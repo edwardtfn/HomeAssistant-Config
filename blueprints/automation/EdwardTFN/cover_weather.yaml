@@ -1,0 +1,230 @@
+blueprint:
+  name: Covers open/close based on the sun position and weather
+  description: This automation will open the covers when the heating is working and will close when the sun light is not desired in the room
+  domain: automation
+  input:
+    cover_list:
+      name: Cover(s) to be automated
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [cover]
+
+    sun_entity:
+      name: Sun entity
+      description: 'Typically is ''sun.sun'' (which can be added with the Sun integration).'
+      default: 'sun.sun'
+      selector:
+        entity:
+          multiple: false
+          domain: [sun]
+
+    weather_entity:
+      name: Weather entity
+      default: false
+      selector:
+        entity:
+          multiple: false
+          domain: [weather]
+
+    windows_azimuth:
+      name: Windows direction (azimuth)
+      description: Select the angle of your windows (approximatelly). This is used to calculate the angle of the Sun compared to your windows.
+      default: ['0']
+      selector:
+        select:
+          mode: dropdown
+          multiple: false
+          options:
+            - label: 0° (North)
+              value: "0"
+            - label: 15°
+              value: "15"
+            - label: 30°
+              value: "30"
+            - label: 45° (Northeast)
+              value: "45"
+            - label: 60°
+              value: "60"
+            - label: 75°
+              value: "75"
+            - label: 90° (East)
+              value: "90"
+            - label: 105°
+              value: "105"
+            - label: 120°
+              value: "120"
+            - label: 135° (Southeast)
+              value: "135"
+            - label: 150°
+              value: "150"
+            - label: 165°
+              value: "165"
+            - label: 180° (South)
+              value: "180"
+            - label: 195°
+              value: "195"
+            - label: 210°
+              value: "210"
+            - label: 225° (Southwest)
+              value: "225"
+            - label: 240°
+              value: "240"
+            - label: 255°
+              value: "255"
+            - label: 270° (West)
+              value: "270"
+            - label: 285°
+              value: "285"
+            - label: 300°
+              value: "300"
+            - label: 315° (Northwest)
+              value: "315"
+            - label: 330°
+              value: "330"
+            - label: 345°
+              value: "345"
+
+    sensitivity:
+      name: Sensitivity
+      description: Ajust to a lower number if you want your covers to close earlier of to a higher number if you want to accept more light before closing the covers.
+      default: 30
+      selector:
+        number:
+          min: 1
+          max: 99
+          step: 1
+          mode: slider
+
+#    windows_angle:
+#      name: Windows vertical angle.
+#      description: 'The angle of your window in relation to the flat ground. If you don''t know, select 90°.
+
+#        - A window flat in the ground will be 0°.
+#        - A window facing directly to the top of the sky will be 180°.
+#        - A normal window facing the street (or your neighbours in many cases) will be 90°. This is the most common option.'
+#      default: 90
+#      selector:
+#        number:
+#          min: 0
+#          max: 180
+#          step: 1
+#          mode: slider
+
+    pause_entities:
+      name: (Optional) Pause update entities
+      description: 'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the system won''t be controlling your covers.
+
+        You can use this to hold this automation when you are travelling, just as an example.'
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch]
+
+mode: restart
+
+trigger_variables:
+  hysteresis: 0.1
+  input_sun_entity: !input sun_entity
+  input_windows_azimuth: !input windows_azimuth
+  input_weather_entity: !input weather_entity
+  input_sensitivity: !input sensitivity
+  # expand(input_sun_entity)[0].state
+  sun_index: >-
+    {% set sun_entities_count = states.sun | default([]) | list | count %}
+    {% set weather_entities_count = states.weather | default([]) | list | count %}
+    {% if (sun_entities_count < 1) or (weather_entities_count < 1) %}
+      unknown
+    {% else %}
+      {% set calc_sun_entity = states.sun | selectattr('entity_id', 'eq', input_sun_entity) | list | first %}
+      {% set calc_weather_entity = states.weather | selectattr('entity_id', 'eq', input_weather_entity) | list | first %}
+      {% set relative_angle_ratio = ((min(90, max(0, (90 - ((calc_sun_entity.attributes.azimuth | default(0) | float(0)) - (input_windows_azimuth | float(0))) | abs)))))/90 %}
+      {% set elevation = calc_sun_entity.attributes.elevation | default(0) | float(0) %}
+      {% set elevation_ratio = (min(12, max(0, elevation))/12) %}
+
+      {% set condition = calc_weather_entity.state | default('unknown') %}
+      {% if condition in ['sunny'] %}
+        {% set condition_ratio = 1.0 %}
+      {% elif condition in ['clear-night'] %}
+        {% set condition_ratio = 0.9 %}
+      {% elif condition in ['windy'] %}
+        {% set condition_ratio = 0.7 %}
+      {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+        {% set condition_ratio = 0.5 %}
+      {% elif condition in ['cloudy'] %}
+        {% set condition_ratio = 0.3 %}
+      {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+        {% set condition_ratio = 0.2 %}
+      {% elif condition in ['fog','pouring'] %}
+        {% set condition_ratio = 0.1 %}
+      {% else %}
+        {% set condition_ratio = 0.5 %}
+      {% endif %}
+
+      {% set visibility = calc_weather_entity.attributes.visibility | default(10000) | float(10000) %}
+      {% if visibility < 1000 %}
+        {% set visibility = (visibility * 1000) %}
+      {% endif %}
+      {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+      {{ (100*relative_angle_ratio*elevation_ratio*condition_ratio*visibility_ratio) | float(0) }}
+    {% endif %}
+
+  cover_action: >-
+    {% if (sun_index | default('unknown')) == 'unknown' %}
+      none
+    {% elif (sun_index | float(0)) > (input_sensitivity | float(0)) %}
+      open
+    {% elif (sun_index | float(0)) < ((input_sensitivity | float(0)) * (hysteresis | float(0))) %}
+      close
+    {% else %}
+      none
+    {% endif %}
+
+  input_pause_entities: !input pause_entities
+  input_pause_entities_selected: >-
+    {% if input_pause_entities %}
+      true
+    {% else %}
+      false
+    {% endif %}
+
+trigger:
+  - id: Action
+    platform: template
+    value_template: >-
+      {{ cover_action }}
+  - id: Pause
+    platform: state
+    entity_id: !input pause_entities
+
+condition:
+  - condition: or
+    conditions:
+      - condition: template
+        value_template: >-
+          {{ ( input_pause_entities_selected == false ) }}
+      - condition: state
+        entity_id: !input pause_entities
+        state: 'off'
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ cover_action == 'open' }}"
+        sequence:
+          - service: cover.open_cover
+            data: {}
+            target:
+              entity_id: !input cover_list
+      - conditions:
+          - condition: template
+            value_template: "{{ cover_action == 'close' }}"
+        sequence:
+          - service: cover.close_cover
+            data: {}
+            target:
+              entity_id: !input cover_list
+    default: []

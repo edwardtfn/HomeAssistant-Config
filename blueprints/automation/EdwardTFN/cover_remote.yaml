@@ -1,0 +1,65 @@
+blueprint:
+  # This is based on this other public Blueprint: source_url: https://community.home-assistant.io/t/zha-ikea-open-close-switch-for-covers-e-g-kadrilj-fyrtur/258904
+  name: Cover control with Tradfri open/close remote
+  description: |
+    Control a cover with an Ikea Tradfri open/close button remote over ZHA
+
+    Short press on ☼ button will open the cover.
+    Short press on ☰ button will close the cover.
+    Long press on ☼ or ☰  will stop the cover.
+  domain: automation
+  input:
+    remote_device:
+      name: Remote
+      description: "IKEA open/close remote to use"
+      selector:
+        device:
+          integration: zha
+          #manufacturer: ["IKEA of Sweden", "\u0002KE"]
+          model: "TRADFRI open/close remote"
+    cover_entity:
+      name: Cover
+      description: The cover to control
+      selector:
+        entity:
+          domain: cover
+
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input remote_device
+
+variables:
+  input_cover_entity: !input cover_entity
+  cover_state: '{{ states(input_cover_entity) }}'
+
+action:
+  - service: >-
+      {% if cover_state in ["opening", "closing"] %}
+        cover.stop_cover
+      {% else %}
+        {% if trigger.event.data.command == "up_open" %}
+          cover.open_cover
+        {% elif trigger.event.data.command == "down_close" %}
+          cover.close_cover
+        {% else %}
+          cover.stop_cover
+        {% endif %}
+      {% endif %}
+    target: 
+      entity_id: !input cover_entity
+  - wait_for_trigger:
+      - platform: state
+        entity_id: !input cover_entity
+        to: 
+          - open
+          - closed
+    timeout:
+      minutes: 2
+  - delay: 2
+  - service: cover.stop_cover
+    data: {}
+    target:
+      entity_id: !input cover_entity
+mode: restart

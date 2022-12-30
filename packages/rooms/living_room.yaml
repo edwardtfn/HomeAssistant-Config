@@ -1,0 +1,165 @@
+generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
+  - name: Living room - Hygrostat
+    #unique_id: 10a13674-0435-4580-b517-52542e6b441e
+    humidifier: switch.living_room_charging_strip_1_socket_1
+    target_sensor: sensor.kitchen_thermostat_humidity
+    #min_humidity: 0
+    #max_humidity: 100
+    target_humidity: 45
+    away_humidity: 35
+    dry_tolerance: 2
+    device_class: humidifier
+    initial_state: true
+    min_cycle_duration:
+      minutes: 5
+
+media_player:
+  - name: Living room - TV Sony - Universal
+    platform: universal # https://www.home-assistant.io/integrations/universal/
+    unique_id: d82290b5-c6d8-404f-a484-70d5669dcc49
+    device_class: tv
+    #state_template: "{{ is_state('binary_sensor.living_room_tv_is_on', 'off') }}"
+    #state_template: "{{states('binary_sensor.living_room_tv_is_on')}}"
+    icon: "{{ iif(is_state('binary_sensor.living_room_tv_is_on', 'on'), 'mdi:television', 'mdi:television-off') }}"
+    children:
+      - media_player.living_room_tv_sony_dlna
+    commands:
+      turn_on:
+        service: input_button.press
+        data: {}
+        target:
+          entity_id: input_button.living_room_tv_sony_turn_on
+      turn_off:
+        service: input_button.press
+        data: {}
+        target:
+          entity_id: input_button.living_room_tv_sony_turn_off
+      volume_up:
+        service: media_player.volume_set
+        data:
+          volume_level: "{{ min(1,(state_attr('media_player.living_room_tv_sony_dlna', 'volume_level') | float(0)) + 0.01) }}"
+        target:
+          entity_id: media_player.living_room_tv_sony_dlna
+      volume_down:
+        service: media_player.volume_set
+        data:
+          volume_level: "{{ max(0,(state_attr('media_player.living_room_tv_sony_dlna', 'volume_level') | float(0)) - 0.01) }}"
+        target:
+          entity_id: media_player.living_room_tv_sony_dlna
+      volume_mute:
+        service: media_player.volume_mute
+        data:
+          is_volume_muted: "{{ is_state_attr('media_player.living_room_tv_sony_dlna', 'is_volume_muted', false) | default(true) }}"
+        target:
+          entity_id: media_player.living_room_tv_sony_dlna
+      volume_set:
+        service: media_player.volume_set
+        data:
+          volume_level: "{{ volume_level }}"
+        target:
+          entity_id: media_player.living_room_tv_sony_dlna
+      #media_play:
+        #service: media_player.media_play
+        #data: {}
+        #target:
+          #entity_id: media_player.bedroom_tv_samsung_integration
+      #media_pause:
+        #service: media_player.media_pause
+        #data: {}
+        #target:
+          #entity_id: media_player.bedroom_tv_samsung_integration
+      #media_previous_track:
+        #service: media_player.media_previous_track
+        #data: {}
+        #target:
+          #entity_id: media_player.bedroom_tv_samsung_integration
+      #media_next_track:
+        #service: media_player.media_next_track
+        #data: {}
+        #target:
+          #entity_id: media_player.bedroom_tv_samsung_integration
+    attributes:
+      state: binary_sensor.living_room_tv_is_on
+      volume_level: media_player.living_room_tv_sony_dlna|volume_level
+      is_volume_muted: media_player.living_room_tv_sony_dlna|is_volume_muted
+
+#switch:
+#- platform: command_line
+#switches:
+#tv_sony_rpi: # https://www.home-assistant.io/integrations/braviatv/#using-hdmi-cec
+##unique_id: a0483a05-3d6a-4db9-857a-f4be3bafac34
+#command_on: ssh root@192.168.12.30 "echo 'on 0' | cec-client -s"
+#command_off: ssh root@192.168.12.30 "echo 'standby 0' | cec-client -s"
+#command_state: ssh root@192.168.12.30 "echo 'pow 0' | cec-client -s |grep 'power status:'"
+#value_template: '{{ value == "power status: on" }}'
+
+template:
+  - binary_sensor:
+      - name: Living room - TV is on
+        unique_id: 363e5658-843f-47d4-a170-29c4b2553745
+        state: >-
+          {{ states('sensor.living_room_tv_rack_outlets_power') | float(0) > 100 }}
+
+  - sensor:
+    - name: Living room - Thermostat Humidity
+      unique_id: 514a17fd-42ef-4949-b4aa-d62bff1de8de
+      unit_of_measurement: "%"
+      device_class: humidity
+      state: >-
+        {% set cloud_humidity = states('sensor.living_room_thermostat_cloud_humidity') | default('unknown') %}
+        {% if is_number(cloud_humidity) %}
+          {{ cloud_humidity | float(0) | round(1) }}
+        {% else %}
+          {{ state_attr('climate.living_room_thermostat', 'current_humidity') }}
+        {% endif %}
+    - name: Living room - Total power
+      unique_id: 5f335852-e3aa-4803-bfbc-898d875d6fef
+      unit_of_measurement: "W"
+      device_class: power
+      state: >-
+        {{ expand('group.living_room_power_sensors') 
+        | rejectattr('state', 'in', ['unavailable','unknown']) 
+        | map(attribute='state') 
+        | map('float') 
+        | sum
+        | float(0)
+        | round(2)
+        }}
+#    - name: Living room - Total energy
+#      unique_id: c6bf0bb4-44ac-4cc3-9b28-d4e7b36346ee
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >-
+#        {{ 0
+#        +  (states('sensor.living_room_lights_map_wall_energy') | float(0))
+#        +  (states('sensor.living_room_lights_tv_wall_energy') | float(0))
+#        +  (states('sensor.living_room_map_wall_outlets_energy') | float(0))
+#        +  (states('sensor.living_room_tv_rack_outlets_energy') | float(0))
+#        +  (states('sensor.living_room_windows_wall_outlets_energy') | float(0))
+#        }}
+
+#zha:
+  #device_config:
+    # Living room - Charging strip
+    #70:b3:d5:2b:60:01:20:b2-1:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:b2-2:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:b2-3:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:b2-4:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:b2-5:
+      #type: "switch"
+    
+    # Living room - Media strip
+    #70:b3:d5:2b:60:01:20:03-1:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:03-2:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:03-3:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:03-4:
+      #type: "switch"
+    #70:b3:d5:2b:60:01:20:03-5:
+      #type: "switch"

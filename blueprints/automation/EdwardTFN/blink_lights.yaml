@@ -1,0 +1,100 @@
+blueprint:
+  name: Blink lights on a trigger
+  description: Blink lights (or a switch) when a trigger (binary-sensor) changes.
+  domain: automation
+  source_url: https://github.com/edwardtfn/ha_blueprints/raw/main/automation/EdwardTFN/blink_lights.yaml
+  input:
+    trigger_entities:
+      name: Trigger entities
+      description: 'The lights/switches will "blink" if any of the entities selected here changes it states. Try to avoid a big number of lights or groups as it can take long to change the state on all the entities.'
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch]
+
+    entities_list:
+      name: Lights and switches to blink
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [light, switch]
+
+    number_of_blinks:
+      name: Number of blinks
+      default: 3
+      selector:
+        number:
+          min: 0
+          max: 25
+          unit_of_measurement: blinks
+
+    blink_duration:
+      name: Blink speed (msec)
+      description: The time (in milliseconds) the entities will stay on each state (on or off). Try to increase this time if you are using too many lights or if you have long transition time for the lights.
+      default: 1000
+      selector:
+        number:
+          min: 50
+          max: 5000
+          unit_of_measurement: milliseconds
+
+    pause_entities:
+      name: (Optional) Pause update entities
+      description: 'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the system won''t blink the lights on a trigger.
+
+        You can use this to hold this automation when you have a party or you are not at home.'
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch]
+
+mode: single
+
+trigger_variables:
+  input_pause_entities: !input pause_entities
+  input_pause_entities_selected: >-
+    {% if input_pause_entities %}
+      true
+    {% else %}
+      false
+    {% endif %}
+
+trigger:
+  - platform: state
+    entity_id: !input trigger_entities
+    to: "off"
+    from: "on"
+  - platform: state
+    entity_id: !input trigger_entities
+    to: "on"
+    from: "off"
+
+condition:
+  - condition: or
+    conditions:
+      - condition: template
+        value_template: >-
+          {{ ( input_pause_entities_selected == false ) }}
+      - condition: state
+        entity_id: !input pause_entities
+        state: "off"
+
+variables:
+  repeat_count: !input number_of_blinks
+
+action:
+  - repeat:
+      count: "{{ repeat_count *2 }}"
+      sequence:
+        - service: homeassistant.toggle
+          data: {}
+          target:
+            entity_id: !input entities_list
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 0
+            milliseconds: !input blink_duration

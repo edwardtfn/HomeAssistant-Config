@@ -1,0 +1,49 @@
+blueprint:
+  name: Blink lights (old)
+  description: Blink lights (or switches).
+  domain: script
+  #source_url: 
+  input:
+    entities_list:
+      name: Lights and switches to blink
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [light, switch]
+
+    number_of_blinks:
+      name: Number of blinks
+      default: 3
+      selector:
+        number:
+          min: 0
+          max: 25
+          unit_of_measurement: blinks
+
+    blink_duration:
+      name: Blink speed (msec)
+      description: The time (in milliseconds) the entities will stay on each state (on or off). Try to increase this time if you are using too many lights or if you have long transition time for the lights.
+      default: 1000
+      selector:
+        number:
+          min: 50
+          max: 5000
+          unit_of_measurement: milliseconds
+
+variables:
+  repeat_count: !input number_of_blinks
+
+sequence:
+  - repeat:
+      count: "{{ repeat_count *2 }}"
+      sequence:
+        - service: homeassistant.toggle
+          data: {}
+          target:
+            entity_id: !input entities_list
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 0
+            milliseconds: !input blink_duration

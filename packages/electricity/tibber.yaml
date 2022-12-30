@@ -1,0 +1,311 @@
+      #PriceLevel
+        #Price level based on trailing price average (3 days for hourly values and 30 days for daily values)
+        # NORMAL: The price is greater than 90 % and smaller than 115 % compared to average price.
+        # CHEAP: The price is greater than 60 % and smaller or equal to 90 % compared to average price.
+        # VERY_CHEAP: The price is smaller or equal to 60 % compared to average price.
+        # EXPENSIVE: The price is greater or equal to 115 % and smaller than 140 % compared to average price.
+        # VERY_EXPENSIVE: The price is greater or equal to 140 % compared to average price.
+
+
+sensor:
+    # https://community.home-assistant.io/t/tibber-sensor-for-future-price-tomorrow/253818/23
+    - platform: rest
+      name: Tibber Electricity Price
+      resource: https://api.tibber.com/v1-beta/gql
+      method: POST
+      scan_interval: 900
+      payload: '{ "query": "{ viewer { homes { currentSubscription { priceInfo { current { total currency level } today { total startsAt level } tomorrow { total startsAt level }}}}}}" }'
+      json_attributes_path: "$.data.viewer.homes[0].currentSubscription.priceInfo"
+      json_attributes:
+        - current
+        - today
+        - tomorrow
+      value_template: '{{ value_json["data"]["viewer"]["homes"][0]["currentSubscription"]["priceInfo"]["current"]["total"] }}'
+      headers:
+        Authorization: !secret tibber_api_token
+        Content-Type: application/json
+        User-Agent: REST
+
+template:
+  - sensor:
+    - name: Electricity price
+      unique_id: d4c04abf-c258-4f0f-a61d-cc0170225081
+      unit_of_measurement: "SEK/kWh"
+      icon: mdi:currency-usd
+      state: >-
+        {% if this.attributes.future_prices | default('unknown') in ['unknown', 'unavailable'] or (this.attributes.future_prices | default([]) | map(attribute='total') | list | count) < 1 %}
+          unknown
+        {% else %}
+          {{ this.attributes.future_prices |  default([]) | map(attribute='total') | list | first | float(0) }}
+        {% endif %}
+      attributes:
+        current: >-
+          {% if state_attr('sensor.tibber_electricity_price', 'current') %}
+            {{ state_attr('sensor.tibber_electricity_price', 'current') }}
+          {% else %}
+            [ ]
+          {% endif %}
+        today: >-
+          {% if state_attr('sensor.tibber_electricity_price', 'today') %}
+            {{ state_attr('sensor.tibber_electricity_price', 'today') }}
+          {% else %}
+            [ ]
+          {% endif %}
+        tomorrow: >-
+          {% if state_attr('sensor.tibber_electricity_price', 'tomorrow') %}
+            {{ state_attr('sensor.tibber_electricity_price', 'tomorrow') }}
+          {% else %}
+            [ ]
+          {% endif %}
+        all_prices: "{{ this.attributes.today | default([]) + this.attributes.tomorrow | default([]) }}"
+        #today_count: "{{ this.attributes.today | default([]) | map(attribute='total') | list | count }}"
+        #tomorrow_count: "{{ this.attributes.tomorrow | default([]) | map(attribute='total') | list | count }}"
+        #all_prices_count: "{{ this.attributes.all_prices | default([]) | map(attribute='total') | list | count }}"
+        min_price: >-
+          {% if this.attributes.today | default('unknown') in ['unknown','unavailable','none'] or (this.attributes.today | default([]) | map(attribute='total') | list | count) < 1 %}
+            unknown
+          {% else %}
+            {{ this.attributes.today | default([0]) | map(attribute='total') | list | min | float(0) | round(4) }}
+          {% endif %}
+        max_price: >-
+          {% if this.attributes.today | default('unknown') in ['unknown','unavailable','none'] or (this.attributes.today | default([]) | map(attribute='total') | list | count) < 1 %}
+            unknown
+          {% else %}
+            {{ this.attributes.today | default([0]) | map(attribute='total') | list | max | float(0) | round(4) }}
+          {% endif %}
+        avg_price: >-
+          {% if this.attributes.today | default('unknown') in ['unknown','unavailable','none'] or (this.attributes.today | default([]) | map(attribute='total') | list | count) < 1 %}
+            unknown
+          {% elif (this.attributes.today | default([]) | map(attribute='total') | list | count) < 2 %}
+            {{ this.attributes.today | default([0]) | map(attribute='total') | list | max | float(0) | round(4) }}
+          {% else %}
+            {{ this.attributes.today | default([0]) | map(attribute='total') | list | average(0) | float(0) | round(4) }}
+          {% endif %}
+        price_level: >-
+          {% if (this.attributes.current | default('unknown')) in ['unknown','unavailable','none'] %}
+            unknown
+          {% else %}
+            {{ this.attributes.current.level | default('unknown') | replace('_', ' ') | capitalize }}
+          {% endif %}
+        price_level_1d: >-
+          {% set price_cur = this.state | default(0) | float(0) %}
+          {% set price_avg = this.attributes.avg_price | default(0) | float(0) %}
+          {% if price_cur == 0 or price_avg == 0 %}
+            unknown
+          {% else %}
+            {% set price_ratio = (price_cur / price_avg) %}
+            {% if price_ratio >= 1.4 %}
+              Very expensive
+            {% elif price_ratio >= 1.15 %}
+              Expensive
+            {% elif price_ratio <= 0.6 %}
+              Very cheap
+            {% elif price_ratio <= 0.9 %}
+              Cheap
+            {% else %}
+              Normal
+            {% endif %}
+          {% endif %}
+        price_level_combined: >-
+          {% set level1 = this.attributes.price_level_1d | default('unknown') %}
+          {% set level3 = this.attributes.price_level | default('unknown') %}
+          {% if level1 == level3 %}
+            {{ level1 }}
+          {% elif level1 in ['unknown','unavailable','none'] or level3 in ['unknown','unavailable','none'] %}
+            unknown
+          {% elif level1 == "Very cheap" %}
+            {{ level3 }}
+          {% elif level3 == "Very cheap" %}
+            {{ level1 }}
+          {% elif level1 == "Cheap" %}
+            {{ level3 }}
+          {% elif level3 == "Cheap" %}
+            {{ level1 }}
+          {% elif level1 == "Normal" %}
+            {{ level3 }}
+          {% elif level3 == "Normal" %}
+            {{ level1 }}
+          {% elif level1 == "Expensive" %}
+            {{ level3 }}
+          {% else %}
+            {{ level1 }}
+          {% endif %}
+        is_below_average: >-
+          {% if is_number(this.state) and is_number(this.attributes.avg_price) %}
+            {{ (this.state | float(0) < this.attributes.avg_price | float(0)) | lower }}
+          {% else %}
+            unknown
+          {% endif %}
+        is_above_average: >-
+          {% if is_number(this.state) and is_number(this.attributes.avg_price) %}
+            {{ (this.state | float(0) > this.attributes.avg_price | float(0)) | lower}}
+          {% else %}
+            unknown
+          {% endif %}
+        is_at_min: >-
+          {% if is_number(this.state) and is_number(this.attributes.min_price) %}
+            {{ (this.state | float(0) <= this.attributes.min_price | float(0)) | lower }}
+          {% else %}
+            unknown
+          {% endif %}
+        is_at_max: >-
+          {% if is_number(this.state) and is_number(this.attributes.max_price) %}
+            {{ (this.state | float(0) >= this.attributes.max_price | float(0)) | lower }}
+          {% else %}
+            unknown
+          {% endif %}
+        is_close_to_min: >-
+          {% if is_number(this.state) and is_number(this.attributes.min_price) %}
+            {{ (this.state | float(0) <= (1.15 * this.attributes.min_price | float(0))) | lower }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices: >-
+          {% if (this.attributes.all_prices | default('unknown')) in ['unknown','unavailable','none'] %}
+            unknown
+          {% else %}
+            {{ (this.attributes.all_prices | default([])) | selectattr('startsAt', 'gt', (now() - timedelta(hours=1)) | string | replace(' ','T')) | list }}
+          {% endif %}
+        future_prices_totals: >-
+          {% if (this.attributes.future_prices | default('unknown')) in ['unknown','unavailable','none'] %}
+            unknown
+          {% else %}
+            {{ (this.attributes.future_prices | default([])) | map(attribute='total') | list }}
+          {% endif %}
+        #future_prices_count: "{{ (this.attributes.future_prices_totals | default([])) | count }}"
+        future_prices_min: |-
+          {% if this.attributes.future_prices_totals | default([0]) | count > 0 %}
+            {{  this.attributes.future_prices_totals | default([0]) | min | float(0) | round(4) }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_max: |-
+          {% if this.attributes.future_prices_totals | default([0]) | count > 0 %}
+            {{ (this.attributes.future_prices_totals | default([0])) | max | float(0) | round(4) }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_avg: >-
+          {% if this.attributes.future_prices_totals | default([0]) | count > 0 %}
+            {{ (this.attributes.future_prices_totals | default([0])) | average(0) | float(0) | round(4) }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_curr_price_level: >-
+          {% set price_cur = this.state | default(0) | float(0) %}
+          {% set price_avg = this.attributes.future_prices_avg | default(0) | float(0) %}
+          {% if price_cur == 0 or price_avg == 0 %}
+            unknown
+          {% else %}
+            {% set price_ratio = (price_cur / price_avg) %}
+            {% if price_ratio >= 1.4 %}
+              Very expensive
+            {% elif price_ratio >= 1.15 %}
+              Expensive
+            {% elif price_ratio <= 0.6 %}
+              Very cheap
+            {% elif price_ratio <= 0.9 %}
+              Cheap
+            {% else %}
+              Normal
+            {% endif %}
+          {% endif %}
+        future_prices_16h: >-
+          {% if (this.attributes.future_prices | default('unknown')) in ['unknown','unavailable','none'] %}
+            unknown
+          {% else %}
+            {{ (this.attributes.future_prices | default([]) | list)[0:16]}}
+          {% endif %}
+        future_prices_16h_totals: >-
+          {% if (this.attributes.future_prices_16h | default('unknown')) in ['unknown','unavailable','none'] %}
+            unknown
+          {% else %}
+            {{ (this.attributes.future_prices_16h | default([])) | map(attribute='total') | list }}
+          {% endif %}
+        #future_prices_16h_count: "{{ (this.attributes.future_prices_16h_totals | default([])) | count }}"
+        future_prices_16h_min: |-
+          {% if this.attributes.future_prices_16h_totals | default([0]) | count > 0 %}
+            {{ (this.attributes.future_prices_16h_totals | default([0])) | min | float(0) | round(4) }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_16h_max: |-
+          {% if this.attributes.future_prices_16h_totals | default([0]) | count > 0 %}
+            {{ (this.attributes.future_prices_16h_totals | default([0])) | max | float(0) | round(4) }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_16h_avg: >-
+          {% if this.attributes.future_prices_16h_totals | default([0]) | count > 0 %}
+            {{ (this.attributes.future_prices_16h_totals | default([0])) | average(0) | float(0) | round(4) }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_16h_current_price_level: >-
+          {% set price_cur = this.state | default(0) | float(0) %}
+          {% set price_avg = this.attributes.future_prices_16h_avg | default(0) | float(0) %}
+          {% if price_cur == 0 or price_avg == 0 %}
+            unknown
+          {% else %}
+            {% set price_ratio = (price_cur / price_avg) %}
+            {% if price_ratio >= 1.4 %}
+              Very expensive
+            {% elif price_ratio >= 1.15 %}
+              Expensive
+            {% elif price_ratio <= 0.6 %}
+              Very cheap
+            {% elif price_ratio <= 0.9 %}
+              Cheap
+            {% else %}
+              Normal
+            {% endif %}
+          {% endif %}
+        future_prices_16h_current_price_is_close_to_min: >-
+          {% if is_number(this.state) and is_number(this.attributes.future_prices_16h_min) %}
+            {{ (this.state | float(0) <= (1.15 * this.attributes.future_prices_16h_min | default(0) | float(0))) | lower }}
+          {% else %}
+            unknown
+          {% endif %}
+        future_prices_16h_current_price_is_at_min: >-
+          {% if this.state | default(0) | float(0) > 0 and this.attributes.future_prices_16h_min | default(0) | float(0) > 0 %}
+            {{ (this.state | default(0) | float(0) <= this.attributes.future_prices_16h_min | default(0) | float(0)) | lower }}
+          {% else %}
+            unknown
+          {% endif %}
+
+    - name: Temp - Future prices 16h - Current price is at min
+      unique_id: cec8c55d-6266-46dc-9c8a-b7f7cbfaa4ee
+      state: "{{ state_attr('sensor.electricity_price', 'future_prices_16h_current_price_is_at_min') | default('unknown') }}"
+
+    - name: Total electricity price
+      unique_id: 84932203-6512-4e6c-9002-bf51b63d7a52
+      unit_of_measurement: "SEK/kWh"
+      state: >
+        {% set electricity_price = 0.75 + states('sensor.electricity_price') | float(0) %}
+        {{ (electricity_price) | round(4, default=0) }}
+
+    - name: CO2 cost rate
+      unique_id: df385245-cd24-4b58-8535-b683ab0b3f88
+      unit_of_measurement: "gCO2eq/h"
+      device_class: monetary
+      state: >- # sensor.co2_intensity
+        {{
+          (
+            states('sensor.co2_intensity') | float(0)
+            * states('sensor.total_power') | float(0)
+            / 1000
+          ) | round(1)
+        }}
+
+    - name: Energy cost rate
+      unique_id: a6e64783-7974-4a7c-a724-cda241643a10
+      unit_of_measurement: "SEK/h"
+      device_class: monetary
+      state: >-
+        {{ 
+          (
+            states('sensor.total_electricity_price') | float(0)
+            * states('sensor.total_power') | float(0)
+            / 1000
+          ) | round(2)
+        }}

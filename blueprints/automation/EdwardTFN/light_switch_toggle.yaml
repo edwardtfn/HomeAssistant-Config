@@ -1,0 +1,36 @@
+blueprint:
+  name: Toggle lights when input changes
+  description: Turn lights on or off when an input (binary sensor) changes from off to on or from on to off.
+  domain: automation
+  input:
+    input_entity:
+      name: Input entity
+      description: This can be a binary sensor, switch or boolean helper used to toggle the lighs.
+      selector:
+        entity:
+          domain: [input_boolean, binary_sensor, switch]
+    light_target:
+      name: Light entity
+      description: Light or group of lights to toggle when the input changes
+      selector:
+        entity:
+          domain: light
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input input_entity
+    from: "on"
+    to: "off"
+  - platform: state
+    entity_id: !input input_entity
+    from: "off"
+    to: "on"
+
+condition: []
+
+action:
+  - service: light.toggle
+    target: 
+      entity_id: !input light_target

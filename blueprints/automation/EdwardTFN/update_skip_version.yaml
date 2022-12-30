@@ -1,0 +1,89 @@
+blueprint:
+  name: Skip updates based on its versions changes level
+  description: 'Skip majors, minors or patches updates'
+  domain: automation
+  #source_url: 
+  input:
+    entities_list:
+      name: Update entities to skip updates
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [update]
+
+    skip_major:
+      name: Skip major updates
+      description: 'This will skip any major updates, which means if a version changes from "2022.*.*" to "2023.*.*", it will be skipped.'
+      default: true
+      selector:
+        boolean:
+
+    skip_minor:
+      name: Skip minor updates
+      description: 'This will skip any minor updates, which means if a version changes from "2022.10.*" to "2022.11.*", it will be skipped.'
+      default: true
+      selector:
+        boolean:
+
+    skip_patch:
+      name: Skip patches
+      description: 'This will skip any patches, which means if a version changes from "2022.10.0" to "2022.10.1", it will be skipped.'
+      default: false
+      selector:
+        boolean:
+
+mode: queued
+max: 10
+max_exceeded: warning
+
+trigger:
+  - id: New update
+    platform: state
+    entity_id: !input entities_list
+    to: 'on'
+  - id: HA Start
+    platform: homeassistant
+    event: start
+
+variables:
+  list_of_entities_to_include: !input entities_list
+  bool_skip_major: !input skip_major
+  bool_skip_minor: !input skip_minor
+  bool_skip_patch: !input skip_patch
+  list_of_skip_entity_id: >-
+    {%- set skip_update = namespace(entity_id=[]) %}
+    {%- for state in states.update | selectattr('entity_id', 'in', list_of_entities_to_include) | selectattr('state', 'eq', 'on') %}
+      {%- if state.attributes.latest_version and (state.attributes.installed_version != state.attributes.latest_version) %}
+        {%- if
+          ( bool_skip_major and (version(state.attributes.latest_version) - state.attributes.installed_version).major) or
+          ( bool_skip_minor and (version(state.attributes.latest_version) - state.attributes.installed_version).minor) or
+          ( bool_skip_patch and (version(state.attributes.latest_version) - state.attributes.installed_version).patch) %}
+          {%- set skip_update.entity_id = skip_update.entity_id + [state.entity_id] %}
+        {%- endif %}
+      {%- endif %}
+    {%- endfor %}
+    {{ skip_update.entity_id | list }}
+#    {%- set ns = namespace(entity_id=[]) %}
+#    {%- for state in states.update | selectattr('entity_id', 'in', list_of_entities_to_include) | selectattr('state', 'eq', 'on') %}
+#      {%- if state.attributes.latest_version and (state.attributes.latest_version.endswith('.0') or state.attributes.latest_version.endswith('.00')) %}
+#        {%- set ns.entity_id = ns.entity_id + [state.entity_id] %}
+#      {%- endif %}
+#    {%- endfor %}
+#    {{ ns.entity_id | list }}
+
+action:
+  - if:
+      - condition: template
+        value_template: "{{ list_of_skip_entity_id | count > 0 }}"
+    then:
+      - service: update.skip
+        data: {}
+        target:
+          entity_id: "{{ list_of_skip_entity_id }}"
+        continue_on_error: true
+  - service: notify.signal_edward
+    data:
+      message: "Skipping major updates: {{ list_of_skip_entity_id | join(', ') }}"
+    continue_on_error: true
+

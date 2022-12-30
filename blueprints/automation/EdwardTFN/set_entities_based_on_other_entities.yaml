@@ -1,0 +1,88 @@
+blueprint:
+  name: Set entities based on other entities new on/off state (with a pause entity)
+  domain: automation
+  #source_url: EdwardTFN (TBD)
+
+  input:
+    input_entities:
+      name: Input entities
+      description: When one of these entities changes, the destination entities will also change to the same state of the input entity which triggered the actions. This can be a binary sensor (door, motion, etc.), a light, a switch or a boolean helper.
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch, light]
+    target_entities:
+      name: Target entities
+      description: When one of the input entities changes, the target entities will also change to the same state of the input entity which triggered the actions. This can be a binary sensor (door, motion, etc.), a light, a switch or a boolean helper.
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch, light]
+    pause_entities:
+      name: (Optional) Pause automation
+      description: 'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the target entities won''t be changed when one of input entities changes.
+
+        You can use this to hold the automation when you have a party at home or when you are on vacations, or even to have the automation paused when a door is open.'
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch]
+
+trigger_variables:
+  input_pause_entities: !input pause_entities
+  input_pause_entities_selected: >-
+    {% if input_pause_entities %}
+      true
+    {% else %}
+      false
+    {% endif %}
+  input_pause_entities_processed: >-
+    {% if input_pause_entities_selected %}
+      {{ input_pause_entities }}
+    {% else %}
+      [ ]
+    {% endif %}
+
+trigger:
+  - id: Turn on
+    platform: state
+    entity_id: !input input_entities
+    from: "off"
+    to: "on"
+  - id: Turn off
+    platform: state
+    entity_id: !input input_entities
+    from: "on"
+    to: "off"
+
+condition:
+  - condition: or
+    conditions:
+      - condition: template
+        value_template: >-
+          {{ ( input_pause_entities_selected == false ) }}
+      - condition: state
+        entity_id: !input pause_entities
+        state: "off"
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: Turn on
+        sequence:
+          - service: homeassistant.turn_on
+            target:
+              entity_id: !input target_entities
+      - conditions:
+          - condition: trigger
+            id: Turn off
+        sequence:
+          - service: homeassistant.turn_off
+            target:
+              entity_id: !input target_entities
+
+mode: single

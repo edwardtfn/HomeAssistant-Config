@@ -1,0 +1,98 @@
+generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
+  - name: Bedroom - Hygrostat
+    #unique_id: b7b4aec9-212e-43b2-9ec4-982491695fda
+    humidifier: switch.bedroom_power_strip_1_socket_3
+    target_sensor: sensor.bedroom_thermostat_humidity
+    #min_humidity: 0
+    #max_humidity: 100
+    target_humidity: 45
+    away_humidity: 35
+    dry_tolerance: 2
+    device_class: humidifier
+    initial_state: true
+    min_cycle_duration:
+      minutes: 5
+
+sensor:
+  - platform: history_stats
+    name: Bedroom - Dog's bed - Occupancy ratio (24h)
+    entity_id: binary_sensor.bedroom_dogs_bed_occupied
+    state: "off"
+    type: ratio
+    start: "{{ (now() + timedelta(hours=-24)) }}"
+    end: "{{ now() }}"
+
+  - platform: mold_indicator #https://www.home-assistant.io/integrations/mold_indicator/
+    name: Bedroom - Mold indicator
+    indoor_temp_sensor: sensor.bedroom_thermostat_current_temperature
+    indoor_humidity_sensor: sensor.bedroom_thermostat_humidity
+    outdoor_temp_sensor: sensor.home_weather_outdoor_temperature
+    calibration_factor: 1.0
+
+template:
+  - binary_sensor:
+    - name: Bedroom - Locker - Temperature is high
+      unique_id: 62606665-c789-4b10-8578-0dcf8b876df3
+      state: "{{ states('sensor.bedroom_locker_vibration_device_temperature') | float(default=0) > 40 }}"
+      device_class: problem
+
+  - sensor:
+    - name: Bedroom - Thermostat Humidity
+      unique_id: 6e460995-b4c5-4f51-9a97-d39382731d68
+      unit_of_measurement: "%"
+      device_class: humidity
+      state: >-
+        {% set cloud_humidity = states('sensor.bedroom_thermostat_cloud_humidity') | default('unknown') %}
+        {% if is_number(cloud_humidity) %}
+          {{ cloud_humidity | float(0) | round(1) }}
+        {% else %}
+          {{ state_attr('climate.bedroom_thermostat', 'current_humidity') }}
+        {% endif %}
+
+    - name: Bedroom - Total power
+      unique_id: 380d9ded-7be6-4cbc-b409-353baf8c9b96
+      unit_of_measurement: "W"
+      device_class: power
+      state: >-
+        {{ expand('group.bedroom_power_sensors') 
+        | rejectattr('state', 'in', ['unavailable','unknown']) 
+        | map(attribute='state') 
+        | map('float') 
+        | sum
+        | float(0)
+        | round(2)
+        }}
+#    - name: Bedroom - Total energy
+#      unique_id: 3fd283f9-0cb7-4594-931c-720fcb69a5ab
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >-
+#        {{ 0
+#        +  (states('sensor.bedroom_ceiling_lights_energy') | float(0))
+#        +  (states('sensor.bedroom_outlets_carol_energy') | float(0))
+#        +  (states('sensor.bedroom_outlets_edward_energy') | float(0))
+#        +  (states('sensor.bedroom_tv_rack_energy') | float(0))
+#        }}
+
+#    - name: Closet - Total power
+#      unique_id: 13288986-8a40-46de-ad8c-1f1473c51a7f
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.closet_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
+#    - name: Closet - Total energy
+#      unique_id: 31f4d5e6-307f-445b-9252-bfbb5ba41b36
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >- 
+#        {{ (0
+#        +  (states('sensor.closet_lights_energy') | float(0))
+#        +  (states('sensor.closet_outlets_energy') | float(0))
+#        ) | float(0) | round(1) }}

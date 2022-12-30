@@ -1,0 +1,83 @@
+blueprint:
+  name: Keep lights or switches always ON
+  description: This blueprint will help turning on the devices automatically if the device is turned off for a given number of seconds.
+  domain: automation
+  source_url: https://raw.githubusercontent.com/edwardtfn/ha_auto_update_scheduled/main/auto_update_scheduled.yaml
+  input:
+    entities_list:
+      name: Lights and switches to be kept always ON
+      default: false
+      selector:
+        entity:
+          multiple: true
+          domain: [light, switch, group]
+    timeout:
+      name: Time to wait after the entity is off before trying to turn it on.
+      default: 15
+      selector:
+        number:
+          min: 0
+          max: 600
+          unit_of_measurement: seconds
+
+    pause_entities:
+      name: (Optional) Pause update entities
+      description:
+        'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the system won''t be automatically turning the devices on.
+
+        You can use this to hold this automation when you are doing some maintenance in the systems and want them off during longer time.'
+      default: []
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch]
+
+mode: parallel
+max: 100
+max_exceeded: warning
+
+trigger_variables:
+  input_pause_entities: !input pause_entities
+  input_pause_entities_selected: >-
+    {% if input_pause_entities %}
+      true
+    {% else %}
+      false
+    {% endif %}
+
+trigger:
+  - id: Entity turned off
+    platform: state
+    entity_id: !input entities_list
+  - id: Home Assistant started-up
+    platform: homeassistant
+    event: start
+  - id: Time pattern catch up
+    platform: time_pattern
+    minutes: "00"
+
+condition:
+  - condition: or
+    conditions:
+      - condition: template
+        value_template: >-
+          {{ ( input_pause_entities_selected == false ) }}
+      - condition: state
+        entity_id: !input pause_entities
+        state: "off"
+
+action:
+  - delay: !input timeout
+  - if:
+      - condition: trigger
+        id: Entity turned off
+    then:
+      - service: homeassistant.turn_on
+        target:
+          entity_id: "{{ trigger.entity_id }}"
+        continue_on_error: true
+      - delay: !input timeout
+
+  - service: homeassistant.turn_on
+    target:
+      entity_id: !input entities_list

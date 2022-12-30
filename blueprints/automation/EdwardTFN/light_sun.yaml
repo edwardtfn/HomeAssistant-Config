@@ -1,0 +1,62 @@
+blueprint:
+  domain: automation
+  name: Turn lights on or off at sunset or sunrise
+  description: This automatioj will turn lights on or off whe  the Sun crossed an elevation threshold.
+  source_url: https://community.home-assistant.io/t/code-review-turning-lights-off-on-at-sunset-runrise/473105/8
+  input:
+    light_entities:
+      name: Lights
+      description: Please select the lights or switches you want to toggle when the Suj crosses the threshold.
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [light, switch, group]
+
+    sun_threshold:
+      name: Sun threshold
+      description: Select the Sun angle where the lights will toggle.
+      default: -5
+      selector:
+        number:
+          min: -90
+          max: 90
+          step: 0.1
+          mode: slider
+          unit_of_measurement: °
+
+    sun_entity: # It's good to ask for this entity as some user might have changed from sun.sun.
+      name: Sun entity
+      description: 'Typically is ''sun.sun'' (which can be added with the Sun integration).'
+      default: 'sun.sun'
+      selector:
+        entity:
+          multiple: false
+          domain: [sun]
+
+mode: single
+
+trigger:
+  - platform: numeric_state
+    entity_id: !input sun_entity
+    attribute: elevation
+    below: !input sun_threshold
+  - platform: numeric_state
+    entity_id: !input sun_entity
+    attribute: elevation
+    above: !input sun_threshold
+  - platform: homeassistant
+    event: start
+  - platform: event
+    event_type: automation_reloaded
+condition: []
+
+variables:
+  sun_threshold: !input sun_threshold
+  sun_entity: !input sun_entity
+
+action:
+  - service: >-
+      homeassistant.turn_{{ iif(state_attr(sun_entity, 'elevation') < sun_threshold, 'on',
+      'off') }}
+    entity_id: !input light_entities

@@ -1,0 +1,31 @@
+blueprint:
+  name: Blink lights
+  description: Blink lights (or switches).
+  domain: script
+  source_url: https://github.com/edwardtfn/ha_blueprints/raw/main/script/EdwardTFN/blink_lights.yaml
+
+fields:
+  entities:
+    name: entities
+    description: A list of entity_id of all lights and switches to blink
+  number_of_blinks:
+    description: The number of times the lights will blink
+  blink_duration:
+    description: >-
+      The time (in milliseconds) the entities will stay on each state (on or
+      off). Try to increase this time if you are using too many lights or if you
+      have long transition time for the lights.
+sequence:
+  - repeat:
+      count: "{{ number_of_blinks *2 }}"
+      sequence:
+        - service: homeassistant.toggle
+          data: {}
+          target:
+            entity_id: "{{ entities }}"
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 0
+            milliseconds: "{{ blink_duration }}"
+mode: single

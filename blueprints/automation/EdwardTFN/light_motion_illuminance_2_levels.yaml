@@ -1,0 +1,308 @@
+blueprint:
+  # in use
+  name: Motion-activated light with illuminance and dimming
+  description: Turn on a light when motion is detected and the room is dark.
+  domain: automation
+  #adapted from motion_light.yaml from source_url: https://github.com/home-assistant/core/blob/dev/homeassistant/components/automation/blueprints/motion_light.yaml
+  input:
+    motion_entity:
+      name: Motion Sensor
+      selector:
+        entity:
+          domain: [input_boolean, binary_sensor, switch]
+          #device_class: motion
+    lumens_entity:
+      name: (Optional) Light level sensor
+      default: [ ]
+      selector:
+        entity:
+          domain: sensor
+          device_class: illuminance
+    max_lumens:
+      name: Max level of light to trigger the automation
+      description: => This will be ignored if no light level sensor is selected
+      default: 15
+      selector:
+        number:
+          min: 0
+          max: 150
+          unit_of_measurement: lx
+    occupancy_ratio_entity:
+      name: (Optional) Occupancy ratio entity
+      description: Select an entity that measures the ratio of occupancy in a given time, then select a threshold to ensure the light will not turn off while the occupancy ratio is above the threshold.
+      default: [ ]
+      selector:
+        entity:
+          domain: sensor
+    occupancy_ratio_threshold:
+      name: Occupancy ratio threshold
+      default: 20
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "%"
+    sun_entity:
+      name: Sun entity
+      description: 'In most cases this is "sun.sun".'
+      default: sun.sun
+      selector:
+        entity:
+          domain: sun
+    max_sun_angle:
+      name: (Optional) Max Sun angle
+      description: 'Defines a maximum angle of the Sun to allow the light to turn on. If the Sun is above this angle, this automation won''t turn the lights on.
+
+        Some usefull values are:
+
+        +90°: Max Sun elevation - The lights will go on regardless the Sun position (it will ignore the Sun, but still respect other conditions).
+
+        0°: Sunset/Sunrise - The lights only go on if the Sun is bellow the horizon.
+
+        -6° (default): Civil twilight - The Sun is below the horizon, but still some natural light and the artificial lights in external areas might not be necessary.
+
+        -18°: Night - No Sun light at all.
+
+        -90°: Min Sun elevation - The lights will never go on.'
+      default: +90
+      selector:
+        number:
+          min: -18
+          max: +90
+          unit_of_measurement: "°"
+    light_target:
+      name: Light
+      selector:
+        entity:
+          domain: light
+    light_level_high:
+      name: Light level (normal)
+      default: 100
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "%"
+    light_level_dimmer:
+      name: Light level (dimmed)
+      default: 50
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "%"
+    no_motion_wait_to_dimming:
+      name: Dimming wait time
+      description: Time to leave the light on max after last motion is detected.
+      default: 15
+      selector:
+        number:
+          min: 1
+          max: 600
+          unit_of_measurement: seconds
+    no_motion_wait_to_off:
+      name: Dimming wait time
+      description: Time to leave the light on after dimmming.
+      default: 15
+      selector:
+        number:
+          min: 1
+          max: 600
+          unit_of_measurement: seconds
+    pause_entities_on:
+      name: (Optional) Pause automation when "On" entity
+      description: 'You can select an entity to pause this automation. If the selected entity is "On" or "True" the system won''t be controlling the lights.
+
+        You can use this to hold your automation when you have a party at home, or to stop the lights in the living room to change when the TV is on.'
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch, group]
+    pause_entities_off:
+      name: (Optional) Pause automation when "Off" entity
+      description: 'You can select an entity to pause this automation. If the selected entity is "Off" or "False" the system won''t be controlling the lights.
+
+        You can use this to hold the light changes when the bathroom door is closed (it''s state will be "False" or "Off").'
+      default: [ ]
+      selector:
+        entity:
+          multiple: true
+          domain: [input_boolean, binary_sensor, switch, group]
+
+# If motion is detected within the delay,
+# we restart the script.
+mode: restart
+max_exceeded: silent
+
+trigger_variables:
+  input_occupancy_ratio_entity: !input occupancy_ratio_entity
+  input_pause_entities_on: !input pause_entities_on
+  input_pause_entities_off: !input pause_entities_off
+  input_lumens_entity: !input lumens_entity
+
+trigger:
+  - id: Motion detected
+    platform: state
+    entity_id: !input motion_entity
+    from: "off"
+    to: "on"
+  #- id: Motion detected for X secs   # This will refresh the light level when motion is detected
+    #platform: state
+    #entity_id: !input motion_entity
+    #from: "off"
+    #to: "on"
+    #for:
+      #seconds: 2
+  - id: Sun crossing down the threshold
+    platform: numeric_state
+    entity_id: !input sun_entity
+    attribute: elevation
+    below: !input max_sun_angle
+  - id: Sunrise and sunset
+    platform: state
+    entity_id: !input sun_entity
+    from:
+      - above_horizon
+      - below_horizon
+    to:
+      - above_horizon
+      - below_horizon
+
+condition:
+  - alias: There is motion
+    condition: state
+    entity_id: !input motion_entity
+    state: 'on'
+  - alias: "Sun is below threshold"
+    condition: numeric_state
+    entity_id: !input sun_entity
+    attribute: elevation
+    below: !input max_sun_angle
+  - alias: "Max level of light or light already on"
+    condition: or
+    conditions:
+      - "{{ not input_lumens_entity }}"
+      - condition: numeric_state
+        entity_id: !input lumens_entity
+        below: !input max_lumens
+      - condition: state
+        entity_id: !input light_target
+        state: 'on'
+      - condition: state
+        entity_id: !input sun_entity
+        state: below_horizon
+  - condition: or
+    conditions:
+      - "{{ not input_pause_entities_on }}"
+      - condition: state
+        entity_id: !input pause_entities_on
+        state: 'off'
+  - condition: or
+    conditions:
+      - "{{ not input_pause_entities_off }}"
+      - condition: state
+        entity_id: !input pause_entities_off
+        state: 'on'
+
+action:
+  - alias: "Turn on the light"
+    service: light.turn_on
+    target: 
+      entity_id: !input light_target
+    data:
+        brightness_pct: !input light_level_high
+        transition: 1
+  - alias: "Wait until there is no motion from device"
+    wait_for_trigger:
+      platform: state
+      entity_id: !input motion_entity
+      from: "on"
+      to: "off"
+  - if:
+      - condition: state
+        entity_id: !input light_target
+        state: "off"
+    then:
+      - stop: Lights already off
+  - alias: "Wait the number of seconds that has been set"
+    delay: !input no_motion_wait_to_dimming
+  - if:
+      - condition: state
+        entity_id: !input light_target
+        state: "off"
+    then:
+      - stop: Lights already off
+  - alias: "Wait for pause entities (ON) in case they changes since the automation started"
+    if:
+      - "{{ input_pause_entities_on }}"
+      - condition: state
+        entity_id: !input pause_entities_on
+        state: 'on'
+    then:
+      - wait_for_trigger:
+          platform: state
+          entity_id: !input pause_entities_on
+          to: "off"
+  - alias: "Wait for pause entities (OFF) in case they changes since the automation started"
+    if:
+      - "{{ input_pause_entities_off }}"
+      - condition: state
+        entity_id: !input pause_entities_off
+        state: 'off'
+    then:
+      - wait_for_trigger:
+          platform: state
+          entity_id: !input pause_entities_off
+          to: "on"
+  - alias: "Dimming the light"
+    service: light.turn_on
+    target: 
+      entity_id: !input light_target
+    data:
+        brightness_pct: !input light_level_dimmer
+        transition: 5
+  - alias: "Wait the number of seconds that has been set"
+    delay: !input no_motion_wait_to_off
+  - if:
+      - condition: state
+        entity_id: !input light_target
+        state: "off"
+    then:
+      - stop: Lights already off
+  - if:
+      - "{{ input_occupancy_ratio_entity }}"
+    then:
+      - wait_for_trigger:
+          platform: numeric_state
+          entity_id: !input occupancy_ratio_entity
+          below: !input occupancy_ratio_threshold
+
+  - alias: "Wait for pause entities (ON) in case they changes since the automation started"
+    if:
+      - "{{ input_pause_entities_on }}"
+      - condition: state
+        entity_id: !input pause_entities_on
+        state: 'on'
+    then:
+      - wait_for_trigger:
+          platform: state
+          entity_id: !input pause_entities_on
+          to: "off"
+  - alias: "Wait for pause entities (OFF) in case they changes since the automation started"
+    if:
+      - "{{ input_pause_entities_off }}"
+      - condition: state
+        entity_id: !input pause_entities_off
+        state: 'off'
+    then:
+      - wait_for_trigger:
+          platform: state
+          entity_id: !input pause_entities_off
+          to: "on"
+  - alias: "Turn off the light"
+    service: light.turn_off
+    target: 
+      entity_id: !input light_target
+    data:
+        transition: 5

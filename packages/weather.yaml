@@ -1,0 +1,343 @@
+template:
+  - sensor:
+    - name: Home - Weather - Outdoor temperature
+      unique_id: 98145c69-93c1-4239-842c-4c7c3b7ad530
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: "{{ state_attr('weather.home', 'temperature') | default('unknown') }}"
+
+    - name: Home - Average room temperature
+      unique_id: 42816c14-97c2-4c6f-804b-723fb1a0ba97
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state: >-
+        {{ expand([
+          'sensor.bathroom_thermostat_current_temperature', 
+          'sensor.bedroom_thermostat_current_temperature', 
+          'sensor.guest_room_thermostat_current_temperature', 
+          'sensor.kitchen_thermostat_current_temperature', 
+          'sensor.living_room_thermostat_current_temperature',
+          'sensor.office_thermostat_1_current_temperature',
+          'sensor.office_thermostat_2_current_temperature'
+          ]) 
+        | rejectattr('state', 'in', ['unavailable','unknown']) 
+        | map(attribute='state') 
+        | map('float') 
+        | average
+        | float(0)
+        | round(1)
+        }}
+
+    - name: Home - Sun elevation
+      unique_id: d725f9db-2e6c-42ae-afaa-e1cac9edf391
+      unit_of_measurement: "°"
+      state: >-
+        {{ state_attr('sun.sun', 'elevation') }}
+
+    - name: Home - Sun azimuth
+      unique_id: 2375d2d3-5883-461c-9afb-4e337bcc9a16
+      unit_of_measurement: "°"
+      state: >-
+        {{ state_attr('sun.sun', 'azimuth') }}
+
+
+    #- platform: template
+    #  sensors: weather_just_icon: 
+    #  name: "Home - Weather" 
+    #  icon_template: >- 
+    #    {% if is_state("weather.climacell_hourly","clear-day") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","sunny") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","clear") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","clear-night") %} mdi:weather-night {% elif is_state("weather.climacell_hourly","rainy") %} mdi:weather-rainy {% elif is_state("weather.climacell_hourly","pouring") %} mdi:weather-pouring {% elif is_state("weather.climacell_hourly","snow") %} mdi:weather-snowy {% elif is_state("weather.climacell_hourly","fog") %} mdi:weather-fog {% elif is_state("weather.climacell_hourly","sleet") %} mdi:weather-partly-snowy-rainy {% elif is_state("weather.climacell_hourly","wind") %} mdi:weather-windy {% elif is_state("weather.climacell_hourly","cloudy") %} mdi:weather-cloudy {% elif is_state("weather.climacell_hourly","partlycloudy") %} mdi:weather-partly-cloudy {% elif is_state("weather.climacell_hourly","partly-cloudy-night") %} mdi:weather-night-partly-cloudy {% elif is_state("weather.climacell_hourly","hail") %} mdi:weather-hail {% elif is_state("weather.climacell_hourly","lightning") %} mdi:weather-lightning {% elif is_state("weather.climacell_hourly","tstorm") %} mdi:weather-lightning-rainy {% endif %}
+    - name: Home - Visibility
+      unique_id: c0e7b7dc-6d69-4b86-99de-c84553386800
+      unit_of_measurement: "Km"
+      state: >-
+        {{ state_attr('weather.home', 'visibility') }}
+
+    - name: Civil Solar day status
+      unique_id: 3ce1befd-f340-4c84-ad9c-beaf400550ce
+      state: >-
+        {% set sun_angle = state_attr('sun.sun', 'elevation') %}
+        {% if sun_angle in ['unknown','undefined','none'] %}
+          unknown
+        {% elif sun_angle | float(0) < -6 %}
+          night
+        {% elif sun_angle | float(0) < 0 %}
+          twilight
+        {% else %}
+          day
+        {% endif %}
+      icon: >-
+        {% if is_state("sensor.civil_solar_day_status", "night") %}
+          mdi:weather-night
+        {% elif is_state("sensor.civil_solar_day_status", "day") %}
+          mdi:weather-sunny
+        {% elif is_state("sensor.civil_solar_day_status", "twilight") %}
+          {% if is_state_attr('sun.sun', 'rising', true) %}
+            mdi:weather-sunset-up
+          {% else %}
+            mdi:weather-sunset-down
+          {% endif %}
+        {% else %}
+          mdi:help
+        {% endif %}
+
+    - name: Home - Artillerigatan - Sun index 1
+      unique_id: 6eca7b7c-ed13-4feb-8b7d-ab08b3f91678
+      unit_of_measurement: "%"
+      state: >-
+        {% set win_azimuth = 160 %}
+        {% set relative_angle = min(90, max(0, (90 - (((state_attr('sun.sun', 'azimuth') | float(0)) - (win_azimuth | float(0))) | abs)))) %}
+        {% set relative_angle_ratio = (relative_angle/90) %}
+
+        {% set elevation_ratio = (min(12, max(0, state_attr('sun.sun', 'elevation') | float(0)))/12) %}
+
+        {% set condition = states('weather.home') %}
+        {% if condition in ['sunny'] %}
+          {% set condition_ratio = 1.0 %}
+        {% elif condition in ['clear-night'] %}
+          {% set condition_ratio = 0.9 %}
+        {% elif condition in ['windy'] %}
+          {% set condition_ratio = 0.7 %}
+        {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+          {% set condition_ratio = 0.5 %}
+        {% elif condition in ['cloudy'] %}
+          {% set condition_ratio = 0.3 %}
+        {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+          {% set condition_ratio = 0.2 %}
+        {% elif condition in ['fog','pouring'] %}
+          {% set condition_ratio = 0.1 %}
+        {% else %}
+          {% set condition_ratio = 0.5 %}
+        {% endif %}
+
+        {% set visibility = state_attr('weather.home', 'visibility') | float(0) %}
+        {% if visibility < 1000 %}
+          {% set visibility = (visibility * 1000) %}
+        {% endif %}
+        {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+        {{ (100*relative_angle_ratio*elevation_ratio*condition_ratio*visibility_ratio) | float(0) | round(2) }}
+
+#        {% set elevation = min(90, max(0, (state_attr('sun.sun', 'elevation') | float(0)))) %}
+#        {% set elevation_ratio = (elevation/90) %}
+
+#    - name: Home - Artillerigatan - Sun index 2
+#      unique_id: 987779bf-f723-414c-8a8c-a6b8c2f0f146
+#      unit_of_measurement: "%"
+#      state: >-
+#        {% set win_azimuth = 160 %}
+#        {% set relative_angle = min(90, max(0, (90 - (((state_attr('sun.sun', 'azimuth') | float(0)) - (win_azimuth | float(0))) | abs)))) %}
+#        {% set relative_angle_ratio = (relative_angle/90) %}
+
+#        {% set elevation = min(90, max(0, (state_attr('sun.sun', 'elevation') | float(0)))) %}
+#        {% set elevation_ratio = (elevation/90) %}
+#
+#        {% set condition = states('weather.smhi_home') %}
+#        {% if condition in ['sunny'] %}
+#          {% set condition_ratio = 1.0 %}
+#        {% elif condition in ['clear-night'] %}
+#          {% set condition_ratio = 0.9 %}
+#        {% elif condition in ['windy'] %}
+#          {% set condition_ratio = 0.7 %}
+#        {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+#          {% set condition_ratio = 0.5 %}
+#        {% elif condition in ['cloudy'] %}
+#          {% set condition_ratio = 0.3 %}
+#        {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+#          {% set condition_ratio = 0.2 %}
+#        {% elif condition in ['fog','pouring'] %}
+#          {% set condition_ratio = 0.1 %}
+#        {% else %}
+#          {% set condition_ratio = 0.5 %}
+#        {% endif %}
+
+#        {% set visibility = state_attr('weather.smhi_home', 'visibility') | float(0) %}
+#        {% if visibility < 1000 %}
+#          {% set visibility = (visibility * 1000) %}
+#        {% endif %}
+#        {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+#        {{ (elevation_ratio*100*(((1-relative_angle_ratio)*(1-elevation_ratio)*(1-condition_ratio)*(1-visibility_ratio)))) | float(0) | round(3) }}
+
+    - name: Home - Artillerigatan - Sun index 3
+      unique_id: aae7daab-18d8-4bf9-ac1f-9fa58b55e39f
+      unit_of_measurement: "%"
+      state: >-
+        {% set win_azimuth = 160 %}
+        {% set relative_angle = min(90, max(0, (90 - (((state_attr('sun.sun', 'azimuth') | float(0)) - (win_azimuth | float(0))) | abs)))) %}
+        {% set relative_angle_ratio = (relative_angle/90) %}
+
+        {% set elevation_ratio = (min(12, max(0, state_attr('sun.sun', 'elevation') | float(0)))/12) %}
+
+        {% set condition = states('weather.home') %}
+        {% if condition in ['sunny'] %}
+          {% set condition_ratio = 1.0 %}
+        {% elif condition in ['clear-night'] %}
+          {% set condition_ratio = 0.9 %}
+        {% elif condition in ['windy'] %}
+          {% set condition_ratio = 0.7 %}
+        {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+          {% set condition_ratio = 0.5 %}
+        {% elif condition in ['cloudy'] %}
+          {% set condition_ratio = 0.3 %}
+        {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+          {% set condition_ratio = 0.2 %}
+        {% elif condition in ['fog','pouring'] %}
+          {% set condition_ratio = 0.1 %}
+        {% else %}
+          {% set condition_ratio = 0.5 %}
+        {% endif %}
+
+        {% set visibility = state_attr('weather.home', 'visibility') | float(0) %}
+        {% if visibility < 1000 %}
+          {% set visibility = (visibility * 1000) %}
+        {% endif %}
+        {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+        {{ (elevation_ratio*25*(relative_angle_ratio+elevation_ratio+condition_ratio+visibility_ratio)) | float(0) | round(2) }}
+
+    - name: Home - Artillerigatan - Sun index 4
+      unique_id: 0cc6c07f-267f-43ba-b9a3-3c574108d85c
+      unit_of_measurement: "%"
+      state: >-
+         {{ (((states('sensor.home_artillerigatan_sun_index_1') | float(0))+(states('sensor.home_artillerigatan_sun_index_3') | float(0)))/2) | float(0) | round(2) }}
+
+    # sun-window angular similarity
+    # https://community.home-assistant.io/t/incident-angle-of-sunlight/444646
+    - name: Home - Artillerigatan - Sun ratio
+      unique_id: a9aee862-f58f-495d-87be-f47c664936dd
+      unit_of_measurement: '%'
+      state: >
+        {% set input_windows_azimuth = 165 %}
+        {% set input_sun_entity = 'sun.sun' %}
+        {% set input_weather_entity = 'weather.home' %}
+
+        {% set relative_angle_ratio = ((min(90, max(0, (90 - (((state_attr(input_sun_entity, 'azimuth') | float(0)) - (input_windows_azimuth | float(0))) | abs))))))/90 %}
+        {% set elevation_ratio = (min(12, max(0, state_attr(input_sun_entity, 'elevation') | float(0)))/12) %}
+
+        {% set condition = states(input_weather_entity) %}
+        {% if condition in ['sunny'] %}
+          {% set condition_ratio = 1.0 %}
+        {% elif condition in ['clear-night'] %}
+          {% set condition_ratio = 0.9 %}
+        {% elif condition in ['windy'] %}
+          {% set condition_ratio = 0.7 %}
+        {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+          {% set condition_ratio = 0.5 %}
+        {% elif condition in ['cloudy'] %}
+          {% set condition_ratio = 0.3 %}
+        {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+          {% set condition_ratio = 0.2 %}
+        {% elif condition in ['fog','pouring'] %}
+          {% set condition_ratio = 0.1 %}
+        {% else %}
+          {% set condition_ratio = 0.5 %}
+        {% endif %}
+
+        {% set visibility = state_attr(input_weather_entity, 'visibility') | float(10000) %}
+        {% if visibility < 1000 %}
+          {% set visibility = (visibility * 1000) %}
+        {% endif %}
+        {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+        {{ (100*relative_angle_ratio*elevation_ratio*condition_ratio*visibility_ratio) | float(0) | round(2) }}
+
+    - name: Home - Bunkebergsgatan - Sun ratio
+      unique_id: 341b3c47-7d46-4be2-b749-8480f968f18e
+      unit_of_measurement: '%'
+      state: >
+        {% set input_windows_azimuth = 255 %}
+        {% set input_sun_entity = 'sun.sun' %}
+        {% set input_weather_entity = 'weather.home' %}
+
+        {% set relative_angle_ratio = ((min(90, max(0, (90 - (((state_attr(input_sun_entity, 'azimuth') | float(0)) - (input_windows_azimuth | float(0))) | abs))))))/90 %}
+        {% set elevation_ratio = (min(12, max(0, state_attr(input_sun_entity, 'elevation') | float(0)))/12) %}
+
+        {% set condition = states(input_weather_entity) %}
+        {% if condition in ['sunny'] %}
+          {% set condition_ratio = 1.0 %}
+        {% elif condition in ['clear-night'] %}
+          {% set condition_ratio = 0.9 %}
+        {% elif condition in ['windy'] %}
+          {% set condition_ratio = 0.7 %}
+        {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+          {% set condition_ratio = 0.5 %}
+        {% elif condition in ['cloudy'] %}
+          {% set condition_ratio = 0.3 %}
+        {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+          {% set condition_ratio = 0.2 %}
+        {% elif condition in ['fog','pouring'] %}
+          {% set condition_ratio = 0.1 %}
+        {% else %}
+          {% set condition_ratio = 0.5 %}
+        {% endif %}
+
+        {% set visibility = state_attr(input_weather_entity, 'visibility') | float(10000) %}
+        {% if visibility < 1000 %}
+          {% set visibility = (visibility * 1000) %}
+        {% endif %}
+        {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+        {{ (100*relative_angle_ratio*elevation_ratio*condition_ratio*visibility_ratio) | float(0) | round(2) }}
+
+    - name: Home - Bunkeberget park - Sun ratio
+      unique_id: 5f86c7de-9103-41d4-9aa0-da7c17fa5879
+      unit_of_measurement: '%'
+      state: >
+        {% set input_windows_azimuth = 345 %}
+        {% set input_sun_entity = 'sun.sun' %}
+        {% set input_weather_entity = 'weather.home' %}
+
+        {% set relative_angle_ratio = ((min(90, max(0, (90 - (((state_attr(input_sun_entity, 'azimuth') | float(0)) - (input_windows_azimuth | float(0))) | abs))))))/90 %}
+        {% set elevation_ratio = (min(12, max(0, state_attr(input_sun_entity, 'elevation') | float(0)))/12) %}
+
+        {% set condition = states(input_weather_entity) %}
+        {% if condition in ['sunny'] %}
+          {% set condition_ratio = 1.0 %}
+        {% elif condition in ['clear-night'] %}
+          {% set condition_ratio = 0.9 %}
+        {% elif condition in ['windy'] %}
+          {% set condition_ratio = 0.7 %}
+        {% elif condition in ['lightning','lightning-rainy','partlycloudy','windy-variant','exceptional'] %}
+          {% set condition_ratio = 0.5 %}
+        {% elif condition in ['cloudy'] %}
+          {% set condition_ratio = 0.3 %}
+        {% elif condition in ['hail','rainy','snowy','snowy-rainy'] %}
+          {% set condition_ratio = 0.2 %}
+        {% elif condition in ['fog','pouring'] %}
+          {% set condition_ratio = 0.1 %}
+        {% else %}
+          {% set condition_ratio = 0.5 %}
+        {% endif %}
+
+        {% set visibility = state_attr(input_weather_entity, 'visibility') | float(10000) %}
+        {% if visibility < 1000 %}
+          {% set visibility = (visibility * 1000) %}
+        {% endif %}
+        {% set visibility_ratio = min(1,max(0,(visibility/10000))) %}
+
+        {{ (100*relative_angle_ratio*elevation_ratio*condition_ratio*visibility_ratio) | float(0) | round(2) }}
+
+    - name: Temp - Sun rising
+      unique_id: c951e85b-9233-48b4-95fd-493e4b5c8aa3
+      state: "{{ state_attr('sun.sun', 'rising') }}"
+
+  - trigger:
+    - platform: state
+      entity_id:
+        - sun.sun
+      attribute: rising
+      from:
+        - true
+        - True
+        - on
+      to:
+        - false
+        - False
+        - off
+    sensor:
+      - name: Sun - Max elevation
+        unique_id: 07603c28-6f7d-4589-99b1-5b5862e9bf2c
+        unit_of_measurement: "°"
+        state: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
+        attributes:
+          last_update: "{{ now() }}"
