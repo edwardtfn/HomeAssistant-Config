@@ -1,0 +1,251 @@
+automation: !include automations.yaml
+
+binary_sensor:
+  #- platform: ping # https://www.home-assistant.io/integrations/ping/#binary-sensor
+    #host: !secret ip_pc_1
+    #name: "Living room - PC-1"
+    #count: 2
+    #scan_interval: 30
+
+  - platform: workday # https://www.home-assistant.io/integrations/workday/
+    country: SE
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+device_tracker:
+  #- platform: bluetooth_tracker
+    #track_new_devices: false
+  #- platform: bluetooth_le_tracker
+    #track_new_devices: false
+  - platform: ping # https://www.home-assistant.io/integrations/ping/#presence-detection
+    hosts:
+      carols_phone_ping: !secret ip_carols_phone
+      edwards_phone_ping: !secret ip_edwards_phone
+      pc_1_ping: !secret ip_pc_1
+
+
+emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
+  host_ip: !secret ip_home_assistant
+  listen_port: 80
+  #advertise_ip: 10.0.0.10
+  #advertise_port: 8080
+  #off_maps_to_on_domains:
+    #- script
+    #- scene
+  expose_by_default: false
+  exposed_domains:
+    - humidifier
+
+  entities:
+    #### Home ####
+    input_boolean.home_party_mode:
+      hidden: false
+
+    #### Balcony ####
+    #binary_sensor.balcony_door:
+      #hidden: true
+    light.balcony_lamp_light:
+      hidden: false
+    light.balcony_string_lights:
+      hidden: false
+    
+    #### Bathroom ####
+    light.bathroom_ceiling_lights:
+      hidden: false
+    light.bathroom_mirror_light:
+      hidden: false
+    
+    #### Bedroom ####
+    light.bedroom_carol_light:
+      hidden: false
+    light.bedroom_closet_lights:
+      hidden: false
+    light.bedroom_edward_light:
+      hidden: false
+    switch.bedroom_power_strip_1_socket_4: # TV Samsung
+      hidden: false
+
+    #### Corridor ####
+    light.corridor_lights_all:
+      hidden: false
+
+    #### Guest bathroom ####
+    light.guest_bathroom_ceiling_light:
+      hidden: false
+    light.guest_bathroom_mirror_lights:
+      hidden: false
+
+    #### Guest room ####
+    light.guest_room_closet_lights:
+      hidden: false
+    light.guest_room_wall_lights:
+      hidden: false
+
+    #### Hall ####
+    #binary_sensor.hall_front_door:
+      #hidden: true
+    light.hall_ceiling_light:
+      hidden: false
+
+    #### Kitchen ####
+    #binary_sensor.kitchen_windows:
+      #hidden: true
+    light.kitchen_bench_lights:
+      hidden: false
+    light.kitchen_table_lights:
+      hidden: false
+
+    #### Living room ####
+    input_button.living_room_tv_sony_toggle:
+      hidden: false
+    input_button.living_room_tv_sony_turn_off:
+      hidden: false
+    input_button.living_room_tv_sony_turn_on:
+      hidden: false
+
+    #### Office ####
+    light.office_ceiling_lines:
+      hidden: false
+    light.office_workstation_lights:
+      hidden: false
+
+
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /local/card-mod.js
+
+
+group: !include groups.yaml
+
+homeassistant:
+  packages: !include_dir_named packages
+
+#home_connect_alt: #https://github.com/ekutner/home-connect-hass
+  #client_id: !secret home_connect_alt_client_id
+  #client_secret: !secret home_connect_alt_client_secret
+
+http:
+  #ssl_certificate: /ssl/fullchain.pem
+  #ssl_key: /ssl/privkey.pem
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - !secret trusted_proxy_1
+    - !secret trusted_proxy_2
+
+#logger:
+#  default: warning
+#  logs:
+#    homeassistant.components.bluetooth: debug
+
+notify: !include notifications.yaml
+
+scene: !include scenes.yaml
+
+script: !include scripts.yaml
+
+shell_command: !include shell.yaml
+
+template:
+  - trigger:
+    - id: Motion # When motion is detected
+      platform: state
+      entity_id:
+        - binary_sensor.bathroom_motion
+        - binary_sensor.bathroom_motion_dual_sensors_state
+        - binary_sensor.bathroom_motion_occupancy
+        - binary_sensor.bathroom_shower_motion_occupancy
+        - binary_sensor.guest_bathroom_motion_iaszone
+        - binary_sensor.guest_bathroom_motion_occupancy
+        - binary_sensor.guest_room_motion
+        - binary_sensor.guest_room_motion_occupancy
+        - binary_sensor.hall_motion_occupancy
+        - binary_sensor.kitchen_bench_motion_occupancy
+        - binary_sensor.kitchen_bench_motion_on_off
+        - binary_sensor.kitchen_table_motion_occupancy
+        - binary_sensor.kitchen_table_motion_on_off
+        - binary_sensor.office_motion_occupancy
+        - binary_sensor.office_workstation_motion_occupancy
+        - binary_sensor.office_workstation_motion_iaszone
+      from: "off"
+      to: "on"
+    - id: Others # When other activities are detected
+      platform: state
+      entity_id:
+        - binary_sensor.balcony_door
+        - binary_sensor.balcony_string_lights_channel_1_input
+        - binary_sensor.bathroom_ceiling_lights_channel_1_input
+        - binary_sensor.bathroom_door
+        - binary_sensor.bathroom_mirror_light_input
+        - binary_sensor.bedroom_ceiling_lights_input
+        - binary_sensor.bedroom_closet_door
+        - binary_sensor.bedroom_closet_lights_input
+        - binary_sensor.bedroom_dogs_bed_occupied
+        - binary_sensor.guest_bathroom_ceiling_light_input
+        - binary_sensor.guest_bathroom_door
+        - binary_sensor.guest_bathroom_mirror_lights_input
+        - binary_sensor.guest_room_closet_door
+        - binary_sensor.guest_room_closet_lights_input
+        - binary_sensor.guest_room_door
+        - binary_sensor.guest_room_door_outlets_ceiling_lights_input
+        - binary_sensor.hall_front_door
+        - binary_sensor.hall_light_switch_input
+        - binary_sensor.kitchen_ceiling_lights_table_lights_input
+        - binary_sensor.kitchen_ceiling_lights_windows_lights_input
+        - binary_sensor.kitchen_bench_left_light_input
+        - binary_sensor.kitchen_bench_right_light_input
+        - binary_sensor.kitchen_dishwasher_door
+        - binary_sensor.kitchen_windows
+        - binary_sensor.living_room_lights_map_wall_input
+        - binary_sensor.living_room_lights_tv_wall_input
+        - binary_sensor.living_room_windows_left
+        - binary_sensor.living_room_windows_right
+        - binary_sensor.office_door
+        - binary_sensor.office_windows_outlets_ceiling_lights_input
+      from:
+        - "on"
+        - "off"
+      to:
+        - "on"
+        - "off"
+    sensor:
+      - name: Home - Last activity
+        unique_id: 90dca34c-260c-4c54-92cb-dbc760dcb2d4
+        icon: mdi:motion-sensor
+        device_class: timestamp
+        state: "{{ now() }}"
+        attributes:
+          entity_id: "{{ trigger.entity_id }}"
+          entity_friendly_name: >-
+            {% if state_attr( trigger.entity_id, 'friendly_name' ) | default('none') %}
+              {{ state_attr( trigger.entity_id, 'friendly_name' ) | default('none') }}
+            {% else %}
+              none
+            {% endif %}
+          area_name: >-
+            {% if area_name( trigger.entity_id ) | default('none') %}
+              {{ area_name( trigger.entity_id ) | default('none') }}
+            {% else %}
+              none
+            {% endif %}
+          last_update: "{{ now() }}"
+          trigger: "{{ trigger }}"
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+zha:
+  enable_quirks: true
+  custom_quirks_path: /config/zha/quirks
+
+  zigpy_config: # https://github.com/zigpy/zigpy/wiki/OTA-Device-Firmware-Updates
+    ota:
+      otau_directory: /config/zha/zigpy_ota
+      ikea_provider: true
+      ledvance_provider: true
+
+zone: !include zone.yaml
