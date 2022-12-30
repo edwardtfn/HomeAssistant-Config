@@ -2,7 +2,7 @@ blueprint:
   name: Keep lights or switches always ON
   description: This blueprint will help turning on the devices automatically if the device is turned off for a given number of seconds.
   domain: automation
-  source_url: https://raw.githubusercontent.com/edwardtfn/ha_auto_update_scheduled/main/auto_update_scheduled.yaml
+  source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/always_on.yaml
   input:
     entities_list:
       name: Lights and switches to be kept always ON

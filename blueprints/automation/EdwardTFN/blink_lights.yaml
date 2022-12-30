@@ -2,7 +2,7 @@ blueprint:
   name: Blink lights on a trigger
   description: Blink lights (or a switch) when a trigger (binary-sensor) changes.
   domain: automation
-  source_url: https://github.com/edwardtfn/ha_blueprints/raw/main/automation/EdwardTFN/blink_lights.yaml
+  source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/blink_lights.yaml
   input:
     trigger_entities:
       name: Trigger entities

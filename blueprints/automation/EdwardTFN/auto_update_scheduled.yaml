@@ -21,7 +21,7 @@ blueprint:
   domain: automation
   homeassistant:
     min_version: '2022.9.0'
-  source_url: https://raw.githubusercontent.com/edwardtfn/ha_auto_update_scheduled/main/auto_update_scheduled.yaml
+  source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/auto_update_scheduled.yaml
   input:
     backup_bool:
       name: Create a full backup before start the updates?
