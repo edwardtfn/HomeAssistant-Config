@@ -1,5 +1,6 @@
 blueprint:
   # This is based on this other public Blueprint: source_url: https://community.home-assistant.io/t/zha-ikea-open-close-switch-for-covers-e-g-kadrilj-fyrtur/258904
+  source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/cover_remote.yaml
   name: Cover control with Tradfri open/close remote
   description: |
     Control a cover with an Ikea Tradfri open/close button remote over ZHA
