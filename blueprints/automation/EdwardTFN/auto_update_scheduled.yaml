@@ -729,7 +729,7 @@ action:
   - variables:
       restart_entities: >-
         {{ states.update 
-        | selectattr('state', 'eq', 'off')
+        | selectattr('attributes.release_summary', 'defined')
         | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
         | map(attribute='entity_id')
         | list
