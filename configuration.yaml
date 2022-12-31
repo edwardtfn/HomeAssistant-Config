@@ -97,12 +97,12 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       hidden: false
 
     #### Living room ####
-    input_button.living_room_tv_sony_toggle:
-      hidden: false
-    input_button.living_room_tv_sony_turn_off:
-      hidden: false
-    input_button.living_room_tv_sony_turn_on:
-      hidden: false
+    #input_button.living_room_tv_sony_toggle:
+      #hidden: false
+    #input_button.living_room_tv_sony_turn_off:
+      #hidden: false
+    #input_button.living_room_tv_sony_turn_on:
+      #hidden: false
 
     #### Office ####
     light.office_ceiling_lines:

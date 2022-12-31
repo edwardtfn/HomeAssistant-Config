@@ -728,13 +728,12 @@ action:
   ########## Restart Home Assistant ##########
   - variables:
       restart_entities: >-
-        {% set output = namespace(entities=[]) %}
-        {% for state in states.update %}
-          {% if is_state_attr(state.entity_id, 'release_summary', "<ha-alert alert-type='error'>Restart of Home Assistant required</ha-alert>") %}
-            {% set output.entities = output.entities + [state.entity_id] %}
-          {% endif %}
-        {% endfor %}
-        {{ output.entities }}
+        {{ states.update 
+        | selectattr('state', 'eq', 'off')
+        | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
+        | map(attribute='entity_id')
+        | list
+        }}
       restart_count: >-
         {{ restart_entities | count | int(0) }}
   - alias: "Logbook - Restart variables"

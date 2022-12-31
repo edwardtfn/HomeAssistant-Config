@@ -1,4 +1,13 @@
 template:
+  - binary_sensor:
+    - name: Home - Heating
+      unique_id: ccdc9413-8b08-4d95-837a-8883886df7f6
+      device_class: heat
+      state: "{{ (this.attributes.entities | default([]) | count | int(0)) > 0 }}"
+      attributes:
+        entities: "{{ expand(integration_entities('HomeKit Controller - Tado')) | selectattr('domain', 'eq', 'climate') | selectattr('attributes.hvac_action', 'eq', 'heating') | map(attribute='entity_id') | list }}"
+
+
   - sensor:
     - name: Home - Weather - Outdoor temperature
       unique_id: 98145c69-93c1-4239-842c-4c7c3b7ad530
