@@ -13,20 +13,20 @@ alert:
     skip_first: true
     notifiers:
       - signal_group_artillerigatan
-  kitchen_fridge_temperature:
-    name: Kitchen - Fridge - Temperature alert
-    message: >-
-      The temperature in the fridge is outside the normal range ({{ states('sensor.kitchen_fridge_hygrometer_temperature') }}ºC).
-      
-      Please check the door and power supply.
-    done_message: The temperature in the fridge is back to normal ({{ states('sensor.kitchen_fridge_hygrometer_temperature') }}ºC).
-    entity_id: binary_sensor.kitchen_fridge_temperature_normal_range
-    state: 'off'
-    repeat: 15
-    can_acknowledge: true
-    skip_first: true
-    notifiers:
-      - signal_group_artillerigatan
+  #kitchen_fridge_temperature:
+    #name: Kitchen - Fridge - Temperature alert
+    #message: >-
+      #The temperature in the fridge is outside the normal range ({{ states('sensor.kitchen_fridge_hygrometer_temperature') }}ºC).
+      #
+      #Please check the door and power supply.
+    #done_message: The temperature in the fridge is back to normal ({{ states('sensor.kitchen_fridge_hygrometer_temperature') }}ºC).
+    #entity_id: binary_sensor.kitchen_fridge_temperature_normal_range
+    #state: 'off'
+    #repeat: 15
+    #can_acknowledge: true
+    #skip_first: true
+    #notifiers:
+      #- signal_group_artillerigatan
 
 #home_connect:
 #client_id: !secret home_connect_client_id
