@@ -212,19 +212,11 @@ variables:
             if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
         {{ u }}
     {% endfor %}
-  core_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-  core_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-  core_version_change: "{{ version(core_latest_version) - version(core_installed_version) }}"
-
   os_update_entity: >-
     {% for u in integration_entities('hassio') | select('search', '^update[.]')
             if (device_attr(u, 'identifiers') | first)[1] == 'OS' %}
         {{ u }}
     {% endfor %}
-  os_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-  os_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-  os_version_change: "{{ version(os_latest_version) - version(os_installed_version) }}"
-
   supervisor_update_entity: >-
     {% for u in integration_entities('hassio') | select('search', '^update[.]')
             if (device_attr(u, 'identifiers') | first)[1] == 'supervisor' %}
@@ -235,20 +227,29 @@ variables:
   input_update_exclusions: >-
     {% set exclusions = temp_input_update_exclusions | default([]) %}
     {% if input_core_os_update_mode == 'ignore' %}
-      {% set exclusions = exclusions + [core_update_entity, os_update_entity] %}
-    {% elif input_core_os_update_mode == 'patches' %}
-      {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
-        {% set exclusions = exclusions + [core_update_entity] %}
-      {% endif %}
-      {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
-        {% set exclusions = exclusions + [os_update_entity] %}
-      {% endif %}
-    {% elif input_core_os_update_mode == 'major_and_minor' %}
-      {% if (not core_version_change.major) and (not core_version_change.minor) %}
-        {% set exclusions = exclusions + [core_update_entity] %}
-      {% endif %}
-      {% if (not os_version_change.major) and (not os_version_change.minor) %}
-        {% set exclusions = exclusions + [os_update_entity] %}
+      {% set exclusions = exclusions + [core_update_entity | default(""), os_update_entity | default("")] %}
+    {% else %}
+      {% set core_installed_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+      {% set core_latest_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+      {% set core_version_change = version(core_latest_version) - version(core_installed_version) %}
+      {% set os_installed_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+      {% set os_latest_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+      {% set os_version_change = version(os_latest_version) - version(os_installed_version) %}
+
+      {% if input_core_os_update_mode == 'patches' %}
+        {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
+          {% set exclusions = exclusions + [core_update_entity | default("")] %}
+        {% endif %}
+        {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
+          {% set exclusions = exclusions + [os_update_entity | default("")] %}
+        {% endif %}
+      {% elif input_core_os_update_mode == 'major_and_minor' %}
+        {% if (not core_version_change.major) and (not core_version_change.minor) %}
+          {% set exclusions = exclusions + [core_update_entity | default("")] %}
+        {% endif %}
+        {% if (not os_version_change.major) and (not os_version_change.minor) %}
+          {% set exclusions = exclusions + [os_update_entity | default("")] %}
+        {% endif %}
       {% endif %}
     {% endif %}
     {{ exclusions }}
@@ -365,37 +366,39 @@ action:
                 if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
             {{ u }}
         {% endfor %}
-      core_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-      core_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-      core_version_change: "{{ version(core_latest_version) - version(core_installed_version) }}"
-
       os_update_entity: >-
         {% for u in integration_entities('hassio') | select('search', '^update[.]')
                 if (device_attr(u, 'identifiers') | first)[1] == 'OS' %}
             {{ u }}
         {% endfor %}
-      os_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-      os_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-      os_version_change: "{{ version(os_latest_version) - version(os_installed_version) }}"
 
       temp_input_update_exclusions: !input update_exclusions
       input_update_exclusions: >-
         {% set exclusions = temp_input_update_exclusions | default([]) %}
         {% if input_core_os_update_mode == 'ignore' %}
-          {% set exclusions = exclusions + [core_update_entity, os_update_entity] %}
-        {% elif input_core_os_update_mode == 'patches' %}
-          {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
-            {% set exclusions = exclusions + [core_update_entity] %}
-          {% endif %}
-          {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
-            {% set exclusions = exclusions + [os_update_entity] %}
-          {% endif %}
-        {% elif input_core_os_update_mode == 'major_and_minor' %}
-          {% if (not core_version_change.major) and (not core_version_change.minor) %}
-            {% set exclusions = exclusions + [core_update_entity] %}
-          {% endif %}
-          {% if (not os_version_change.major) and (not os_version_change.minor) %}
-            {% set exclusions = exclusions + [os_update_entity] %}
+          {% set exclusions = exclusions + [core_update_entity | default(""), os_update_entity | default("")] %}
+        {% else %}
+          {% set core_installed_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+          {% set core_latest_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+          {% set core_version_change = version(core_latest_version) - version(core_installed_version) %}
+          {% set os_installed_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+          {% set os_latest_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+          {% set os_version_change = version(os_latest_version) - version(os_installed_version) %}
+
+          {% if input_core_os_update_mode == 'patches' %}
+            {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
+              {% set exclusions = exclusions + [core_update_entity | default("")] %}
+            {% endif %}
+            {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
+              {% set exclusions = exclusions + [os_update_entity | default("")] %}
+            {% endif %}
+          {% elif input_core_os_update_mode == 'major_and_minor' %}
+            {% if (not core_version_change.major) and (not core_version_change.minor) %}
+              {% set exclusions = exclusions + [core_update_entity | default("")] %}
+            {% endif %}
+            {% if (not os_version_change.major) and (not os_version_change.minor) %}
+              {% set exclusions = exclusions + [os_update_entity | default("")] %}
+            {% endif %}
           {% endif %}
         {% endif %}
         {{ exclusions }}
@@ -468,37 +471,39 @@ action:
                 if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
             {{ u }}
         {% endfor %}
-      core_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-      core_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-      core_version_change: "{{ version(core_latest_version) - version(core_installed_version) }}"
-
       os_update_entity: >-
         {% for u in integration_entities('hassio') | select('search', '^update[.]')
                 if (device_attr(u, 'identifiers') | first)[1] == 'OS' %}
             {{ u }}
         {% endfor %}
-      os_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-      os_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-      os_version_change: "{{ version(os_latest_version) - version(os_installed_version) }}"
 
       temp_input_update_exclusions: !input update_exclusions
       input_update_exclusions: >-
         {% set exclusions = temp_input_update_exclusions | default([]) %}
         {% if input_core_os_update_mode == 'ignore' %}
-          {% set exclusions = exclusions + [core_update_entity, os_update_entity] %}
-        {% elif input_core_os_update_mode == 'patches' %}
-          {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
-            {% set exclusions = exclusions + [core_update_entity] %}
-          {% endif %}
-          {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
-            {% set exclusions = exclusions + [os_update_entity] %}
-          {% endif %}
-        {% elif input_core_os_update_mode == 'major_and_minor' %}
-          {% if (not core_version_change.major) and (not core_version_change.minor) %}
-            {% set exclusions = exclusions + [core_update_entity] %}
-          {% endif %}
-          {% if (not os_version_change.major) and (not os_version_change.minor) %}
-            {% set exclusions = exclusions + [os_update_entity] %}
+          {% set exclusions = exclusions + [core_update_entity | default(""), os_update_entity | default("")] %}
+        {% else %}
+          {% set core_installed_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+          {% set core_latest_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+          {% set core_version_change = version(core_latest_version) - version(core_installed_version) %}
+          {% set os_installed_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+          {% set os_latest_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+          {% set os_version_change = version(os_latest_version) - version(os_installed_version) %}
+
+          {% if input_core_os_update_mode == 'patches' %}
+            {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
+              {% set exclusions = exclusions + [core_update_entity | default("")] %}
+            {% endif %}
+            {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
+              {% set exclusions = exclusions + [os_update_entity | default("")] %}
+            {% endif %}
+          {% elif input_core_os_update_mode == 'major_and_minor' %}
+            {% if (not core_version_change.major) and (not core_version_change.minor) %}
+              {% set exclusions = exclusions + [core_update_entity | default("")] %}
+            {% endif %}
+            {% if (not os_version_change.major) and (not os_version_change.minor) %}
+              {% set exclusions = exclusions + [os_update_entity | default("")] %}
+            {% endif %}
           {% endif %}
         {% endif %}
         {{ exclusions }}
@@ -571,37 +576,39 @@ action:
                 if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
             {{ u }}
         {% endfor %}
-      core_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-      core_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', core_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-      core_version_change: "{{ version(core_latest_version) - version(core_installed_version) }}"
-
       os_update_entity: >-
         {% for u in integration_entities('hassio') | select('search', '^update[.]')
                 if (device_attr(u, 'identifiers') | first)[1] == 'OS' %}
             {{ u }}
         {% endfor %}
-      os_installed_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.installed_version') | list | first | default('') }}"
-      os_latest_version: "{{ states.update | default([]) | selectattr('entity_id', 'in', os_update_entity) | map(attribute='attributes.latest_version') | list | first | default('') }}"
-      os_version_change: "{{ version(os_latest_version) - version(os_installed_version) }}"
 
       temp_input_update_exclusions: !input update_exclusions
       input_update_exclusions: >-
         {% set exclusions = temp_input_update_exclusions | default([]) %}
         {% if input_core_os_update_mode == 'ignore' %}
-          {% set exclusions = exclusions + [core_update_entity, os_update_entity] %}
-        {% elif input_core_os_update_mode == 'patches' %}
-          {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
-            {% set exclusions = exclusions + [core_update_entity] %}
-          {% endif %}
-          {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
-            {% set exclusions = exclusions + [os_update_entity] %}
-          {% endif %}
-        {% elif input_core_os_update_mode == 'major_and_minor' %}
-          {% if (not core_version_change.major) and (not core_version_change.minor) %}
-            {% set exclusions = exclusions + [core_update_entity] %}
-          {% endif %}
-          {% if (not os_version_change.major) and (not os_version_change.minor) %}
-            {% set exclusions = exclusions + [os_update_entity] %}
+          {% set exclusions = exclusions + [core_update_entity | default(""), os_update_entity | default("")] %}
+        {% else %}
+          {% set core_installed_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+          {% set core_latest_version = states.update | default([]) | selectattr('entity_id', 'in', core_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+          {% set core_version_change = version(core_latest_version) - version(core_installed_version) %}
+          {% set os_installed_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.installed_version') | list | first | default('') %}
+          {% set os_latest_version = states.update | default([]) | selectattr('entity_id', 'in', os_update_entity | default("")) | map(attribute='attributes.latest_version') | list | first | default('') %}
+          {% set os_version_change = version(os_latest_version) - version(os_installed_version) %}
+
+          {% if input_core_os_update_mode == 'patches' %}
+            {% if core_version_change.major or core_version_change.minor or (not core_version_change.patch) %}
+              {% set exclusions = exclusions + [core_update_entity | default("")] %}
+            {% endif %}
+            {% if os_version_change.major or os_version_change.minor or (not os_version_change.patch) %}
+              {% set exclusions = exclusions + [os_update_entity | default("")] %}
+            {% endif %}
+          {% elif input_core_os_update_mode == 'major_and_minor' %}
+            {% if (not core_version_change.major) and (not core_version_change.minor) %}
+              {% set exclusions = exclusions + [core_update_entity | default("")] %}
+            {% endif %}
+            {% if (not os_version_change.major) and (not os_version_change.minor) %}
+              {% set exclusions = exclusions + [os_update_entity | default("")] %}
+            {% endif %}
           {% endif %}
         {% endif %}
         {{ exclusions }}
@@ -726,31 +733,10 @@ action:
         - ') }}
 
   ########## Restart Home Assistant ##########
-  - variables:
-      restart_entities: >-
-        {{ states.update 
-        | selectattr('attributes.release_summary', 'defined')
-        | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
-        | map(attribute='entity_id')
-        | list
-        }}
-      restart_count: >-
-        {{ restart_entities | count | int(0) }}
-  - alias: "Logbook - Restart variables"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: >-
-        Restart variables: 
-          input_restart_bool: {{ input_restart_bool }}, 
-          restart_count: {{ restart_count }}, 
-          restart_entities: {{ restart_entities }}
   - alias: "Restart"
     continue_on_error: true
     if:
-      - "{{ input_restart_bool and (restart_count > 0) }}"
+      - "{{ input_restart_bool and ( (states.update | selectattr('attributes.release_summary', 'defined') | selectattr('attributes.release_summary', 'search', '<ha-alert alert-type=''error''>') | map(attribute='entity_id') | list | count | int(0)) > 0) }}"
     then:
       - alias: "Restart - Logbook - Restarting"
         continue_on_error: true
