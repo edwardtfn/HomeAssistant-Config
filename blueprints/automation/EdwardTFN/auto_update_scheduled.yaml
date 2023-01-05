@@ -734,10 +734,40 @@ action:
         - ') }}
 
   ########## Restart Home Assistant ##########
+  - alias: "Restart - Logbook"
+    continue_on_error: true
+    service: logbook.log
+    data:
+      name: Auto-update
+      entity_id: '{{ this.entity_id }}'
+      message:  >-
+        {{ states.update 
+          | selectattr('attributes.release_summary', 'defined') 
+          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
+          | map(attribute='entity_id') 
+          | list 
+          | count 
+          | int(0) }} items pending a restart:
+        - {{ states.update 
+          | selectattr('attributes.release_summary', 'defined') 
+          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
+          | map(attribute='entity_id') 
+          | list 
+          | join(' 
+        - ') }}
   - alias: "Restart"
     continue_on_error: true
     if:
-      - "{{ input_restart_bool and ( (states.update | selectattr('attributes.release_summary', 'defined') | selectattr('attributes.release_summary', 'search', '<ha-alert alert-type=''error''>') | map(attribute='entity_id') | list | count | int(0)) > 0) }}"
+      - >-
+        {{ input_restart_bool and (
+          (
+            states.update 
+            | selectattr('attributes.release_summary', 'defined') 
+            | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
+            | map(attribute='entity_id') 
+            | list | count | int(0)
+          ) > 0)
+        }}
     then:
       - alias: "Restart - Logbook - Restarting"
         continue_on_error: true
