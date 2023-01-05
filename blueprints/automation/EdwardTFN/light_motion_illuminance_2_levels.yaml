@@ -195,13 +195,13 @@ condition:
         state: below_horizon
   - condition: or
     conditions:
-      - "{{ not input_pause_entities_on }}"
+      - "{{ input_pause_entities_on | default([]) | list | count < 1 }}"
       - condition: state
         entity_id: !input pause_entities_on
         state: 'off'
   - condition: or
     conditions:
-      - "{{ not input_pause_entities_off }}"
+      - "{{ input_pause_entities_off | default([]) | list | count < 1 }}"
       - condition: state
         entity_id: !input pause_entities_off
         state: 'on'
@@ -236,7 +236,7 @@ action:
       - stop: Lights already off
   - alias: "Wait for pause entities (ON) in case they changes since the automation started"
     if:
-      - "{{ input_pause_entities_on }}"
+      - "{{ input_pause_entities_on | default([]) | list | count > 0 }}"
       - condition: state
         entity_id: !input pause_entities_on
         state: 'on'
@@ -247,7 +247,7 @@ action:
           to: "off"
   - alias: "Wait for pause entities (OFF) in case they changes since the automation started"
     if:
-      - "{{ input_pause_entities_off }}"
+      - "{{ input_pause_entities_off | default([]) | list | count > 0 }}"
       - condition: state
         entity_id: !input pause_entities_off
         state: 'off'
@@ -281,7 +281,7 @@ action:
 
   - alias: "Wait for pause entities (ON) in case they changes since the automation started"
     if:
-      - "{{ input_pause_entities_on }}"
+      - "{{ input_pause_entities_on | default([]) | list | count > 0 }}"
       - condition: state
         entity_id: !input pause_entities_on
         state: 'on'
@@ -292,7 +292,7 @@ action:
           to: "off"
   - alias: "Wait for pause entities (OFF) in case they changes since the automation started"
     if:
-      - "{{ input_pause_entities_off }}"
+      - "{{ input_pause_entities_off | default([]) | list | count > 0 }}"
       - condition: state
         entity_id: !input pause_entities_off
         state: 'off'
