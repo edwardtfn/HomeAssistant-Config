@@ -747,7 +747,7 @@ action:
           | map(attribute='entity_id') 
           | list 
           | count 
-          | int(0) }} items pending a restart:
+          | int(0) }} item(s) pending a restart:
         - {{ states.update 
           | selectattr('attributes.release_summary', 'defined') 
           | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
@@ -769,16 +769,33 @@ action:
           ) > 0)
         }}
     then:
-      - alias: "Restart - Logbook - Restarting"
+      - alias: "Restart - Check config"
         continue_on_error: true
-        service: logbook.log
-        data:
-          name: Auto-update
-          entity_id: '{{ this.entity_id }}'
-          message: Restarting Home Assistant....
-      - alias: "Restart - Call host reboot service"
-        continue_on_error: true
-        service: hassio.host_reboot
+        service: homeassistant.check_config
+      - if:
+          - "{{ states.persistent_notification.invalid_config.state | default('unavailable') == 'notifying' or states.persistent_notification.homeassistant_check_config.state | default('unavailable') == 'notifying' }}"
+        then:
+          - alias: "Restart - Logbook - Skipping restart"
+            continue_on_error: true
+            service: logbook.log
+            data:
+              name: Auto-update
+              entity_id: '{{ this.entity_id }}'
+              message: >-
+                Skipping restart process due to notifications of invalid configurations:
+                states.persistent_notification.invalid_config.state = {{ states.persistent_notification.invalid_config.state | default('unavailable') }}, 
+                states.persistent_notification.homeassistant_check_config.state = {{ states.persistent_notification.homeassistant_check_config.state | default('unavailable') }}
+        else:
+          - alias: "Restart - Logbook - Restarting"
+            continue_on_error: true
+            service: logbook.log
+            data:
+              name: Auto-update
+              entity_id: '{{ this.entity_id }}'
+              message: Restarting Home Assistant...
+          - alias: "Restart - Call host reboot service"
+            continue_on_error: true
+            service: hassio.host_reboot
 
     ########## Post-update actions ##########
   - alias: "Logbook - Post-actions"
