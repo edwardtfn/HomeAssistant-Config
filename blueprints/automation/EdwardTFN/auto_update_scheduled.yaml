@@ -195,7 +195,7 @@ condition:
     state: "on"
   - condition: or
     conditions:
-      - "{{ not input_pause_entities_selected }}"
+      - "{{ input_pause_entities | default([]) | list | count | int(0) < 1 }}"
       - condition: state
         entity_id: !input pause_entities
         state: 'off'
