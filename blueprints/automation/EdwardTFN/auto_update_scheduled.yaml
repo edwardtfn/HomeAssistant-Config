@@ -121,6 +121,22 @@ blueprint:
       selector:
         action: {}
 
+    actions_pre_restart:
+      name: (optional) Pre-restart actions
+      description: 'Actions to execute before the automation requests a restart.
+
+        You can use this to send notifications, turn on/off devices or stopping automations before restarting Home Assistant.
+
+
+        Note => Please be aware that all actions will run right before the restart process, which can happens over-night. Take this in account when selecting your actions.
+
+        Note => Note all the restarts will be controlled by this automation, like when a Core update is installed. These actions might not be executed in those cases.
+
+        Note => The variable "\{\{ pending_updates \}\}" is available for your actions and contains the list of pending updates.'
+      default: [ ]
+      selector:
+        action: {}
+
     actions_pos_update:
       name: (optional) Post-update actions
       description: 'Actions to execute AFTER the update process finishes.
@@ -128,7 +144,7 @@ blueprint:
         You can use this to send notifications, turn on/off devices or activate scenes after applying  the updates.
 
 
-        Note => Please be aware that all actions will run right before the update process, which can happens over-night. Take this in account when selecting your actions.
+        Note => Please be aware that all actions will run right after the update process, which can happens over-night. Take this in account when selecting your actions.
 
         Note => The variable "\{\{ pending_updates \}\}" is available for your actions and contains the list of pending updates.
 
@@ -775,6 +791,20 @@ action:
       - if:
           - "{{ states.persistent_notification.invalid_config.state | default('unavailable') == 'notifying' or states.persistent_notification.homeassistant_check_config.state | default('unavailable') == 'notifying' }}"
         then:
+          - alias: "Logbook: Running pre-restart actions"
+            continue_on_error: true
+            service: logbook.log
+            data:
+              name: Auto-update
+              entity_id: '{{ this.entity_id }}'
+              message: Running pre-restart actions...
+          - alias: "Run pre-restart actions"
+            continue_on_error: true 
+            choose:
+            - conditions:
+                - '{{ true }}'
+              sequence: !input actions_pre_restart
+            default: []
           - alias: "Restart - Logbook - Skipping restart"
             continue_on_error: true
             service: logbook.log
