@@ -2,7 +2,7 @@ blueprint:
   name: Blink lights
   description: Blink lights (or switches).
   domain: script
-  source_url: https://github.com/edwardtfn/ha_blueprints/raw/main/script/EdwardTFN/blink_lights.yaml
+  source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/script/EdwardTFN/blink_lights.yaml
 
 fields:
   entities:
