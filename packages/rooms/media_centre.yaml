@@ -23,7 +23,7 @@ template:
     - name: Media centre - Internet status
       unique_id: c48b19c3-7288-477f-94b8-1c201b6ade7a
       device_class: connectivity
-      state: "{{ states('binary_sensor.router_wan') }}"
+      state: "{{ states('binary_sensor.aimesh_router_wan') }}"
       
   - sensor:
     - name: Media centre - Total power
