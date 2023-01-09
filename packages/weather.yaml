@@ -22,12 +22,12 @@ template:
       state: >-
         {{ expand([
           'sensor.bathroom_thermostat_current_temperature', 
-          'sensor.bedroom_thermostat_current_temperature', 
+          'sensor.bedroom_hygrometer_temperature', 
+          'sensor.corridor_air_quality_temperature'
           'sensor.guest_room_thermostat_current_temperature', 
           'sensor.kitchen_thermostat_current_temperature', 
           'sensor.living_room_thermostat_current_temperature',
-          'sensor.office_thermostat_1_current_temperature',
-          'sensor.office_thermostat_2_current_temperature'
+          'sensor.office_hygrometer_temperature'
           ]) 
         | rejectattr('state', 'in', ['unavailable','unknown']) 
         | map(attribute='state') 
