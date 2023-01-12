@@ -8,7 +8,7 @@ alert:
     done_message: The temperature in the freezer is back to normal ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
     entity_id: binary_sensor.kitchen_freezer_temperature_normal_range
     state: 'off'
-    repeat: 15
+    repeat: 150
     can_acknowledge: true
     skip_first: true
     notifiers:
