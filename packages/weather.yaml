@@ -350,3 +350,37 @@ template:
         state: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
         attributes:
           last_update: "{{ now() }}"
+
+  - trigger:
+    - platform: time
+      at: "00:00:00"
+    - platform: template
+      value_template: "{{ states('sensor.home_average_room_temperature') > states('sensor.home_todays_max_average_temperature') }}"
+    sensor:
+      - name: Home - Todays max average temperature
+        unique_id: home_todays_max_average_temperature
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:thermometer-chevron-up
+        state: "{{ states('sensor.home_average_room_temperature')}}"
+        attributes:
+          datetime: "{{ now() }}"
+
+
+  - trigger:
+    - platform: time
+      at: "00:00:00"
+    - platform: template
+      value_template: "{{ states('sensor.home_average_room_temperature') < states('sensor.home_todays_min_average_temperature') }}"
+    sensor:
+      - name: Home - Todays min average temperature
+        unique_id: home_todays_min_average_temperature
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:thermometer-chevron-down
+        state: "{{ states('sensor.home_average_room_temperature')}}"
+        attributes:
+          datetime: "{{ now() }}"
+
+
+    
