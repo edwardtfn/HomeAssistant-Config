@@ -43,8 +43,6 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       hidden: false
 
     #### Balcony ####
-    #binary_sensor.balcony_door:
-      #hidden: true
     light.balcony_lamp_light:
       hidden: false
     light.balcony_string_lights:
@@ -83,31 +81,23 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       hidden: false
 
     #### Hall ####
-    #binary_sensor.hall_front_door:
-      #hidden: true
     light.hall_ceiling_light:
       hidden: false
 
     #### Kitchen ####
-    #binary_sensor.kitchen_windows:
-      #hidden: true
     light.kitchen_bench_lights:
       hidden: false
     light.kitchen_table_lights:
       hidden: false
 
     #### Living room ####
-    #input_button.living_room_tv_sony_toggle:
-      #hidden: false
-    #input_button.living_room_tv_sony_turn_off:
-      #hidden: false
-    #input_button.living_room_tv_sony_turn_on:
-      #hidden: false
 
     #### Office ####
     light.office_ceiling_lines:
       hidden: false
     light.office_workstation_lights:
+      hidden: false
+    light.kitchen_curtain_s_lights:
       hidden: false
 
 
