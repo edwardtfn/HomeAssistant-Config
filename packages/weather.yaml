@@ -355,14 +355,14 @@ template:
     - platform: time
       at: "00:00:00"
     - platform: template
-      value_template: "{{ states('sensor.home_average_room_temperature') > states('sensor.home_todays_max_average_temperature') }}"
+      value_template: "{{ states('sensor.home_weather_outdoor_temperature') > states('sensor.home_weather_outdoor_temperature_daily_max') }}"
     sensor:
-      - name: Home - Todays max average temperature
-        unique_id: home_todays_max_average_temperature
+      - name: Home - Weather - Outdoor temperature - Daily max
+        unique_id: home_weather_outdoor_temperature_daily_max
         unit_of_measurement: "°C"
         device_class: temperature
         icon: mdi:thermometer-chevron-up
-        state: "{{ states('sensor.home_average_room_temperature')}}"
+        state: "{{ states('sensor.home_weather_outdoor_temperature')}}"
         attributes:
           datetime: "{{ now() }}"
 
@@ -371,14 +371,14 @@ template:
     - platform: time
       at: "00:00:00"
     - platform: template
-      value_template: "{{ states('sensor.home_average_room_temperature') < states('sensor.home_todays_min_average_temperature') }}"
+      value_template: "{{ states('sensor.home_weather_outdoor_temperature') < states('sensor.home_weather_outdoor_temperature_daily_min') }}"
     sensor:
-      - name: Home - Todays min average temperature
-        unique_id: home_todays_min_average_temperature
+      - name: Home - Weather - Outdoor temperature - Daily min
+        unique_id: home_weather_outdoor_temperature_daily_min
         unit_of_measurement: "°C"
         device_class: temperature
         icon: mdi:thermometer-chevron-down
-        state: "{{ states('sensor.home_average_room_temperature')}}"
+        state: "{{ states('sensor.home_weather_outdoor_temperature')}}"
         attributes:
           datetime: "{{ now() }}"
 
