@@ -28,21 +28,42 @@ blueprint:
           min: 0
           max: 150
           unit_of_measurement: lx
-    occupancy_ratio_entity:
-      name: (Optional) Occupancy ratio entity
-      description: Select an entity that measures the ratio of occupancy in a given time, then select a threshold to ensure the light will not turn off while the occupancy ratio is above the threshold.
+    bathroom_door:
+      name: Bathroom door sensor
+      description: Use this for a bathroom where you know if some movement is detected while the door is closed the lights should be kept on until the door opens
       default: [ ]
       selector:
         entity:
-          domain: sensor
-    occupancy_ratio_threshold:
-      name: Occupancy ratio threshold
-      default: 20
+          domain: binary_sensor
+          device_class: door
+    bathroom_closed_door_timeout:
+      name: Bathroom closed door timeout
+      description: >-
+        This is catch up for the case where your motion sensor incorrectly detects a movement while the door is closed. The lights will turn off after this time even if the door is kept closed.
+
+#        Note => This is the only input in minutes. All the other time related inputs in this blueprint are in seconds.
+      default: 1200
       selector:
         number:
           min: 1
-          max: 100
-          unit_of_measurement: "%"
+          max: 86400
+          unit_of_measurement: seconds
+
+    #occupancy_ratio_entity:
+      #name: (Optional) Occupancy ratio entity
+      #description: Select an entity that measures the ratio of occupancy in a given time, then select a threshold to ensure the light will not turn off while the occupancy ratio is above the threshold.
+      #default: [ ]
+      #selector:
+        #entity:
+          #domain: sensor
+    #occupancy_ratio_threshold:
+      #name: Occupancy ratio threshold
+      #default: 20
+      #selector:
+        #number:
+          #min: 1
+          #max: 100
+          #unit_of_measurement: "%"
     sun_entity:
       name: Sun entity
       description: 'In most cases this is "sun.sun".'
@@ -137,7 +158,7 @@ mode: restart
 max_exceeded: silent
 
 trigger_variables:
-  input_occupancy_ratio_entity: !input occupancy_ratio_entity
+  #input_occupancy_ratio_entity: !input occupancy_ratio_entity
   input_pause_entities_on: !input pause_entities_on
   input_pause_entities_off: !input pause_entities_off
   input_lumens_entity: !input lumens_entity
@@ -206,6 +227,14 @@ condition:
         entity_id: !input pause_entities_off
         state: 'on'
 
+variables:
+  #input_occupancy_ratio_entity: !input occupancy_ratio_entity
+  input_pause_entities_on: !input pause_entities_on
+  input_pause_entities_off: !input pause_entities_off
+  input_lumens_entity: !input lumens_entity
+  input_bathroom_door: !input bathroom_door
+  motion_with_bathroom_door_closed: false
+
 action:
   - alias: "Turn on the light"
     service: light.turn_on
@@ -213,7 +242,16 @@ action:
       entity_id: !input light_target
     data:
         brightness_pct: !input light_level_high
-        transition: 1
+#        transition: 1
+  - alias: "Is the bathroom door closed?"
+    variables:
+      motion_with_bathroom_door_closed: >-
+        {% if (input_bathroom_door | default([]) | count > 0) %}
+          {{ is_state(input_bathroom_door, "off") }}
+        {% else %}
+          false
+        {% endif %}
+          
   - alias: "Wait until there is no motion from device"
     wait_for_trigger:
       platform: state
@@ -226,8 +264,13 @@ action:
         state: "off"
     then:
       - stop: Lights already off
+
   - alias: "Wait the number of seconds that has been set"
-    delay: !input no_motion_wait_to_dimming
+    if: "{{ motion_with_bathroom_door_closed }}"
+    then:
+      - delay: !input bathroom_closed_door_timeout
+    else:
+      - delay: !input no_motion_wait_to_dimming
   - if:
       - condition: state
         entity_id: !input light_target
@@ -271,13 +314,13 @@ action:
         state: "off"
     then:
       - stop: Lights already off
-  - if:
-      - "{{ input_occupancy_ratio_entity }}"
-    then:
-      - wait_for_trigger:
-          platform: numeric_state
-          entity_id: !input occupancy_ratio_entity
-          below: !input occupancy_ratio_threshold
+  #- if:
+      #- "{{ input_occupancy_ratio_entity }}"
+    #then:
+      #- wait_for_trigger:
+          #platform: numeric_state
+          #entity_id: !input occupancy_ratio_entity
+          #below: !input occupancy_ratio_threshold
 
   - alias: "Wait for pause entities (ON) in case they changes since the automation started"
     if:
