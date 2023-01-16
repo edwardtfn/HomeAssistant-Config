@@ -83,6 +83,40 @@ media_player:
       volume_level: media_player.living_room_tv_sony_dlna|volume_level
       is_volume_muted: media_player.living_room_tv_sony_dlna|is_volume_muted
 
+script:
+  living_room_toggle_tv:
+    alias: Living room - Toggle TV
+    sequence:
+    - if:
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_is_on
+        state: 'on'
+      then:
+      - service: media_player.play_media
+        data:
+          media_content_type: custom
+          media_content_id: Turn off TV
+        target:
+          entity_id: media_player.living_room_fire_tv
+      else:
+      - service: media_player.play_media
+        data:
+          media_content_type: custom
+          media_content_id: Turn on TV
+        target:
+          entity_id: media_player.living_room_fire_tv
+    - wait_for_trigger:
+      - platform: state
+        entity_id:
+        - binary_sensor.living_room_tv_is_on
+      timeout:
+        hours: 0
+        minutes: 1
+        seconds: 0
+        milliseconds: 0
+    mode: single
+    icon: mdi:television-box
+
 #switch:
 #- platform: command_line
 #switches:

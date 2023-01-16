@@ -9,8 +9,8 @@
 
 sensor:
     # https://community.home-assistant.io/t/tibber-sensor-for-future-price-tomorrow/253818/23
-    - platform: rest
-      name: Tibber Electricity Price
+    - name: Tibber Electricity Price
+      platform: rest
       resource: https://api.tibber.com/v1-beta/gql
       method: POST
       scan_interval: 900

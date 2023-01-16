@@ -1,3 +1,14 @@
+script:
+  climate_toggle:
+    alias: Home - Climate - Toggle a thermostat
+    icon: mdi:thermometer
+    mode: restart
+    sequence:
+    - service: climate.set_hvac_mode
+      data_template:
+        hvac_mode: '{{ iif(is_state(climate, ''off''), ''auto'', ''off'') }}'
+        entity_id: '{{ climate }}'
+
 template:
   - binary_sensor:
     - name: Home - Heating
@@ -6,7 +17,6 @@ template:
       state: "{{ (this.attributes.entities | default([]) | count | int(0)) > 0 }}"
       attributes:
         entities: "{{ expand(integration_entities('HomeKit Controller - Tado')) | selectattr('domain', 'eq', 'climate') | selectattr('attributes.hvac_action', 'eq', 'heating') | map(attribute='entity_id') | list }}"
-
 
   - sensor:
     - name: Home - Weather - Outdoor temperature
