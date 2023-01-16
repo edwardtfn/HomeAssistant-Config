@@ -37,17 +37,21 @@ blueprint:
           domain: binary_sensor
           device_class: door
     bathroom_closed_door_timeout:
-      name: Bathroom closed door timeout
+      name: Bathroom closed door timeout (in minutes)
       description: >-
+        You can skip this field if you are not using this blueprint to automate a bathroom light.
+        
         This is catch up for the case where your motion sensor incorrectly detects a movement while the door is closed. The lights will turn off after this time even if the door is kept closed.
 
-#        Note => This is the only input in minutes. All the other time related inputs in this blueprint are in seconds.
-      default: 1200
+        Try to select a time that is longer than what is normally the time the bathroom will be occupied.
+
+        Note => This is the only input in minutes. All the other time related inputs in this blueprint are in seconds.
+      default: 120
       selector:
         number:
           min: 1
-          max: 86400
-          unit_of_measurement: seconds
+          max: 360
+          unit_of_measurement: minutes
 
     #occupancy_ratio_entity:
       #name: (Optional) Occupancy ratio entity
@@ -265,12 +269,25 @@ action:
     then:
       - stop: Lights already off
 
-  - alias: "Wait the number of seconds that has been set"
+  - alias: "Wait for the bathroom door to be opened"
     if: "{{ motion_with_bathroom_door_closed }}"
     then:
-      - delay: !input bathroom_closed_door_timeout
-    else:
-      - delay: !input no_motion_wait_to_dimming
+      - if:
+          - condition: state
+            entity_id: !input bathroom_door
+            state: "off"
+        then:
+          - variables:
+              input_bathroom_closed_door_timeout: !input bathroom_closed_door_timeout
+          - wait_for_trigger:
+              platform: state
+              entity_id: !input bathroom_door
+              to: "on"
+            timeout:
+              minutes: "{{ input_bathroom_closed_door_timeout | float(1) }}"
+            continue_on_timeout: true
+  - alias: "Wait the number of seconds that has been set"
+    delay: !input no_motion_wait_to_dimming
   - if:
       - condition: state
         entity_id: !input light_target
