@@ -22,12 +22,12 @@ sensor:
     start: "{{ (now() + timedelta(hours=-24)) }}"
     end: "{{ now() }}"
 
-  - platform: mold_indicator #https://www.home-assistant.io/integrations/mold_indicator/
-    name: Bedroom - Mold indicator
-    indoor_temp_sensor: sensor.bedroom_thermostat_current_temperature
-    indoor_humidity_sensor: sensor.bedroom_thermostat_humidity
-    outdoor_temp_sensor: sensor.home_weather_outdoor_temperature
-    calibration_factor: 1.0
+  #- platform: mold_indicator #https://www.home-assistant.io/integrations/mold_indicator/
+    #name: Bedroom - Mold indicator
+    #indoor_temp_sensor: sensor.bedroom_thermostat_current_temperature
+    #indoor_humidity_sensor: sensor.bedroom_thermostat_humidity
+    #outdoor_temp_sensor: sensor.home_weather_outdoor_temperature
+    #calibration_factor: 1.0
 
 template:
   - binary_sensor:
