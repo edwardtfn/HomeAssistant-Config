@@ -1,0 +1,12 @@
+script:
+  home_reboot_all_shelly_devices:
+    alias: Home - Reboot all Shelly devices
+    sequence:
+    - service: button.press
+      data: {}
+      target:
+        entity_id: '{{ expand(integration_entities(''shelly'')) | selectattr(''domain'',
+          ''eq'', ''button'') | selectattr(''entity_id'', ''search'', ''_reboot'') |
+          map(attribute=''entity_id'') | list }}'
+    mode: restart
+
