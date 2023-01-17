@@ -49,6 +49,8 @@ trigger:
   - id: Entity turned off
     platform: state
     entity_id: !input entities_list
+    to: "off"
+    for: !input timeout
   - id: Home Assistant started-up
     platform: homeassistant
     event: start
@@ -67,7 +69,7 @@ condition:
         state: "off"
 
 action:
-  - delay: !input timeout
+#  - delay: !input timeout
   - if:
       - condition: trigger
         id: Entity turned off

@@ -72,6 +72,11 @@ zha:
     ota:
       otau_directory: /config/zha/zigpy_ota
       ikea_provider: true
+      inovelli_provider: true
       ledvance_provider: true
+      salus_provider: true
+      sonoff_provider: true
+      thirdreality_provider: true
+
 
 zone: !include zone.yaml
