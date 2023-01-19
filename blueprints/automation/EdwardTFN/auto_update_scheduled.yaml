@@ -115,7 +115,7 @@ blueprint:
 
         Note => Please be aware that all actions will run right before the update process, which can happens over-night. Take this in account when selecting your actions.
 
-        Note => The variable "\{\{ pending_updates \}\}" is available for your actions and contains the list of pending updates.'
+        Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
       default: [ ]
       selector:
         action: {}
@@ -131,7 +131,7 @@ blueprint:
 
         Note => Note all the restarts will be controlled by this automation, like when a Core update is installed. These actions might not be executed in those cases.
 
-        Note => The variable "\{\{ pending_updates \}\}" is available for your actions and contains the list of pending updates.'
+        Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
       default: [ ]
       selector:
         action: {}
@@ -145,7 +145,7 @@ blueprint:
 
         Note => Please be aware that all actions will run right after the update process, which can happens over-night. Take this in account when selecting your actions.
 
-        Note => The variable "\{\{ pending_updates \}\}" is available for your actions and contains the list of pending updates.
+        Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.
 
         **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed. If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.'
       default: [ ]
