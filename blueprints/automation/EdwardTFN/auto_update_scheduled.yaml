@@ -194,9 +194,9 @@ trigger:
     value_template: >-
       {{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) > 0 }}
   - id: New day
-    platform: template
-    value_template: >-
-      {{ (now().day >= ((input_schedule_monthday) | int(0))) }}
+    platform: time
+    at: "00:00:01"
+
 
 condition:
   - condition: template
