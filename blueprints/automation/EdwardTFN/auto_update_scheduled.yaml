@@ -172,15 +172,9 @@ max_exceeded: warning
 
 trigger_variables:
   input_schedule_monthday: !input schedule_monthday
-  input_core_os_update_mode: !input core_os_update_mode
-  #input_other_update_mode: !input other_update_mode
   input_pause_entities: !input pause_entities
-
-  temp_input_update_exclusions: !input update_exclusions
-  input_update_exclusions: "{{ temp_input_update_exclusions }}"
-
+  input_update_exclusions: !input update_exclusions
   updates_list: "{{ states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | map(attribute='entity_id') | list }}"
-
 
 trigger:
   - id: HA Schedule based
@@ -192,7 +186,7 @@ trigger:
   - id: New update
     platform: template
     value_template: >-
-      {{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) > 0 }}
+      {{ states.update | default([]) | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0) }}
   - id: New day
     platform: time
     at: "00:00:01"
@@ -201,10 +195,10 @@ trigger:
 condition:
   - condition: template
     value_template: >-
-      {{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) > 0 }}
+      {{ (states.update | default([]) | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) > 0 }}
   - condition: template
     value_template: >-
-      {{ (now().day >= ((input_schedule_monthday) | int(0))) }}
+      {{ now().day >= ((input_schedule_monthday) | int(0)) }}
   - condition: state
     entity_id: !input schedule_entity
     state: "on"
