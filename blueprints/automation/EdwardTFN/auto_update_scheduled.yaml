@@ -173,7 +173,8 @@ max_exceeded: warning
 trigger_variables:
   input_schedule_monthday: !input schedule_monthday
   input_pause_entities: !input pause_entities
-  input_update_exclusions: !input update_exclusions
+  temp_input_update_exclusions: !input update_exclusions
+  input_update_exclusions: "{{ temp_input_update_exclusions | default([]) }}"
   updates_list: "{{ states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | map(attribute='entity_id') | list }}"
 
 trigger:
