@@ -305,6 +305,9 @@ action:
           platform: state
           entity_id: !input pause_entities_on
           to: "off"
+          for:
+            seconds: 30
+
   - alias: "Wait for pause entities (OFF) in case they changes since the automation started"
     if:
       - "{{ input_pause_entities_off | default([]) | list | count > 0 }}"
@@ -316,6 +319,9 @@ action:
           platform: state
           entity_id: !input pause_entities_off
           to: "on"
+          for:
+            seconds: 30
+
   - alias: "Dimming the light"
     service: light.turn_on
     target: 
@@ -350,6 +356,8 @@ action:
           platform: state
           entity_id: !input pause_entities_on
           to: "off"
+          for:
+            seconds: 30
   - alias: "Wait for pause entities (OFF) in case they changes since the automation started"
     if:
       - "{{ input_pause_entities_off | default([]) | list | count > 0 }}"
@@ -361,6 +369,8 @@ action:
           platform: state
           entity_id: !input pause_entities_off
           to: "on"
+          for:
+            seconds: 30
   - alias: "Turn off the light"
     service: light.turn_off
     target: 
