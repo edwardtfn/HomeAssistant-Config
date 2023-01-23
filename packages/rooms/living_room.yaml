@@ -13,13 +13,13 @@ generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrosta
     min_cycle_duration:
       minutes: 5
 
-hdmi_cec: # https://www.home-assistant.io/integrations/hdmi_cec/
-  host: 192.168.12.224
-  platform: media_player
-  devices:
-    TV: 0.0.0.0
-    RPi: 1.0.0.0
-    Fire TV Cube: 2.0.0.0
+#hdmi_cec: # https://www.home-assistant.io/integrations/hdmi_cec/
+  #host: 192.168.12.224
+  #platform: media_player
+  #devices:
+    #TV: 0.0.0.0
+    #RPi: 1.0.0.0
+    #Fire TV Cube: 2.0.0.0
   
 media_player:
   - name: Living room - TV Sony - Universal
