@@ -33,7 +33,7 @@ template:
         {{ expand([
           'sensor.bathroom_thermostat_current_temperature', 
           'sensor.bedroom_hygrometer_temperature', 
-          'sensor.corridor_air_quality_temperature'
+          'sensor.corridor_air_quality_temperature',
           'sensor.guest_room_thermostat_current_temperature', 
           'sensor.kitchen_thermostat_current_temperature', 
           'sensor.living_room_thermostat_current_temperature',
