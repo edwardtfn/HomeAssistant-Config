@@ -141,7 +141,7 @@ template:
           | map(attribute='state') 
           | map('float') 
           | sum 
-          | round(1) 
+          | round(2) 
         }}
 
 #####
@@ -165,4 +165,4 @@ template:
         +  (states('sensor.living_room_total_energy') | float(0))
         +  (states('sensor.media_centre_total_energy') | float(0))
         +  (states('sensor.office_total_energy') | float(0))
-        ) | float(0) | round(1) }}
+        ) | float(0) | round(2) }}
