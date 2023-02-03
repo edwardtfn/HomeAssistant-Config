@@ -15,9 +15,9 @@ default_config:
 
 device_tracker:
   #- platform: bluetooth_tracker
-    #track_new_devices: false
+    #track_new_devices: true
   #- platform: bluetooth_le_tracker
-    #track_new_devices: false
+    #track_new_devices: true
   - platform: ping # https://www.home-assistant.io/integrations/ping/#presence-detection
     hosts:
       #carols_phone_ping: !secret ip_carols_phone
