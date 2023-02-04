@@ -1,136 +1,5 @@
-#sensor:
-#    - create_group: Home - All lights
-#      platform: powercalc
-#      entities:
-#        - create_group: Balcony - All lights
-#          entities:
-#            - entity_id: light.balcony_lamp_light
-#            - entity_id: light.balcony_string_lights
-#        - create_group: Bathroom - All lights
-#          entities:
-#            - entity_id: light.bathroom_ceiling_lights
-#            - entity_id: light.bathroom_mirror_light
-#        - create_group: Bedrrom - All lights
-#          entities:
-#            - entity_id: light.bedroom_carol_light
-#            - entity_id: light.bedroom_edward_light
-#            - entity_id: light.bedroom_ceiling_lights
-#        - create_group: Closet - All lights
-#          entities:
-#            - entity_id: light.closet_lights
-#        - create_group: Data centre - All lights
-#          entities:
-#            - entity_id: light.data_centre_lights
-#        - create_group: Gaming room - All lights
-#          entities:
-#            - entity_id: light.gaming_room_wall_switch_ceiling_lights
-#            - entity_id: light.gaming_room_wall_lights
-#        - create_group: Guest bathroom - All lights
-#          entities:
-#            - entity_id: light.guest_bathroom_ceiling_light
-#            - entity_id: light.guest_bathroom_mirror_lights
-#        - create_group: Hall - All lights
-#          entities:
-#            - entity_id: light.hall_ceiling_light
-#        - create_group: Kitchen - All lights
-#          entities:
-#            - entity_id: light.kitchen_ceiling_lights_windows_lights
-#            - create_group: Kitchen - Bench - All lights
-#              entities:
-#                - entity_id: light.kitchen_bench_left_light
-#                - entity_id: light.kitchen_bench_right_light
-#            - create_group: Kitchen - Table - All lights
-#              entities:
-#                - entity_id: light.kitchen_table_light_1
-#                - entity_id: light.kitchen_table_light_2
-#                - entity_id: light.kitchen_table_light_3
-#        - create_group: Living room - All lights
-#          entities:
-#            - entity_id: light.living_room_lights_map_wall
-#            - entity_id: light.living_room_lights_tv_wall
-#        - create_group: Office - All lights
-#          entities:
-#            - entity_id: light.office_wall_lights
-#            - entity_id: light.office_workstation_ceiling_lights
-#            - entity_id: light.office_workstation_left
-#            - entity_id: light.office_workstation_right
-
 template:
   - sensor:
-#    - name: All lights - Total power
-#      unique_id: 61061515-f84d-4378-ab6d-ca6a4de53474
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >- 
-#        {{ states.sensor 
-#          | selectattr('entity_id', 'in', expand('group.home_core_power_sensors') | map(attribute='entity_id') | list ) 
-#          | rejectattr('state', 'in', ['unavailable','unknown']) 
-#          | map(attribute='state') 
-#          | map('float') 
-#          | sum 
-#          | float(0) 
-#          | round(1) 
-#        }}
-
-#        {{ (0
-#        +  (states('sensor.balcony_string_lights_power') | float(0))
-#        +  (states('sensor.balcony_lamp_light_power') | float(0))
-#        +  (states('sensor.bathroom_ceiling_lights_power') | float(0))
-#        +  (states('sensor.bathroom_mirror_light_power') | float(0))
-#        +  (states('sensor.bedroom_carol_light_power') | float(0))
-#        +  (states('sensor.bedroom_edward_light_power') | float(0))
-#        +  (states('sensor.bedroom_ceiling_lights_power') | float(0))
-#        +  (states('sensor.closet_lights_power') | float(0))
-#        +  (states('sensor.data_centre_lights_power') | float(0))
-#        +  (states('sensor.gaming_room_wall_switch_ceiling_lights_power') | float(0))
-#        +  (states('sensor.gaming_room_wall_lights_power') | float(0))
-#        +  (states('sensor.guest_bathroom_mirror_lights_power') | float(0))
-#        +  (states('sensor.guest_bathroom_ceiling_light_power') | float(0))
-#        +  (states('sensor.hall_ceiling_light_power') | float(0))
-#        +  (states('sensor.kitchen_bench_left_light_power') | float(0))
-#        +  (states('sensor.kitchen_bench_right_light_power') | float(0))
-#        +  (states('sensor.kitchen_ceiling_lights_table_lights_power') | float(0))
-#        +  (states('sensor.kitchen_ceiling_lights_windows_lights_power') | float(0))
-#        +  (states('sensor.living_room_lights_map_wall_power') | float(0))
-#        +  (states('sensor.living_room_lights_tv_wall_power') | float(0))
-#        +  (states('sensor.office_ceiling_lights_power') | float(0))
-#        +  (states('sensor.office_wall_lights_power') | float(0))
-#        +  (states('sensor.office_workstation_left_power') | float(0))
-#        +  (states('sensor.office_workstation_right_power') | float(0))
-#        ) | float(0) | round(1) }}
-
-#    - name: All lights - Total energy
-#      unique_id: ea8975d7-9924-4fa8-b9a3-21e5bddc44fe
-#      unit_of_measurement: "kWh"
-#      device_class: energy
-#      state: >- 
-#        {{ (0
-#        +  (states('sensor.balcony_string_lights_energy') | float(0))
-#        +  (states('sensor.balcony_lamp_light_energy') | float(0))
-#        +  (states('sensor.bathroom_ceiling_lights_energy') | float(0))
-#        +  (states('sensor.bathroom_mirror_light_energy') | float(0))
-#        +  (states('sensor.bedroom_carol_light_energy') | float(0))
-#        +  (states('sensor.bedroom_edward_light_energy') | float(0))
-#        +  (states('sensor.bedroom_ceiling_lights_energy') | float(0))
-#        +  (states('sensor.closet_lights_energy') | float(0))
-#        +  (states('sensor.data_centre_lights_energy') | float(0))
-#        +  (states('sensor.gaming_room_wall_switch_ceiling_lights_energy') | float(0))
-#        +  (states('sensor.gaming_room_wall_lights_energy') | float(0))
-#        +  (states('sensor.guest_bathroom_mirror_lights_energy') | float(0))
-#        +  (states('sensor.guest_bathroom_ceiling_light_energy') | float(0))
-#        +  (states('sensor.hall_ceiling_light_energy') | float(0))
-#        +  (states('sensor.kitchen_bench_left_light_energy') | float(0))
-#        +  (states('sensor.kitchen_bench_right_light_energy') | float(0))
-#        +  (states('sensor.kitchen_ceiling_lights_table_lights_energy') | float(0))
-#        +  (states('sensor.kitchen_ceiling_lights_windows_lights_energy') | float(0))
-#        +  (states('sensor.living_room_lights_map_wall_energy') | float(0))
-#        +  (states('sensor.living_room_lights_tv_wall_energy') | float(0))
-#        +  (states('sensor.office_ceiling_lights_energy') | float(0))
-#        +  (states('sensor.office_wall_lights_energy') | float(0))
-#        +  (states('sensor.office_workstation_left_energy') | float(0))
-#        +  (states('sensor.office_workstation_right_energy') | float(0))
-#        ) | float(0) | round(1) }}
-
     - name: Total power
       unique_id: 7f0219f4-cdcd-4647-b8b7-4aaaf8c750a4
       unit_of_measurement: "W"
@@ -147,22 +16,45 @@ template:
 #####
 #####        {{ states.sensor | rejectattr('entity_id', 'in', ['sensor.total_power','unknown']) | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'power') | rejectattr('state', 'in', ['unavailable','unknown']) | map(attribute='state') | map('float') | sum }}
 
-    - name: Total energy
-      unique_id: e6ea5908-d766-47d8-979c-c9b684f42752
-      unit_of_measurement: "kWh"
-      device_class: energy
-      state: >-
-        {{ (0
-        +  (states('sensor.balcony_total_energy') | float(0))
-        +  (states('sensor.bathroom_total_energy') | float(0))
-        +  (states('sensor.bedroom_total_energy') | float(0))
-        +  (states('sensor.corridor_total_energy') | float(0))
-        +  (states('sensor.guest_room_total_energy') | float(0))
-        +  (states('sensor.guest_bathroom_total_energy') | float(0))
-        +  (states('sensor.hall_total_energy') | float(0))
-        +  (states('sensor.kitchen_total_energy') | float(0))
-        +  (states('sensor.laundry_total_energy') | float(0))
-        +  (states('sensor.living_room_total_energy') | float(0))
-        +  (states('sensor.media_centre_total_energy') | float(0))
-        +  (states('sensor.office_total_energy') | float(0))
-        ) | float(0) | round(2) }}
+#    - name: Total energy
+#      unique_id: e6ea5908-d766-47d8-979c-c9b684f42752
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >-
+#        {{ (0
+#        +  (states('sensor.balcony_total_energy') | float(0))
+#        +  (states('sensor.bathroom_total_energy') | float(0))
+#        +  (states('sensor.bedroom_total_energy') | float(0))
+#        +  (states('sensor.corridor_total_energy') | float(0))
+#        +  (states('sensor.guest_room_total_energy') | float(0))
+#        +  (states('sensor.guest_bathroom_total_energy') | float(0))
+#        +  (states('sensor.hall_total_energy') | float(0))
+#        +  (states('sensor.kitchen_total_energy') | float(0))
+#        +  (states('sensor.laundry_total_energy') | float(0))
+#        +  (states('sensor.living_room_total_energy') | float(0))
+#        +  (states('sensor.media_centre_total_energy') | float(0))
+#        +  (states('sensor.office_total_energy') | float(0))
+#        ) | float(0) | round(2) }}
+
+sensor:
+  - name: Total energy
+    platform: group
+    unique_id: e6ea5908-d766-47d8-979c-c9b684f42752
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: measurement
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.balcony_total_energy
+      - sensor.bathroom_total_energy
+      - sensor.bedroom_total_energy
+      - sensor.corridor_total_energy
+      - sensor.guest_room_total_energy
+      - sensor.guest_bathroom_total_energy
+      - sensor.hall_total_energy
+      - sensor.kitchen_total_energy
+      - sensor.laundry_total_energy
+      - sensor.living_room_total_energy
+      - sensor.media_centre_total_energy
+      - sensor.office_total_energy

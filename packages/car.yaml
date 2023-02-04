@@ -4,7 +4,7 @@ alert:
     message: >-
       VW Passat is parked in the neighborhood streets for too long ({{ states('sensor.vw_passat_parking_time') }}).
     
-      Please move it to a parking area and avoid expensive tickets.
+      Please move it to a parking area.
     done_message: VW Passat was moved!
     entity_id: device_tracker.vw_passat_position
     state: "Close to home"
@@ -30,38 +30,6 @@ alert:
       - signal_group_artillerigatan
 
 automation:
-  - alias: VW Passat parking in the neighborhood for too long
-    id: '1640450531920'
-    trigger:
-    - type: not_moving
-      platform: device
-      device_id: 39f38da7888f9019b44f408bf6e9bc1d
-      entity_id: binary_sensor.vw_passat_vehicle_moving
-      domain: binary_sensor
-      for:
-        hours: 0
-        minutes: 25
-        seconds: 0
-    condition:
-    - condition: or
-      conditions:
-      - condition: zone
-        entity_id: device_tracker.vw_passat_position
-        zone: zone.neighborhood_close
-      - condition: zone
-        entity_id: device_tracker.vw_passat_position
-        zone: zone.home
-    action:
-    - service: notify.all_devices
-      data:
-        message: The car is stopped in the streets for more than 25min ({{ states('sensor.vw_passat_parking_time')
-          }}). Please move it to a parking area and avoid tickets.
-        title: VW Passat parking
-    - service: notify.signal_group_artillerigatan
-      data:
-        message: The car is stopped in the streets for more than 25min ({{ states('sensor.vw_passat_parking_time')
-          }}). Please move it to a parking area and avoid tickets
-    mode: restart
   - alias: VW Passat - Lock automatically when stopped
     id: '1646444632458'
     description: ''
@@ -156,6 +124,12 @@ template:
   - sensor:
       - name: WV Passat - Stopped and unlocked
         unique_id: 4cf3367f-b24c-469b-88d3-0e328641fe93
+        availability: >-
+          {{
+            (states('lock.vw_passat_door_locked') | default('unknown') not in ['unknown', 'unavailable', 'none'] )
+            and
+            (states('binary_sensor.vw_passat_vehicle_moving') | default('unknown') not in ['unknown', 'unavailable', 'none'] )
+          }}
         state: >-
           {% set door_locked = states('lock.vw_passat_door_locked') %}
           {% set trunk_locked = states('lock.vw_passat_trunk_locked') %}

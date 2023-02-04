@@ -49,9 +49,12 @@ http:
     - !secret trusted_proxy_1
     - !secret trusted_proxy_2
 
-#logger:
-#  default: warning
-#  logs:
+logger:
+  # The next line sets the default logging level, for all python modules.
+  # It seems "recommended" to set it to avoid too much logging.
+  default: warning
+  logs:
+    custom_components.zha_toolkit: debug
 #    homeassistant.components.bluetooth: debug
 
 notify: !include notifications.yaml
@@ -78,6 +81,7 @@ zha:
       sonoff_provider: true
       thirdreality_provider: true
 
+zha_toolkit:
 
 zone: !include zone.yaml
 
