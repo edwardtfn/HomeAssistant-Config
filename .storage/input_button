@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_button",
+  "data": {
+    "items": [
+      {
+        "name": "Home Assistant - Update entities count",
+        "icon": "mdi:update",
+        "id": "home_assistant_update_entities_count"
+      }
+    ]
+  }
+}

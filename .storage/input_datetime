@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_datetime",
+  "data": {
+    "items": [
+      {
+        "name": "Kitchen - Dishwasher - Last run",
+        "has_time": true,
+        "has_date": true,
+        "icon": "mdi:dishwasher",
+        "id": "kitchen_dishwasher_last_run"
+      },
+      {
+        "has_date": true,
+        "name": "Home Assistant - Last start",
+        "icon": "mdi:restart",
+        "has_time": true,
+        "id": "home_assistant_last_start"
+      }
+    ]
+  }
+}

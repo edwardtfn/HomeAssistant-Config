@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "input_number",
+  "data": {
+    "items": [
+      {
+        "min": 0.0,
+        "max": 6.0,
+        "name": "Office - Cube - Last activated face",
+        "icon": "mdi:cube-outline",
+        "mode": "box",
+        "step": 1.0,
+        "id": "office_cube_last_activated_face"
+      },
+      {
+        "min": 0.0,
+        "max": 100.0,
+        "name": "Home - Sun max elevation",
+        "icon": "mdi:white-balance-sunny",
+        "mode": "box",
+        "step": 0.1,
+        "unit_of_measurement": "°",
+        "id": "home_sun_max_elevation"
+      }
+    ]
+  }
+}
