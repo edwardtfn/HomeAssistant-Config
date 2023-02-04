@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "minor_version": 3,
+  "key": "core.area_registry",
+  "data": {
+    "areas": [
+      {
+        "name": "Living Room",
+        "id": "living_room",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Kitchen",
+        "id": "kitchen",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Bedroom",
+        "id": "bedroom",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Hall",
+        "id": "hall",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Bathroom",
+        "id": "bathroom",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Guest room",
+        "id": "guest_room",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Office",
+        "id": "office",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Balcony",
+        "id": "balcony",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Guest bathroom",
+        "id": "guest_bathroom",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Media centre",
+        "id": "media_centre",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Laundry",
+        "id": "laundry",
+        "picture": null,
+        "aliases": []
+      },
+      {
+        "name": "Corridor",
+        "id": "corridor",
+        "picture": null,
+        "aliases": []
+      }
+    ]
+  }
+}

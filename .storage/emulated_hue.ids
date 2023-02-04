@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "minor_version": 1,
+  "key": "emulated_hue.ids",
+  "data": {
+    "1": "input_boolean.home_party_mode",
+    "2": "light.balcony_lamp_light",
+    "3": "light.balcony_string_lights",
+    "4": "light.bathroom_ceiling_lights",
+    "5": "light.bathroom_mirror_light",
+    "6": "light.bedroom_carol_light",
+    "7": "light.bedroom_closet_lights",
+    "8": "light.bedroom_edward_light",
+    "9": "switch.bedroom_power_strip_1_socket_4",
+    "10": "light.corridor_lights_all",
+    "11": "light.guest_bathroom_ceiling_light",
+    "12": "light.guest_bathroom_mirror_lights",
+    "13": "light.guest_room_closet_lights",
+    "14": "light.guest_room_wall_lights",
+    "15": "light.hall_ceiling_light",
+    "16": "light.kitchen_bench_lights",
+    "17": "light.kitchen_table_lights",
+    "18": "light.office_ceiling_lines",
+    "19": "light.office_workstation_lights",
+    "20": "light.kitchen_curtain_s_lights"
+  }
+}
