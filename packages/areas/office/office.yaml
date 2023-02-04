@@ -1,0 +1,146 @@
+climate:
+  - platform: climate_group # https://github.com/daenny/climate_group
+    name: Office - Thermostat
+    temperature_unit: C
+    entities:
+      - climate.office_thermostat_1
+      - climate.office_thermostat_2
+
+#generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
+#- name: Office - Hygrostat
+##unique_id: 0e70550f-baac-4679-8179-1be50ebd94ba
+#humidifier: switch.office_workstation_power_strip_switch_1
+#target_sensor: sensor.office_hygrometer_humidity
+#min_humidity: 0
+#max_humidity: 100
+#target_humidity: 30
+#away_humidity: 25
+#dry_tolerance: 2
+#device_class: humidifier
+#initial_state: true
+#min_cycle_duration:
+#minutes: 5
+
+sensor:
+  - platform: history_stats
+    name: Office - Workstation - Motion ratio in the last 10m
+    entity_id: binary_sensor.office_workstation_motion_occupancy
+    state: "on"
+    type: ratio
+    start: "{{ (now() + timedelta(minutes=-10)) }}"
+    end: "{{ now() }}"
+
+#    - platform: powercalc
+#      entity_id: light.office_wall_lights
+#      power_sensor_id: sensor.office_wall_lights_outlet_power
+#fixed:
+#power: "{{states('sensor.office_wall_lights_outlet_power')}}"
+#energy_sensor_id: sensor.office_wall_lights_outlet_energy
+#standby_power: 12.7
+
+template:
+  - sensor:
+      - name: Office - Thermostat Humidity
+        unique_id: 5f8f23b4-d33d-4f43-8b0b-bf4bc1ba0f55
+        unit_of_measurement: "%"
+        device_class: humidity
+        state: >-
+          {% set cloud_humidity = states('sensor.office_thermostat_cloud_humidity') | default('unknown') %}
+          {% if is_number(cloud_humidity) %}
+            {{ cloud_humidity | float(0) | round(1) }}
+          {% else %}
+            {{ state_attr('climate.office_thermostat_1', 'current_humidity') }}
+          {% endif %}
+      - name: Office - Total power
+        unique_id: 9a97bcb4-5d9d-40ce-b2ef-0f6eab474d4a
+        unit_of_measurement: "W"
+        device_class: power
+        state: >-
+          {{ expand('group.office_power_sensors') 
+          | rejectattr('state', 'in', ['unavailable','unknown']) 
+          | map(attribute='state') 
+          | map('float') 
+          | sum
+          | float(0)
+          | round(2)
+          }}
+
+#    - name: Office - Total energy
+#      unique_id: 624bd673-b7df-4b0b-9d5b-517764d43d9c
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >-
+#        {{ 0
+#        +  (states('sensor.office_ceiling_lights_energy') | float(0))
+#        +  (states('sensor.office_windows_energy') | float(0))
+#        +  (states('sensor.office_workstation_wall_outlet_energy') | float(0))
+#        }}
+
+vacuum: # https://community.home-assistant.io/t/add-wifi-to-an-older-roomba/23282/221
+  - platform: template
+    vacuums:
+      office_roomba:
+        # Name for your Roomba
+        friendly_name: "Office - Roomba"
+        # Any unique identifier, eg, MAC address (optional)
+        unique_id: 290197ee-f618-4dd3-8570-fa1504e11684
+        # Vacuum state template
+        # NOTE: need to convert to lower case for template to work and "Lost" is not a valid state.
+        # Either change the custom component to use lower case and "idle" for state "lost" or 
+        # change the template here to convert case and convert "lost" state to another valid state 
+        # (see https://www.home-assistant.io/integrations/vacuum.template/#value_template for possible states)
+        # and use one of the below value_templates. FYI, second one is NOT tested!
+        value_template: >-
+          {% set activity = states('sensor.office_roomba_activity') | lower %}
+          {% if activity in ['cleaning','docked','unknown','unavailable'] %}
+            {{ activity }}
+          {% else %}
+            error
+          {% endif %}
+
+        #"{{ states('sensor.office_roomba_activity')|lower }}"
+        #value_template: >
+        #  {% if is_state('sensor.roomba_activity', 'Cleaning') %}
+        #    cleaning
+        #  {% elif is_state('sensor.roomba_activity', 'Docked') %}
+        #    docked
+        #  {% elif is_state('sensor.roomba_activity', 'Lost') %}
+        #    idle
+        #  {% else %}
+        #    error
+        #  {% endif %}
+        battery_level_template: "{{ states('sensor.office_roomba_battery') | float(0) | round(0) }}"
+        # Use ESP module availability for vacuum availability, if defined in your ESPHome yaml
+        # availability_template: "{{ states('binary_sensor.office_roomba_status') }}"
+        # Provide vacuum attributes based on exposed ESPHome sensors
+        attribute_templates:
+          activity: "{{ states('sensor.office_roomba_activity') }}"
+          #oi_mode: "{{ states('sensor.office_roomba_oi_mode')|title }}"
+          charging_state: "{{ states('sensor.office_roomba_charging_state') }}"
+          #temperature: "{{ states('sensor.office_roomba_temperature')|int }} °C"
+          voltage: "{{ states('sensor.office_roomba_voltage') | float(0) }} V"
+        # Provide commands for each action to send to ESP
+        start:
+          service: esphome.roomba_2_command
+          data:
+            command: start
+        pause:
+          service: esphome.roomba_2_command
+          data:
+            command: sleep
+        stop:
+          service: esphome.roomba_2_command
+          data:
+            command: stop
+        return_to_base:
+          service: esphome.roomba_2_command
+          data:
+            command: dock
+        clean_spot:
+          service: esphome.roomba_2_command
+          data:
+            command: spot
+        locate:
+          service: esphome.roomba_2_command
+          data:
+            command: locate

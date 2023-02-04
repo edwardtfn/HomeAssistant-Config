@@ -1,0 +1,10 @@
+sensor:
+  - platform: history_stats
+    name: Bedroom - Dog's bed - Occupancy ratio (24h)
+    entity_id: binary_sensor.bedroom_dogs_bed_occupied
+    state: "off"
+    type: ratio
+    #start: "{{ (now() + timedelta(hours=-24)) }}"
+    end: "{{ now() }}"
+    duration:
+      hours: 24

@@ -1,0 +1,70 @@
+template:
+  - sensor:
+    - name: Laundry - Total power
+      unique_id: c658e80f-c7d0-4417-83b1-0da38233e507
+      unit_of_measurement: "W"
+      device_class: power
+      state: >-
+        {{ expand('group.laundry_power_sensors') 
+        | rejectattr('state', 'in', ['unavailable','unknown']) 
+        | map(attribute='state') 
+        | map('float') 
+        | sum
+        | float(0)
+        | round(2)
+        }}
+#    - name: Laundry - Total energy
+#      unique_id: f7f8a6cf-2d7d-4cc8-9964-3c4e137a8539
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >-
+#        {{ 0
+#        +  (states('sensor.laundry_bench_outlets_energy') | float(0))
+#        +  (states('sensor.laundry_dryer_outlet_energy') | float(0))
+#        +  (states('sensor.laundry_washing_machine_energy') | float(0))
+#        }}
+
+    - name: Laundry - Dryer - Status
+      unique_id: b4439038-05c0-48a1-97e2-6617549a0d7b
+      icon: mdi:tumble-dryer
+      state: >-
+        {% set device_entity_id = 'sensor.laundry_dryer_outlet_power' %}
+        {% if states(device_entity_id) in ['none','undefined','unknown','unavailable'] %}
+          unknown
+        {% else %}
+          {% set device_power = states(device_entity_id) | float(0) %}
+          {% if device_power > 300 %}
+            drying
+          {% elif device_power > 35 %}
+            spinning
+          {% elif device_power > 10 %}
+            heating
+          {% elif device_power > 1.1 %}
+            completed
+          {% else %}
+            idle
+          {% endif %}
+        {% endif %}
+
+    - name: Laundry - Washing machine - Status
+      unique_id: 40df64c7-e7d0-4090-899d-8aa156d9bd2b
+      icon: mdi:washing-machine
+      state: >-
+        {% set device_entity_id = 'sensor.laundry_washing_machine_power' %}
+        {% if states(device_entity_id) in ['none','undefined','unknown','unavailable'] %}
+          unknown
+        {% else %}
+          {% set device_power = states(device_entity_id) | float(0) %}
+          {% if device_power > 1000 %}
+            heating
+          {% elif device_power > 250 %}
+            spinning
+          {% elif device_power > 3.5 %}
+            washing
+          {% elif device_power > 1.5 %}
+            completed
+          {% else %}
+            idle
+          {% endif %}
+        {% endif %}
+

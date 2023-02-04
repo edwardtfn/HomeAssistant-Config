@@ -1,0 +1,109 @@
+binary_sensor:
+  - name: Guest bathroom - Occupied
+    platform: bayesian # https://www.home-assistant.io/integrations/bayesian/
+    unique_id: 70b01e9d-d3ee-40ff-b0c2-bcafaba12039
+    device_class: occupancy
+    prior: 0.01
+    probability_threshold: 0.5
+    observations:
+      - entity_id: sensor.guest_bathroom_motion_ratio_in_the_last_10m
+        platform: numeric_state
+        above: 0.1
+        prob_given_true: 0.7
+        prob_given_false: 0.1
+      - entity_id: binary_sensor.guest_bathroom_motion_occupancy
+        platform: state
+        to_state: on
+        prob_given_true: 0.8
+        prob_given_false: 0.1
+      - entity_id: binary_sensor.guest_bathroom_motion_iaszone
+        platform: state
+        to_state: on
+        prob_given_true: 0.99
+        prob_given_false: 0.25
+      - entity_id: sensor.guest_bathroom_mirror_outlets_power
+        platform: numeric_state
+        above: 10
+        prob_given_true: 0.9
+        prob_given_false: 0.1
+      - entity_id: input_boolean.home_empty
+        platform: state
+        to_state: on
+        prob_given_true: 0.0
+        prob_given_false: 0.01
+      - entity_id: input_boolean.home_travelling_mode
+        platform: state
+        to_state: on
+        prob_given_true: 0.0
+        prob_given_false: 0.01
+      - entity_id: input_boolean.home_party_mode
+        platform: state
+        to_state: on
+        prob_given_true: 0.4
+        prob_given_false: 0.1
+
+
+sensor:
+    - platform: history_stats
+      name: Guest bathroom - Motion ratio in the last 10m
+      entity_id: binary_sensor.guest_bathroom_motion_occupancy
+      state: "on"
+      type: ratio
+      start: "{{ (now() + timedelta(minutes=-10)) }}"
+      end: "{{ now() }}"
+
+template:
+  - sensor:
+  ########## Guest bathroom ##########
+    - name: Guest bathroom - Total power
+      unique_id: be2bf885-f925-479f-828b-34d175430467
+      unit_of_measurement: "W"
+      device_class: power
+      state: >-
+        {{ expand('group.guest_bathroom_power_sensors') 
+        | rejectattr('state', 'in', ['unavailable','unknown']) 
+        | map(attribute='state') 
+        | map('float') 
+        | sum
+        | float(0)
+        | round(2)
+        }}
+#    - name: Guest bathroom - Total energy
+#      unique_id: 987e731d-f02a-4321-be20-48e6273df387
+#      unit_of_measurement: "kWh"
+#      device_class: energy
+#      state: >-
+#        {{ 0
+#        +  (states('sensor.guest_bathroom_ceiling_light_energy') | float(0))
+#        +  (states('sensor.guest_bathroom_mirror_lights_energy') | float(0))
+#        +  (states('sensor.guest_bathroom_mirror_outlets_energy') | float(0))
+#        +  (states('sensor.guest_bathroom_towel_warmer_energy') | float(0))
+#        }}
+  - trigger:
+    - id: Door
+      platform: state
+      entity_id:
+        - binary_sensor.guest_bathroom_door
+      from:
+        - "off"
+        - "on"
+      to:
+        - "off"
+        - "on"
+    - id: Motion
+      platform: state
+      entity_id:
+        - binary_sensor.guest_bathroom_motion_iaszone
+      to:
+        - "on"
+    binary_sensor:
+      - name: Guest bathroom - Motion while door is closed
+        unique_id: 2a4cfac8-4ece-4855-b282-0010f459ab5e
+        state: "{{ (trigger.id == 'Motion') and is_state('binary_sensor.guest_bathroom_door', 'off') }}"
+        attributes:
+          triggered_by: "{{ trigger.entity_id }}"
+          last_triggered: "{{ now() }}"
+          trigger: "{{ trigger }}"
+          door: "{{ states('binary_sensor.guest_bathroom_door') }}"
+          motion: "{{ states('binary_sensor.guest_bathroom_motion_iaszone') }}"
+

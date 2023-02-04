@@ -1,0 +1,69 @@
+plant: # https://www.home-assistant.io/integrations/plant/
+  bathroom_bonsai_ficus:
+    sensors:
+      moisture: sensor.bathroom_bonsai_ficus_moisture
+      #battery: sensor.my_sensor_battery
+      temperature: sensor.bathroom_bonsai_ficus_temperature
+      conductivity: sensor.bathroom_bonsai_ficus_conductivity
+      brightness: sensor.bathroom_bonsai_ficus_illuminance
+    min_moisture: 20
+    max_moisture: 60
+    min_battery: 20
+    min_conductivity: 350
+    max_conductivity: 2000
+    min_temperature: 10
+    max_temperature: 32
+    min_brightness: 1500
+    max_brightness: 30000
+    #check_days: 3
+
+sensor:
+    - platform: history_stats
+      name: Bathroom - Motion ratio in the last 10m
+      entity_id: binary_sensor.bathroom_motion_dual_sensors_state
+      state: "on"
+      type: ratio
+      start: "{{ (now() + timedelta(minutes=-10)) }}"
+      end: "{{ now() }}"
+
+template:
+  - binary_sensor:
+    - name: Bathroom - Towel warmer status
+      unique_id: 0b261b81-a51c-4d5f-b289-0ce3650c2112
+      device_class: heat
+      state: >
+        {% set sensor1 = states('sensor.bathroom_towel_warmer_power') %}
+        {% if sensor1 == 'unknown' or sensor1 == 'none' %}
+          unknown
+        {% elif sensor1 | float(default=0) > 20 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+
+  - sensor:
+    - name: Bathroom - Thermostat Humidity
+      unique_id: 70b8ca41-ee22-4b68-baf0-0511dbc1cebe
+      unit_of_measurement: "%"
+      device_class: humidity
+      state: >-
+        {% set cloud_humidity = states('sensor.bathroom_thermostat_cloud_humidity') | default('unknown') %}
+        {% if is_number(cloud_humidity) %}
+          {{ cloud_humidity | float(0) | round(1) }}
+        {% else %}
+          {{ state_attr('climate.bathroom_thermostat', 'current_humidity') }}
+        {% endif %}
+
+    - name: Bathroom - Total power
+      unique_id: d75df4b5-57af-4ee3-8910-9af9f2ca8f7a
+      unit_of_measurement: "W"
+      device_class: power
+      state: >-
+        {{ expand('group.bathroom_power_sensors') 
+        | rejectattr('state', 'in', ['unavailable','unknown']) 
+        | map(attribute='state') 
+        | map('float') 
+        | sum
+        | float(0)
+        | round(2)
+        }}

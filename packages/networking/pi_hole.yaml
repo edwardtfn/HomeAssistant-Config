@@ -1,0 +1,55 @@
+template:
+  - sensor:
+    - name: Pi-hole Percentage Cached Today
+      unique_id: 59b83537-a816-443f-8a76-6a242d8eb3cd
+      unit_of_measurement: "%"
+      state: >-
+        {% set tot = states('sensor.pi_hole_dns_queries_today') | float(0) %}
+        {% if tot <= 0 %}
+          unknown
+        {% else %}
+          {% set cur = states('sensor.pi_hole_dns_queries_cached') | float(0) %}
+          {{ min(100,max(0,100*(cur/tot))) | float(0) }}
+        {% endif %}
+    - name: Pi-hole Percentage Forwarded Today
+      unique_id: ad65a6cf-358a-461a-947e-b135a0d210e6
+      unit_of_measurement: "%"
+      state: >-
+        {% set tot = states('sensor.pi_hole_dns_queries_today') | float(0) %}
+        {% if tot <= 0 %}
+          unknown
+        {% else %}
+          {% set cur = states('sensor.pi_hole_dns_queries_forwarded') | float(0) %}
+          {{ min(100,max(0,100*(cur/tot))) | float(0) }}
+        {% endif %}
+    - name: Pi-hole Percentage Others Today
+      unique_id: 680e2d65-8a17-48fd-b6b4-4fb766bc069c
+      unit_of_measurement: "%"
+      state: >-
+        {% set tot = states('sensor.pi_hole_dns_queries_today') | float(0) %}
+        {% if tot <= 0 %}
+          unknown
+        {% else %}
+          {% set blocked = states('sensor.pi_hole_ads_blocked_today') | float(0) %}
+          {% set cached = states('sensor.pi_hole_dns_queries_cached') | float(0) %}
+          {% set forwarded = states('sensor.pi_hole_dns_queries_forwarded') | float(0) %}
+          {% set cur = tot - (blocked + cached + forwarded) %}
+          {{ min(100,max(0,100*(cur/tot))) | float(0) }}
+        {% endif %}
+    - name: RPi Monitor Pi-hole Percentage Used RAM
+      unique_id: dbe2d2f3-571f-471b-b879-c760e25a7cb5
+      unit_of_measurement: "%"
+      state: >-
+        {% set memory = state_attr('sensor.rpi_monitor_pihole', 'memory') | default('unknown') %}
+        {% if memory in ['unknown','unavailable','none'] or not memory %}
+          unknown
+        {% else %}
+          {% set free_mb = memory.free_mb | default(-1) | float(-1) %}
+          {% set size_mb = memory.size_mb | default(-1) | float(-1) %}
+          {% if free_mb < 0 or size_mb <= 0 or size_mb < free_mb %}
+            unknown
+          {% else %}
+            {% set used_mb = size_mb - free_mb %}
+            {{ min(100,max(0,100*(used_mb/size_mb))) | float(0) }}
+          {% endif %}
+        {% endif %}

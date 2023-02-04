@@ -1,0 +1,6 @@
+template:
+  - binary_sensor:
+    - name: Bedroom - Locker - Temperature is high
+      unique_id: 62606665-c789-4b10-8578-0dcf8b876df3
+      state: "{{ states('sensor.bedroom_locker_vibration_device_temperature') | float(default=0) > 40 }}"
+      device_class: problem
