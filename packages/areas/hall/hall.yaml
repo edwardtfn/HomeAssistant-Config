@@ -1,30 +1,43 @@
-template:
-  - sensor:
-    - name: Hall - Ceiling light - power
-      unique_id: 7c0c964a-52e8-492d-bba8-a7cf12c35e17
-      unit_of_measurement: 'W'
-      device_class: power
-      state: >
-        {% if is_state('light.hall_ceiling_light', 'on') %}
-          {% set brightness = state_attr('light.hall_ceiling_light', 'brightness') | int  %}
-          {{ 15 * (brightness | float(0) / 255) | round(2) }}
-        {% else %}
-          0
-        {% endif %}
+sensor:
+  - name: Hall - Total power
+    platform: group
+    unique_id: e7dfb98d-dd87-4b31-b8fd-10f5f5eeec85
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.hall_light_switch_light_power
+      - sensor.hall_light_switch_panel_power
+      - sensor.hall_outlets_power
 
-    - name: Hall - Total power
-      unique_id: dd9f43ce-666f-4b45-b8cb-da700fa22c38
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.hall_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#template:
+#  - sensor:
+#    - name: Hall - Ceiling light - power
+#      unique_id: 7c0c964a-52e8-492d-bba8-a7cf12c35e17
+#      unit_of_measurement: 'W'
+#      device_class: power
+#      state: >
+#        {% if is_state('light.hall_ceiling_light', 'on') %}
+#          {% set brightness = state_attr('light.hall_ceiling_light', 'brightness') | int  %}
+#          {{ 15 * (brightness | float(0) / 255) | round(2) }}
+#        {% else %}
+#          0
+#        {% endif %}
+
+#    - name: Hall - Total power
+#      unique_id: dd9f43ce-666f-4b45-b8cb-da700fa22c38
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.hall_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
 #    - name: Hall - Total energy
 #      unique_id: 73abe2cc-b16e-4f5c-b9db-fb0bf715c8a2
 #      unit_of_measurement: "kWh"

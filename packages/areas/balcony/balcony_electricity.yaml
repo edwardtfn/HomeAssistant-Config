@@ -1,15 +1,28 @@
-template:
-  - sensor:
-    - name: Balcony - Total power
-      unique_id: 7772608a-3448-46f2-962e-95efc82c0e59
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.balcony_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#template:
+#  - sensor:
+#    - name: Balcony - Total power
+#      unique_id: 7772608a-3448-46f2-962e-95efc82c0e59
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.balcony_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
+
+sensor:
+  - name: Balcony - Total power
+    platform: group
+    unique_id: 68b06246-8522-4759-bf20-e3e8d5ea13b3
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.balcony_lamp_light_power
+      - sensor.balcony_lamp_sockets_power
+      - sensor.balcony_string_lights_power

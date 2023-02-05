@@ -44,30 +44,46 @@ binary_sensor:
 
 
 sensor:
-    - platform: history_stats
-      name: Guest bathroom - Motion ratio in the last 10m
-      entity_id: binary_sensor.guest_bathroom_motion_occupancy
-      state: "on"
-      type: ratio
-      start: "{{ (now() + timedelta(minutes=-10)) }}"
-      end: "{{ now() }}"
+  - platform: history_stats
+    name: Guest bathroom - Motion ratio in the last 10m
+    entity_id: binary_sensor.guest_bathroom_motion_occupancy
+    state: "on"
+    type: ratio
+    #start: "{{ (now() + timedelta(minutes=-10)) }}"
+    end: "{{ now() }}"
+    duration:
+      hours: 24
+
+  - name: Guest bathroom - Total power
+    platform: group
+    unique_id: c42393bd-7efa-43d2-b747-f7b2d86bf506
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.guest_bathroom_ceiling_light_power
+      - sensor.guest_bathroom_mirror_lights_power
+      - sensor.guest_bathroom_mirror_outlets_power
+      - sensor.guest_bathroom_towel_warmer_power
+
 
 template:
-  - sensor:
+#  - sensor:
   ########## Guest bathroom ##########
-    - name: Guest bathroom - Total power
-      unique_id: be2bf885-f925-479f-828b-34d175430467
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.guest_bathroom_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#    - name: Guest bathroom - Total power
+#      unique_id: be2bf885-f925-479f-828b-34d175430467
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.guest_bathroom_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
 #    - name: Guest bathroom - Total energy
 #      unique_id: 987e731d-f02a-4321-be20-48e6273df387
 #      unit_of_measurement: "kWh"

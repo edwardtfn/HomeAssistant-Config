@@ -18,13 +18,25 @@ plant: # https://www.home-assistant.io/integrations/plant/
     #check_days: 3
 
 sensor:
-    - platform: history_stats
-      name: Bathroom - Motion ratio in the last 10m
-      entity_id: binary_sensor.bathroom_motion_dual_sensors_state
-      state: "on"
-      type: ratio
-      start: "{{ (now() + timedelta(minutes=-10)) }}"
-      end: "{{ now() }}"
+  - platform: history_stats
+    name: Bathroom - Motion ratio in the last 10m
+    entity_id: binary_sensor.bathroom_motion_dual_sensors_state
+    state: "on"
+    type: ratio
+    start: "{{ (now() + timedelta(minutes=-10)) }}"
+    end: "{{ now() }}"
+
+  - name: Bathroom - Total power
+    platform: group
+    unique_id: d7d2ded1-4090-413e-9b7c-8077f6e5a46d
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.bathroom_ceiling_lights_power
+      - sensor.bathroom_mirror_light_power
+      - sensor.bathroom_mirror_outlets_power
 
 template:
   - binary_sensor:
@@ -54,16 +66,16 @@ template:
           {{ state_attr('climate.bathroom_thermostat', 'current_humidity') }}
         {% endif %}
 
-    - name: Bathroom - Total power
-      unique_id: d75df4b5-57af-4ee3-8910-9af9f2ca8f7a
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.bathroom_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#    - name: Bathroom - Total power
+#      unique_id: d75df4b5-57af-4ee3-8910-9af9f2ca8f7a
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.bathroom_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}

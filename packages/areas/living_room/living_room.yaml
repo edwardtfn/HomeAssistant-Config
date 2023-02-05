@@ -91,6 +91,21 @@ media_player:
       volume_level: media_player.living_room_tv_sony_dlna|volume_level
       is_volume_muted: media_player.living_room_tv_sony_dlna|is_volume_muted
 
+sensor:
+  - name: Living room - Total power
+    platform: group
+    unique_id: d456266c-cc95-4cb8-a4df-54ee4380aefb
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.living_room_lights_map_wall_power
+      - sensor.living_room_lights_tv_wall_power
+      - sensor.living_room_map_wall_outlets_power
+      - sensor.living_room_tv_rack_outlets_power
+      - sensor.living_room_windows_wall_outlets_power
+
 script:
   living_room_toggle_tv:
     alias: Living room - Toggle TV
@@ -154,19 +169,19 @@ template:
         {% else %}
           {{ state_attr('climate.living_room_thermostat', 'current_humidity') }}
         {% endif %}
-    - name: Living room - Total power
-      unique_id: 5f335852-e3aa-4803-bfbc-898d875d6fef
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.living_room_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#    - name: Living room - Total power
+#      unique_id: 5f335852-e3aa-4803-bfbc-898d875d6fef
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.living_room_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
 #    - name: Living room - Total energy
 #      unique_id: c6bf0bb4-44ac-4cc3-9b28-d4e7b36346ee
 #      unit_of_measurement: "kWh"

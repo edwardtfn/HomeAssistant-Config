@@ -2709,121 +2709,134 @@
               ]
             },
             {
-              "type": "custom:plotly-graph",
-              "refresh_interval": 300,
-              "hours_to_show": 36,
-              "time_offset": "1d",
-              "autorange_after_scroll": true,
-              "layout": {
-                "xaxis": {
-                  "rangeselector": {
-                    "y": 1.2,
-                    "buttons": [
-                      {
-                        "count": 1,
-                        "step": "day"
-                      },
-                      {
-                        "count": 7,
-                        "step": "day"
-                      },
-                      {
-                        "count": 12,
-                        "step": "day"
-                      }
-                    ]
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.electricity_price",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.electricity_price",
+                  "state_not": "unknown"
+                }
+              ],
+              "card": {
+                "type": "custom:plotly-graph",
+                "refresh_interval": 300,
+                "hours_to_show": 36,
+                "time_offset": "1d",
+                "autorange_after_scroll": true,
+                "layout": {
+                  "xaxis": {
+                    "rangeselector": {
+                      "y": 1.2,
+                      "buttons": [
+                        {
+                          "count": 1,
+                          "step": "day"
+                        },
+                        {
+                          "count": 7,
+                          "step": "day"
+                        },
+                        {
+                          "count": 12,
+                          "step": "day"
+                        }
+                      ]
+                    }
+                  },
+                  "yaxis": {
+                    "rangemode": "tozero",
+                    "tickformat": ".1f"
+                  },
+                  "yaxis2": {
+                    "rangemode": "tozero",
+                    "tickformat": ".2f",
+                    "fixrange": true
+                  },
+                  "yaxis9": {
+                    "visible": false,
+                    "fixedrange": true
                   }
                 },
-                "yaxis": {
-                  "rangemode": "tozero",
-                  "tickformat": ".1f"
-                },
-                "yaxis2": {
-                  "rangemode": "tozero",
-                  "tickformat": ".2f",
-                  "fixrange": true
-                },
-                "yaxis9": {
-                  "visible": false,
-                  "fixedrange": true
-                }
-              },
-              "round": 2,
-              "default": null,
-              "entities": [
-                {
-                  "entity": "sensor.total_energy_utility_meter",
-                  "name": "Energy consumption",
-                  "type": "bar",
-                  "marker": {
-                    "color": "rgba(165,165,0,0.6)"
-                  },
-                  "texttemplate": " %{y:.2f} kr/kWh",
-                  "statistic": "state",
-                  "period": "hour",
-                  "filters": [
-                    {
-                      "fn": "(params) => {\n  const ys = [];\n  ys.push(0); \n  for (let i = 1; i < params.statistics.length; i++){\n    ys.push(Math.max(0,params.statistics[i].state-params.statistics[i-1].state));\n  }\n  return { ys };\n}"
-                    }
-                  ]
-                },
-                {
-                  "entity": "sensor.electricity_price",
-                  "yaxis": "y2",
-                  "unit_of_measurement": "kr/kWh",
-                  "line": {
-                    "color": "rgba(255, 165, 0, 1)",
-                    "width": 3
-                  },
-                  "filters": [
-                    {
-                      "store_var": "electricity_price"
+                "round": 2,
+                "default": null,
+                "entities": [
+                  {
+                    "entity": "sensor.total_energy_utility_meter",
+                    "name": "Energy consumption",
+                    "type": "bar",
+                    "marker": {
+                      "color": "rgba(165,165,0,0.6)"
                     },
-                    {
-                      "exponential_moving_average": {
-                        "alpha": 1
+                    "texttemplate": " %{y:.2f} kr/kWh",
+                    "statistic": "state",
+                    "period": "hour",
+                    "filters": [
+                      {
+                        "fn": "(params) => {\n  const ys = [];\n  ys.push(0); \n  for (let i = 1; i < params.statistics.length; i++){\n    ys.push(Math.max(0,params.statistics[i].state-params.statistics[i-1].state));\n  }\n  return { ys };\n}"
                       }
-                    }
-                  ],
-                  "show_value": true,
-                  "texttemplate": " %{y:.2f} kr/kWh"
-                },
-                {
-                  "entity": "sensor.electricity_price",
-                  "yaxis": "y2",
-                  "name": "Future price",
-                  "fill": "tozeroy",
-                  "fillcolor": "rgba(255, 165, 0,.1)",
-                  "line": {
-                    "color": "rgba(255, 165, 0, 1)",
-                    "width": 1,
-                    "dash": "dot"
+                    ]
                   },
-                  "filters": [
-                    {
-                      "fn": "({ meta, vars }) => ({\n  xs: [vars.electricity_price.xs.slice(-1)[0],...meta.future_prices.map(({ startsAt }) => new Date(startsAt))],\n  ys: [vars.electricity_price.ys.slice(-1)[0],...meta.future_prices.map(({ total }) => total)],\n})"
+                  {
+                    "entity": "sensor.electricity_price",
+                    "yaxis": "y2",
+                    "unit_of_measurement": "kr/kWh",
+                    "line": {
+                      "color": "rgba(255, 165, 0, 1)",
+                      "width": 3
                     },
-                    {
-                      "exponential_moving_average": {
-                        "alpha": 1
+                    "filters": [
+                      {
+                        "store_var": "electricity_price"
+                      },
+                      {
+                        "exponential_moving_average": {
+                          "alpha": 1
+                        }
                       }
-                    }
-                  ]
-                },
-                {
-                  "entity": "",
-                  "name": "Now",
-                  "yaxis": "y9",
-                  "showlegend": false,
-                  "line": {
-                    "width": 1,
-                    "dash": "dot",
-                    "color": "deepskyblue"
+                    ],
+                    "show_value": true,
+                    "texttemplate": " %{y:.2f} kr/kWh"
                   },
-                  "x": "$fn () => [Date.now(), Date.now()]",
-                  "y": "$fn () => [0,1]"
-                }
-              ]
+                  {
+                    "entity": "sensor.electricity_price",
+                    "yaxis": "y2",
+                    "name": "Future price",
+                    "fill": "tozeroy",
+                    "fillcolor": "rgba(255, 165, 0,.1)",
+                    "line": {
+                      "color": "rgba(255, 165, 0, 1)",
+                      "width": 1,
+                      "dash": "dot"
+                    },
+                    "filters": [
+                      {
+                        "fn": "({ meta, vars }) => ({\n  xs: [vars.electricity_price.xs.slice(-1)[0],...meta.future_prices.map(({ startsAt }) => new Date(startsAt))],\n  ys: [vars.electricity_price.ys.slice(-1)[0],...meta.future_prices.map(({ total }) => total)],\n})"
+                      },
+                      {
+                        "exponential_moving_average": {
+                          "alpha": 1
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "entity": "",
+                    "name": "Now",
+                    "yaxis": "y9",
+                    "showlegend": false,
+                    "line": {
+                      "width": 1,
+                      "dash": "dot",
+                      "color": "deepskyblue"
+                    },
+                    "x": "$fn () => [Date.now(), Date.now()]",
+                    "y": "$fn () => [0,1]"
+                  }
+                ]
+              }
             }
           ]
         },

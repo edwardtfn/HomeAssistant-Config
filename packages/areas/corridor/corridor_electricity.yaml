@@ -1,15 +1,26 @@
-template:
-  - sensor:
-    - name: Corridor - Total power
-      unique_id: b5aa2435-d428-4a08-8aee-1a19055977ee
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.corridor_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#template:
+#  - sensor:
+#    - name: Corridor - Total power
+#      unique_id: b5aa2435-d428-4a08-8aee-1a19055977ee
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.corridor_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
+sensor:
+  - name: Corridor - Total power
+    platform: group
+    unique_id: 4ab7c4c8-9d8b-4e2c-a412-e3fdf7f47b2b
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.corridor_ceiling_lights_power
+      - sensor.corridor_outlet_1_power

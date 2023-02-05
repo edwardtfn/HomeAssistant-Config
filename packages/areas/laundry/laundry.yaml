@@ -1,18 +1,32 @@
+sensor:
+  - name: Laundry - Total power
+    platform: group
+    unique_id: c1adb8ac-8515-4959-909f-025c5ceb95a7
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.bathroom_towel_warmer_power
+      - sensor.laundry_bench_outlets_power
+      - sensor.laundry_dryer_outlet_power
+      - sensor.laundry_washing_machine_power
+
 template:
   - sensor:
-    - name: Laundry - Total power
-      unique_id: c658e80f-c7d0-4417-83b1-0da38233e507
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.laundry_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#    - name: Laundry - Total power
+#      unique_id: c658e80f-c7d0-4417-83b1-0da38233e507
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.laundry_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
 #    - name: Laundry - Total energy
 #      unique_id: f7f8a6cf-2d7d-4cc8-9964-3c4e137a8539
 #      unit_of_measurement: "kWh"

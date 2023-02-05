@@ -1,4 +1,4 @@
-#sensor:
+sensor:
 #    - platform: powercalc
 #      entity_id: light.gaming_room_wall_lights
 #      power_sensor_id: sensor.gaming_room_wall_switch_outlets_power
@@ -9,6 +9,20 @@
 #      entity_id: switch.gaming_room_wall_outlets_switch
 #      fixed:
 #        power: 5
+
+  - name: Guest room - Total power
+    platform: group
+    unique_id: 7c699742-8468-4e35-8e39-4f9cde7314c2
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.guest_room_closet_lights_power
+      - sensor.guest_room_closet_outlets_power
+      - sensor.guest_room_door_outlets_ceiling_lights_power
+      - sensor.guest_room_door_outlets_outlet_power
+      - sensor.guest_room_windows_outlets_power
 
 template:
   - sensor:
@@ -35,19 +49,19 @@ template:
           {{ state_attr('climate.guest_room_closet_thermostat', 'current_humidity') }}
         {% endif %}
 
-    - name: Guest room - Total power
-      unique_id: 31fdb672-8dda-4247-9f86-f6f56298228d
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.guest_room_power_sensors') 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | sum
-        | float(0)
-        | round(2)
-        }}
+#    - name: Guest room - Total power
+#      unique_id: 31fdb672-8dda-4247-9f86-f6f56298228d
+#      unit_of_measurement: "W"
+#      device_class: power
+#      state: >-
+#        {{ expand('group.guest_room_power_sensors') 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | sum
+#        | float(0)
+#        | round(2)
+#        }}
 
 #    - name: Guest closet - Total power
 #      unique_id: 7a807158-b9d2-43ba-b3e1-54d304a6a3e2
