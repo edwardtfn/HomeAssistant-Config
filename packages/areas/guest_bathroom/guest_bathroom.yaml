@@ -69,32 +69,6 @@ sensor:
 
 
 template:
-#  - sensor:
-  ########## Guest bathroom ##########
-#    - name: Guest bathroom - Total power
-#      unique_id: be2bf885-f925-479f-828b-34d175430467
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >-
-#        {{ expand('group.guest_bathroom_power_sensors') 
-#        | rejectattr('state', 'in', ['unavailable','unknown']) 
-#        | map(attribute='state') 
-#        | map('float') 
-#        | sum
-#        | float(0)
-#        | round(2)
-#        }}
-#    - name: Guest bathroom - Total energy
-#      unique_id: 987e731d-f02a-4321-be20-48e6273df387
-#      unit_of_measurement: "kWh"
-#      device_class: energy
-#      state: >-
-#        {{ 0
-#        +  (states('sensor.guest_bathroom_ceiling_light_energy') | float(0))
-#        +  (states('sensor.guest_bathroom_mirror_lights_energy') | float(0))
-#        +  (states('sensor.guest_bathroom_mirror_outlets_energy') | float(0))
-#        +  (states('sensor.guest_bathroom_towel_warmer_energy') | float(0))
-#        }}
   - trigger:
     - id: Door
       platform: state

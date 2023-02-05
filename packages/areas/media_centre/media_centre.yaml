@@ -36,18 +36,3 @@ template:
       unique_id: c48b19c3-7288-477f-94b8-1c201b6ade7a
       device_class: connectivity
       state: "{{ states('binary_sensor.aimesh_router_wan') }}"
-
-#  - sensor:
-#    - name: Media centre - Total power
-#      unique_id: 06667410-fd9d-4122-914a-b81aad5d49d8
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >-
-#        {{ expand('group.media_centre_power_sensors') 
-#        | rejectattr('state', 'in', ['unavailable','unknown']) 
-#        | map(attribute='state') 
-#        | map('float') 
-#        | sum
-#        | float(0)
-#        | round(2)
-#        }}

@@ -65,17 +65,3 @@ template:
         {% else %}
           {{ state_attr('climate.bathroom_thermostat', 'current_humidity') }}
         {% endif %}
-
-#    - name: Bathroom - Total power
-#      unique_id: d75df4b5-57af-4ee3-8910-9af9f2ca8f7a
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >-
-#        {{ expand('group.bathroom_power_sensors') 
-#        | rejectattr('state', 'in', ['unavailable','unknown']) 
-#        | map(attribute='state') 
-#        | map('float') 
-#        | sum
-#        | float(0)
-#        | round(2)
-#        }}

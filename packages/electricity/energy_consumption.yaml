@@ -1,42 +1,25 @@
-template:
-  - sensor:
-    - name: Total power
-      unique_id: 7f0219f4-cdcd-4647-b8b7-4aaaf8c750a4
-      unit_of_measurement: "W"
-      device_class: power
-      state: >-
-        {{ expand('group.home_core_power_sensors')
-          | rejectattr('state', 'in', ['unavailable','unknown'])
-          | map(attribute='state') 
-          | map('float') 
-          | sum 
-          | round(2) 
-        }}
-
-#####
-#####        {{ states.sensor | rejectattr('entity_id', 'in', ['sensor.total_power','unknown']) | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'power') | rejectattr('state', 'in', ['unavailable','unknown']) | map(attribute='state') | map('float') | sum }}
-
-#    - name: Total energy
-#      unique_id: e6ea5908-d766-47d8-979c-c9b684f42752
-#      unit_of_measurement: "kWh"
-#      device_class: energy
-#      state: >-
-#        {{ (0
-#        +  (states('sensor.balcony_total_energy') | float(0))
-#        +  (states('sensor.bathroom_total_energy') | float(0))
-#        +  (states('sensor.bedroom_total_energy') | float(0))
-#        +  (states('sensor.corridor_total_energy') | float(0))
-#        +  (states('sensor.guest_room_total_energy') | float(0))
-#        +  (states('sensor.guest_bathroom_total_energy') | float(0))
-#        +  (states('sensor.hall_total_energy') | float(0))
-#        +  (states('sensor.kitchen_total_energy') | float(0))
-#        +  (states('sensor.laundry_total_energy') | float(0))
-#        +  (states('sensor.living_room_total_energy') | float(0))
-#        +  (states('sensor.media_centre_total_energy') | float(0))
-#        +  (states('sensor.office_total_energy') | float(0))
-#        ) | float(0) | round(2) }}
-
 sensor:
+  - name: Total power
+    platform: group
+    unique_id: cfc588f6-3143-42d6-968b-1e669e3c7ca4
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.balcony_total_power
+      - sensor.bathroom_total_power
+      - sensor.bedroom_total_power
+      - sensor.corridor_total_power
+      - sensor.guest_room_total_power
+      - sensor.guest_bathroom_total_power
+      - sensor.hall_total_power
+      - sensor.kitchen_total_power
+      - sensor.laundry_total_power
+      - sensor.living_room_total_power
+      - sensor.media_centre_total_power
+      - sensor.office_total_power
+
   - name: Total energy
     platform: group
     unique_id: e6ea5908-d766-47d8-979c-c9b684f42752

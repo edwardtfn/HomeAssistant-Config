@@ -109,47 +109,6 @@ template:
           {{ state_attr('climate.kitchen_thermostat', 'current_humidity') }}
         {% endif %}
 
-#    - name: Kitchen - Total power
-#      unique_id: eaf39a4b-6aa5-45cc-9c4b-38a080c5de7c
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >-
-#        {{ expand('group.kitchen_power_sensors') 
-#        | rejectattr('state', 'in', ['unavailable','unknown']) 
-#        | map(attribute='state') 
-#        | map('float') 
-#        | sum
-#        | float(0)
-#        | round(2)
-#        }}
-#    - name: Kitchen - Cooktop - Total power
-#      unique_id: 31e4c470-00dd-4552-8c04-4525acbf08b9
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >-
-#        {{  0
-#          + states('sensor.kitchen_cooktop_l1_outlet_power') | float(0)
-#          + states('sensor.kitchen_cooktop_l2_outlet_power') | float(0)
-#          + states('sensor.kitchen_cooktop_l3_outlet_power') | float(0)
-#          | float(0) | round(2)
-#        }}
-#    - name: Kitchen - Bench - Total power
-#      unique_id: 0bc201d0-a38d-4652-bd79-77e489f14724
-#      unit_of_measurement: "W"
-#      device_class: power
-#      state: >-
-#        {{  0
-#          + states('sensor.kitchen_bench_outlets_1_outlets_power') | float(0)
-#          + states('sensor.kitchen_bench_outlets_1_usb_power') | float(0)
-#          + states('sensor.kitchen_bench_outlets_2_power') | float(0)
-#          + states('sensor.kitchen_bench_outlets_3_power') | float(0)
-#          + states('sensor.kitchen_bench_left_light_power') | float(0)
-#          + states('sensor.kitchen_bench_right_light_power') | float(0)
-#          + states('sensor.kitchen_cooker_hood_power') | float(0)
-#          | float(0) | round(2)
-#        }}
-
-
   - trigger:
     - id: Door
       platform: state

@@ -42,14 +42,6 @@ sensor:
       - sensor.office_windows_outlets_ceiling_lights_power
       - sensor.office_windows_outlets_outlets_power
 
-#    - platform: powercalc
-#      entity_id: light.office_wall_lights
-#      power_sensor_id: sensor.office_wall_lights_outlet_power
-#fixed:
-#power: "{{states('sensor.office_wall_lights_outlet_power')}}"
-#energy_sensor_id: sensor.office_wall_lights_outlet_energy
-#standby_power: 12.7
-
 template:
   - sensor:
       - name: Office - Thermostat Humidity
@@ -63,30 +55,6 @@ template:
           {% else %}
             {{ state_attr('climate.office_thermostat_1', 'current_humidity') }}
           {% endif %}
-#      - name: Office - Total power
-#        unique_id: 9a97bcb4-5d9d-40ce-b2ef-0f6eab474d4a
-#        unit_of_measurement: "W"
-#        device_class: power
-#        state: >-
-#          {{ expand('group.office_power_sensors') 
-#          | rejectattr('state', 'in', ['unavailable','unknown']) 
-#          | map(attribute='state') 
-#          | map('float') 
-#          | sum
-#          | float(0)
-#          | round(2)
-#          }}
-
-#    - name: Office - Total energy
-#      unique_id: 624bd673-b7df-4b0b-9d5b-517764d43d9c
-#      unit_of_measurement: "kWh"
-#      device_class: energy
-#      state: >-
-#        {{ 0
-#        +  (states('sensor.office_ceiling_lights_energy') | float(0))
-#        +  (states('sensor.office_windows_energy') | float(0))
-#        +  (states('sensor.office_workstation_wall_outlet_energy') | float(0))
-#        }}
 
 vacuum: # https://community.home-assistant.io/t/add-wifi-to-an-older-roomba/23282/221
   - platform: template
