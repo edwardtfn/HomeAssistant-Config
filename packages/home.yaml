@@ -14,64 +14,84 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
   entities:
     #### Home ####
     input_boolean.home_party_mode:
+      name: Party mode
       hidden: false
 
     #### Balcony ####
     light.balcony_lamp_light:
+      name: Lamp
       hidden: false
     light.balcony_string_lights:
+      name: String lights
       hidden: false
     
     #### Bathroom ####
     light.bathroom_ceiling_lights:
+      name: Ceiling lights
       hidden: false
     light.bathroom_mirror_light:
+      name: Mirror lights
       hidden: false
     
     #### Bedroom ####
     light.bedroom_carol_light:
+      name: "Carol's lights"
       hidden: false
     light.bedroom_closet_lights:
+      name: Closet lights
       hidden: false
     light.bedroom_edward_light:
+      name: "Edward's lights"
       hidden: false
     switch.bedroom_power_strip_1_socket_4: # TV Samsung
+      name: Samsung
       hidden: false
 
     #### Corridor ####
     light.corridor_lights_all:
+      name: Corridor lights
       hidden: false
 
     #### Guest bathroom ####
     light.guest_bathroom_ceiling_light:
+      name: Ceiling lights
       hidden: false
     light.guest_bathroom_mirror_lights:
+      name: Mirror lights
       hidden: false
 
     #### Guest room ####
     light.guest_room_closet_lights:
+      name: Closet lights
       hidden: false
     light.guest_room_wall_lights:
+      name: Wall lights
       hidden: false
 
     #### Hall ####
     light.hall_ceiling_light:
+      name: Hall lights
       hidden: false
 
     #### Kitchen ####
     light.kitchen_bench_lights:
+      name: Bench lights
       hidden: false
     light.kitchen_table_lights:
+      name: Table lights
       hidden: false
 
     #### Living room ####
 
     #### Office ####
     light.office_ceiling_lines:
+      name: Ceiling lines lights
       hidden: false
     light.office_workstation_lights:
+      name: Workstation lights
       hidden: false
     light.kitchen_curtain_s_lights:
+      name: Curtains lights
       hidden: false
 
 
