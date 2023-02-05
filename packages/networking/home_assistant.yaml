@@ -37,7 +37,9 @@ script:
         name: Home - Core power switches
         icon: mdi:flash
         entities: "{{ core_switch_entities | join(',') }}"
+    ## Deprecated - Now using sensor groups ##
     - alias: 'Group: Core power sensor'
+      enabled: false
       continue_on_error: true
       service: group.set
       data:
@@ -46,6 +48,7 @@ script:
         icon: mdi:flash
         entities: "{{ core_power_entities | join(',') }}"
     - alias: 'Group: Power sensors by areas'
+      enabled: false
       continue_on_error: true
       repeat:
         count: '{{ all_areas | count }}'
