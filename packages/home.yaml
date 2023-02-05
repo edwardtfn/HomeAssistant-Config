@@ -8,7 +8,8 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
     #- scene
   expose_by_default: false
   exposed_domains:
-    - humidifier
+    - light
+    - switch
 
   entities:
     #### Home ####
