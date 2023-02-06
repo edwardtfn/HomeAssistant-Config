@@ -1,28 +1,7 @@
-automation: !include automations.yaml
-
-binary_sensor:
-  #- platform: ping # https://www.home-assistant.io/integrations/ping/#binary-sensor
-    #host: !secret ip_pc_1
-    #name: "Living room - PC-1"
-    #count: 2
-    #scan_interval: 30
-
-  - platform: workday # https://www.home-assistant.io/integrations/workday/
-    country: SE
+#automation: !include automations.yaml
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
-
-device_tracker:
-  #- platform: bluetooth_tracker
-    #track_new_devices: true
-  #- platform: bluetooth_le_tracker
-    #track_new_devices: true
-  - platform: ping # https://www.home-assistant.io/integrations/ping/#presence-detection
-    hosts:
-      #carols_phone_ping: !secret ip_carols_phone
-      #edwards_phone_ping: !secret ip_edwards_phone
-      pc_1_ping: !secret ip_pc_1
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -30,7 +9,7 @@ frontend:
     - /local/card-mod.js
 
 
-group: !include groups.yaml
+#group: !include groups.yaml
 
 homeassistant:
   packages: !include_dir_named packages
