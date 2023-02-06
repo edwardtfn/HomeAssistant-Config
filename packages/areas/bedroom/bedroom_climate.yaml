@@ -1,3 +1,42 @@
+automation:
+- alias: Bedroom - Climate - Windows based
+  id: '1671274923506'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/tado_windows.yaml
+    input:
+      window_entity:
+      - binary_sensor.bedroom_thermostat_cloud_open_window
+      climate_target:
+      - climate.bedroom_thermostat
+- alias: Bedroom - Humidifier - Toggle twice
+  id: '1671969156364'
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  - platform: time_pattern
+    minutes: '00'
+  condition:
+  - condition: state
+    state: 'on'
+    entity_id: switch.bedroom_power_strip_1_socket_3
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.bedroom_power_strip_1_socket_3
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.bedroom_power_strip_1_socket_3
+  mode: single
+
 generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
   - name: Bedroom - Hygrostat
     #unique_id: b7b4aec9-212e-43b2-9ec4-982491695fda

@@ -1,0 +1,220 @@
+automation:
+- alias: Bedroom - Locker - Door opened
+  id: '1642068751469'
+  description: ''
+  trigger:
+  - type: vibration
+    platform: device
+    device_id: 6b3504557997cb46fea2e699d75e287b
+    entity_id: binary_sensor.bedroom_locker_vibration
+    domain: binary_sensor
+  - device_id: 6b3504557997cb46fea2e699d75e287b
+    domain: zha
+    platform: device
+    type: device_tilted
+    subtype: device_tilted
+  condition:
+  - condition: not
+    conditions:
+    - condition: zone
+      entity_id: person.carolina_costa
+      zone: zone.home
+    - condition: not
+      conditions:
+      - condition: zone
+        entity_id: person.edward_firmo
+        zone: zone.home
+  action:
+  - service: script.home_surveillance_turn_on_all_cameras
+    data: {}
+    continue_on_error: true
+  - service: alarm_control_panel.alarm_arm_home
+    data: {}
+    target:
+      entity_id: alarm_control_panel.artillerigatan
+    continue_on_error: true
+  - service: notify.signal_group_artillerigatan
+    data:
+      message: Attention!! Vibration detected on the lockers door. Home Assistant
+        is turning on the cameras.
+    continue_on_error: true
+  mode: single
+- alias: Bedroom - Carol - Button
+  id: '1642659938498'
+  description: ''
+  trigger:
+  - device_id: 415ea4e93b7b40bfec831e00e8eed86b
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: remote_button_short_press
+    id: Click
+  - device_id: 415ea4e93b7b40bfec831e00e8eed86b
+    domain: zha
+    platform: device
+    type: remote_button_double_press
+    subtype: remote_button_double_press
+    id: Double click
+  - device_id: 415ea4e93b7b40bfec831e00e8eed86b
+    domain: zha
+    platform: device
+    type: remote_button_long_release
+    subtype: remote_button_long_release
+    id: Long press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Click
+      sequence:
+      - service: light.toggle
+        target:
+          entity_id:
+          - light.bedroom_carol_light
+        data:
+          transition: 1
+    - conditions:
+      - condition: trigger
+        id: Double click
+      sequence:
+      - service: light.toggle
+        data:
+          transition: 1
+        target:
+          entity_id:
+          - light.bedroom_edward_light
+    - conditions:
+      - condition: trigger
+        id: Long press
+      sequence:
+      - service: rest_command.switchbot_scenes_bedroom_samsung_tv_ok
+        data: {}
+    default: []
+  mode: single
+- alias: Bedroom - Edward - Button
+  id: '1642676595726'
+  description: ''
+  trigger:
+  - device_id: da7cc1e8cd02855ff9b5f6151462a92a
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: remote_button_short_press
+    id: Click
+  - device_id: da7cc1e8cd02855ff9b5f6151462a92a
+    domain: zha
+    platform: device
+    type: remote_button_double_press
+    subtype: remote_button_double_press
+    id: Double click
+  - device_id: da7cc1e8cd02855ff9b5f6151462a92a
+    domain: zha
+    platform: device
+    type: remote_button_long_release
+    subtype: remote_button_long_release
+    id: Long press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Click
+      sequence:
+      - service: light.toggle
+        target:
+          entity_id:
+          - light.bedroom_edward_light
+        data:
+          transition: 1
+    - conditions:
+      - condition: trigger
+        id: Double click
+      sequence:
+      - service: light.toggle
+        data:
+          transition: 1
+        target:
+          entity_id:
+          - light.bedroom_carol_light
+    - conditions:
+      - condition: trigger
+        id: Long press
+      sequence:
+      - service: rest_command.switchbot_scenes_bedroom_samsung_tv_ok
+        data: {}
+    default: []
+  mode: single
+- alias: Bedroom - Bed''s lights - Wall switch
+  id: '1660893434211'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/light_switch_toggle.yaml
+    input:
+      input_entity: binary_sensor.bedroom_ceiling_lights_input
+      light_target: light.bedroom_beds_lights
+- alias: Bedroom - Closet - Lights - Door based
+  id: '1661762745931'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/set_entities_based_on_other_entities.yaml
+    input:
+      input_entities:
+      - binary_sensor.bedroom_closet_door
+      target_entities:
+      - light.bedroom_closet_lights
+- alias: Bedroom - TV - Turn on when in stand-by
+  id: '1663789452400'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.bedroom_tv_samsung_universal
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: switch.bedroom_power_strip_1_socket_4
+    state: 'on'
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.bedroom_tv_samsung_switchbot
+  mode: single
+- alias: Bedroom - TV - Turn on if in standby after power on
+  id: '1663790152446'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.bedroom_power_strip_1_socket_4
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: media_player.bedroom_tv_samsung_universal
+    state: 'off'
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.bedroom_tv_samsung_switchbot
+  mode: single
+- alias: Bedroom - Always on
+  id: c7ffed8e-cb93-4435-8f08-69b6115897bd
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/always_on.yaml
+    input:
+      timeout: 60
+      entities_list:
+      - switch.bedroom_power_strip_1_socket_1
+      - switch.bedroom_power_strip_1_usb

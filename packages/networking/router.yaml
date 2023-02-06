@@ -1,0 +1,121 @@
+automation:
+- alias: Media centre - Router - WAN IP changed
+  id: '1670957751694'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.aimesh_router_wan_ip
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    not_from:
+    - unknown
+    - unavailable
+  condition: []
+  action:
+  - service: notify.signal_edward
+    data:
+      message: The WAN IP address has changed from {{ trigger.from_state.state }}
+        to {{ trigger.to_state.state }}.
+  mode: single
+- alias: Media centre - Router - Recover when frozen
+  id: '1668551792507'
+  description: ''
+  trigger:
+  - id: Restart HTTP service
+    platform: state
+    entity_id:
+    - sensor.aimesh_router_cpu
+    - sensor.aimesh_router_ram
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  - id: Reboot router
+    platform: state
+    entity_id:
+    - sensor.aimesh_router_cpu
+    - sensor.aimesh_router_ram
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
+  - id: Power cycle router
+    platform: state
+    entity_id:
+    - sensor.aimesh_router_cpu
+    - sensor.aimesh_router_ram
+    for:
+      minutes: 30
+  condition: []
+  action:
+  - service: notify.signal_edward
+    data:
+      message: 'Router is not updating {{ state_attr(trigger.entity_id, ''friendly_name'')
+        }}.
+
+        State: {{ states(trigger.entity_id) }}
+
+        Last changed: {{ trigger.to_state.last_changed | default(''unavailable'')
+        }}
+
+        Recovery action: {{ trigger.id }}.'
+    continue_on_error: true
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Restart HTTP service
+      sequence:
+      - service: button.press
+        data: {}
+        target:
+          entity_id: button.aimesh_router_restart_http_daemon
+    - conditions:
+      - condition: trigger
+        id: Reboot router
+      sequence:
+      - service: button.press
+        data: {}
+        target:
+          entity_id: button.aimesh_router_reboot
+    - conditions:
+      - condition: trigger
+        id: Power cycle router
+      sequence:
+      - service: script.media_centre_router_power_cycle
+        data: {}
+  mode: single
+
+script:
+  media_centre_router_power_cycle:
+    alias: Media centre - Router - Power cycle
+    icon: mdi:router-wireless-off
+    mode: single
+    sequence:
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.media_centre_power_strip_socket_1
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 30
+        milliseconds: 0
+    - service: switch.turn_on
+      data: {}
+      target:
+        entity_id: switch.media_centre_power_strip_socket_1
+
+template:
+  - binary_sensor:
+    - name: Media centre - Internet status
+      unique_id: c48b19c3-7288-477f-94b8-1c201b6ade7a
+      device_class: connectivity
+      state: "{{ states('binary_sensor.aimesh_router_wan') }}"

@@ -1,3 +1,879 @@
+automation:
+- alias: Home - Battery - Low battery devices
+  id: '1653260609920'
+  description: ''
+  use_blueprint:
+    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      exclude:
+        entity_id:
+        - sensor.abisko_internal_battery_level
+        - sensor.sm_g981b_battery_level
+        - sensor.vw_passat_battery_level
+        - sensor.edwards_phone_battery_level
+        - sensor.edwards_tablet_battery_level
+      actions:
+      - service: notify.signal_group_artillerigatan
+        data:
+          message: 'Low battery warning for: {{sensors}}'
+      threshold: 15
+- alias: Home - Covers - Reset when stuck in a state
+  id: '1662801171931'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - cover.balcony_curtain
+    - cover.bedroom_curtains
+    - cover.bedroom_curtains_dual
+    - cover.bedroom_curtain_left
+    - cover.bedroom_curtain_right
+    - cover.guest_room_shutter_cover
+    - cover.living_room_blinds
+    - cover.living_room_blind_right_cover
+    - cover.living_room_blind_centre_cover
+    - cover.living_room_blind_left_cover_2
+    - cover.office_roller_blind_1_cover
+    - cover.office_roller_blind_2_cover
+    - cover.office_roller_blinds_all
+    - cover.office_shutter_1_cover
+    - cover.office_shutter_2_cover
+    - cover.office_shutters_all
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+    to:
+    - closing
+    - opening
+  condition: []
+  action:
+  - service: cover.stop_cover
+    target:
+      entity_id: '{{ trigger.entity_id }}'
+  mode: parallel
+  max: 15
+- alias: Home - Electricity - Price level
+  id: '1642002824536'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.electricity_price
+    attribute: future_prices_curr_price_level
+  - platform: homeassistant
+    event: start
+  - platform: state
+    entity_id:
+    - media_player.living_room_tv_sony_universal
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_party_mode
+    state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Very cheap
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+          - switch.laundry_bench_outlets
+        data: {}
+      - if:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: media_player.living_room_tv_sony_universal
+            state: 'off'
+        then:
+        - service: switch.turn_on
+          data: {}
+          target:
+            entity_id:
+            - switch.living_room_charging_strip_1_socket_2
+            - switch.living_room_charging_strip_1_socket_3
+            - switch.living_room_charging_strip_1_socket_4
+            - switch.office_workstation_power_strip_usb
+        else:
+        - service: switch.turn_off
+          data: {}
+          target:
+            entity_id:
+            - switch.living_room_charging_strip_1_socket_2
+            - switch.living_room_charging_strip_1_socket_3
+            - switch.living_room_charging_strip_1_socket_4
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Cheap
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+        data: {}
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Normal
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+        data: {}
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Expensive
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Very expensive
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+    default: []
+  mode: restart
+- alias: Home - Tracker - When person changes
+  id: '1644249978268'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - person.carolina_costa
+    - person.edward_firmo
+    - person.dory
+    - person.skal
+    - lock.vw_passat_door_locked
+    - binary_sensor.vw_passat_vehicle_moving
+  condition:
+  - condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+    enabled: true
+  action:
+  - service: notify.signal_edward
+    data:
+      message: '{{trigger.to_state.name}} changed from {{trigger.from_state.state}}
+        to {{trigger.to_state.state}} by {{ trigger.to_state.attributes.source }}'
+  mode: parallel
+  max: 10
+- alias: Home - Silence hours
+  id: '1654865795294'
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:30:00'
+    id: Prepare for quite hours
+  - platform: time
+    at: 07:30:00
+    id: Quite hours starts
+  - platform: time
+    at: 08:00:00
+    id: Quite hours ends
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_party_mode
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.home_travelling_mode
+    state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: Prepare for quite hours
+      sequence:
+      - parallel:
+        - if:
+          - condition: not
+            conditions:
+            - condition: device
+              device_id: 216297d2524fa8459f265e6a9930f739
+              domain: vacuum
+              entity_id: vacuum.hall_roomba
+              type: is_docked
+          then:
+          - service: logbook.log
+            data:
+              name: Silent hours (preparing)
+              message: Sending roomba to it's docking station.
+          - device_id: 216297d2524fa8459f265e6a9930f739
+            domain: vacuum
+            entity_id: vacuum.hall_roomba
+            type: dock
+        - if:
+          - condition: device
+            type: is_on
+            device_id: 7718afce3cec294c17968906f186a35f
+            entity_id: switch.laundry_washing_machine_outlet
+            domain: switch
+          then:
+          - wait_for_trigger:
+            - platform: numeric_state
+              entity_id: sensor.laundry_washing_machine_power
+              for:
+                hours: 0
+                minutes: 5
+                seconds: 0
+              below: '2'
+            continue_on_timeout: false
+          - type: turn_off
+            device_id: 7718afce3cec294c17968906f186a35f
+            entity_id: switch.laundry_washing_machine_outlet
+            domain: switch
+        - if:
+          - condition: device
+            type: is_on
+            device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+            entity_id: switch.laundry_dryer_outlet
+            domain: switch
+          then:
+          - wait_for_trigger:
+            - platform: numeric_state
+              entity_id: sensor.laundry_dryer_outlet_power
+              for:
+                hours: 0
+                minutes: 5
+                seconds: 0
+              below: '2'
+            continue_on_timeout: false
+          - type: turn_off
+            device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+            entity_id: switch.laundry_dryer_outlet
+            domain: switch
+    - conditions:
+      - condition: trigger
+        id: Quite hours starts
+      sequence:
+      - parallel:
+        - if:
+          - condition: not
+            conditions:
+            - condition: device
+              device_id: 216297d2524fa8459f265e6a9930f739
+              domain: vacuum
+              entity_id: vacuum.hall_roomba
+              type: is_docked
+          then:
+          - service: vacuum.stop
+            data: {}
+            target:
+              device_id: 216297d2524fa8459f265e6a9930f739
+        - if:
+          - condition: device
+            type: is_on
+            device_id: 7718afce3cec294c17968906f186a35f
+            entity_id: switch.laundry_washing_machine_outlet
+            domain: switch
+          then:
+          - wait_for_trigger:
+            - platform: numeric_state
+              entity_id: sensor.laundry_washing_machine_power
+              above: '10'
+            continue_on_timeout: false
+          - service: notify.signal_group_artillerigatan
+            data:
+              message: Silence hours - Looks like the washer was left running at this
+                time. Please take a look.
+        - if:
+          - condition: device
+            type: is_on
+            device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+            entity_id: switch.laundry_dryer_outlet
+            domain: switch
+          then:
+          - wait_for_trigger:
+            - platform: numeric_state
+              entity_id: sensor.laundry_dryer_outlet_power
+              above: '10'
+            continue_on_timeout: false
+          - service: notify.signal_group_artillerigatan
+            data:
+              message: Silence hours - Looks like the dryer was left running at this
+                time. Please take a look.
+    - conditions:
+      - condition: trigger
+        id: Quite hours ends
+      sequence:
+      - type: turn_on
+        device_id: 7718afce3cec294c17968906f186a35f
+        entity_id: switch.laundry_washing_machine_outlet
+        domain: switch
+      - type: turn_on
+        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+        entity_id: switch.laundry_dryer_outlet
+        domain: switch
+    default: []
+  mode: restart
+- alias: Home - Surveillance - Back to home
+  id: '1659888305176'
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: zone.home
+    above: '0'
+  - platform: numeric_state
+    entity_id: zone.neighborhood_close
+    above: '0'
+  condition:
+  - condition: numeric_state
+    entity_id: zone.home
+    above: '0'
+  - condition: numeric_state
+    entity_id: zone.neighborhood_close
+    above: '0'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_boolean.home_empty
+      state: 'on'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: alarm_control_panel.artillerigatan
+        state: disarmed
+  action:
+  - service: alarm_control_panel.alarm_disarm
+    data: {}
+    target:
+      entity_id: alarm_control_panel.artillerigatan
+    continue_on_error: true
+  - service: script.home_surveillance_turn_off_all_cameras
+    data: {}
+    continue_on_error: true
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.home_empty
+    continue_on_error: true
+  - service: notify.signal_edward
+    data:
+      message: Disarming alarm as someone got back home.
+  mode: single
+- alias: Home - Weather - Windows are open
+  id: '1663627849757'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - weather.home
+    to: rainy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: snowy-rainy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: lightning-rainy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: snowy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: windy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: windy-variant
+  condition:
+  - condition: template
+    value_template: "{{ (\n  states.binary_sensor \n  | selectattr('attributes.device_class',
+      'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
+      'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
+  action:
+  - service: notify.signal_group_artillerigatan
+    data:
+      message: "The weather is changing and the following windows are open:\n- {{
+        states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
+        \n    | selectattr('attributes.device_class','eq','window') \n    | selectattr('state',
+        'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
+        ') }}"
+  mode: single
+- alias: Home - Surveillance - Notify when cameras are streaming
+  id: '1663996078108'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.hall_camera_streaming_sensor
+    - binary_sensor.living_room_camera_streaming_sensor
+    - binary_sensor.office_door_camera_streaming_sensor
+    - binary_sensor.office_windows_camera_streaming_sensor
+    to: 'True'
+    id: started streaming
+  - platform: state
+    entity_id:
+    - switch.hall_camera_enabled
+    - switch.office_door_camera_enabled
+    - switch.office_windows_camera_enabled
+    - switch.living_room_camera_enabled
+    from: 'off'
+    to: 'on'
+    id: was enabled
+  condition: []
+  action:
+  - parallel:
+    - service: notify.signal_group_artillerigatan
+      continue_on_error: true
+      data:
+        message: Attention, a camera in {{ area_name(trigger.entity_id) }} {{ trigger.id
+          }}
+  mode: single
+- alias: Home - Surveillance - Empty home
+  id: '1663997487123'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - zone.home
+    - zone.neighborhood_close
+    - zone.gamlestaden
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: zone.home
+        state: '0'
+      - condition: state
+        entity_id: zone.neighborhood_close
+        state: '0'
+      - condition: state
+        entity_id: input_boolean.home_empty
+        state: 'off'
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_empty
+        continue_on_error: true
+      - service: notify.signal_edward
+        data:
+          message: No one at home.
+        continue_on_error: true
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.home_empty
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: numeric_state
+          entity_id: zone.home
+          above: 0
+        - condition: numeric_state
+          entity_id: zone.neighborhood_close
+          above: 0
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.home_empty
+        continue_on_error: true
+      - service: notify.signal_edward
+        data:
+          message: '{{ trigger.entity_id }} changed from {{ trigger.from_state.state
+            }} to {{ trigger.to_state.state }}.'
+        continue_on_error: true
+  mode: restart
+- alias: Home - Surveillance - Dogs at home
+  id: '1673675258067'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - person.dory
+  - platform: state
+    entity_id:
+    - person.skal
+  condition: []
+  action:
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.dory
+        state: home
+      - condition: state
+        entity_id: person.skal
+        state: home
+    - condition: state
+      entity_id: input_boolean.home_no_dogs
+      state: 'on'
+    then:
+    - service: notify.signal_edward
+      data:
+        message: Dogs back home
+      continue_on_error: true
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.home_no_dogs
+      continue_on_error: true
+    else:
+    - if:
+      - condition: state
+        entity_id: input_boolean.home_no_dogs
+        state: 'on'
+      - condition: state
+        entity_id: person.dory
+        state: not_home
+      - condition: state
+        entity_id: person.skal
+        state: not_home
+      then:
+      - service: notify.signal_edward
+        data:
+          message: Who let the dogs out?
+        continue_on_error: true
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_no_dogs
+        continue_on_error: true
+  mode: restart
+- alias: Home - Weather - Max Sun elevation
+  id: '1665333562720'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sun.sun
+    attribute: rising
+    from:
+    - true
+    - true
+    - 'on'
+    to:
+    - false
+    - false
+    - 'off'
+  condition: []
+  action:
+  - service: input_number.set_value
+    data:
+      value: '{{ state_attr(''sun.sun'', ''elevation'') | float(0) }}'
+    target:
+      entity_id: input_number.home_sun_max_elevation
+  mode: single
+- alias: Home - Network - New device connected
+  id: '1666531818056'
+  description: Create a HA notification for any new device connected to the local
+    network
+  trigger:
+  - platform: event
+    event_type: asusrouter_device_connected
+  condition: []
+  action:
+  - service: persistent_notification.create
+    data_template:
+      title: Device has joined the local network
+      message: 'MAC: {{trigger.event.data.mac}}, IP: {{trigger.event.data.ip}}, name:
+        {{trigger.event.data.name}}'
+    continue_on_error: true
+  - service: notify.signal_edward
+    data:
+      message: 'A new device joined the local network:
+
+        Name: {{trigger.event.data.name}}
+
+        IP: {{trigger.event.data.ip}}
+
+        MAC: {{trigger.event.data.mac}}'
+    continue_on_error: true
+  mode: queued
+  max: 100
+- alias: Home - Humidifiers - At least one humidifier requires attention
+  id: '1638151457747'
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - climate.bedroom_thermostat
+    - climate.kitchen_thermostat
+    - climate.living_room_thermostat
+    - climate.office_thermostat_1
+    attribute: current_humidity
+    below: 35
+    for:
+      minutes: 5
+  action:
+  - service: notify.signal_edward
+    data:
+      message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} has reported
+        low humidity ({{ state_attr(trigger.entity_id, ''current_humidity'') }}%)
+        in the room.
+
+        Please check the water level and power supply.'
+  mode: single
+- alias: Home - Surveillance - Alarm helper
+  id: '1672450352965'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - alarm_control_panel.artillerigatan
+    id: Alarm
+    for:
+      seconds: 2
+  - platform: state
+    entity_id:
+    - input_boolean.home_alarm
+    id: Helper
+    for:
+      seconds: 2
+  - platform: homeassistant
+    event: start
+    id: Start
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: alarm_control_panel.artillerigatan
+      state: unknown
+    - condition: state
+      entity_id: alarm_control_panel.artillerigatan
+      state: unavailable
+  action:
+  - if:
+    - condition: or
+      conditions:
+      - condition: trigger
+        id: Alarm
+      - condition: trigger
+        id: Start
+    then:
+    - if:
+      - condition: state
+        entity_id: alarm_control_panel.artillerigatan
+        state: disarmed
+        for:
+          seconds: 2
+      then:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.home_alarm
+      else:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_alarm
+    else:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.home_alarm
+          state: 'on'
+        sequence:
+        - service: alarm_control_panel.alarm_arm_home
+          data: {}
+          target:
+            entity_id: alarm_control_panel.artillerigatan
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.home_alarm
+          state: 'off'
+        sequence:
+        - service: alarm_control_panel.alarm_disarm
+          data: {}
+          target:
+            entity_id: alarm_control_panel.artillerigatan
+  mode: single
+- alias: Home - Curtain's lights
+  id: '1672609137203'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.home_curtain_s_lights_reference
+  - platform: state
+    entity_id:
+    - sensor.electricity_price
+    attribute: future_prices_curr_price_level
+  - platform: state
+    entity_id:
+    - sensor.civil_solar_day_status
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_party_mode
+    state: 'off'
+  - condition: state
+    entity_id: binary_sensor.living_room_tv_is_on
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.home_empty
+    state: 'off'
+  action:
+  - if:
+    - condition: state
+      entity_id: light.home_curtain_s_lights_reference
+      state: 'on'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.civil_solar_day_status
+        state: day
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Very expensive
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Expensive
+    then:
+    - if:
+      - condition: state
+        entity_id: light.kitchen_curtain_s_lights
+        state: 'off'
+      then:
+      - service: light.turn_on
+        data:
+          transition: 5
+        target:
+          entity_id:
+          - light.kitchen_curtain_s_lights
+    else:
+    - service: light.turn_off
+      data:
+        transition: 5
+      target:
+        entity_id:
+        - light.kitchen_curtain_s_lights
+  mode: restart
+- alias: Home - Covers - Stop when stuck
+  id: '1673883567332'
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states.cover
+
+      | selectattr(''state'', ''in'', [''opening'', ''closing''])
+
+      | list
+
+      | count
+
+      | int(0)
+
+      }}'
+  condition:
+  - condition: template
+    value_template: '{{ states.cover
+
+      | selectattr(''state'', ''in'', [''opening'', ''closing''])
+
+      | list
+
+      | count
+
+      | int(0) > 0
+
+      }}
+
+      '
+  action:
+  - service: cover.stop_cover
+    data: {}
+    target:
+      entity_id: '{{ states.cover | selectattr(''state'', ''in'', [''opening'', ''closing''])
+        | map(attribute=''entity_id'') | list }}'
+  mode: single
+- alias: Home - People - Phone out of battery
+  id: '1673901325564'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.sm_g981b_battery_level
+    to: '0'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    id: Carol's phone
+  - platform: state
+    entity_id:
+    - sensor.sm_g981b_battery_level
+    to:
+    - unavailable
+    - unknown
+    for:
+      minutes: 5
+    id: Carol's phone
+  - platform: state
+    entity_id:
+    - sensor.device_tracker_edwards_phone_icloud3_battery
+    to: '0'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    id: Edward's phone
+  - platform: state
+    entity_id:
+    - sensor.device_tracker_edwards_phone_icloud3_batter
+    to:
+    - unavailable
+    - unknown
+    for:
+      minutes: 5
+    id: Edward's phone
+  condition: []
+  action:
+  - service: notify.signal_group_artillerigatan
+    data:
+      message: 'Phone out of battery:
+
+        Trigger id: {{ trigger.id }}
+
+        Entity: {{ trigger.entity_id }}'
+  mode: single
+
 emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
   host_ip: !secret ip_home_assistant
   listen_port: 80
@@ -94,6 +970,25 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       name: Curtains lights
       hidden: false
 
+group:
+  hosts:
+    name: Hosts
+    entities:
+      - person.edward_firmo
+      - person.carolina_costa
+
+  pets:
+    name: Pets
+    entities:
+      - person.dory
+      - person.skal
+
+  everyone:
+    name: Everyone
+    entities:
+      - group.hosts
+      - group.pets
+      #- group.guests
 
 script:
   home_reboot_all_shelly_devices:

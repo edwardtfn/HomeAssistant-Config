@@ -1,0 +1,31 @@
+automation:
+- alias: Hall - Door - Announce to Alexa
+  id: '1669284651718'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.hall_front_door
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.alexa_media
+    data:
+      target: Kitchen
+      message: The front door is open.
+  mode: single
+- alias: Hall - Lights - Motion based
+  id: '1642595120266'
+  description: Motion-activated light with illuminance level
+  use_blueprint:
+    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
+    input:
+      light_level_high: 75
+      light_level_dimmer: 25
+      motion_entity: binary_sensor.hall_motion_occupancy
+      lumens_entity: sensor.hall_motion_light_level
+      max_lumens: 15
+      light_target: light.hall_ceiling_light
+      no_motion_wait_to_dimming: 90
+      no_motion_wait_to_off: 5

@@ -1,0 +1,53 @@
+automation:
+- alias: Hall - Intercom - Announce when ringing
+  id: '1673810955012'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.hall_intercom_input_channel_2
+    id: is ringing
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.hall_intercom_input_channel_2
+    id: stopped ringing
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - parallel:
+    - service: notify.signal_group_artillerigatan
+      data:
+        message: The intercom {{ trigger.id }}
+      continue_on_error: true
+    - service: notify.all_devices
+      data:
+        message: The intercom {{ trigger.id }}
+      continue_on_error: true
+    - service: notify.alexa_media
+      data:
+        message: The intercom {{ trigger.id }}
+        target: Kitchen, Office, Bedroom, Bathroom
+      continue_on_error: true
+  mode: single
+- alias: Hall - Intercom - No communication
+  id: '1675431939704'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - device_tracker.hall_intercom
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+    from: home
+  condition: []
+  action:
+  - service: notify.signal_edward
+    data:
+      message: The Shelly device monitoring the Intercom is out since more than 30min
+        ago.
+  mode: single

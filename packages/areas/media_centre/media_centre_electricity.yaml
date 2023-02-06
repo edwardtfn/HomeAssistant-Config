@@ -1,3 +1,17 @@
+automation:
+- alias: Media centre - Always on
+  id: 24396ba3-9fc0-4703-86aa-79362592c076
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/always_on.yaml
+    input:
+      timeout: 60
+      entities_list:
+      - switch.media_centre_power_strip_socket_1
+      - switch.media_centre_power_strip_socket_2
+      - switch.media_centre_power_strip_socket_3
+      - switch.media_centre_power_strip_socket_4
+
 sensor:
   - name: Media centre - Total power
     platform: group

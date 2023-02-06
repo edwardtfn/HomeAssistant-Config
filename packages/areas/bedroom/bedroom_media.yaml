@@ -1,3 +1,14 @@
+automation:
+- alias: Bedroom - Apple TV - Turn on/off together with TV
+  id: '1671816500266'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/set_entities_based_on_other_entities.yaml
+    input:
+      input_entities:
+      - switch.bedroom_power_strip_1_socket_4
+      target_entities:
+      - switch.bedroom_power_strip_1_socket_2
 media_player:
   - name: Bedroom - TV Samsung - Universal
     platform: universal # https://www.home-assistant.io/integrations/universal/

@@ -1,3 +1,10 @@
+group:
+  living_room_table_lights_disable_automations:
+    name: Living room - Table lights - Disable automations
+    entities:
+      - input_boolean.home_party_mode
+      - binary_sensor.living_room_tv_is_on
+
 #hdmi_cec: # https://www.home-assistant.io/integrations/hdmi_cec/
   #host: 192.168.12.224
   #platform: media_player

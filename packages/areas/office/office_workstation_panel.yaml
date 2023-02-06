@@ -1,0 +1,35 @@
+automation:
+- alias: Office - Workstation - Panel - Configuration
+  id: '1672915688798'
+  description: ''
+  use_blueprint:
+    path: Blackymas/nspanel_blueprint.yaml
+    input:
+      nspanel_name: office_workstation_panel
+      weather: AccuWeather
+      accuweather: home
+      outdoortemp: sensor.home_weather_outdoor_temperature
+      humidity: sensor.office_thermostat_1_current_humidity
+      climate: climate.office_thermostat_cloud
+      left_button_entity: light.office_ceiling_lines
+      left_button_name: Lines
+      right_button_entity: light.office_workstation_lights
+      right_button_name: Desk
+      heatingsystemflame: binary_sensor.home_heating
+      entity01: cover.office_shutter_1_cover
+      entity02: cover.office_shutter_2_cover
+      entity01_name: Shutter 1
+      entity02_name: Shutter 2
+      entity05: cover.office_roller_blind_1_cover
+      entity05_name: Blind 1
+      entity06: cover.office_roller_blind_2_cover
+      entity06_name: Blind 2
+      button_page01_label: Office
+      entity03: light.office_ceiling_lines
+      entity03_name: Ceiling lights
+      entity07: light.office_workstation_lights
+      entity07_name: Workstation lights
+      entity04: switch.office_workstation_outlets_displays
+      entity04_name: Displays
+      entity08: switch.office_workstation_power_strip_switch_2
+      entity08_name: Docking station
