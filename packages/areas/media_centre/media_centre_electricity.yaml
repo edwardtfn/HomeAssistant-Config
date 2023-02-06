@@ -1,0 +1,12 @@
+sensor:
+  - name: Media centre - Total power
+    platform: group
+    unique_id: 6261b8f8-27d2-48dd-b924-5812ffcb983a
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.media_centre_switch_outlets_power
+      - sensor.media_centre_switch_power_strip_power
+

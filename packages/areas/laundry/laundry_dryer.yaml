@@ -1,0 +1,23 @@
+template:
+  - sensor:
+    - name: Laundry - Dryer - Status
+      unique_id: b4439038-05c0-48a1-97e2-6617549a0d7b
+      icon: mdi:tumble-dryer
+      state: >-
+        {% set device_entity_id = 'sensor.laundry_dryer_outlet_power' %}
+        {% if states(device_entity_id) in ['none','undefined','unknown','unavailable'] %}
+          unknown
+        {% else %}
+          {% set device_power = states(device_entity_id) | float(0) %}
+          {% if device_power > 300 %}
+            drying
+          {% elif device_power > 35 %}
+            spinning
+          {% elif device_power > 10 %}
+            heating
+          {% elif device_power > 1.1 %}
+            completed
+          {% else %}
+            idle
+          {% endif %}
+        {% endif %}

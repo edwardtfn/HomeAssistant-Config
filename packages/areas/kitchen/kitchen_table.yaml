@@ -1,0 +1,10 @@
+sensor:
+  - name: Kitchen - Table - Motion ratio in the last 10m
+    platform: history_stats
+    entity_id: binary_sensor.kitchen_motion_all
+    state: "on"
+    type: ratio
+    #start: "{{ (now() + timedelta(minutes=-10)) }}"
+    end: "{{ now() }}"
+    duration:
+      minutes: 10

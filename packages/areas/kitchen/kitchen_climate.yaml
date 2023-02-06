@@ -1,0 +1,13 @@
+template:
+  - sensor:
+    - name: Kitchen - Thermostat Humidity
+      unique_id: b5577dd5-bd1b-48b4-a3cc-cd20bda7d033
+      unit_of_measurement: "%"
+      device_class: humidity
+      state: >-
+        {% set cloud_humidity = states('sensor.kitchen_thermostat_cloud_humidity') | default('unknown') %}
+        {% if is_number(cloud_humidity) %}
+          {{ cloud_humidity | float(0) | round(1) }}
+        {% else %}
+          {{ state_attr('climate.kitchen_thermostat', 'current_humidity') }}
+        {% endif %}

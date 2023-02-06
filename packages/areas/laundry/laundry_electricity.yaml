@@ -1,0 +1,13 @@
+sensor:
+  - name: Laundry - Total power
+    platform: group
+    unique_id: c1adb8ac-8515-4959-909f-025c5ceb95a7
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.bathroom_towel_warmer_power
+      - sensor.laundry_bench_outlets_power
+      - sensor.laundry_dryer_outlet_power
+      - sensor.laundry_washing_machine_power

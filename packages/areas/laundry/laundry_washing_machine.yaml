@@ -1,0 +1,24 @@
+template:
+  - sensor:
+    - name: Laundry - Washing machine - Status
+      unique_id: 40df64c7-e7d0-4090-899d-8aa156d9bd2b
+      icon: mdi:washing-machine
+      state: >-
+        {% set device_entity_id = 'sensor.laundry_washing_machine_power' %}
+        {% if states(device_entity_id) in ['none','undefined','unknown','unavailable'] %}
+          unknown
+        {% else %}
+          {% set device_power = states(device_entity_id) | float(0) %}
+          {% if device_power > 1000 %}
+            heating
+          {% elif device_power > 250 %}
+            spinning
+          {% elif device_power > 3.5 %}
+            washing
+          {% elif device_power > 1.5 %}
+            completed
+          {% else %}
+            idle
+          {% endif %}
+        {% endif %}
+

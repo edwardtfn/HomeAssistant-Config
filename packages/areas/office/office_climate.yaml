@@ -1,0 +1,36 @@
+climate:
+  - platform: climate_group # https://github.com/daenny/climate_group
+    name: Office - Thermostat
+    temperature_unit: C
+    entities:
+      - climate.office_thermostat_1
+      - climate.office_thermostat_2
+
+#generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
+#- name: Office - Hygrostat
+##unique_id: 0e70550f-baac-4679-8179-1be50ebd94ba
+#humidifier: switch.office_workstation_power_strip_switch_1
+#target_sensor: sensor.office_hygrometer_humidity
+#min_humidity: 0
+#max_humidity: 100
+#target_humidity: 30
+#away_humidity: 25
+#dry_tolerance: 2
+#device_class: humidifier
+#initial_state: true
+#min_cycle_duration:
+#minutes: 5
+
+template:
+  - sensor:
+      - name: Office - Thermostat Humidity
+        unique_id: 5f8f23b4-d33d-4f43-8b0b-bf4bc1ba0f55
+        unit_of_measurement: "%"
+        device_class: humidity
+        state: >-
+          {% set cloud_humidity = states('sensor.office_thermostat_cloud_humidity') | default('unknown') %}
+          {% if is_number(cloud_humidity) %}
+            {{ cloud_humidity | float(0) | round(1) }}
+          {% else %}
+            {{ state_attr('climate.office_thermostat_1', 'current_humidity') }}
+          {% endif %}

@@ -1,0 +1,12 @@
+sensor:
+  - name: Hall - Total power
+    platform: group
+    unique_id: e7dfb98d-dd87-4b31-b8fd-10f5f5eeec85
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.hall_light_switch_light_power
+      - sensor.hall_light_switch_panel_power
+      - sensor.hall_outlets_power

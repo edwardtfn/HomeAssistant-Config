@@ -1,0 +1,12 @@
+sensor:
+  - name: Office - Total power
+    platform: group
+    unique_id: bc1b1004-a388-4465-9a1f-8d392901a99f
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.office_door_outlets_power
+      - sensor.office_windows_outlets_ceiling_lights_power
+      - sensor.office_windows_outlets_outlets_power

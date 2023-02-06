@@ -1,0 +1,33 @@
+#home_connect:
+  #client_id: !secret home_connect_client_id
+  #client_secret: !secret home_connect_client_secret
+
+template:
+  - trigger:
+    - id: Door
+      platform: state
+      entity_id:
+        - binary_sensor.kitchen_dishwasher_door
+      from:
+        - "off"
+        - "on"
+      to:
+        - "off"
+        - "on"
+    - id: Cycle
+      platform: state
+      entity_id:
+        - sensor.kitchen_dishwasher_operation_state
+      to:
+        - "Run"
+    binary_sensor:
+      - name: Kitchen - Dishwasher - Door oppened after run
+        unique_id: 39cd3a86-5db0-40a0-978d-29751413fc59
+        state: "{{ trigger.id == 'Door' }}"
+        attributes:
+          triggered_by: "{{ trigger.entity_id }}"
+          last_triggered: "{{ now() }}"
+          trigger: "{{ trigger }}"
+          door: "{{ states('binary_sensor.kitchen_dishwasher_door') }}"
+          operation_state: "{{ states('sensor.kitchen_dishwasher_operation_state') }}"
+
