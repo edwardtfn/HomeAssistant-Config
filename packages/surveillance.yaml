@@ -39,10 +39,10 @@ script:
       data: {}
       target:
         entity_id:
+        - switch.dogs_mat_camera_enabled
         - switch.hall_camera_enabled
-        - switch.office_door_camera_enabled
-        - switch.office_windows_camera_enabled
         - switch.living_room_camera_enabled
+        - switch.office_camera_enabled
     mode: restart
     icon: mdi:cctv
   home_surveillance_turn_off_all_cameras:
@@ -54,7 +54,7 @@ script:
       data: {}
       target:
         entity_id:
+        - switch.dogs_mat_camera_enabled
         - switch.hall_camera_enabled
-        - switch.office_door_camera_enabled
-        - switch.office_windows_camera_enabled
         - switch.living_room_camera_enabled
+        - switch.office_camera_enabled

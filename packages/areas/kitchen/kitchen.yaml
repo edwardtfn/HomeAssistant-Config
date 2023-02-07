@@ -1,5 +1,4 @@
 automation:
-
 - alias: Kitchen - Always on
   id: f711c2a0-4b8a-4aed-b8bb-5a2ce62aed4f
   description: ''
@@ -206,7 +205,7 @@ automation:
         message: Dishwasher successfully started.
       continue_on_error: true
     else:
-    - service: notify.signal_group_artillerigatan
+    - service: notify.signal_group_home
       data:
         message: Failed to start the dishwasher.
       continue_on_error: true
@@ -292,7 +291,7 @@ automation:
         - condition: trigger
           id: Fridge - Low
       sequence:
-      - service: notify.signal_group_artillerigatan
+      - service: notify.signal_group_home
         data:
           message: "Abnormal temperature! \n{{ state_attr(trigger.entity_id, 'friendly_name')
             }} is {{states(trigger.entity_id) | float(-99) | round(1) }}ºC.\nPlease
@@ -309,7 +308,7 @@ automation:
         - condition: trigger
           id: Fridge - Normal
       sequence:
-      - service: notify.signal_group_artillerigatan
+      - service: notify.signal_group_home
         data:
           message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} temperature
             is back to normal ({{states(trigger.entity_id) | float(-99) | round(1)
@@ -326,14 +325,14 @@ automation:
       light_target: light.kitchen_table_lights
       light_level_high: 90
       light_level_dimmer: 25
-      no_motion_wait_to_dimming: 120
+      no_motion_wait_to_dimming: 360
       max_sun_angle: 90
       max_lumens: 50
       pause_entities_on:
       - binary_sensor.living_room_tv_is_on
       - input_boolean.home_party_mode
-      occupancy_ratio_entity: sensor.kitchen_table_motion_ratio_in_the_last_10m
-      occupancy_ratio_threshold: 10
+      #occupancy_ratio_entity: sensor.kitchen_table_motion_ratio_in_the_last_10m
+      #occupancy_ratio_threshold: 10
 - alias: Kitchen - Table - Lights - Wall switch
   id: '1661932373416'
   description: ''

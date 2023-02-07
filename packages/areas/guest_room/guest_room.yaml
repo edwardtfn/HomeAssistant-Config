@@ -96,7 +96,7 @@ automation:
     path: EdwardTFN/light_motion_illuminance_2_levels.yaml
     input:
       motion_entity: binary_sensor.guest_room_motion
-      lumens_entity: sensor.guest_room_motion_light_level
+      lumens_entity: sensor.guest_room_motion_illuminance
       light_target: light.guest_room_wall_lights
       no_motion_wait_to_dimming: 120
       pause_entities_off:

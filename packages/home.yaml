@@ -7,13 +7,13 @@ automation:
     input:
       exclude:
         entity_id:
-        - sensor.abisko_internal_battery_level
-        - sensor.sm_g981b_battery_level
-        - sensor.vw_passat_battery_level
+        - sensor.carols_laptop_internal_battery_level
+        - sensor.carols_phone_battery_level
         - sensor.edwards_phone_battery_level
         - sensor.edwards_tablet_battery_level
+        - sensor.vw_passat_battery_level
       actions:
-      - service: notify.signal_group_artillerigatan
+      - service: notify.signal_group_home
         data:
           message: 'Low battery warning for: {{sensors}}'
       threshold: 15
@@ -314,7 +314,7 @@ automation:
               entity_id: sensor.laundry_washing_machine_power
               above: '10'
             continue_on_timeout: false
-          - service: notify.signal_group_artillerigatan
+          - service: notify.signal_group_home
             data:
               message: Silence hours - Looks like the washer was left running at this
                 time. Please take a look.
@@ -330,7 +330,7 @@ automation:
               entity_id: sensor.laundry_dryer_outlet_power
               above: '10'
             continue_on_timeout: false
-          - service: notify.signal_group_artillerigatan
+          - service: notify.signal_group_home
             data:
               message: Silence hours - Looks like the dryer was left running at this
                 time. Please take a look.
@@ -373,13 +373,13 @@ automation:
     - condition: not
       conditions:
       - condition: state
-        entity_id: alarm_control_panel.artillerigatan
+        entity_id: alarm_control_panel.eufy_hub
         state: disarmed
   action:
   - service: alarm_control_panel.alarm_disarm
     data: {}
     target:
-      entity_id: alarm_control_panel.artillerigatan
+      entity_id: alarm_control_panel.eufy_hub
     continue_on_error: true
   - service: script.home_surveillance_turn_off_all_cameras
     data: {}
@@ -427,7 +427,7 @@ automation:
       'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
       'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
   action:
-  - service: notify.signal_group_artillerigatan
+  - service: notify.signal_group_home
     data:
       message: "The weather is changing and the following windows are open:\n- {{
         states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
@@ -449,17 +449,17 @@ automation:
     id: started streaming
   - platform: state
     entity_id:
+    - switch.dogs_mat_camera_enabled
     - switch.hall_camera_enabled
-    - switch.office_door_camera_enabled
-    - switch.office_windows_camera_enabled
     - switch.living_room_camera_enabled
+    - switch.office_camera_enabled
     from: 'off'
     to: 'on'
     id: was enabled
   condition: []
   action:
   - parallel:
-    - service: notify.signal_group_artillerigatan
+    - service: notify.signal_group_home
       continue_on_error: true
       data:
         message: Attention, a camera in {{ area_name(trigger.entity_id) }} {{ trigger.id
@@ -655,7 +655,7 @@ automation:
   trigger:
   - platform: state
     entity_id:
-    - alarm_control_panel.artillerigatan
+    - alarm_control_panel.eufy_hub
     id: Alarm
     for:
       seconds: 2
@@ -672,10 +672,10 @@ automation:
   - condition: not
     conditions:
     - condition: state
-      entity_id: alarm_control_panel.artillerigatan
+      entity_id: alarm_control_panel.eufy_hub
       state: unknown
     - condition: state
-      entity_id: alarm_control_panel.artillerigatan
+      entity_id: alarm_control_panel.eufy_hub
       state: unavailable
   action:
   - if:
@@ -688,7 +688,7 @@ automation:
     then:
     - if:
       - condition: state
-        entity_id: alarm_control_panel.artillerigatan
+        entity_id: alarm_control_panel.eufy_hub
         state: disarmed
         for:
           seconds: 2
@@ -712,7 +712,7 @@ automation:
         - service: alarm_control_panel.alarm_arm_home
           data: {}
           target:
-            entity_id: alarm_control_panel.artillerigatan
+            entity_id: alarm_control_panel.eufy_hub
       - conditions:
         - condition: state
           entity_id: input_boolean.home_alarm
@@ -721,7 +721,7 @@ automation:
         - service: alarm_control_panel.alarm_disarm
           data: {}
           target:
-            entity_id: alarm_control_panel.artillerigatan
+            entity_id: alarm_control_panel.eufy_hub
   mode: single
 - alias: Home - Curtain's lights
   id: '1672609137203'
@@ -829,7 +829,7 @@ automation:
   trigger:
   - platform: state
     entity_id:
-    - sensor.sm_g981b_battery_level
+    - sensor.carols_phone_battery_level
     to: '0'
     for:
       hours: 0
@@ -838,7 +838,7 @@ automation:
     id: Carol's phone
   - platform: state
     entity_id:
-    - sensor.sm_g981b_battery_level
+    - sensor.carols_phone_battery_level
     to:
     - unavailable
     - unknown
@@ -856,7 +856,7 @@ automation:
     id: Edward's phone
   - platform: state
     entity_id:
-    - sensor.device_tracker_edwards_phone_icloud3_batter
+    - sensor.device_tracker_edwards_phone_icloud3_battery
     to:
     - unavailable
     - unknown
@@ -865,7 +865,7 @@ automation:
     id: Edward's phone
   condition: []
   action:
-  - service: notify.signal_group_artillerigatan
+  - service: notify.signal_group_home
     data:
       message: 'Phone out of battery:
 
@@ -1042,15 +1042,13 @@ template:
         - binary_sensor.guest_bathroom_motion_iaszone
         - binary_sensor.guest_bathroom_motion_occupancy
         - binary_sensor.guest_room_motion
-        - binary_sensor.guest_room_motion_occupancy
         - binary_sensor.hall_motion_occupancy
         - binary_sensor.kitchen_bench_motion_occupancy
         - binary_sensor.kitchen_bench_motion_on_off
         - binary_sensor.kitchen_table_motion_occupancy
         - binary_sensor.kitchen_table_motion_on_off
         - binary_sensor.office_motion_occupancy
-        - binary_sensor.office_workstation_motion_occupancy
-        - binary_sensor.office_workstation_motion_iaszone
+        - binary_sensor.office_workstation_motion
       from: "off"
       to: "on"
     - id: Others # When other activities are detected
@@ -1073,7 +1071,8 @@ template:
         - binary_sensor.guest_room_door
         - binary_sensor.guest_room_door_outlets_ceiling_lights_input
         - binary_sensor.hall_front_door
-        - binary_sensor.hall_light_switch_input
+        - binary_sensor.hall_panel_left_button
+        - binary_sensor.hall_panel_right_button
         - binary_sensor.kitchen_ceiling_lights_table_lights_input
         - binary_sensor.kitchen_ceiling_lights_windows_lights_input
         - binary_sensor.kitchen_bench_left_light_input

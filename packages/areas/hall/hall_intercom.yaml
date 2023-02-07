@@ -18,7 +18,7 @@ automation:
   condition: []
   action:
   - parallel:
-    - service: notify.signal_group_artillerigatan
+    - service: notify.signal_group_home
       data:
         message: The intercom {{ trigger.id }}
       continue_on_error: true

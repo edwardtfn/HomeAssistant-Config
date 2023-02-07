@@ -69,7 +69,7 @@ automation:
     attribute: error_code
     above: 0
   action:
-  - service: notify.signal_group_artillerigatan
+  - service: notify.signal_group_home
     data:
       message: 'The Roomba from hall reported an error!
 

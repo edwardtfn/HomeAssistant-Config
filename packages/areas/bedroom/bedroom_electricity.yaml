@@ -1,3 +1,15 @@
+automation:
+- alias: Bedroom - Always on
+  id: c7ffed8e-cb93-4435-8f08-69b6115897bd
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/always_on.yaml
+    input:
+      timeout: 60
+      entities_list:
+      - switch.bedroom_power_strip_1_socket_1
+      - switch.bedroom_power_strip_1_usb
+
 sensor:
   - name: Bedroom - Total power
     platform: group

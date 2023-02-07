@@ -371,7 +371,7 @@ automation:
 sensor:
   - platform: history_stats
     name: Office - Workstation - Motion ratio in the last 10m
-    entity_id: binary_sensor.office_workstation_motion_occupancy
+    entity_id: binary_sensor.office_workstation_motion
     state: "on"
     type: ratio
     #start: "{{ (now() + timedelta(minutes=-10)) }}"
