@@ -25,7 +25,7 @@
                 },
                 {
                   "type": "alarm-control-panel",
-                  "entity": "alarm_control_panel.artillerigatan"
+                  "entity": "alarm_control_panel.eufy_hub"
                 },
                 {
                   "type": "conditional",
@@ -127,13 +127,13 @@
                   "type": "conditional",
                   "conditions": [
                     {
-                      "entity": "vacuum.living_room_roomba",
+                      "entity": "vacuum.hall_roomba",
                       "state_not": "docked"
                     }
                   ],
                   "chip": {
                     "type": "entity",
-                    "entity": "vacuum.living_room_roomba"
+                    "entity": "vacuum.hall_roomba"
                   }
                 },
                 {
@@ -5686,7 +5686,7 @@
                     {
                       "type": "custom:mushroom-template-card",
                       "primary": "Dryer",
-                      "secondary": "{{ states('sensor.laundry_dryer_status') | capitalize }}\n{% if states('sensor.laundry_dryer_power') | float(0) > 0%} {{\n  states('sensor.laundry_dryer_outlet_power') | float(0) | round(1) }}W\n{% endif %}",
+                      "secondary": "{{ states('sensor.laundry_dryer_status') | capitalize }}\n{% if states('sensor.laundry_dryer_outlet_power') | float(0) > 0%} {{\n  states('sensor.laundry_dryer_outlet_power') | float(0) | round(1) }}W\n{% endif %}",
                       "icon": "mdi:tumble-dryer",
                       "icon_color": "{% if is_state('switch.laundry_dryer_outlet', 'off') %}\n  off\n{% else %}\n  {% if is_state('sensor.laundry_dryer_status', 'Idle') %}\n    blue\n  {% else %}\n    red\n  {% endif %}\n{% endif %}",
                       "entity": "sensor.laundry_dryer_status",
@@ -6003,7 +6003,7 @@
                     },
                     {
                       "type": "custom:mushroom-vacuum-card",
-                      "entity": "vacuum.living_room_roomba",
+                      "entity": "vacuum.hall_roomba",
                       "name": "Roomba",
                       "fill_container": true,
                       "layout": "vertical",
@@ -6317,20 +6317,20 @@
                     },
                     {
                       "type": "custom:mushroom-template-card",
-                      "primary": "Camera (Door)",
-                      "secondary": "{{ states('camera.office_door_camera') | capitalize }}",
+                      "primary": "Camera",
+                      "secondary": "{{ states('camera.office_camera') | capitalize }}",
                       "icon": "{{ iif(is_state(entity, 'True'), 'mdi:cctv', 'mdi:cctv-off') }}",
                       "layout": "vertical",
                       "fill_container": true,
-                      "entity": "binary_sensor.office_door_camera_streaming_sensor",
-                      "icon_color": "{{ iif(is_state(entity, 'True'), 'red', iif(is_state('switch.office_door_camera_enabled', 'on'), 'gold', '')) }}",
+                      "entity": "binary_sensor.office_camera_streaming_sensor",
+                      "icon_color": "{{ iif(is_state(entity, 'True'), 'red', iif(is_state('switch.office_camera_enabled', 'on'), 'gold', '')) }}",
                       "badge_icon": "{{ iif(is_state(entity, 'True'), 'mdi:wifi', '') }}",
                       "badge_color": "red",
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.camera_toggle",
                         "data": {
-                          "camera": "camera.office_door_camera"
+                          "camera": "camera.office_camera"
                         },
                         "target": {}
                       },
@@ -6340,20 +6340,20 @@
                     },
                     {
                       "type": "custom:mushroom-template-card",
-                      "primary": "Camera (Windows)",
-                      "secondary": "{{ states('camera.office_windows_camera') | capitalize }}",
+                      "primary": "Camera (Dog's mat)",
+                      "secondary": "{{ states('camera.dogs_mat_camera') | capitalize }}",
                       "icon": "{{ iif(is_state(entity, 'True'), 'mdi:cctv', 'mdi:cctv-off') }}",
                       "layout": "vertical",
                       "fill_container": true,
-                      "entity": "binary_sensor.office_windows_camera_streaming_sensor",
-                      "icon_color": "{{ iif(is_state(entity, 'True'), 'red', iif(is_state('switch.office_windows_camera_enabled', 'on'), 'gold', '')) }}",
+                      "entity": "binary_sensor.dogs_mat_camera_streaming_sensor",
+                      "icon_color": "{{ iif(is_state(entity, 'True'), 'red', iif(is_state('switch.dogs_mat_camera_enabled', 'on'), 'gold', '')) }}",
                       "badge_icon": "{{ iif(is_state(entity, 'True'), 'mdi:wifi', '') }}",
                       "badge_color": "red",
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.camera_toggle",
                         "data": {
-                          "camera": "camera.office_windows_camera"
+                          "camera": "camera.dogs_mat_camera_camera"
                         },
                         "target": {}
                       },
@@ -9057,7 +9057,7 @@
                 "arm_home",
                 "arm_away"
               ],
-              "entity": "alarm_control_panel.artillerigatan",
+              "entity": "alarm_control_panel.eufy_hub",
               "name": "Camera mode"
             },
             {
@@ -9132,12 +9132,12 @@
                   ],
                   "card": {
                     "type": "picture-entity",
-                    "entity": "camera.office_door_camera",
+                    "entity": "camera.office_camera",
                     "tap_action": {
                       "action": "call-service",
                       "service": "camera.turn_on",
                       "target": {
-                        "entity_id": "camera.office_door_camera"
+                        "entity_id": "camera.office_camera"
                       }
                     }
                   }
@@ -9155,7 +9155,7 @@
                     "cards": [
                       {
                         "type": "custom:webrtc-camera",
-                        "entity": "camera.office_door_camera"
+                        "entity": "camera.office_camera"
                       },
                       {
                         "type": "button",
@@ -9166,7 +9166,7 @@
                           "action": "call-service",
                           "service": "camera.turn_off",
                           "target": {
-                            "entity_id": "camera.office_door_camera"
+                            "entity_id": "camera.office_camera"
                           }
                         }
                       }
@@ -9248,12 +9248,12 @@
                   ],
                   "card": {
                     "type": "picture-entity",
-                    "entity": "camera.office_windows_camera",
+                    "entity": "camera.dogs_mat_camera",
                     "tap_action": {
                       "action": "call-service",
                       "service": "camera.turn_on",
                       "target": {
-                        "entity_id": "camera.office_windows_camera"
+                        "entity_id": "camera.dogs_mat_camera"
                       }
                     }
                   }
@@ -9271,7 +9271,7 @@
                     "cards": [
                       {
                         "type": "custom:webrtc-camera",
-                        "entity": "camera.office_windows_camera"
+                        "entity": "camera.dogs_mat_camera"
                       },
                       {
                         "type": "button",
@@ -9282,7 +9282,7 @@
                           "action": "call-service",
                           "service": "camera.turn_off",
                           "target": {
-                            "entity_id": "camera.office_windows_camera"
+                            "entity_id": "camera.dogs_mat_camera"
                           }
                         }
                       }
