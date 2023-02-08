@@ -1,0 +1,12 @@
+sensor:
+  - name: Bathroom - Total power
+    platform: group
+    unique_id: d7d2ded1-4090-413e-9b7c-8077f6e5a46d
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.bathroom_ceiling_lights_power
+      - sensor.bathroom_mirror_light_power
+      - sensor.bathroom_mirror_outlets_power

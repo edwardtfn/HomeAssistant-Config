@@ -1,0 +1,132 @@
+automation:
+- alias: Office - Workstation - Cube
+  id: '1643883389793'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/zha_aqara_cube_simple.yaml
+    input:
+      last_face_input: input_number.office_cube_last_activated_face
+      cube: cee0a393afbe9b83b66284988780d061
+      face_1_knock:
+      - service: light.toggle
+        data:
+          transition: 1
+          brightness_pct: 50
+          color_temp: 230
+        target:
+          entity_id: light.office_workstation_lights
+      face_1_rotate_counter_clockwise:
+      - device_id: 5a5dd33d7bd421bc2afe0bb014d92337
+        domain: light
+        entity_id: light.office_workstation_lights_left
+        type: brightness_decrease
+      - device_id: 6edbdadfce89c79507b7272c7c977037
+        domain: light
+        entity_id: light.office_workstation_lights_right
+        type: brightness_decrease
+      face_1_rotate_clockwise:
+      - device_id: 5a5dd33d7bd421bc2afe0bb014d92337
+        domain: light
+        entity_id: light.office_workstation_lights_left
+        type: brightness_increase
+      - device_id: 6edbdadfce89c79507b7272c7c977037
+        domain: light
+        entity_id: light.office_workstation_lights_right
+        type: brightness_increase
+      face_4_knock:
+      - service: light.toggle
+        data:
+          transition: 1
+          brightness_pct: 50
+        target:
+          entity_id: light.office_ceiling_lines
+      face_2_knock:
+      - choose:
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: device
+              device_id: 2e935ff845c97cb19fc36d05e1d50415
+              domain: cover
+              entity_id: cover.office_roller_blind_cover
+              type: is_opening
+            - condition: device
+              device_id: 2e935ff845c97cb19fc36d05e1d50415
+              domain: cover
+              entity_id: cover.office_roller_blind_cover
+              type: is_closing
+          sequence:
+          - service: cover.stop_cover
+            data: {}
+            target:
+              device_id: 2e935ff845c97cb19fc36d05e1d50415
+        - conditions:
+          - condition: device
+            device_id: 2e935ff845c97cb19fc36d05e1d50415
+            domain: cover
+            entity_id: cover.office_roller_blind_cover
+            type: is_open
+          sequence:
+          - service: cover.close_cover
+            data: {}
+            target:
+              device_id: 2e935ff845c97cb19fc36d05e1d50415
+        - conditions:
+          - condition: device
+            device_id: 2e935ff845c97cb19fc36d05e1d50415
+            domain: cover
+            entity_id: cover.office_roller_blind_cover
+            type: is_closed
+          sequence:
+          - service: cover.open_cover
+            data: {}
+            target:
+              device_id: 2e935ff845c97cb19fc36d05e1d50415
+        default: []
+      face_3_knock:
+      - service: switch.toggle
+        data: {}
+        target:
+          entity_id: switch.office_workstation_outlets_docking_station
+      face_3_counter_clockwise:
+      - choose:
+        - conditions:
+          - condition: not
+            conditions:
+            - condition: device
+              device_id: 216297d2524fa8459f265e6a9930f739
+              domain: vacuum
+              entity_id: vacuum.hall_roomba
+              type: is_docked
+            - condition: device
+              device_id: 216297d2524fa8459f265e6a9930f739
+              domain: vacuum
+              entity_id: vacuum.hall_roomba
+              type: is_cleaning
+          sequence:
+          - device_id: 216297d2524fa8459f265e6a9930f739
+            domain: vacuum
+            entity_id: vacuum.hall_roomba
+            type: dock
+        default: []
+      face_3_rotate_counter_clockwise: []
+      face_2_rotate_clockwise: []
+      face_5_knock:
+      - service: switch.toggle
+        data: {}
+        target:
+          entity_id:
+          - switch.office_workstation_outlets_displays
+      face_4_rotate_counter_clockwise:
+      - device_id: 23b99823c540e6a0265e79892b351820
+        domain: light
+        entity_id: light.office_ceiling_lines
+        type: brightness_decrease
+      face_4_rotate_clockwise:
+      - device_id: 23b99823c540e6a0265e79892b351820
+        domain: light
+        entity_id: light.office_ceiling_lines
+        type: brightness_increase
+      face_2_rotate_counter_clockwise: []
+      face_5_rotate_counter_clockwise: []
+

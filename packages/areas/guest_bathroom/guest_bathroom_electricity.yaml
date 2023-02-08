@@ -1,0 +1,13 @@
+sensor:
+  - name: Guest bathroom - Total power
+    platform: group
+    unique_id: c42393bd-7efa-43d2-b747-f7b2d86bf506
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.guest_bathroom_ceiling_light_power
+      - sensor.guest_bathroom_mirror_lights_power
+      - sensor.guest_bathroom_mirror_outlets_power
+      - sensor.guest_bathroom_towel_warmer_power

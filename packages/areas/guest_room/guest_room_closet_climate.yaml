@@ -1,0 +1,13 @@
+template:
+  - sensor:
+    - name: Guest room - Closet - Thermostat Humidity
+      unique_id: d2ddbe5e-6a2d-47e9-abea-7f39d59979fe
+      unit_of_measurement: "%"
+      device_class: humidity
+      availability: "{{ is_number('sensor.guest_room_closet_thermostat_cloud_humidity') or state_attr('climate.guest_room_closet_thermostat', 'current_humidity') | float(-1) >= 0}}"
+      state: >-
+        {% if is_number('sensor.guest_room_closet_thermostat_cloud_humidity') %}
+          {{ states('sensor.guest_room_closet_thermostat_cloud_humidity') | float(0) | round(0) }}
+        {% else %}
+          {{ state_attr('climate.guest_room_closet_thermostat', 'current_humidity') | float(0) | round(0) }}
+        {% endif %}

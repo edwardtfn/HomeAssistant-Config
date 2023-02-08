@@ -131,5 +131,6 @@ template:
   - binary_sensor:
       - name: Living room - TV is on
         unique_id: 363e5658-843f-47d4-a170-29c4b2553745
+        availability: "{{ is_number('sensor.living_room_tv_rack_outlets_power') }}"
         state: >-
           {{ states('sensor.living_room_tv_rack_outlets_power') | float(0) > 100 }}

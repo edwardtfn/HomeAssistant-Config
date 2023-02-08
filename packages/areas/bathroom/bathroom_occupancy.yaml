@@ -1,0 +1,10 @@
+sensor:
+  - platform: history_stats
+    name: Bathroom - Motion ratio in the last 10m
+    entity_id: binary_sensor.bathroom_motion_dual_sensors_state
+    state: "on"
+    type: ratio
+    #start: "{{ (now() + timedelta(minutes=-10)) }}"
+    end: "{{ now() }}"
+    duration:
+      minutes: 10

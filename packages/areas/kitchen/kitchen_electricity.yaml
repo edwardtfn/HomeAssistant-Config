@@ -1,3 +1,14 @@
+automation:
+- alias: Kitchen - Always on
+  id: f711c2a0-4b8a-4aed-b8bb-5a2ce62aed4f
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/always_on.yaml
+    input:
+      timeout: 60
+      entities_list:
+      - switch.kitchen_cooker_hood
+
 sensor:
   - name: Kitchen - Total power
     platform: group
@@ -24,31 +35,3 @@ sensor:
       - sensor.kitchen_refrigeration_freezer_outlet_power
       - sensor.kitchen_refrigeration_fridge_outlet_power
       - sensor.kitchen_windows_wall_outlet_power
-
-  - name: Kitchen - Bench - Total power
-    platform: group
-    unique_id: 1b0da3e6-ade5-484e-bd3a-0c6ef60739ec
-    unit_of_measurement: "W"
-    device_class: power
-    type: sum
-    ignore_non_numeric: true
-    entities:
-      - sensor.kitchen_bench_outlets_1_outlets_power
-      - sensor.kitchen_bench_outlets_1_usb_power
-      - sensor.kitchen_bench_outlets_2_power
-      - sensor.kitchen_bench_outlets_3_power
-      - sensor.kitchen_bench_left_light_power
-      - sensor.kitchen_bench_right_light_power
-      - sensor.kitchen_cooker_hood_power
-
-  - name: Kitchen - Cooktop - Total power
-    platform: group
-    unique_id: c9eaa92a-a69d-4873-8661-5dedc6d2f313
-    unit_of_measurement: "W"
-    device_class: power
-    type: sum
-    ignore_non_numeric: true
-    entities:
-      - sensor.kitchen_cooktop_l1_outlet_power
-      - sensor.kitchen_cooktop_l2_outlet_power
-      - sensor.kitchen_cooktop_l3_outlet_power

@@ -1,49 +1,3 @@
-automation:
-- alias: Guest bathroom - Lights - Motion based
-  id: '1644684428323'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-    input:
-      lumens_entity: sensor.guest_bathroom_motion_illuminance
-      light_target: light.guest_bathroom_all_lights
-      light_level_high: 50
-      light_level_dimmer: 25
-      no_motion_wait_to_dimming: 300
-      no_motion_wait_to_off: 60
-      max_lumens: 15
-      bathroom_door: binary_sensor.guest_bathroom_door
-      motion_entity: binary_sensor.guest_bathroom_motion_dual_sensors_state
-- alias: Guest bathroom - Mirror lights - Simplified
-  id: '1644684579413'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-    input:
-      motion_entity: binary_sensor.guest_bathroom_motion_occupancy
-      lumens_entity: sensor.guest_bathroom_motion_illuminance
-      max_lumens: 1
-      light_level_high: 100
-      light_level_dimmer: 100
-      light_target: light.guest_bathroom_mirror_lights
-      no_motion_wait_to_off: 20
-- alias: Guest bathroom - Mirror lights - Turn on when door opens
-  id: '1661417826606'
-  description: ''
-  trigger:
-  - type: opened
-    platform: device
-    device_id: e9983c431c3c0265853419df7462492e
-    entity_id: binary_sensor.guest_bathroom_door
-    domain: binary_sensor
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 47652d57654a4bb75f6f08281fb040e6
-    entity_id: light.guest_bathroom_mirror_lights
-    domain: light
-  mode: single
-
 binary_sensor:
   - name: Guest bathroom - Occupied
     platform: bayesian # https://www.home-assistant.io/integrations/bayesian/
@@ -88,7 +42,6 @@ binary_sensor:
         prob_given_true: 0.4
         prob_given_false: 0.1
 
-
 sensor:
   - platform: history_stats
     name: Guest bathroom - Motion ratio in the last 10m
@@ -98,21 +51,7 @@ sensor:
     #start: "{{ (now() + timedelta(minutes=-10)) }}"
     end: "{{ now() }}"
     duration:
-      hours: 24
-
-  - name: Guest bathroom - Total power
-    platform: group
-    unique_id: c42393bd-7efa-43d2-b747-f7b2d86bf506
-    unit_of_measurement: "W"
-    device_class: power
-    type: sum
-    ignore_non_numeric: true
-    entities:
-      - sensor.guest_bathroom_ceiling_light_power
-      - sensor.guest_bathroom_mirror_lights_power
-      - sensor.guest_bathroom_mirror_outlets_power
-      - sensor.guest_bathroom_towel_warmer_power
-
+      minutes: 10
 
 template:
   - trigger:

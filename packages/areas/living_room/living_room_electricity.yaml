@@ -1,3 +1,18 @@
+automation:
+- alias: Living room - Always on
+  id: 75d18245-d852-41c3-bc38-085b93aaf518
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/always_on.yaml
+    input:
+      timeout: 60
+      entities_list:
+      - switch.living_room_network_strip_1_socket_1
+      - switch.living_room_network_strip_1_socket_2
+      - switch.living_room_network_strip_1_socket_3
+      - switch.living_room_network_strip_1_socket_4
+      - switch.living_room_network_strip_1_usb
+
 sensor:
   - name: Living room - Total power
     platform: group

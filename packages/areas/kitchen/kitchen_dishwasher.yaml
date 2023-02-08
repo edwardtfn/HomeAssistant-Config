@@ -1,3 +1,87 @@
+automation:
+- alias: Kitchen - Dishwasher - Run when price is at minimum
+  id: '1640731367839'
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.electricity_price
+    attribute: future_prices_16h_current_price_is_at_min
+    to: 'true'
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: sensor.kitchen_dishwasher_operation_state
+      state: Inactive
+    - condition: state
+      entity_id: sensor.kitchen_dishwasher_operation_state
+      state: Ready
+    - condition: state
+      entity_id: sensor.kitchen_dishwasher_operation_state
+      state: unavailable
+  - condition: template
+    value_template: '{{ as_timestamp(now() - timedelta(hours=8)) >= as_timestamp(states(''input_datetime.kitchen_dishwasher_last_run''))}}'
+  - condition: state
+    entity_id: input_boolean.home_travelling_mode
+    state: 'off'
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.kitchen_dishwasher_power
+  - service: notify.signal_edward
+    data:
+      message: Dishwasher is starting...
+    continue_on_error: true
+    enabled: false
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+    continue_on_error: true
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.kitchen_dishwasher_power
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.kitchen_dishwasher_program_eco50
+  - wait_for_trigger:
+    - platform: state
+      entity_id:
+      - sensor.kitchen_dishwasher_operation_state
+      to: Run
+    timeout:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - if:
+    - condition: state
+      entity_id: sensor.kitchen_dishwasher_operation_state
+      state: Run
+    then:
+    - service: input_datetime.set_datetime
+      target:
+        entity_id: input_datetime.kitchen_dishwasher_last_run
+      data:
+        timestamp: '{{ now().timestamp() }}'
+      continue_on_error: true
+    - service: notify.signal_edward
+      data:
+        message: Dishwasher successfully started.
+      continue_on_error: true
+    else:
+    - service: notify.signal_group_home
+      data:
+        message: Failed to start the dishwasher.
+      continue_on_error: true
+  mode: restart
+
 #home_connect:
   #client_id: !secret home_connect_client_id
   #client_secret: !secret home_connect_client_secret
@@ -23,6 +107,9 @@ template:
     binary_sensor:
       - name: Kitchen - Dishwasher - Door oppened after run
         unique_id: 39cd3a86-5db0-40a0-978d-29751413fc59
+        availability: >-
+          {{ states('sensor.kitchen_dishwasher_operation_state') not in ['unknown','unavailable'] 
+          and states('binary_sensor.kitchen_dishwasher_door') not in ['unknown','unavailable'] }}
         state: "{{ trigger.id == 'Door' }}"
         attributes:
           triggered_by: "{{ trigger.entity_id }}"

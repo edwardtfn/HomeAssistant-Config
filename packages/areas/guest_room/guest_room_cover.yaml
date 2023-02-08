@@ -1,0 +1,9 @@
+automation:
+- alias: Guest room - Covers - Shutter - Remote control
+  id: '1664956189168'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/cover_remote.yaml
+    input:
+      remote_device: f924ed9d99a9600cb8c516a76d023253
+      cover_entity: cover.guest_room_shutter_cover

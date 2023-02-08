@@ -1,0 +1,88 @@
+automation:
+- alias: Kitchen - Bench - Lights - Motion
+  id: '1642333235058'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
+    input:
+      max_lumens: 15
+      no_motion_wait_to_dimming: 60
+      light_level_high: 100
+      light_level_dimmer: 35
+      motion_entity: binary_sensor.kitchen_bench_motion_occupancy
+      lumens_entity: sensor.kitchen_bench_motion_light_level
+      light_target: light.kitchen_bench_lights
+      no_motion_wait_to_off: 15
+      occupancy_ratio_entity: sensor.kitchen_table_motion_ratio_in_the_last_10m
+      occupancy_ratio_threshold: 40
+      pause_entities_on:
+      - input_boolean.home_party_mode
+- alias: Kitchen - Bench - Lights - Wall switch
+  id: '1661932329651'
+  description: ''
+  use_blueprint:
+    path: EdwardTFN/light_switch_toggle.yaml
+    input:
+      input_entity: binary_sensor.kitchen_ceiling_lights_windows_lights_input
+      light_target: light.kitchen_bench_lights
+- alias: Kitchen - Bench - Lights - turn off all together
+  id: '1638880572560'
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: d398de22fe0839ccde27872343e1e05b
+    entity_id: light.kitchen_bench_left_light
+    domain: light
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  - platform: device
+    type: turned_off
+    device_id: a1a8cf45cfc1e7d7ce9a42e2b5248e27
+    entity_id: light.kitchen_bench_right_light
+    domain: light
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  condition:
+  - condition: or
+    conditions:
+    - condition: device
+      type: is_on
+      device_id: d398de22fe0839ccde27872343e1e05b
+      entity_id: light.kitchen_bench_left_light
+      domain: light
+    - condition: device
+      type: is_on
+      device_id: a1a8cf45cfc1e7d7ce9a42e2b5248e27
+      entity_id: light.kitchen_bench_right_light
+      domain: light
+  action:
+  - service: light.turn_off
+    data:
+      transition: 5
+    target:
+      device_id:
+      - d398de22fe0839ccde27872343e1e05b
+      - a1a8cf45cfc1e7d7ce9a42e2b5248e27
+  mode: single
+
+sensor:
+  - name: Kitchen - Bench - Total power
+    platform: group
+    unique_id: 1b0da3e6-ade5-484e-bd3a-0c6ef60739ec
+    unit_of_measurement: "W"
+    device_class: power
+    type: sum
+    ignore_non_numeric: true
+    entities:
+      - sensor.kitchen_bench_outlets_1_outlets_power
+      - sensor.kitchen_bench_outlets_1_usb_power
+      - sensor.kitchen_bench_outlets_2_power
+      - sensor.kitchen_bench_outlets_3_power
+      - sensor.kitchen_bench_left_light_power
+      - sensor.kitchen_bench_right_light_power
+      - sensor.kitchen_cooker_hood_power
+
