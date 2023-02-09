@@ -1,0 +1,8 @@
+light:
+  - name: "Kitchen - All lights"
+    platform: group
+    unique_id: ffd1b649-a851-4450-b1c0-5a2f9b366a20
+    entities:
+      - light.kitchen_bench_lights
+      - light.kitchen_table_lights
+      - light.curtains_lights_segment_kitchen

@@ -19,8 +19,8 @@ automation:
   id: '1662154991151'
   description: ''
   trigger:
-  - platform: homeassistant
-    event: start
+  #- platform: homeassistant
+  #  event: start
   - platform: state
     entity_id:
     - sensor.civil_solar_day_status
@@ -33,6 +33,11 @@ automation:
     entity_id: binary_sensor.office_door
     state: 'on'
   action:
+  - service: cover.open_cover
+    data: {}
+    target:
+      entity_id:
+      - cover.office_roller_blinds_all
   - if:
     - condition: state
       entity_id: sun.sun
@@ -42,18 +47,17 @@ automation:
       data: {}
       target:
         entity_id:
-        - cover.office_roller_blinds_all
         - cover.office_shutters_all
     else:
     - service: cover.set_cover_position
       data:
-        position: 40
+        position: 25
       target:
-        entity_id: cover.office_roller_blind_1_cover
+        entity_id: cover.office_shutter_1_cover
     - service: cover.close_cover
       data: {}
       target:
-        entity_id: cover.office_roller_blind_2_cover
+        entity_id: cover.office_shutter_2_cover
   mode: restart
 - alias: Office - Covers - Bunkebergsgatan - Weather based
   id: '1663594463162'

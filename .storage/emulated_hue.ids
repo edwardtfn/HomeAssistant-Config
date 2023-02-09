@@ -22,6 +22,7 @@
     "17": "light.kitchen_table_lights",
     "18": "light.office_ceiling_lines",
     "19": "light.office_workstation_lights",
-    "20": "light.kitchen_curtain_s_lights"
+    "20": "light.kitchen_curtain_s_lights",
+    "21": "light.corridor_all_lights"
   }
 }

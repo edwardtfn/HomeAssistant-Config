@@ -57,3 +57,12 @@ automation:
       pause_entities_off:
       - binary_sensor.guest_room_door
 
+light:
+  - platform: group
+    name: "Guest room - All lights"
+    unique_id: 57021482-5abd-4737-ae65-d9edc692ae5f
+    entities:
+      - light.guest_room_wall_lights
+      - light.guest_room_closet_lights
+
+

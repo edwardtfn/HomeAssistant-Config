@@ -1,3 +1,20 @@
+binary_sensor:
+  - name: Bathroom - Motion - Dual sensors state
+    platform: group
+    unique_id: fb0a26b1-c832-406d-8e07-fbef740a6654
+    device_class: motion
+    entities:
+      - binary_sensor.bathroom_motion
+      - binary_sensor.bathroom_shower_motion_occupancy
+
+  - name: Bathroom - Mirro's cabinet doors
+    platform: group
+    unique_id: 6679ce44-f051-4181-a805-1ff078d54a3a
+    device_class: opening
+    entities:
+      - binary_sensor.bathroom_drawers
+      - binary_sensor.bathroom_mirrors_cabinet_doors
+
 sensor:
   - platform: history_stats
     name: Bathroom - Motion ratio in the last 10m

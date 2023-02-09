@@ -22,3 +22,11 @@ automation:
     input:
       input_entity: binary_sensor.office_windows_outlets_ceiling_lights_input
       light_target: light.office_ceiling_lines
+
+light:
+  - name: "Office - All lights"
+    platform: group
+    unique_id: 5b9b2fd0-edec-4ee9-8488-11abcd5d5b39
+    entities:
+      - light.office_ceiling_lines
+      - light.office_workstation_lights

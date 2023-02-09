@@ -43,3 +43,12 @@ automation:
     entity_id: light.guest_bathroom_mirror_lights
     domain: light
   mode: single
+
+light:
+  - platform: group
+    name: "Guest bathroom - All lights"
+    unique_id: ad3f8239-b80f-416b-b83a-78a36bde6e36
+    entities:
+      - light.guest_bathroom_ceiling_light
+      - light.guest_bathroom_mirror_lights
+

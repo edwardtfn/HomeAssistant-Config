@@ -3,7 +3,7 @@ template:
     - name: Laundry - Washing machine - Status
       unique_id: 40df64c7-e7d0-4090-899d-8aa156d9bd2b
       icon: mdi:washing-machine
-      availability: "{{ is_number('sensor.laundry_washing_machine_power') }}"
+      availability: "{{ is_number(states('sensor.laundry_washing_machine_power')) }}"
       state: >-
         {% set device_entity_id = 'sensor.laundry_washing_machine_power' %}
         {% if states(device_entity_id) in ['none','undefined','unknown','unavailable'] %}

@@ -924,7 +924,7 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       hidden: false
 
     #### Corridor ####
-    light.corridor_lights_all:
+    light.corridor_all_lights:
       name: Corridor lights
       hidden: false
 
@@ -989,6 +989,38 @@ group:
       - group.hosts
       - group.pets
       #- group.guests
+
+light:
+  - name: "Home - All lights"
+    platform: group
+    unique_id: 231dd2fc-265c-45f9-be39-f5d9c675f854
+    entities:
+      - light.balcony_all_lights
+      - light.bathroom_all_lights
+      - light.bedroom_all_lights
+      - light.corridor_all_lights
+      - light.guest_bathroom_all_lights
+      - light.guest_room_all_lights
+      - light.hall_all_lights
+      - light.kitchen_all_lights
+      - light.living_room_all_lights
+      - light.office_all_lights
+
+  - name: "Home - All lights (except bathrooms)"
+    platform: group
+    unique_id: 99afacd2-f852-4658-ad7f-98eb3b021870
+    entities:
+      - light.balcony_all_lights
+      #- light.bathroom_all_lights
+      - light.bedroom_all_lights
+      - light.corridor_all_lights
+      #- light.guest_bathroom_all_lights
+      - light.guest_room_all_lights
+      - light.hall_all_lights
+      - light.kitchen_all_lights
+      - light.living_room_all_lights
+      - light.office_all_lights
+
 
 script:
   home_reboot_all_shelly_devices:

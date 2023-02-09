@@ -62,9 +62,9 @@ template:
       unique_id: 514a17fd-42ef-4949-b4aa-d62bff1de8de
       unit_of_measurement: "%"
       device_class: humidity
-      availability: "{{ is_number('sensor.living_room_thermostat_cloud_humidity') or state_attr('climate.living_room_thermostat', 'current_humidity') | float(-1) >= 0}}"
+      availability: "{{ is_number(states('sensor.living_room_thermostat_cloud_humidity')) or state_attr('climate.living_room_thermostat', 'current_humidity') | float(-1) >= 0}}"
       state: >-
-        {% if is_number('sensor.living_room_thermostat_cloud_humidity') %}
+        {% if is_number(states('sensor.living_room_thermostat_cloud_humidity')) %}
           {{ states('sensor.living_room_thermostat_cloud_humidity') | float(0) | round(0) }}
         {% else %}
           {{ state_attr('climate.living_room_thermostat', 'current_humidity') | float(0) | round(0) }}

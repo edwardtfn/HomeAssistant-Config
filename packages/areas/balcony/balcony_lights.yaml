@@ -113,3 +113,11 @@ automation:
         target:
           entity_id: light.balcony_string_lights
   mode: restart
+
+light:
+  - platform: group
+    name: "Balcony - All lights"
+    unique_id: a43af511-9bcb-47e7-979d-67d61315092e
+    entities:
+      - light.balcony_lamp_light
+      - light.balcony_string_lights

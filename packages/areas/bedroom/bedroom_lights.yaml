@@ -113,3 +113,13 @@ automation:
     input:
       input_entity: binary_sensor.bedroom_ceiling_lights_input
       light_target: light.bedroom_beds_lights
+
+light:
+  - platform: group
+    name: "Bedroom - All lights"
+    unique_id: 1a7bc5c6-c863-4e8b-bb4f-0637ef1f02cc
+    entities:
+      - light.bedroom_ceiling_lights
+      - light.bedroom_carol_light
+      - light.bedroom_edward_light
+      - light.bedroom_closet_lights

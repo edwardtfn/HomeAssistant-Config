@@ -184,6 +184,14 @@ automation:
     path: EdwardTFN/set_entities_based_on_other_entities.yaml
     input:
       input_entities:
-      - binary_sensor.bathroom_mirrors_cabinet_doors
+      - binary_sensor.bathroom_mirror_door
       target_entities:
+      - light.bathroom_mirror_light
+
+light:
+  - platform: group
+    name: "Bathroom - All lights"
+    unique_id: d8aee04c-bce5-423b-84e1-5af7259a5998
+    entities:
+      - light.bathroom_ceiling_lights
       - light.bathroom_mirror_light

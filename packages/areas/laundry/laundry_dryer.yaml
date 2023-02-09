@@ -3,7 +3,7 @@ template:
     - name: Laundry - Dryer - Status
       unique_id: b4439038-05c0-48a1-97e2-6617549a0d7b
       icon: mdi:tumble-dryer
-      availability: "{{ is_number('sensor.laundry_dryer_outlet_power') }}"
+      availability: "{{ is_number(states('sensor.laundry_dryer_outlet_power')) }}"
       state: >-
         {% set device_entity_id = 'sensor.laundry_dryer_outlet_power' %}
         {% if states(device_entity_id) in ['none','undefined','unknown','unavailable'] %}

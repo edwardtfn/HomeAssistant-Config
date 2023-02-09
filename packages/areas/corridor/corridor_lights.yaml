@@ -15,6 +15,16 @@ automation:
     input:
       motion_entity: binary_sensor.corridor_motion_occupancy
       lumens_entity: sensor.corridor_motion_light_level
-      light_target: light.corridor_lights_all
+      light_target: light.corridor_all_lights
       light_level_high: 25
       light_level_dimmer: 10
+
+light:
+  - platform: group
+    name: "Corridor - All lights"
+    unique_id: 002f43c0-40a0-4222-a7ad-c536888abf56
+    #icon: mdi:light-flood-down
+    entities:
+      - light.corridor_lights_1_huelight
+      - light.corridor_lights_2_huelight
+      - light.corridor_lights_3_huelight

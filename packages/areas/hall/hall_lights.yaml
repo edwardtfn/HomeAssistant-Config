@@ -13,3 +13,12 @@ automation:
       light_target: light.hall_ceiling_light
       no_motion_wait_to_dimming: 90
       no_motion_wait_to_off: 5
+
+light:
+  - name: "Hall - All lights"
+    platform: group
+    unique_id: 7782c1bb-f612-4f4a-9fd2-010a028ea34c
+    entities:
+      - light.hall_ceiling_light
+
+

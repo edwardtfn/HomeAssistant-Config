@@ -45,5 +45,5 @@ template:
     - name: Bedroom - Locker - Temperature is high
       unique_id: 62606665-c789-4b10-8578-0dcf8b876df3
       device_class: problem
-      availability: "{{ is_number('sensor.bedroom_locker_vibration_device_temperature') }}"
+      availability: "{{ is_number(states('sensor.bedroom_locker_vibration_device_temperature')) }}"
       state: "{{ states('sensor.bedroom_locker_vibration_device_temperature') | float(0) > 40 }}"

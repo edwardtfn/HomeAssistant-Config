@@ -3,5 +3,5 @@ template:
     - name: Guest bathroom - Towel warmer status
       unique_id: 3462d042-67d3-4d9e-b695-052a2068b2f3
       device_class: heat
-      availability: "{{ is_number('sensor.guest_bathroom_towel_warmer_power') }}"
+      availability: "{{ is_number(states('sensor.guest_bathroom_towel_warmer_power')) }}"
       state: "{{ 'on' if (states('sensor.guest_bathroom_towel_warmer_power') | float(0) > 20) else 'off' }}"

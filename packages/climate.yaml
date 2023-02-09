@@ -1,3 +1,21 @@
+sensor:
+  - name: Home - Average room temperature
+    platform: group
+    unique_id: 55b92afc-918b-4b8b-a98c-9cfbcf788b0a
+    unit_of_measurement: "°C"
+    device_class: temperature
+    ignore_non_numeric: true
+    type: mean
+    entities:
+      - sensor.bathroom_thermostat_current_temperature
+      - sensor.bedroom_hygrometer_temperature
+      - sensor.corridor_air_quality_temperature
+      - sensor.guest_room_thermostat_current_temperature
+      - sensor.hall_panel_temperature
+      - sensor.kitchen_thermostat_current_temperature
+      - sensor.living_room_thermostat_current_temperature
+      - sensor.office_hygrometer_temperature
+
 script:
   climate_toggle:
     alias: Home - Climate - Toggle a thermostat
@@ -25,28 +43,29 @@ template:
       device_class: temperature
       state: "{{ state_attr('weather.home', 'temperature') | default('unknown') }}"
 
-    - name: Home - Average room temperature
+    - name: Home - Average room temperature (rounded)
       unique_id: 42816c14-97c2-4c6f-804b-723fb1a0ba97
       unit_of_measurement: "°C"
       device_class: temperature
-      state: >-
-        {{ expand([
-          'sensor.bathroom_thermostat_current_temperature', 
-          'sensor.bedroom_hygrometer_temperature', 
-          'sensor.corridor_air_quality_temperature',
-          'sensor.guest_room_thermostat_current_temperature', 
-          'sensor.hall_panel_temperature',
-          'sensor.kitchen_thermostat_current_temperature', 
-          'sensor.living_room_thermostat_current_temperature',
-          'sensor.office_hygrometer_temperature'
-          ]) 
-        | rejectattr('state', 'in', ['unavailable','unknown']) 
-        | map(attribute='state') 
-        | map('float') 
-        | average
-        | float(0)
-        | round(1)
-        }}
+      availability: "{{ is_number(states('sensor.home_average_room_temperature')) }}"
+      state: "{{ states('sensor.home_average_room_temperature') | float(0) | round(1) }}"
+#        {{ expand([
+#          'sensor.bathroom_thermostat_current_temperature', 
+#          'sensor.bedroom_hygrometer_temperature', 
+#          'sensor.corridor_air_quality_temperature',
+#          'sensor.guest_room_thermostat_current_temperature', 
+#          'sensor.hall_panel_temperature',
+#          'sensor.kitchen_thermostat_current_temperature', 
+#          'sensor.living_room_thermostat_current_temperature',
+#          'sensor.office_hygrometer_temperature'
+#          ]) 
+#        | rejectattr('state', 'in', ['unavailable','unknown']) 
+#        | map(attribute='state') 
+#        | map('float') 
+#        | average
+#        | float(0)
+#        | round(1)
+#        }}
 
     - name: Home - Sun elevation
       unique_id: d725f9db-2e6c-42ae-afaa-e1cac9edf391

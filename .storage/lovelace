@@ -476,7 +476,7 @@
                   }
                 },
                 {
-                  "entity": "sensor.home_average_room_temperature",
+                  "entity": "sensor.home_average_room_temperature_rounded",
                   "type": "state-label",
                   "style": {
                     "top": "10%",
@@ -697,7 +697,7 @@
                   }
                 },
                 {
-                  "entity": "light.corridor_lights_all",
+                  "entity": "light.corridor_all_lights",
                   "type": "state-icon",
                   "tap_action": {
                     "action": "toggle"
@@ -915,7 +915,7 @@
                   "type": "conditional",
                   "conditions": [
                     {
-                      "entity": "binary_sensor.guest_room_motion_occupancy",
+                      "entity": "binary_sensor.guest_room_motion",
                       "state": "on"
                     },
                     {
@@ -925,7 +925,7 @@
                   ],
                   "elements": [
                     {
-                      "entity": "binary_sensor.guest_room_motion_occupancy",
+                      "entity": "binary_sensor.guest_room_motion",
                       "type": "state-icon",
                       "icon": "mdi:motion-sensor",
                       "style": {
@@ -4790,7 +4790,7 @@
                   "entity": "light.guest_room_wall_lights",
                   "info_entities": [
                     {
-                      "entity": "binary_sensor.guest_room_motion_occupancy",
+                      "entity": "binary_sensor.guest_room_motion",
                       "show_icon": true,
                       "icon": {
                         "conditions": [
@@ -9022,8 +9022,8 @@
                   "name": "Living room"
                 },
                 {
-                  "entity": "sensor.kitchen_air_quality_temperature",
-                  "name": "Kitchen"
+                  "entity": "sensor.corridor_air_quality_temperature",
+                  "name": "Corridor"
                 }
               ],
               "layout": {
