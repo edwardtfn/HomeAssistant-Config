@@ -38,6 +38,9 @@ logger:
 
 notify: !include notifications.yaml
 
+recorder:
+  purge_keep_days: 100
+
 scene: !include scenes.yaml
 
 shell_command: !include shell.yaml
