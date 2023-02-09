@@ -277,6 +277,7 @@ action:
     data: {}
     target:
       entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
+    continue_on_error: true
 
   - variables:
       updates_list: "{{ states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | map(attribute='entity_id') | list }}"
