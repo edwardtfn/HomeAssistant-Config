@@ -271,6 +271,16 @@ variables:
 
 
 action:
+  ########## Refresh update list ##########
+  - alias: "Refresh update list - update entities"
+    service: homeassistant.update_entity
+    data: {}
+    target:
+      entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
+
+  - variables:
+      updates_list: "{{ states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | map(attribute='entity_id') | list }}"
+
   ########## Check for skipping core/OS ##########
   - alias: "Re-check conditions"
     continue_on_error: true
