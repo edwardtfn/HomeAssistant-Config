@@ -31,6 +31,10 @@ template:
         unique_id: d4c04abf-c258-4f0f-a61d-cc0170225081
         unit_of_measurement: "SEK/kWh"
         icon: mdi:currency-usd
+        availability: >-
+          {{ state_attr('sensor.tibber_electricity_price', 'current') | default('unknown') not in ['unknown','unavailable', None]
+          and state_attr('sensor.tibber_electricity_price', 'today') | default('unknown') not in ['unknown','unavailable', None]
+          }}
         state: >-
           {% if this.attributes.future_prices | default('unknown') in ['unknown', 'unavailable'] or (this.attributes.future_prices | default([]) | map(attribute='total') | list | count) < 1 %}
             unknown
@@ -272,13 +276,14 @@ template:
               unknown
             {% endif %}
 
-      - name: Temp - Future prices 16h - Current price is at min
-        unique_id: cec8c55d-6266-46dc-9c8a-b7f7cbfaa4ee
-        state: "{{ state_attr('sensor.electricity_price', 'future_prices_16h_current_price_is_at_min') | default('unknown') }}"
+#      - name: Temp - Future prices 16h - Current price is at min
+#        unique_id: cec8c55d-6266-46dc-9c8a-b7f7cbfaa4ee
+#        state: "{{ state_attr('sensor.electricity_price', 'future_prices_16h_current_price_is_at_min') | default('unknown') }}"
 
       - name: Total electricity price
         unique_id: 84932203-6512-4e6c-9002-bf51b63d7a52
         unit_of_measurement: "SEK/kWh"
+        availability: "{{ is_number(states('sensor.electricity_price')) }}"
         state: >
           {% set electricity_price = 0.75 + states('sensor.electricity_price') | float(0) %}
           {{ (electricity_price) | round(4, default=0) }}
@@ -287,6 +292,7 @@ template:
         unique_id: df385245-cd24-4b58-8535-b683ab0b3f88
         unit_of_measurement: "gCO2eq/h"
         device_class: monetary
+        availability: "{{ is_number(states('sensor.co2_intensity')) and is_number(states('sensor.total_power')) }}"
         state: >- # sensor.co2_intensity
           {{
             (
@@ -300,6 +306,7 @@ template:
         unique_id: a6e64783-7974-4a7c-a724-cda241643a10
         unit_of_measurement: "SEK/h"
         device_class: monetary
+        availability: "{{ is_number(states('sensor.total_electricity_price')) and is_number(states('sensor.total_power')) }}"
         state: >-
           {{ 
             (
