@@ -390,6 +390,22 @@ sensor:
       - type: last_boot
 
   - platform: command_line
+    name: Fan temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    #device_class: temperature
+    #state_class: measurement
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
+
+  - platform: command_line
+    name: Motherboard temperature
+    command: "cat /sys/class/thermal/thermal_zone1/temp"
+    unit_of_measurement: "°C"
+    #device_class: temperature
+    #state_class: measurement
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
+
+  - platform: command_line
     name: Processor temperature
     command: "cat /sys/class/thermal/thermal_zone2/temp"
     unit_of_measurement: "°C"
