@@ -33,3 +33,4 @@ automation:
       entity04_name: Displays
       entity08: switch.office_workstation_power_strip_switch_2
       entity08_name: Docking station
+      hotwatertemp: sensor.home_average_room_temperature

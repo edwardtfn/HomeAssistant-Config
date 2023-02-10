@@ -386,8 +386,16 @@ sensor:
       - type: ipv6_address
         arg: eth0
       - type: processor_use
-      - type: processor_temperature
+      #- type: processor_temperature
       - type: last_boot
+
+  - platform: command_line
+    name: Processor temperature
+    command: "cat /sys/class/thermal/thermal_zone2/temp"
+    unit_of_measurement: "°C"
+    #device_class: temperature
+    #state_class: measurement
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
 
   - platform: time_date
     display_options:
