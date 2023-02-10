@@ -89,7 +89,7 @@ automation:
           conditions:
           - condition: state
             entity_id: media_player.living_room_tv_sony_universal
-            state: 'off'
+            state: 'on'
         then:
         - service: switch.turn_on
           data: {}
@@ -116,6 +116,7 @@ automation:
       - service: switch.turn_on
         target:
           entity_id:
+          - switch.laundry_bench_outlets
           - switch.office_workstation_power_strip_usb
         data: {}
       - service: switch.turn_off
@@ -125,7 +126,6 @@ automation:
           - switch.living_room_charging_strip_1_socket_2
           - switch.living_room_charging_strip_1_socket_3
           - switch.living_room_charging_strip_1_socket_4
-          - switch.laundry_bench_outlets
     - conditions:
       - condition: state
         entity_id: sensor.electricity_price
