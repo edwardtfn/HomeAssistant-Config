@@ -1,4 +1,4 @@
-#automation: !include automations.yaml
+automation: !include automations.yaml
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
