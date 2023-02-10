@@ -6476,8 +6476,8 @@
                       "state_adaptive_color": true
                     },
                     {
-                      "entity": "sensor.processor_temperature",
-                      "name": "Temperature",
+                      "entity": "sensor.memory_use_percent",
+                      "name": "RAM",
                       "show_state": true,
                       "state_adaptive_color": true
                     }
@@ -6492,26 +6492,64 @@
                   "upper_bound": 100
                 },
                 {
-                  "type": "horizontal-stack",
-                  "cards": [
+                  "type": "custom:mini-graph-card",
+                  "name": "Temperature",
+                  "color_thresholds": [
                     {
-                      "type": "custom:apexcharts-card",
-                      "chart_type": "radialBar",
-                      "header": {
-                        "show": true,
-                        "show_states": true,
-                        "colorize_states": true
-                      },
-                      "series": [
-                        {
-                          "entity": "sensor.memory_use_percent",
-                          "name": "RAM"
-                        },
-                        {
-                          "entity": "sensor.disk_use_percent",
-                          "name": "SD card"
-                        }
-                      ]
+                      "color": "#159F3B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#F2B528",
+                      "value": 50
+                    },
+                    {
+                      "color": "#DD5129",
+                      "value": 80
+                    }
+                  ],
+                  "decimals": 1,
+                  "entities": [
+                    {
+                      "entity": "sensor.processor_temperature",
+                      "name": "CPU",
+                      "show_state": true,
+                      "state_adaptive_color": true
+                    },
+                    {
+                      "entity": "sensor.motherboard_temperature",
+                      "name": "Motherboard",
+                      "show_state": true,
+                      "state_adaptive_color": true
+                    },
+                    {
+                      "entity": "sensor.fan_temperature",
+                      "name": "Fan",
+                      "show_state": true,
+                      "state_adaptive_color": true
+                    }
+                  ],
+                  "font_size": 75,
+                  "hour24": true,
+                  "hours_to_show": 1,
+                  "line_width": 3,
+                  "points_per_hour": 120,
+                  "update_interval": 10,
+                  "lower_bound": 0,
+                  "upper_bound": 100
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "chart_type": "radialBar",
+                  "header": {
+                    "show": true,
+                    "show_states": true,
+                    "colorize_states": true
+                  },
+                  "series": [
+                    {
+                      "entity": "sensor.disk_use_percent",
+                      "name": "SDD usage"
                     }
                   ]
                 },
@@ -6531,13 +6569,13 @@
                   "decimals": 2,
                   "entities": [
                     {
-                      "entity": "sensor.network_throughput_in_eth0",
+                      "entity": "sensor.network_throughput_in_eno1",
                       "name": "In",
                       "show_state": true,
                       "state_adaptive_color": true
                     },
                     {
-                      "entity": "sensor.network_throughput_out_eth0",
+                      "entity": "sensor.network_throughput_out_eno1",
                       "name": "Out",
                       "show_state": true,
                       "state_adaptive_color": true
@@ -6557,7 +6595,7 @@
                   "cards": [
                     {
                       "type": "custom:mushroom-entity-card",
-                      "entity": "sensor.ipv4_address_eth0",
+                      "entity": "sensor.ipv4_address_eno1",
                       "name": "Internal IP",
                       "primary_info": "state",
                       "secondary_info": "name",
@@ -6570,7 +6608,7 @@
                       "entities": [
                         {
                           "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.network_in_eth0",
+                          "entity": "sensor.network_in_eno1",
                           "name": "Network In",
                           "primary_info": "state",
                           "secondary_info": "name",
@@ -6581,7 +6619,7 @@
                         },
                         {
                           "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.network_out_eth0",
+                          "entity": "sensor.network_out_eno1",
                           "name": "Network Out",
                           "primary_info": "state",
                           "secondary_info": "name",
@@ -6595,7 +6633,7 @@
                       "entities": [
                         {
                           "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.packets_in_eth0",
+                          "entity": "sensor.packets_in_eno1",
                           "name": "Packets In",
                           "primary_info": "state",
                           "secondary_info": "name",
@@ -6606,7 +6644,7 @@
                         },
                         {
                           "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.packets_out_eth0",
+                          "entity": "sensor.packets_out_eno1",
                           "name": "Packets Out",
                           "primary_info": "state",
                           "secondary_info": "name",
@@ -6766,8 +6804,8 @@
                       "state_adaptive_color": true
                     },
                     {
-                      "entity": "sensor.aimesh_router_cpu_temperature",
-                      "name": "Temperature",
+                      "entity": "sensor.aimesh_router_ram",
+                      "name": "RAM",
                       "show_state": true,
                       "state_adaptive_color": true
                     }
@@ -6782,19 +6820,39 @@
                   "upper_bound": 100
                 },
                 {
-                  "type": "custom:apexcharts-card",
-                  "chart_type": "radialBar",
-                  "header": {
-                    "show": true,
-                    "show_states": true,
-                    "colorize_states": true
-                  },
-                  "series": [
+                  "type": "custom:mini-graph-card",
+                  "name": "Temperature",
+                  "color_thresholds": [
                     {
-                      "entity": "sensor.aimesh_router_ram",
-                      "name": "RAM"
+                      "color": "#159F3B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#F2B528",
+                      "value": 50
+                    },
+                    {
+                      "color": "#DD5129",
+                      "value": 80
                     }
-                  ]
+                  ],
+                  "decimals": 1,
+                  "entities": [
+                    {
+                      "entity": "sensor.aimesh_router_cpu_temperature",
+                      "name": "CPU",
+                      "show_state": true,
+                      "state_adaptive_color": true
+                    }
+                  ],
+                  "font_size": 75,
+                  "hour24": true,
+                  "hours_to_show": 1,
+                  "line_width": 3,
+                  "points_per_hour": 120,
+                  "update_interval": 10,
+                  "lower_bound": 0,
+                  "upper_bound": 100
                 },
                 {
                   "type": "entities",
@@ -7137,8 +7195,8 @@
                       "state_adaptive_color": true
                     },
                     {
-                      "entity": "sensor.aimesh_node_cpu_temperature",
-                      "name": "Temperature",
+                      "entity": "sensor.aimesh_node_ram",
+                      "name": "RAM",
                       "show_state": true,
                       "state_adaptive_color": true
                     }
@@ -7153,19 +7211,39 @@
                   "upper_bound": 100
                 },
                 {
-                  "type": "custom:apexcharts-card",
-                  "chart_type": "radialBar",
-                  "header": {
-                    "show": true,
-                    "show_states": true,
-                    "colorize_states": true
-                  },
-                  "series": [
+                  "type": "custom:mini-graph-card",
+                  "name": "Temperature",
+                  "color_thresholds": [
                     {
-                      "entity": "sensor.aimesh_node_ram",
-                      "name": "RAM"
+                      "color": "#159F3B",
+                      "value": 0
+                    },
+                    {
+                      "color": "#F2B528",
+                      "value": 50
+                    },
+                    {
+                      "color": "#DD5129",
+                      "value": 80
                     }
-                  ]
+                  ],
+                  "decimals": 1,
+                  "entities": [
+                    {
+                      "entity": "sensor.aimesh_node_cpu_temperature",
+                      "name": "CPU",
+                      "show_state": true,
+                      "state_adaptive_color": true
+                    }
+                  ],
+                  "font_size": 75,
+                  "hour24": true,
+                  "hours_to_show": 1,
+                  "line_width": 3,
+                  "points_per_hour": 120,
+                  "update_interval": 10,
+                  "lower_bound": 0,
+                  "upper_bound": 100
                 },
                 {
                   "type": "entities",
@@ -7546,297 +7624,6 @@
                       },
                       "entity": "switch.pi_hole",
                       "name": "Pi-Hole"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "custom:vertical-stack-in-card",
-              "cards": [
-                {
-                  "type": "entities",
-                  "title": "Home Assistant (dev)",
-                  "icon": "mdi:home-assistant",
-                  "entities": [
-                    {
-                      "type": "custom:text-divider-row",
-                      "text": "Host",
-                      "align": "left"
-                    }
-                  ],
-                  "show_header_toggle": true
-                },
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "CPU",
-                  "color_thresholds": [
-                    {
-                      "color": "#159F3B",
-                      "value": 0
-                    },
-                    {
-                      "color": "#F2B528",
-                      "value": 50
-                    },
-                    {
-                      "color": "#DD5129",
-                      "value": 80
-                    }
-                  ],
-                  "decimals": 1,
-                  "entities": [
-                    {
-                      "entity": "sensor.processor_use",
-                      "name": "CPU",
-                      "show_state": true,
-                      "state_adaptive_color": true
-                    },
-                    {
-                      "entity": "sensor.processor_temperature",
-                      "name": "Temperature",
-                      "show_state": true,
-                      "state_adaptive_color": true
-                    }
-                  ],
-                  "font_size": 75,
-                  "hour24": true,
-                  "hours_to_show": 1,
-                  "line_width": 3,
-                  "points_per_hour": 120,
-                  "update_interval": 10,
-                  "lower_bound": 0,
-                  "upper_bound": 100
-                },
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "type": "custom:apexcharts-card",
-                      "chart_type": "radialBar",
-                      "header": {
-                        "show": true,
-                        "show_states": true,
-                        "colorize_states": true
-                      },
-                      "series": [
-                        {
-                          "entity": "sensor.memory_use_percent",
-                          "name": "RAM"
-                        },
-                        {
-                          "entity": "sensor.disk_use_percent",
-                          "name": "SD card"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:text-divider-row",
-                      "text": "Network interface",
-                      "align": "left"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Throughput",
-                  "decimals": 2,
-                  "entities": [
-                    {
-                      "entity": "sensor.network_throughput_in_eth0",
-                      "name": "In",
-                      "show_state": true,
-                      "state_adaptive_color": true
-                    },
-                    {
-                      "entity": "sensor.network_throughput_out_eth0",
-                      "name": "Out",
-                      "show_state": true,
-                      "state_adaptive_color": true
-                    }
-                  ],
-                  "font_size": 75,
-                  "hour24": true,
-                  "hours_to_show": 3,
-                  "line_width": 3,
-                  "points_per_hour": 30,
-                  "update_interval": 300
-                },
-                {
-                  "type": "grid",
-                  "square": false,
-                  "columns": 3,
-                  "cards": [
-                    {
-                      "type": "custom:mushroom-entity-card",
-                      "entity": "sensor.ipv4_address_eth0",
-                      "name": "Internal IP",
-                      "primary_info": "state",
-                      "secondary_info": "name",
-                      "layout": "vertical",
-                      "fill_container": true,
-                      "icon": "mdi:ip-network"
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.network_in_eth0",
-                          "name": "Network In",
-                          "primary_info": "state",
-                          "secondary_info": "name",
-                          "layout": "horizontal",
-                          "icon": "",
-                          "fill_container": false,
-                          "icon_type": "none"
-                        },
-                        {
-                          "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.network_out_eth0",
-                          "name": "Network Out",
-                          "primary_info": "state",
-                          "secondary_info": "name",
-                          "layout": "horizontal",
-                          "icon_type": "none"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.packets_in_eth0",
-                          "name": "Packets In",
-                          "primary_info": "state",
-                          "secondary_info": "name",
-                          "layout": "horizontal",
-                          "icon": "",
-                          "fill_container": false,
-                          "icon_type": "none"
-                        },
-                        {
-                          "type": "custom:mushroom-entity-card",
-                          "entity": "sensor.packets_out_eth0",
-                          "name": "Packets Out",
-                          "primary_info": "state",
-                          "secondary_info": "name",
-                          "layout": "horizontal",
-                          "icon_type": "none"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:text-divider-row",
-                      "text": "Statistics",
-                      "align": "left"
-                    }
-                  ]
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:fold-entity-row",
-                      "padding": 0,
-                      "head": {
-                        "entity": "sensor.home_assistant_entities_count",
-                        "name": "Home Assistant Entities",
-                        "icon": "mdi:devices",
-                        "tap_action": {
-                          "action": "none"
-                        }
-                      },
-                      "entities": [
-                        {
-                          "type": "custom:flex-table-card",
-                          "entities": {
-                            "include": "sensor.home_assistant_entities_count"
-                          },
-                          "columns": [
-                            {
-                              "data": "domain_list",
-                              "name": "Domain",
-                              "modify": "x.replace(/\\w\\S*/g,(x.charAt(0).toUpperCase() + x.substr(1).toLowerCase()).replaceAll(\"_\", \" \"))"
-                            },
-                            {
-                              "data": "count_list",
-                              "name": "Entities",
-                              "align": "right"
-                            },
-                            {
-                              "data": "unavailable_count_list",
-                              "name": "Unavailable",
-                              "align": "right"
-                            }
-                          ],
-                          "sort_by": [
-                            "domain_list+",
-                            "count_list-"
-                          ],
-                          "clickable": true,
-                          "card_mod": {
-                            "style": "ha-card {\n  box-shadow: none;\n  background: none;\n}\n"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:text-divider-row",
-                      "text": "Watchman report",
-                      "align": "left"
-                    }
-                  ]
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "type": "custom:fold-entity-row",
-                      "padding": 0,
-                      "head": {
-                        "entity": "sensor.watchman_missing_entities",
-                        "name": "Watchman Missing Entities",
-                        "icon": "mdi:shield-half-full",
-                        "tap_action": {
-                          "action": "none"
-                        }
-                      },
-                      "entities": [
-                        {
-                          "type": "custom:flex-table-card",
-                          "entities": {
-                            "include": "sensor.watchman_missing_entities"
-                          },
-                          "columns": [
-                            {
-                              "data": "entities",
-                              "name": "Watchman report",
-                              "modify": "x.id + \" is \" + x.state.replace(\"unavail\",\"unavailable\") + \" (\" + x.occurrences + \")\""
-                            }
-                          ],
-                          "clickable": false,
-                          "card_mod": {
-                            "style": "ha-card {\n  box-shadow: none;\n  background: none;\n}\n"
-                          }
-                        }
-                      ]
                     }
                   ]
                 }

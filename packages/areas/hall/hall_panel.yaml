@@ -41,6 +41,7 @@ automation:
       entity09: switch.office_workstation_outlets_displays
       entity08_name: Alarm
       delay: 100
+      hotwatertemp: sensor.home_average_room_temperature 
 - alias: Hall - Panel - Wake up with motion or door
   id: '1672272202160'
   description: ''

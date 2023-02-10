@@ -370,21 +370,21 @@ sensor:
       - type: load_5m
       - type: load_15m
       - type: network_in
-        arg: eth0
+        arg: eno1
       - type: network_out
-        arg: eth0
-      - type: throughput_network_in
-        arg: eth0
-      - type: throughput_network_out
-        arg: eth0
+        arg: eno1
+      #- type: throughput_network_in
+        #arg: eno1
+      #- type: throughput_network_out
+        #arg: eno1
       - type: packets_in
-        arg: eth0
+        arg: eno1
       - type: packets_out
-        arg: eth0
+        arg: eno1
       - type: ipv4_address
-        arg: eth0
+        arg: eno1
       - type: ipv6_address
-        arg: eth0
+        arg: eno1
       - type: processor_use
       #- type: processor_temperature
       - type: last_boot
