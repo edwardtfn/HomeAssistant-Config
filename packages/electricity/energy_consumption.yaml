@@ -25,7 +25,7 @@ sensor:
     unique_id: e6ea5908-d766-47d8-979c-c9b684f42752
     unit_of_measurement: "kWh"
     device_class: energy
-    state_class: measurement
+    state_class: total #measurement
     type: sum
     ignore_non_numeric: true
     entities:
