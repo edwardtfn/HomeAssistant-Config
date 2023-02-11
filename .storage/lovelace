@@ -7772,7 +7772,7 @@
                   },
                   "series": [
                     {
-                      "entity": "sensor.home_server_01_rpi_ram_used_percentage",
+                      "entity": "sensor.home_server_01_rpi_monitor_ram_used_percentage",
                       "name": "RAM"
                     },
                     {
