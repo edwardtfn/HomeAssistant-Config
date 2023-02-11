@@ -1,0 +1,5 @@
+shell_command:
+  # https://www.creatingsmarthome.com/index.php/2022/02/12/guide-start-up-and-shut-down-remote-linux-pc-using-home-assistant/
+  home_server_01_shutdown: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo shutdown -h now"
+  home_server_01_reboot: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo reboot"
+  home_server_01_update: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistaht@home-server-01.local sudo pihole -up"
