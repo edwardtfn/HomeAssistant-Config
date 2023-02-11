@@ -7711,7 +7711,7 @@
               "cards": [
                 {
                   "type": "entities",
-                  "title": "Pi-hole",
+                  "title": "Home - Server - 01 (Pi-hole & SNTP)",
                   "icon": "mdi:earth",
                   "entities": [
                     {
@@ -7741,13 +7741,13 @@
                   "decimals": 1,
                   "entities": [
                     {
-                      "entity": "sensor.rpi_cpu_use_pihole",
+                      "entity": "sensor.home_server_01_rpi_cpu",
                       "name": "CPU",
                       "show_state": true,
                       "state_adaptive_color": true
                     },
                     {
-                      "entity": "sensor.rpi_temp_pihole",
+                      "entity": "sensor.home_server_01_rpi_temperature",
                       "name": "Temperature",
                       "show_state": true,
                       "state_adaptive_color": true
@@ -7772,11 +7772,11 @@
                   },
                   "series": [
                     {
-                      "entity": "sensor.rpi_monitor_pi_hole_percentage_used_ram",
+                      "entity": "sensor.home_server_01_rpi_ram_used_percentage",
                       "name": "RAM"
                     },
                     {
-                      "entity": "sensor.rpi_used_pihole",
+                      "entity": "sensor.home_server_01_rpi_sdcard_used",
                       "name": "SD card"
                     }
                   ]
