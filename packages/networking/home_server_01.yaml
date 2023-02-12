@@ -3,3 +3,23 @@ shell_command:
   home_server_01_shutdown: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo shutdown -h now"
   home_server_01_reboot: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo reboot"
   home_server_01_update: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistaht@home-server-01.local sudo pihole -up"
+
+template:
+  - sensor:
+    - name: Home - Server - 01 RPi Monitor - RAM used percentage
+      unique_id: bf854b6d-6fdc-4aff-a70b-1541938354a5
+      unit_of_measurement: "%"
+      availability: >-
+        {% set memory = state_attr('sensor.home_server_01_rpi_monitor', 'memory') | default('unknown') %}
+        {{ memory not in ['unknown','unavailable','none', None] 
+          and memory
+          and memory.free_mb | default(-1) | float(-1) >= 0
+          and memory.size_mb | default(-1) | float(-1) >= 0
+          and memory.size_mb >= memory.free_mb
+        }}
+      state: >-
+        {% set memory = state_attr('sensor.home_server_01_rpi_monitor', 'memory') | default('unknown') %}
+        {% set free_mb = memory.free_mb | default(-1) | float(-1) %}
+        {% set size_mb = memory.size_mb | default(-1) | float(-1) %}
+        {% set used_mb = size_mb - free_mb %}
+        {{ min(100,max(0,100*(used_mb/size_mb))) | float(0) }}

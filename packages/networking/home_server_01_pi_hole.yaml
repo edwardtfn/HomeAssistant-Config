@@ -29,21 +29,3 @@ template:
         {% set forwarded = states('sensor.pi_hole_dns_queries_forwarded') | float(0) %}
         {% set cur = tot - (blocked + cached + forwarded) %}
         {{ min(100,max(0,100*(cur/tot))) | float(0) }}
-
-    - name: Home - Server - 01 RPi Monitor - RAM used percentage
-      unique_id: bf854b6d-6fdc-4aff-a70b-1541938354a5
-      unit_of_measurement: "%"
-      availability: >-
-        {% set memory = state_attr('sensor.home_server_01_rpi_monitor', 'memory') | default('unknown') %}
-        {{ memory not in ['unknown','unavailable','none', None] 
-          and memory
-          and memory.free_mb | default(-1) | float(-1) >= 0
-          and memory.size_mb | default(-1) | float(-1) >= 0
-          and memory.size_mb >= memory.free_mb
-        }}
-      state: >-
-        {% set memory = state_attr('sensor.home_server_01_rpi_monitor', 'memory') | default('unknown') %}
-        {% set free_mb = memory.free_mb | default(-1) | float(-1) %}
-        {% set size_mb = memory.size_mb | default(-1) | float(-1) %}
-        {% set used_mb = size_mb - free_mb %}
-        {{ min(100,max(0,100*(used_mb/size_mb))) | float(0) }}
