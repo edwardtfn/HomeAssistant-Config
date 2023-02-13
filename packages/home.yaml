@@ -970,26 +970,6 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       name: Curtains lights
       hidden: false
 
-group:
-  hosts:
-    name: Hosts
-    entities:
-      - person.edward_firmo
-      - person.carolina_costa
-
-  pets:
-    name: Pets
-    entities:
-      - person.dory
-      - person.skal
-
-  everyone:
-    name: Everyone
-    entities:
-      - group.hosts
-      - group.pets
-      #- group.guests
-
 light:
   - name: "Home - All lights"
     platform: group

@@ -119,6 +119,12 @@ automation:
       continue_on_error: true
     mode: restart
 
+proximity:
+  car:
+    devices:
+      - device_tracker.vw_passat_position
+    tolerance: 50
+    unit_of_measurement: m
 
 template:
   - sensor:

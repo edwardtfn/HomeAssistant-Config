@@ -6805,51 +6805,10 @@
                       "name": "RAM",
                       "show_state": true,
                       "state_adaptive_color": true
-                    }
-                  ],
-                  "font_size": 75,
-                  "hour24": true,
-                  "hours_to_show": 1,
-                  "line_width": 3,
-                  "points_per_hour": 120,
-                  "update_interval": 10,
-                  "lower_bound": 0,
-                  "upper_bound": 100
-                },
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Temperature",
-                  "color_thresholds": [
-                    {
-                      "color": "#159F3B",
-                      "value": 0
                     },
-                    {
-                      "color": "#F2B528",
-                      "value": 50
-                    },
-                    {
-                      "color": "#DD5129",
-                      "value": 80
-                    }
-                  ],
-                  "decimals": 1,
-                  "entities": [
                     {
                       "entity": "sensor.processor_temperature",
                       "name": "CPU",
-                      "show_state": true,
-                      "state_adaptive_color": true
-                    },
-                    {
-                      "entity": "sensor.motherboard_temperature",
-                      "name": "Motherboard",
-                      "show_state": true,
-                      "state_adaptive_color": true
-                    },
-                    {
-                      "entity": "sensor.fan_temperature",
-                      "name": "Fan",
                       "show_state": true,
                       "state_adaptive_color": true
                     }
