@@ -25,7 +25,7 @@ blueprint:
       description: 'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the target entities won''t be changed when one of input entities changes.
 
         You can use this to hold the automation when you have a party at home or when you are on vacations, or even to have the automation paused when a door is open.'
-      default: [ ]
+      default: false
       selector:
         entity:
           multiple: true
@@ -33,18 +33,6 @@ blueprint:
 
 trigger_variables:
   input_pause_entities: !input pause_entities
-  input_pause_entities_selected: >-
-    {% if input_pause_entities %}
-      true
-    {% else %}
-      false
-    {% endif %}
-  input_pause_entities_processed: >-
-    {% if input_pause_entities_selected %}
-      {{ input_pause_entities }}
-    {% else %}
-      [ ]
-    {% endif %}
 
 trigger:
   - id: Turn on
@@ -63,7 +51,7 @@ condition:
     conditions:
       - condition: template
         value_template: >-
-          {{ ( input_pause_entities_selected == false ) }}
+          {{ ( input_pause_entities == false ) }}
       - condition: state
         entity_id: !input pause_entities
         state: "off"
