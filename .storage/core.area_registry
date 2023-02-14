@@ -5,76 +5,80 @@
   "data": {
     "areas": [
       {
+        "aliases": [],
         "name": "Living Room",
         "id": "living_room",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Kitchen",
         "id": "kitchen",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [
+          "Master",
+          "Master bedroom",
+          "Quarto"
+        ],
         "name": "Bedroom",
         "id": "bedroom",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Hall",
         "id": "hall",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Bathroom",
         "id": "bathroom",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Guest room",
         "id": "guest_room",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Office",
         "id": "office",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Balcony",
         "id": "balcony",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Guest bathroom",
         "id": "guest_bathroom",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Media centre",
         "id": "media_centre",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Laundry",
         "id": "laundry",
-        "picture": null,
-        "aliases": []
+        "picture": null
       },
       {
+        "aliases": [],
         "name": "Corridor",
         "id": "corridor",
-        "picture": null,
-        "aliases": []
+        "picture": null
       }
     ]
   }
