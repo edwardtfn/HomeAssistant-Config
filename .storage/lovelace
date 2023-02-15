@@ -2866,6 +2866,67 @@
                   }
                 ]
               }
+            },
+            {
+              "type": "custom:flex-table-card",
+              "title": "Västtrafik - SKF",
+              "strict": true,
+              "max_rows": 20,
+              "sort_by": [
+                "Departure+"
+              ],
+              "entities": {
+                "include": "sensor.vasttrafik_departure_table"
+              },
+              "columns": [
+                {
+                  "name": "Sort column",
+                  "data": "Departure",
+                  "align": "center",
+                  "hidden": true,
+                  "modify": "Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000)"
+                },
+                {
+                  "name": "Line",
+                  "data": "Departure",
+                  "modify": "x.sname",
+                  "align": "center"
+                },
+                {
+                  "name": "Direction",
+                  "data": "Departure",
+                  "modify": "x.direction"
+                },
+                {
+                  "name": "Departure",
+                  "data": "Departure",
+                  "align": "center",
+                  "modify": "Math.round(Math.max(0,(Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000))"
+                },
+                {
+                  "name": "Platform",
+                  "data": "Departure",
+                  "align": "center",
+                  "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
+                }
+              ],
+              "css": null,
+              "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n"
+            }
+          ]
+        },
+        {
+          "theme": "Backend-selected",
+          "title": "Vasttrafik",
+          "path": "vasttrafik",
+          "type": "panel",
+          "icon": "mdi:tram-side",
+          "badges": [],
+          "cards": [
+            {
+              "type": "iframe",
+              "url": "https://avgangstavla.vasttrafik.se/?source=vasttrafikse-stopareadetailspage&stopAreaGid=9021014005862000",
+              "aspect_ratio": "300%"
             }
           ]
         },
@@ -9547,6 +9608,12 @@
                   }
                 ]
               }
+            },
+            {
+              "type": "markdown",
+              "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n",
+              "content": "{% set icons = { 'TRAM': 'mdi:tram-side', 'BUS': 'mdi:bus', 'BOAT': 'mdi:ferry'} %} {% set ns=namespace(sname=[], fgColor=[], bgColor=[]) %} <table class=\"Vasttrafik\" border=1>\n  <tr>\n    <th>Line</th>\n    <th>Direction</th>\n    <th>Departure</th>\n    <th>Platform</th>\n  </tr>\n{%- for departure in state_attr('sensor.vasttrafik_departure_table', 'Departure') %}\n  <tr valign=middle>\n    <td align=center>{{ departure.sname | default(\"?\") }}</td>\n    <td>{{ departure.direction | default(\"?\") }}</td>\n    {%- set time = departure.rtTime if departure.rtTime | default(false) else departure.Time | default(\"?\") %}\n    {%- set date = departure.rtDate if departure.rtDate | default(false) else departure.Date | default(\"?\") %}\n    {%- set minutes = ((as_timestamp((date + ' ' + time) | as_datetime) - as_timestamp(now())) / 60) | round(0) %}\n    <td align=center>{{ iif(minutes>0, minutes, 'Now') }}</td>\n    <td align=center>{{ departure.track | default(\"?\") }}&nbsp;<ha-icon icon=\"{{ icons[departure.type] | default(\"mdi:help\")}}\"></ha-icon></td>\n  </tr>\n{%- endfor %}  </table>",
+              "title": "Västtrafik - SKF"
             }
           ]
         },
