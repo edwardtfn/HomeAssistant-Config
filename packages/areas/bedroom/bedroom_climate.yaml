@@ -1,19 +1,17 @@
-
-
-#generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
-#  - name: Bedroom - Hygrostat
-#    #unique_id: b7b4aec9-212e-43b2-9ec4-982491695fda
-#    humidifier: switch.bedroom_power_strip_1_socket_3
-#    target_sensor: sensor.bedroom_hygrometer_humidity
-#    #min_humidity: 0
-#    #max_humidity: 100
-#    target_humidity: 45
-#    away_humidity: 35
-#    dry_tolerance: 2
-#    device_class: humidifier
-#    initial_state: true
-#    min_cycle_duration:
-#      minutes: 5
+generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
+  - name: Bedroom - Hygrostat
+    #unique_id: b7b4aec9-212e-43b2-9ec4-982491695fda
+    humidifier: switch.bedroom_power_strip_1_socket_4
+    target_sensor: sensor.bedroom_hygrometer_humidity
+    #min_humidity: 0
+    #max_humidity: 100
+    target_humidity: 45
+    away_humidity: 35
+    dry_tolerance: 2
+    device_class: humidifier
+    initial_state: true
+    min_cycle_duration:
+      minutes: 5
 
   #- platform: mold_indicator #https://www.home-assistant.io/integrations/mold_indicator/
     #name: Bedroom - Mold indicator
