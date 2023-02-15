@@ -1,0 +1,106 @@
+input_text: # You can create the input_text using the UI (Settings > Devices & Services > Helpers)
+  vasttrafik_api_key:
+    name: Vasttrafik - API Key
+    initial: !secret vasttrafik_api_key
+    mode: password
+  vasttrafik_api_secret:
+    name: Vasttrafik - API Secret
+    initial: !secret vasttrafik_api_secret
+    mode: password
+
+rest:
+  - resource: https://api.vasttrafik.se/token
+    method: POST
+    payload: 'grant_type=client_credentials'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+      Authorization: >-
+        Basic {{ (states('input_text.vasttrafik_api_key') + ':' + states('input_text.vasttrafik_api_secret')) | base64_encode }}
+    scan_interval: 60
+    sensor:
+      - name: Vasttrafik - Access token
+        unique_id: f1031621-3a2b-4f10-b90e-bac3dc26361f
+        value_template: "{{ now() + timedelta(seconds= value_json.expires_in ) }}"
+        json_attributes:
+          - access_token
+          - scope
+          - token_type
+          - expires_in
+
+  - resource: https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard
+    method: GET
+    params:
+      id: !secret vasttrafik_station_1_id
+      date: "{{ now().strftime('%Y-%m-%d') }}"
+      time: "{{ now().strftime('%H:%M') }}"
+      format: json
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+      Authorization: >-
+        {{ state_attr('sensor.vasttrafik_access_token', 'token_type') }} {{ state_attr('sensor.vasttrafik_access_token', 'access_token') }}
+    scan_interval: 60
+    sensor:
+      - name: Vasttrafik - Departure table
+        unique_id: f469a04a-ca05-4ee6-9dc7-96a3b9bc4a7e
+        value_template: "{{ (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | map(attribute='rtDate') | list | first) + ' ' + (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | sort(attribute='rtTime') | map(attribute='rtTime') | list | first) }}"
+        json_attributes_path: "$.DepartureBoard"
+        json_attributes:
+          - servertime
+          - serverdate
+          - Departure
+
+
+#sensor:
+  # https://www.home-assistant.io/integrations/vasttrafik/
+  #- platform: vasttrafik
+  #  key: !secret vasttrafik_api_key
+  #  secret: !secret vasttrafik_api_secret
+  #  departures:
+  #    - from: !secret vasttrafik_station_1_id
+  #      name: !secret vasttrafik_station_1_sensor_name
+
+  #- name: Vasttrafik - Access token - OLD
+  #  platform: rest
+  #  unique_id: a5aa33b4-a4d5-4aaf-b0f0-e1487137672c
+  #  method: POST
+  #  resource: "https://api.vasttrafik.se/token"
+  #  payload: 'grant_type=client_credentials'
+  #  headers:
+  #    Content-Type: application/x-www-form-urlencoded
+  #    Authorization: >-
+  #      Basic {{ (states('input_text.vasttrafik_api_key') + ':' + states('input_text.vasttrafik_api_secret')) | base64_encode }}
+  #  scan_interval: 60
+  #  value_template: "{{ now() + timedelta(seconds= value_json.expires_in ) }}"
+  #  json_attributes:
+  #    - access_token
+  #    - scope
+  #    - token_type
+  #    - expires_in
+
+  #- name: Vasttrafik - Departure table - OLD
+  #  platform: rest
+  #  unique_id: e429da0d-c99b-4a6b-844e-d538e33f0daf
+  #  method: GET
+  #  resource: "https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard"
+  #  params:
+  #    id: !secret vasttrafik_station_1_id
+  #    date: "{{ now().strftime('%Y-%m-%d') }}"
+  #    time: "{{ now().strftime('%H:%M') }}"
+  #    format: json
+  #  headers:
+  #    Content-Type: application/x-www-form-urlencoded
+  #    Authorization: >-
+  #      {{ state_attr('sensor.vasttrafik_access_token', 'token_type') }} {{ state_attr('sensor.vasttrafik_access_token', 'access_token') }}
+  #  scan_interval: 60
+  #  value_template: "{{ (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | map(attribute='rtDate') | list | first) + ' ' + (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | sort(attribute='rtTime') | map(attribute='rtTime') | list | first) }}"
+  #  json_attributes_path: "$.DepartureBoard"
+  #  json_attributes:
+  #    - servertime
+  #    - serverdate
+  #    - Departure
+
+#logger:
+#  logs:
+#    homeassistant.components.rest: debug
+
+            #{{ state_attr('sensor.vasttrafik_access_token', 'token_type') }} {{ state_attr('sensor.vasttrafik_access_token', 'access_token') }}

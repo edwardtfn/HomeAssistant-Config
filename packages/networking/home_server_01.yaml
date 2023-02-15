@@ -1,12 +1,12 @@
 sensor:
-  - platform: command_line
-    name: Chrony clients
-    command: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo chronyc clients | grep '192.168.'' | wc -l"
-    unit_of_measurement: clients
-    #device_class: temperature
-    #state_class: measurement
-    value_template: '{{ value }}'
-    scan_interval: 300
+  #- platform: command_line
+  #  name: Chrony clients
+  #  command: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo chronyc clients | grep '192.168.'' | wc -l"
+  #  unit_of_measurement: clients
+  #  #device_class: temperature
+  #  #state_class: measurement
+  #  value_template: '{{ value }}'
+  #  scan_interval: 300
 
 shell_command:
   # https://www.creatingsmarthome.com/index.php/2022/02/12/guide-start-up-and-shut-down-remote-linux-pc-using-home-assistant/

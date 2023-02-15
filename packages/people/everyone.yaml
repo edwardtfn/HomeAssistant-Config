@@ -1,0 +1,7 @@
+group:
+  everyone:
+    name: Everyone
+    entities:
+      - group.hosts
+      - group.pets
+      #- group.guests

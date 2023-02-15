@@ -1,0 +1,18 @@
+group:
+  hosts:
+    name: Hosts
+    entities:
+      - person.edward_firmo
+      - person.carolina_costa
+
+proximity:
+  edward_firmo:
+    devices:
+      - person.edward_firmo
+    tolerance: 50
+    unit_of_measurement: m
+  carolina_costa:
+    devices:
+      - person.carolina_costa
+    tolerance: 50
+    unit_of_measurement: m

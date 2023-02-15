@@ -1001,7 +1001,6 @@ light:
       - light.living_room_all_lights
       - light.office_all_lights
 
-
 script:
   home_reboot_all_shelly_devices:
     alias: Home - Reboot all Shelly devices
@@ -1040,7 +1039,6 @@ script:
       target:
         entity_id: '{{ states.button | selectattr(''entity_id'', ''search'', ''reboot'')
           | map(attribute=''entity_id'') | list }}'
-
 
 template:
   - trigger:
