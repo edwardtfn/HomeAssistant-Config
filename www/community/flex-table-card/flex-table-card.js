@@ -352,18 +352,12 @@ class DataRow {
                     content == "null" || (Array.isArray(content) && content.length == 0))
                 return ((this.strict) ? null : "n/a");
 
-            let cell_style = (cfg.style) ? eval(cfg.style) : "";
-            if (cell_style === "undefined" || typeof cell_style === "undefined" || cell_style === null ||
-            cell_style == "null" || (Array.isArray(cell_style) && cell_style.length == 0))
-                return ((this.strict) ? null : "");
-
-' '            return new Object({
+            return new Object({
                 content: content,
                 pre: cfg.prefix || "",
                 suf: cfg.suffix || "",
                 css: cfg.align || "left",
-                hide: cfg.hidden,
-                style: cell_style
+                hide: cfg.hidden
             });
         });
         this.hidden = this.data.some(data => (data === null));
@@ -505,7 +499,7 @@ class FlexTableCard extends HTMLElement {
         element.innerHTML = rows.map((row) =>
             `<tr id="entity_row_${row.entity.entity_id}">${row.data.map(
                 (cell) => ((!cell.hide) ?
-                    `<td class="${cell.css}" style="${cell.style}">${cell.pre}${cell.content}${cell.suf}</td>` : "")
+                    `<td class="${cell.css}">${cell.pre}${cell.content}${cell.suf}</td>` : "")
             ).join("")}</tr>`).join("");
 
         // if configured, set clickable row to show entity popup-dialog
