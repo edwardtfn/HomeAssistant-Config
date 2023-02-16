@@ -1,11 +1,11 @@
 alert:
   raspberry_cpu_temperature:
-    name: Raspberry PI CPU temperature
+    name: Server CPU temperature
     message: >-
-      The temperature in your Raspberry PI used with Home Assistant is too high ({{ states('sensor.processor_temperature') }}ºC).
+      The temperature in your PC used with Home Assistant is too high ({{ states('sensor.processor_temperature') }}ºC).
       
       Please take some action or the system will shut down automatically.
-    done_message: Raspberry PI temperature is back to normal ({{ states('sensor.processor_temperature') }}ºC).
+    done_message: PC temperature is back to normal ({{ states('sensor.processor_temperature') }}ºC).
     entity_id: binary_sensor.home_assistant_temperature_high
     repeat: 30
     can_acknowledge: true
@@ -106,7 +106,7 @@ automation:
       - update.pi_hole_core_update_available
       - update.pi_hole_ftl_update_available
       - update.pi_hole_web_update_available
-      core_os_update_mode: patches
+      core_os_update_mode: all
       actions_pre_restart:
       - service: notify.signal_edward
         continue_on_error: true

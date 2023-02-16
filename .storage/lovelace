@@ -2901,7 +2901,7 @@
                   "name": "Departure",
                   "data": "Departure",
                   "align": "center",
-                  "modify": "Math.round(Math.max(0,(Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000))"
+                  "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.rtTime }}\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.Date + \" \" + x.Time) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.Time }}\n    else\n      {{ minutes }}\n  }"
                 },
                 {
                   "name": "Platform",
