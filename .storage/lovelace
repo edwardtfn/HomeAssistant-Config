@@ -2890,7 +2890,7 @@
               ],
               "card": {
                 "type": "custom:flex-table-card",
-                "title": "Västtrafik - SKF",
+                "title": "Västtrafik - Svingeln",
                 "strict": true,
                 "max_rows": 20,
                 "sort_by": [
@@ -2911,6 +2911,14 @@
                     "name": "Line",
                     "data": "Departure",
                     "modify": "x.sname",
+                    "align": "center",
+                    "hidden": true,
+                    "style": "'background-color: ' + x.bgColor + ';' + 'color: ' + x.fgColor + ';'"
+                  },
+                  {
+                    "name": "Line",
+                    "data": "Departure",
+                    "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.fgColor + '; background-color: ' + x.bgColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
                     "align": "center"
                   },
                   {
@@ -2922,7 +2930,6 @@
                     "name": "Departure",
                     "data": "Departure",
                     "align": "center",
-                    "style": "\"background-color: blue;\"",
                     "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.rtTime }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.date + \" \" + x.time) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.time }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }"
                   },
                   {
@@ -2931,7 +2938,12 @@
                     "align": "center",
                     "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
                   }
-                ]
+                ],
+                "css": {
+                  "tbody tr:nth-child(odd)": "background-color: #535B64;",
+                  "tbody tr:nth-child(even)": "background-color: #3C4650;"
+                },
+                "style": "ha-card {\n  --mdc-icon-size: 16px;\n  background-color: #3C4650;\n}\n"
               }
             }
           ]
