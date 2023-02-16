@@ -1,0 +1,53 @@
+template_socket:
+  default:
+    - icon: mdi:power-socket-de
+    - name: Outlets
+  card:
+    type: custom:mushroom-template-card
+    entity: '[[entity_id]]'
+    primary: '[[name]]'
+    secondary: |-
+      {% if is_state(entity, 'on') %}
+        {{ states(entity | replace('switch.', 'sensor.') + '_power') | float(-99) | round(1) }}W
+      {% else %}
+        {{ states(entity) | capitalize }}
+      {% endif %}
+    icon_color: |-
+      {% if is_state(entity, 'on') %}
+        {% set curr = states(entity | replace('switch.', 'sensor.') + '_power') | float(-99) %}
+        {% set high_value = 100 %}
+        {% set high_red = 255 %}
+        {% set high_green = 0 %}
+        {% set high_blue = 0 %}
+        {% set mid_value = 25 %}
+        {% set mid_red = 255 %}
+        {% set mid_green = 215 %}
+        {% set mid_blue = 0 %}
+        {% set low_value = 10 %}
+        {% set low_red = 0 %}
+        {% set low_green = 255 %}
+        {% set low_blue = 0 %}
+        {% if curr > mid_value %}
+          {% set curr_point = (curr - mid_value) / (high_value - mid_value) %}
+          {% set red = (curr_point * (high_red - mid_red) + mid_red) %}
+          {% set green = (curr_point * (high_green - mid_green) + mid_green) %}
+          {% set blue = (curr_point * (high_blue - mid_blue) + mid_blue) %}
+        {% else %}
+          {% set curr_point = (mid_value - curr) / (mid_value - low_value) %}
+          {% set red = mid_red - (curr_point * (mid_red - low_red)) %}
+          {% set green = mid_green - (curr_point * (mid_green - low_green)) %}
+          {% set blue = mid_blue - (curr_point * (mid_blue - low_blue)) %}
+        {% endif %}
+        {% set red = min(255, max(0, red | round(0) )) %}
+        {% set green = min(255, max(0, green | round(0) )) %}
+        {% set blue = min(255, max(0, blue | round(0) )) %}
+        {{ '#' + '%02x' | format( red | int ) + '%02x' | format( green | int ) + '%02x' | format( blue | int ) }}
+      {% endif %}
+    icon: '[[icon]]'
+    layout: vertical
+    fill_container: true
+    tap_action:
+      action: toggle
+      confirmation: true
+    hold_action:
+      action: more-info

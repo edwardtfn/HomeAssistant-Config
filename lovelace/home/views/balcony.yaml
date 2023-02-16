@@ -1,0 +1,235 @@
+    title: Balcony
+    theme: Backend-selected
+    path: balcony
+    subview: true
+    type: panel
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Balcony
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/balcony
+                hold_action:
+                  action: none
+                card_mod: null
+                style: |
+                  ha-card {
+                    --chip-background: gray;
+                  }
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Bathroom
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Bedroom
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Corridor
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Guest bathroom
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Guest room
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Hall
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Laundry
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Living room
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: template
+                double_tap_action:
+                  action: none
+                content: Office
+                tap_action:
+                  action: navigate
+                  navigation_path: ''
+                hold_action:
+                  action: none
+              - type: menu
+            alignment: center
+          - type: custom:mushroom-title-card
+            title: Balcony
+            alignment: center
+            title_tap_action:
+              action: none
+            subtitle_tap_action:
+              action: none
+          - square: false
+            columns: 3
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                entity: light.balcony_string_lights
+                name: String lights
+                layout: vertical
+                fill_container: true
+                secondary_info: state
+                use_light_color: false
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.balcony_lamp_light
+                name: Lamp
+                layout: vertical
+                fill_container: true
+                secondary_info: state
+                use_light_color: false
+                show_brightness_control: false
+                collapsible_controls: true
+              - type: custom:decluttering-card
+                template: template_socket
+                variables:
+                  - entity_id: switch.balcony_lamp_sockets
+              - type: custom:mushroom-entity-card
+                entity: weather.home
+                fill_container: true
+                layout: vertical
+                primary_info: state
+                secondary_info: none
+              - type: custom:mushroom-template-card
+                primary: '{{ state_attr(entity, ''temperature'') }}°C'
+                secondary: ''
+                icon: mdi:thermometer
+                icon_color: >-
+                  {% set curr = state_attr(entity, 'temperature') | float(-99)
+                  %} {% set high_value = 22 %} {% set high_red = 255 %} {% set
+                  high_green = 0 %} {% set high_blue = 0 %} {% set mid_h_value =
+                  19 %} {% set mid_h_red = 0 %} {% set mid_h_green = 255 %} {%
+                  set mid_h_blue = 0 %} {% set mid_l_value = 15 %} {% set
+                  mid_l_red = 0 %} {% set mid_l_green = 255 %} {% set mid_l_blue
+                  = 0 %} {% set low_value = 6 %} {% set low_red = 0 %} {% set
+                  low_green = 0 %} {% set low_blue = 255 %} {% if curr >
+                  mid_h_value %}
+                    {% set curr_point = (curr - mid_h_value) / (high_value - mid_h_value) %}
+                    {% set red = (curr_point * (high_red - mid_h_red) + mid_h_red) %}
+                    {% set green = (curr_point * (high_green - mid_h_green) + mid_h_green) %}
+                    {% set blue = (curr_point * (high_blue - mid_h_blue) + mid_h_blue) %}
+                  {% elif curr > mid_l_value %}
+                    {% set curr_point = (curr - mid_h_value) / (mid_h_value - mid_l_value) %}
+                    {% set red = (curr_point * (mid_h_red - mid_l_red) + mid_l_red) %}
+                    {% set green = (curr_point * (mid_h_green - mid_l_green) + mid_l_green) %}
+                    {% set blue = (curr_point * (mid_h_blue - mid_l_blue) + mid_l_blue) %}
+                  {% else %}
+                    {% set curr_point = (mid_l_value - curr) / (mid_l_value - low_value) %}
+                    {% set red = mid_l_red - (curr_point * (mid_l_red - low_red)) %}
+                    {% set green = mid_l_green - (curr_point * (mid_l_green - low_green)) %}
+                    {% set blue = mid_l_blue - (curr_point * (mid_l_blue - low_blue)) %}
+                  {% endif %} {% set red = min(255, max(0, red | round(0) )) %}
+                  {% set green = min(255, max(0, green | round(0) )) %} {% set
+                  blue = min(255, max(0, blue | round(0) )) %} {{ '#' + '%02x' |
+                  format( red | int ) + '%02x' | format( green | int ) + '%02x'
+                  | format( blue | int ) }}
+                layout: vertical
+                fill_container: true
+                entity: weather.home
+                tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - type: custom:mushroom-template-card
+                entity: weather.home
+                primary: '{{ state_attr(entity, ''humidity'') }}%'
+                secondary: ''
+                icon: mdi:water-percent
+                icon_color: >-
+                  {% set curr = state_attr(entity, 'humidity') | float(-99) %}
+                  {% set high_value = 90 %} {% set high_red = 0 %} {% set
+                  high_green = 0 %} {% set high_blue = 255 %} {% set mid_h_value
+                  = 60 %} {% set mid_h_red = 0 %} {% set mid_h_green = 255 %} {%
+                  set mid_h_blue = 0 %} {% set mid_l_value = 40 %} {% set
+                  mid_l_red = 0 %} {% set mid_l_green = 255 %} {% set mid_l_blue
+                  = 0 %} {% set low_value = 30 %} {% set low_red = 255 %} {% set
+                  low_green = 0 %} {% set low_blue = 0 %} {% if curr >
+                  mid_h_value %}
+                    {% set curr_point = (curr - mid_h_value) / (high_value - mid_h_value) %}
+                    {% set red = (curr_point * (high_red - mid_h_red) + mid_h_red) %}
+                    {% set green = (curr_point * (high_green - mid_h_green) + mid_h_green) %}
+                    {% set blue = (curr_point * (high_blue - mid_h_blue) + mid_h_blue) %}
+                  {% elif curr > mid_l_value %}
+                    {% set curr_point = (curr - mid_h_value) / (mid_h_value - mid_l_value) %}
+                    {% set red = (curr_point * (mid_h_red - mid_l_red) + mid_l_red) %}
+                    {% set green = (curr_point * (mid_h_green - mid_l_green) + mid_l_green) %}
+                    {% set blue = (curr_point * (mid_h_blue - mid_l_blue) + mid_l_blue) %}
+                  {% else %}
+                    {% set curr_point = (mid_l_value - curr) / (mid_l_value - low_value) %}
+                    {% set red = mid_l_red - (curr_point * (mid_l_red - low_red)) %}
+                    {% set green = mid_l_green - (curr_point * (mid_l_green - low_green)) %}
+                    {% set blue = mid_l_blue - (curr_point * (mid_l_blue - low_blue)) %}
+                  {% endif %} {% set red = min(255, max(0, red | round(0) )) %}
+                  {% set green = min(255, max(0, green | round(0) )) %} {% set
+                  blue = min(255, max(0, blue | round(0) )) %} {{ '#' + '%02x' |
+                  format( red | int ) + '%02x' | format( green | int ) + '%02x'
+                  | format( blue | int ) }}
+                layout: vertical
+                fill_container: true
+                tap_action:
+                  action: more-info
+                hold_action:
+                  action: more-info
+              - type: custom:mushroom-cover-card
+                entity: cover.balcony_curtain
+                layout: vertical
+                fill_container: true
+                show_buttons_control: false
+                show_position_control: false
+                name: Curtains

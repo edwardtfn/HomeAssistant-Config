@@ -1,0 +1,41 @@
+    title: LAN
+    theme: Backend-selected
+    path: lan
+    type: panel
+    subview: true
+    badges: []
+    cards:
+      - type: custom:flex-table-card
+        sort_by:
+          - devices+
+        entities:
+          include: sensor.aimesh_router_connected_devices
+        columns:
+          - data: devices
+            modify: x.ip
+            hidden: true
+          - data: devices
+            name: ' Device Name'
+            icon: mdi:devices
+            modify: x.name
+          - data: devices
+            name: ' Address'
+            icon: mdi:ip-network
+            modify: x.ip
+          - data: devices
+            name: ' MAC'
+            icon: mdi:barcode-scan
+            modify: x.mac
+          - data: devices
+            name: Connection type
+            modify: x.connection_type
+          - data: devices
+            name: AiMesh node
+            modify: >-
+              x.node.replace('7c:10:c9:b0:2e:60','Node').replace('7c:10:c9:b0:49:e0','Router')
+        card_mod:
+          style: |
+            ha-card {
+              box-shadow: none;
+              background: none;
+            }
