@@ -2922,7 +2922,8 @@
                     "name": "Departure",
                     "data": "Departure",
                     "align": "center",
-                    "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.rtTime }}\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.Date + \" \" + x.Time) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.Time }}\n    else\n      {{ minutes }}\n  }"
+                    "style": "\"background-color: blue;\"",
+                    "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.rtTime }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.date + \" \" + x.time) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.time }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }"
                   },
                   {
                     "name": "Platform",
@@ -2930,9 +2931,7 @@
                     "align": "center",
                     "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
                   }
-                ],
-                "css": null,
-                "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n"
+                ]
               }
             }
           ]

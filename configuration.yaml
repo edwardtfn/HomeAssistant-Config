@@ -36,6 +36,17 @@ logger:
     custom_components.zha_toolkit: debug
 #    homeassistant.components.bluetooth: debug
 
+lovelace:
+  mode: storage
+  # Add yaml dashboards
+  dashboards:
+    lovelace-home:
+      mode: yaml
+      title: Home
+      icon: mdi:home
+      show_in_sidebar: true
+      filename: ./lovelace/home/ui-lovelace.yaml
+
 notify: !include notifications.yaml
 
 recorder:

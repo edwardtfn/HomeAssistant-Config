@@ -20,12 +20,8 @@ rest:
     sensor:
       - name: Vasttrafik - Access token
         unique_id: 3755db8a-6c8f-4438-8549-722621347267
-        value_template: >-
-          {% if value_json.expires_in | int(0) > 0 %}
-            {{ now() + timedelta(seconds= value_json.expires_in | int(0) ) }}
-          {% else %}
-            expired
-          {% endif %}
+        device_class: timestamp
+        value_template: "{{ now() + timedelta(seconds= value_json.expires_in | int(0) ) }}"
         json_attributes:
           - access_token
           - scope
@@ -46,8 +42,9 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Departure table
-        unique_id: 41f20585-8cca-49dd-974f-f18fb7ec491f
-        value_template: "{{ (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | map(attribute='rtDate') | list | first) + ' ' + (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | sort(attribute='rtTime') | map(attribute='rtTime') | list | first) }}"
+        unique_id: b26d080f-5d90-417b-8141-3ff63b57836f
+        device_class: timestamp
+        value_template: "{{ (value_json.DepartureBoard.serverdate + ' ' + value_json.DepartureBoard.servertime) | as_timestamp | timestamp_local }}"
         json_attributes_path: "$.DepartureBoard"
         json_attributes:
           - servertime
