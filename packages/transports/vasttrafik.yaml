@@ -19,8 +19,13 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Access token
-        unique_id: f1031621-3a2b-4f10-b90e-bac3dc26361f
-        value_template: "{{ now() + timedelta(seconds= value_json.expires_in ) }}"
+        unique_id: 3755db8a-6c8f-4438-8549-722621347267
+        value_template: >-
+          {% if value_json.expires_in | int(0) > 0 %}
+            {{ now() + timedelta(seconds= value_json.expires_in | int(0) ) }}
+          {% else %}
+            expired
+          {% endif %}
         json_attributes:
           - access_token
           - scope
@@ -41,7 +46,7 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Departure table
-        unique_id: f469a04a-ca05-4ee6-9dc7-96a3b9bc4a7e
+        unique_id: 41f20585-8cca-49dd-974f-f18fb7ec491f
         value_template: "{{ (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | map(attribute='rtDate') | list | first) + ' ' + (value_json.DepartureBoard.Departure | sort(attribute='rtDate') | sort(attribute='rtTime') | map(attribute='rtTime') | list | first) }}"
         json_attributes_path: "$.DepartureBoard"
         json_attributes:
@@ -58,3 +63,7 @@ rest:
   #  departures:
   #    - from: !secret vasttrafik_station_1_id
   #      name: !secret vasttrafik_station_1_sensor_name
+
+#logger:
+#  logs:
+#    homeassistant.components.rest.sensor: debug

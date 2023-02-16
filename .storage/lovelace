@@ -2369,373 +2369,382 @@
               ]
             },
             {
-              "type": "vertical-stack",
-              "cards": [
+              "type": "conditional",
+              "conditions": [
                 {
-                  "type": "custom:mushroom-title-card",
-                  "title": "{{ iif(is_state('light.home_all_lights', 'on'), 'Lights on:', 'No lights on') }}",
-                  "alignment": "center"
-                },
-                {
-                  "square": true,
-                  "columns": 2,
-                  "type": "grid",
-                  "cards": [
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.balcony_lamp_light",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.balcony_lamp_light",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "layout": "vertical",
-                        "name": "Balcony - Lamp",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.balcony_string_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.balcony_string_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "layout": "vertical",
-                        "name": "Balcony - String lights",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.bathroom_all_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.bathroom_all_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Bathroom",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.bedroom_closet_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.bedroom_closet_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Bedroom - Closet",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.bedroom_carol_light",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.bedroom_carol_light",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Bedroom - Carol",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.bedroom_edward_light",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.bedroom_edward_light",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Bedroom - Edward",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.corridor_lights_all",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.corridor_lights_all",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Corridor",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.guest_room_closet_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.guest_room_closet_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Guest room - Closet",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.guest_bathroom_all_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.guest_bathroom_all_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Guest bathroom",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.guest_room_wall_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.guest_room_wall_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Guest room",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.hall_all_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.hall_all_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Hall",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": false,
-                        "show_color_control": false,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.kitchen_bench_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.kitchen_bench_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Kitchen - Bench",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.kitchen_table_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.kitchen_table_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Kitchen - Table",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.office_ceiling_lines",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.office_ceiling_lines",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Office - Lines",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.office_workstation_lights",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.office_workstation_lights",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Office - Workstation",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.curtains_lights_segment_kitchen",
-                          "state": "on"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:mushroom-light-card",
-                        "entity": "light.curtains_lights_segment_kitchen",
-                        "show_brightness_control": true,
-                        "collapsible_controls": true,
-                        "secondary_info": "none",
-                        "name": "Curtain's lights",
-                        "layout": "vertical",
-                        "use_light_color": true,
-                        "show_color_temp_control": true,
-                        "show_color_control": true,
-                        "fill_container": true
-                      }
-                    }
-                  ]
+                  "entity": "light.home_all_lights",
+                  "state_not": "off"
                 }
-              ]
+              ],
+              "card": {
+                "type": "vertical-stack",
+                "cards": [
+                  {
+                    "type": "custom:mushroom-title-card",
+                    "title": "{{ iif(is_state('light.home_all_lights', 'on'), 'Lights on:', 'No lights on') }}",
+                    "alignment": "center"
+                  },
+                  {
+                    "square": true,
+                    "columns": 2,
+                    "type": "grid",
+                    "cards": [
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.balcony_lamp_light",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.balcony_lamp_light",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "layout": "vertical",
+                          "name": "Balcony - Lamp",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.balcony_string_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.balcony_string_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "layout": "vertical",
+                          "name": "Balcony - String lights",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.bathroom_all_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.bathroom_all_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Bathroom",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.bedroom_closet_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.bedroom_closet_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Bedroom - Closet",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.bedroom_carol_light",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.bedroom_carol_light",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Bedroom - Carol",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.bedroom_edward_light",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.bedroom_edward_light",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Bedroom - Edward",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.corridor_lights_all",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.corridor_lights_all",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Corridor",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.guest_room_closet_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.guest_room_closet_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Guest room - Closet",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.guest_bathroom_all_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.guest_bathroom_all_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Guest bathroom",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.guest_room_wall_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.guest_room_wall_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Guest room",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.hall_all_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.hall_all_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Hall",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": false,
+                          "show_color_control": false,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.kitchen_bench_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.kitchen_bench_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Kitchen - Bench",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.kitchen_table_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.kitchen_table_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Kitchen - Table",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.office_ceiling_lines",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.office_ceiling_lines",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Office - Lines",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.office_workstation_lights",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.office_workstation_lights",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Office - Workstation",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "conditions": [
+                          {
+                            "entity": "light.curtains_lights_segment_kitchen",
+                            "state": "on"
+                          }
+                        ],
+                        "card": {
+                          "type": "custom:mushroom-light-card",
+                          "entity": "light.curtains_lights_segment_kitchen",
+                          "show_brightness_control": true,
+                          "collapsible_controls": true,
+                          "secondary_info": "none",
+                          "name": "Curtain's lights",
+                          "layout": "vertical",
+                          "use_light_color": true,
+                          "show_color_temp_control": true,
+                          "show_color_control": true,
+                          "fill_container": true
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
             },
             {
               "type": "conditional",
@@ -2868,50 +2877,63 @@
               }
             },
             {
-              "type": "custom:flex-table-card",
-              "title": "Västtrafik - SKF",
-              "strict": true,
-              "max_rows": 20,
-              "sort_by": [
-                "Departure+"
-              ],
-              "entities": {
-                "include": "sensor.vasttrafik_departure_table"
-              },
-              "columns": [
+              "type": "conditional",
+              "conditions": [
                 {
-                  "name": "Sort column",
-                  "data": "Departure",
-                  "align": "center",
-                  "hidden": true,
-                  "modify": "Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000)"
+                  "entity": "sensor.vasttrafik_departure_table",
+                  "state_not": "unknown"
                 },
                 {
-                  "name": "Line",
-                  "data": "Departure",
-                  "modify": "x.sname",
-                  "align": "center"
-                },
-                {
-                  "name": "Direction",
-                  "data": "Departure",
-                  "modify": "x.direction"
-                },
-                {
-                  "name": "Departure",
-                  "data": "Departure",
-                  "align": "center",
-                  "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.rtTime }}\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.Date + \" \" + x.Time) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.Time }}\n    else\n      {{ minutes }}\n  }"
-                },
-                {
-                  "name": "Platform",
-                  "data": "Departure",
-                  "align": "center",
-                  "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
+                  "entity": "sensor.vasttrafik_departure_table",
+                  "state_not": "unavailable"
                 }
               ],
-              "css": null,
-              "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n"
+              "card": {
+                "type": "custom:flex-table-card",
+                "title": "Västtrafik - SKF",
+                "strict": true,
+                "max_rows": 20,
+                "sort_by": [
+                  "Departure+"
+                ],
+                "entities": {
+                  "include": "sensor.vasttrafik_departure_table"
+                },
+                "columns": [
+                  {
+                    "name": "Sort column",
+                    "data": "Departure",
+                    "align": "center",
+                    "hidden": true,
+                    "modify": "Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000)"
+                  },
+                  {
+                    "name": "Line",
+                    "data": "Departure",
+                    "modify": "x.sname",
+                    "align": "center"
+                  },
+                  {
+                    "name": "Direction",
+                    "data": "Departure",
+                    "modify": "x.direction"
+                  },
+                  {
+                    "name": "Departure",
+                    "data": "Departure",
+                    "align": "center",
+                    "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.rtTime }}\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.Date + \" \" + x.Time) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.Time }}\n    else\n      {{ minutes }}\n  }"
+                  },
+                  {
+                    "name": "Platform",
+                    "data": "Departure",
+                    "align": "center",
+                    "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
+                  }
+                ],
+                "css": null,
+                "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n"
+              }
             }
           ]
         },
@@ -9614,6 +9636,421 @@
               "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n",
               "content": "{% set icons = { 'TRAM': 'mdi:tram-side', 'BUS': 'mdi:bus', 'BOAT': 'mdi:ferry'} %} {% set ns=namespace(sname=[], fgColor=[], bgColor=[]) %} <table class=\"Vasttrafik\" border=1>\n  <tr>\n    <th>Line</th>\n    <th>Direction</th>\n    <th>Departure</th>\n    <th>Platform</th>\n  </tr>\n{%- for departure in state_attr('sensor.vasttrafik_departure_table', 'Departure') %}\n  <tr valign=middle>\n    <td align=center>{{ departure.sname | default(\"?\") }}</td>\n    <td>{{ departure.direction | default(\"?\") }}</td>\n    {%- set time = departure.rtTime if departure.rtTime | default(false) else departure.Time | default(\"?\") %}\n    {%- set date = departure.rtDate if departure.rtDate | default(false) else departure.Date | default(\"?\") %}\n    {%- set minutes = ((as_timestamp((date + ' ' + time) | as_datetime) - as_timestamp(now())) / 60) | round(0) %}\n    <td align=center>{{ iif(minutes>0, minutes, 'Now') }}</td>\n    <td align=center>{{ departure.track | default(\"?\") }}&nbsp;<ha-icon icon=\"{{ icons[departure.type] | default(\"mdi:help\")}}\"></ha-icon></td>\n  </tr>\n{%- endfor %}  </table>",
               "title": "Västtrafik - SKF"
+            },
+            {
+              "type": "custom:flex-table-card",
+              "title": "Västtrafik - SKF",
+              "strict": true,
+              "max_rows": 20,
+              "sort_by": [
+                "Departure+"
+              ],
+              "entities": {
+                "include": "sensor.vasttrafik_departure_table"
+              },
+              "columns": [
+                {
+                  "name": "Sort column",
+                  "data": "Departure",
+                  "align": "center",
+                  "hidden": true,
+                  "modify": "Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000)"
+                },
+                {
+                  "name": "Line",
+                  "data": "Departure",
+                  "modify": "x.sname",
+                  "align": "center"
+                },
+                {
+                  "name": "Direction",
+                  "data": "Departure",
+                  "modify": "x.direction"
+                },
+                {
+                  "name": "Departure",
+                  "data": "Departure",
+                  "align": "center",
+                  "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\") \n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.rtTime }}\n    else\n      {{ minutes }}\n  }\nelse\n  { \n    var minutes = Math.round(Math.max(0,(Date.parse(x.Date + \" \" + x.Time) - Date.now())/60000));\n    if (minutes>=60)\n      {{ x.Time }}\n    else\n      {{ minutes }}\n  }"
+                },
+                {
+                  "name": "Platform",
+                  "data": "Departure",
+                  "align": "center",
+                  "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
+                }
+              ],
+              "css": null,
+              "style": "ha-card {\n  --mdc-icon-size: 16px;\n}\n#Vasttrafik tr td:nth-child(2n){\n font-weight : bold\n}\nth, td {\nborder-bottom: 1px solid #ddd;\n}\n"
+            },
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:mushroom-title-card",
+                  "title": "{{ iif(is_state('light.home_all_lights', 'on'), 'Lights on:', 'No lights on') }}",
+                  "alignment": "center"
+                },
+                {
+                  "square": true,
+                  "columns": 2,
+                  "type": "grid",
+                  "cards": [
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.balcony_lamp_light",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.balcony_lamp_light",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "layout": "vertical",
+                        "name": "Balcony - Lamp",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.balcony_string_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.balcony_string_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "layout": "vertical",
+                        "name": "Balcony - String lights",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.bathroom_all_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.bathroom_all_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Bathroom",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.bedroom_closet_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.bedroom_closet_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Bedroom - Closet",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.bedroom_carol_light",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.bedroom_carol_light",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Bedroom - Carol",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.bedroom_edward_light",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.bedroom_edward_light",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Bedroom - Edward",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.corridor_lights_all",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.corridor_lights_all",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Corridor",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.guest_room_closet_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.guest_room_closet_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Guest room - Closet",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.guest_bathroom_all_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.guest_bathroom_all_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Guest bathroom",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.guest_room_wall_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.guest_room_wall_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Guest room",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.hall_all_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.hall_all_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Hall",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": false,
+                        "show_color_control": false,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.kitchen_bench_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.kitchen_bench_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Kitchen - Bench",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.kitchen_table_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.kitchen_table_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Kitchen - Table",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.office_ceiling_lines",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.office_ceiling_lines",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Office - Lines",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.office_workstation_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.office_workstation_lights",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Office - Workstation",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "entity": "light.curtains_lights_segment_kitchen",
+                          "state": "on"
+                        }
+                      ],
+                      "card": {
+                        "type": "custom:mushroom-light-card",
+                        "entity": "light.curtains_lights_segment_kitchen",
+                        "show_brightness_control": true,
+                        "collapsible_controls": true,
+                        "secondary_info": "none",
+                        "name": "Curtain's lights",
+                        "layout": "vertical",
+                        "use_light_color": true,
+                        "show_color_temp_control": true,
+                        "show_color_control": true,
+                        "fill_container": true
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
