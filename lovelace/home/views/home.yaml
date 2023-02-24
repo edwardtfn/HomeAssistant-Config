@@ -13,5 +13,5 @@ cards:
   - !include /config/lovelace/library/cards/card_lights_on.yaml
   - !include /config/lovelace/library/cards/card_electricity_price_chart.yaml
   - !include /config/lovelace/library/cards/card_vasttrafik_departure_times.yaml
-  - !include /config/lovelace/library/cards/sandbox.yaml
+  #- !include /config/lovelace/library/cards/sandbox.yaml
   
