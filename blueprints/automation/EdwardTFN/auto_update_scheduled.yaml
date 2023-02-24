@@ -282,30 +282,30 @@ action:
   ########## Refresh update list ##########
   - &recalc-update-list
     variables:
-          input_backup_bool: !input backup_bool
-          input_restart_bool: !input restart_bool
+      input_backup_bool: !input backup_bool
+      input_restart_bool: !input restart_bool
 
-          input_schedule_monthday: !input schedule_monthday
-          input_core_os_update_mode: !input core_os_update_mode
-          input_firmware_update_mode: !input firmware_update_mode
-          input_pause_entities: !input pause_entities
+      input_schedule_monthday: !input schedule_monthday
+      input_core_os_update_mode: !input core_os_update_mode
+      input_firmware_update_mode: !input firmware_update_mode
+      input_pause_entities: !input pause_entities
 
-          core_update_entity: >-
+      core_update_entity: >-
             {% for u in integration_entities('hassio') | select('search', '^update[.]')
                     if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
                 {{ u }}
             {% endfor %}
-          os_update_entity: >-
+      os_update_entity: >-
             {% for u in integration_entities('hassio') | select('search', '^update[.]')
                     if (device_attr(u, 'identifiers') | first)[1] == 'OS' %}
                 {{ u }}
             {% endfor %}
-          supervisor_update_entity: >-
+      supervisor_update_entity: >-
             {% for u in integration_entities('hassio') | select('search', '^update[.]')
                     if (device_attr(u, 'identifiers') | first)[1] == 'supervisor' %}
                 {{ u }}
             {% endfor %}
-          firmware_update_entities: >-
+      firmware_update_entities: >-
             {{ states.update 
               | default([]) 
               | selectattr('attributes.device_class', 'defined') 
@@ -314,8 +314,8 @@ action:
               | list 
             }}
 
-          temp_input_update_exclusions: !input update_exclusions
-          input_update_exclusions: >-
+      temp_input_update_exclusions: !input update_exclusions
+      input_update_exclusions: >-
             {% set exclusions = temp_input_update_exclusions | default([]) %}
 
             {% if input_core_os_update_mode == 'ignore' %}
@@ -366,7 +366,7 @@ action:
 
             {{ exclusions }}
 
-          updates_list: >-
+      updates_list: >-
             {{ states.update 
               | default([]) 
               | selectattr('state','eq','on') 
