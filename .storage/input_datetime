@@ -17,6 +17,18 @@
         "icon": "mdi:restart",
         "has_time": true,
         "id": "home_assistant_last_start"
+      },
+      {
+        "has_time": true,
+        "has_date": true,
+        "name": "customvirtual_ev_starttid_for_smartladdning",
+        "id": "customvirtual_ev_starttid_for_smartladdning"
+      },
+      {
+        "id": "customvirtual_ev_starttid_for_smartladdning_2",
+        "has_time": true,
+        "has_date": true,
+        "name": "customvirtual_ev_starttid_for_smartladdning"
       }
     ]
   }

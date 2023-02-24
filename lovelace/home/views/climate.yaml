@@ -630,7 +630,7 @@
             name: Bedroom
             icon: mdi:water-percent
             show_state: true
-            entity: switch.bedroom_power_strip_1_socket_3
+            entity: switch.bedroom_power_strip_1_humidifier
           - show_name: true
             show_icon: true
             type: button

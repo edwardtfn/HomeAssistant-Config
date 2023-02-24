@@ -3,7 +3,6 @@ decluttering_templates: !include_dir_merge_named  /config/lovelace/library/declu
 title: Home
 views: #!include_dir_merge_list views/
   - !include views/home.yaml
-  - !include views/vasttrafik.yaml
   - !include views/power.yaml
   - !include views/rooms.yaml
   - !include views/climate.yaml

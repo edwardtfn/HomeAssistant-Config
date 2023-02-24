@@ -6,9 +6,9 @@ automation:
     path: EdwardTFN/set_entities_based_on_other_entities.yaml
     input:
       input_entities:
-      - switch.bedroom_power_strip_1_socket_4
+      - switch.bedroom_power_strip_1_tv_samsung
       target_entities:
-      - switch.bedroom_power_strip_1_socket_2
+      - switch.bedroom_power_strip_1_apple_tv
 - alias: Bedroom - TV - Turn on when in stand-by
   id: '1663789452400'
   description: ''
@@ -23,7 +23,7 @@ automation:
       seconds: 0
   condition:
   - condition: state
-    entity_id: switch.bedroom_power_strip_1_socket_4
+    entity_id: switch.bedroom_power_strip_1_tv_samsung
     state: 'on'
   action:
   - service: switch.turn_on
@@ -37,7 +37,7 @@ automation:
   trigger:
   - platform: state
     entity_id:
-    - switch.bedroom_power_strip_1_socket_4
+    - switch.bedroom_power_strip_1_tv_samsung
     from: 'off'
     to: 'on'
     for:
@@ -60,7 +60,7 @@ media_player:
     platform: universal # https://www.home-assistant.io/integrations/universal/
     unique_id: 5974bb5b-cedd-406e-a382-afe424612da4
     device_class: tv
-    icon: "{{ iif(is_state('switch.bedroom_power_strip_1_socket_4', 'on'), 'mdi:television', 'mdi:television-off') }}"
+    icon: "{{ iif(is_state('switch.bedroom_power_strip_1_tv_samsung', 'on'), 'mdi:television', 'mdi:television-off') }}"
     children:
       - media_player.bedroom_tv_samsung_dlna
       - media_player.bedroom_tv_samsung_integration
@@ -69,12 +69,12 @@ media_player:
         service: switch.turn_on
         data: {}
         target:
-          entity_id: switch.bedroom_power_strip_1_socket_4
+          entity_id: switch.bedroom_power_strip_1_tv_samsung
       turn_off:
         service: switch.turn_off
         data: {}
         target:
-          entity_id: switch.bedroom_power_strip_1_socket_4
+          entity_id: switch.bedroom_power_strip_1_tv_samsung
       volume_up:
         service: media_player.volume_set
         data:
@@ -120,7 +120,7 @@ media_player:
         #target:
           #entity_id: media_player.bedroom_tv_samsung_integration
     attributes:
-      state: switch.bedroom_power_strip_1_socket_4
+      state: switch.bedroom_power_strip_1_tv_samsung
       volume_level: media_player.bedroom_tv_samsung_dlna|volume_level
       is_volume_muted: media_player.bedroom_tv_samsung_dlna|is_volume_muted
 

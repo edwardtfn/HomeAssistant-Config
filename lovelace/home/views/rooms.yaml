@@ -359,7 +359,7 @@
             conditions:
               - entity: media_player.bedroom_tv_samsung_universal
                 state: 'on'
-              - entity: switch.bedroom_power_strip_1_socket_4
+              - entity: switch.bedroom_power_strip_1_tv_samsung
                 state: 'on'
             card:
               type: custom:mushroom-media-player-card
@@ -380,7 +380,7 @@
                 service: switch.toggle
                 data: {}
                 target:
-                  entity_id: switch.bedroom_power_strip_1_socket_4
+                  entity_id: switch.bedroom_power_strip_1_tv_samsung
           - type: grid
             square: false
             cards:
@@ -398,14 +398,14 @@
                   entity: media_player.bedroom_tv_samsung_universal
                   icon_color: >-
                     {{ iif(is_state(entity, 'on'), 'green',
-                    iif(is_state('switch.bedroom_power_strip_1_socket_4', 'on'),
+                    iif(is_state('switch.bedroom_power_strip_1_tv_samsung', 'on'),
                     'red', '')) }}
                   tap_action:
                     action: call-service
                     service: switch.toggle
                     data: {}
                     target:
-                      entity_id: switch.bedroom_power_strip_1_socket_4
+                      entity_id: switch.bedroom_power_strip_1_tv_samsung
               - type: custom:mushroom-light-card
                 entity: light.bedroom_carol_light
                 name: Carol's lights

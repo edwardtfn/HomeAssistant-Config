@@ -7,7 +7,7 @@ automation:
     input:
       timeout: 60
       entities_list:
-      - switch.bedroom_power_strip_1_socket_1
+      - switch.bedroom_power_strip_1_echo
       - switch.bedroom_power_strip_1_usb
 
 sensor:

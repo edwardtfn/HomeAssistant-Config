@@ -5,12 +5,12 @@ automation:
   use_blueprint:
     path: EdwardTFN/light_motion_illuminance_2_levels.yaml
     input:
-      motion_entity: binary_sensor.kitchen_table_motion_occupancy
+      motion_entity: binary_sensor.kitchen_occupancy_combined
       lumens_entity: sensor.kitchen_table_motion_light_level
       light_target: light.kitchen_table_lights
       light_level_high: 90
       light_level_dimmer: 25
-      no_motion_wait_to_dimming: 360
+      no_motion_wait_to_dimming: 90
       max_sun_angle: 90
       max_lumens: 50
       pause_entities_on:
