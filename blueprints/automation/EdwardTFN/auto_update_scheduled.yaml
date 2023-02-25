@@ -95,9 +95,42 @@ blueprint:
 #              value: "major_and_minor"
 
     firmware_update_mode:
-      name: Update mode for device's firmware (NOT FULLY IMPLEMENTED)
+      name: Update mode for device's firmware
       description: >-
         Please select the update mode for firmware in the devices connected to Home Assistant (when supported as an HA update).
+
+        * All: All updates will be installed.
+
+        * Patches only:
+          ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
+          ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
+          ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
+        * Don't update: Ignore any update.
+#        * Major & minor only:
+#          ❌ From 2022.11.0 to 2022.11.3 will be ignored (patches).
+#          ✅ From 2022.11.x to 2022.12.x will be updated (minor update).
+#          ✅ From 2022.12.x to 2023.1.x will be updated (major update).
+
+      default: "all"
+      selector:
+        select:
+          multiple: false
+          options:
+            - label: All
+              value: "all"
+            - label: Patches only
+              value: "patches"
+            - label: Don't update
+              value: "ignore"
+#            - label: Major & minor updates only
+#              value: "major_and_minor"
+
+    general_update_mode:
+      name: Update mode for genaral updates
+      description: >-
+        Please select the update mode for everything that is not a device's firmware or a core component of Home Assistant.
+
+        This includes add-ons, HACS componentes, custom cards, etc.
 
         * All: All updates will be installed.
 
@@ -243,41 +276,6 @@ condition:
         entity_id: !input pause_entities
         state: 'off'
 
-variables:
-  input_backup_bool: !input backup_bool
-  input_restart_bool: !input restart_bool
-
-  input_schedule_monthday: !input schedule_monthday
-  input_core_os_update_mode: !input core_os_update_mode
-  input_firmware_update_mode: !input firmware_update_mode
-  input_pause_entities: !input pause_entities
-
-  core_update_entity: >-
-    {% for u in integration_entities('hassio') | select('search', '^update[.]')
-            if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
-        {{ u }}
-    {% endfor %}
-  os_update_entity: >-
-    {% for u in integration_entities('hassio') | select('search', '^update[.]')
-            if (device_attr(u, 'identifiers') | first)[1] == 'OS' %}
-        {{ u }}
-    {% endfor %}
-  supervisor_update_entity: >-
-    {% for u in integration_entities('hassio') | select('search', '^update[.]')
-            if (device_attr(u, 'identifiers') | first)[1] == 'supervisor' %}
-        {{ u }}
-    {% endfor %}
-  firmware_update_entities: >-
-    {{ states.update 
-      | default([]) 
-      | selectattr('attributes.device_class', 'defined') 
-      | selectattr('attributes.device_class', 'eq', 'firmware') 
-      | map(attribute='entity_id') 
-      | list 
-    }}
-
-  updates_list: []
-
 action:
   ########## Refresh update list ##########
   - &recalc-update-list
@@ -288,6 +286,7 @@ action:
       input_schedule_monthday: !input schedule_monthday
       input_core_os_update_mode: !input core_os_update_mode
       input_firmware_update_mode: !input firmware_update_mode
+      input_general_update_mode: !input firmware_update_mode
       input_pause_entities: !input pause_entities
 
       core_update_entity: >-
@@ -313,6 +312,16 @@ action:
               | map(attribute='entity_id') 
               | list 
             }}
+      general_update_entities: >-
+        {{ states.update 
+          | default([]) 
+          | rejectattr('entity_id', 'in', core_update_entity)
+          | rejectattr('entity_id', 'in', os_update_entity)
+          | rejectattr('entity_id', 'in', supervisor_update_entity)
+          | rejectattr('entity_id', 'in', firmware_update_entities)
+          | map(attribute='entity_id') 
+          | list 
+        }}
 
       temp_input_update_exclusions: !input update_exclusions
       input_update_exclusions: >-
@@ -356,6 +365,25 @@ action:
                     {% set ns.entities = ns.entities + [ entity.entity_id ] %}
                   {% endif %}
                 {% elif input_firmware_update_mode == 'major_and_minor' %}
+                  {% if (not entity_version_change.major) and (not entity_version_change.minor) %}
+                    {% set ns.entities = ns.entities + [ entity.entity_id ] %}
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              {% set exclusions = exclusions + [ ns.entities ] %}
+            {% endif %}
+
+            {% if input_general_update_mode == 'ignore' %}
+              {% set exclusions = exclusions + [ general_update_entities ] %}
+            {% else %}
+              {% set ns = namespace(entities = []) %}
+              {% for entity in expand(general_update_entities) | rejectattr('entity_id', 'in', exclusions) | selectattr('state', 'eq', 'on') %}
+                {% set entity_version_change = version(entity.attributes.latest_version | default('')) - version(entity.attributes.installed_version | default('')) %}
+                {% if input_general_update_mode == 'patches' %}
+                  {% if entity_version_change.major or entity_version_change.minor or (not entity_version_change.patch) %}
+                    {% set ns.entities = ns.entities + [ entity.entity_id ] %}
+                  {% endif %}
+                {% elif input_general_update_mode == 'major_and_minor' %}
                   {% if (not entity_version_change.major) and (not entity_version_change.minor) %}
                     {% set ns.entities = ns.entities + [ entity.entity_id ] %}
                   {% endif %}

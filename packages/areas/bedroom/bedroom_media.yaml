@@ -90,9 +90,9 @@ media_player:
       volume_mute:
         service: media_player.volume_mute
         data:
-          is_volume_muted: "{{ is_state_attr('media_player.bedroom_tv_samsung_dlna', 'is_volume_muted', false) | default(true) }}"
+          is_volume_muted: "{{ is_state_attr('media_player.bedroom_tv_samsung_integration', 'is_volume_muted', false) | default(true) }}"
         target:
-          entity_id: media_player.bedroom_tv_samsung_dlna
+          entity_id: media_player.bedroom_tv_samsung_integration
       volume_set:
         service: media_player.volume_set
         data:
@@ -122,7 +122,7 @@ media_player:
     attributes:
       state: switch.bedroom_power_strip_1_tv_samsung
       volume_level: media_player.bedroom_tv_samsung_dlna|volume_level
-      is_volume_muted: media_player.bedroom_tv_samsung_dlna|is_volume_muted
+      is_volume_muted: media_player.bedroom_tv_samsung_integration|is_volume_muted
 
 
 rest_command:
