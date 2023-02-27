@@ -179,6 +179,7 @@ lovelace:
       title: Home
       icon: mdi:home
       show_in_sidebar: true
+      require_admin: false
       filename: ./lovelace/home/ui-lovelace.yaml
 
     lovelace-system-monitoring:
@@ -188,6 +189,14 @@ lovelace:
       show_in_sidebar: true
       require_admin: true
       filename: ./lovelace/system_monitoring/ui-lovelace.yaml
+
+    lovelace-surveillance:
+      mode: yaml
+      title: Surveillance
+      icon: mdi:cctv
+      show_in_sidebar: true
+      require_admin: false
+      filename: ./lovelace/surveillance/ui-lovelace.yaml
 
 notify: !include notifications.yaml
 

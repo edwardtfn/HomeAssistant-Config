@@ -1,3 +1,269 @@
+automation:
+- alias: Home - Surveillance - Back to home
+  id: '1659888305176'
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: zone.home
+    above: '0'
+  - platform: numeric_state
+    entity_id: zone.neighborhood_close
+    above: '0'
+  condition:
+  - condition: numeric_state
+    entity_id: zone.home
+    above: '0'
+  - condition: numeric_state
+    entity_id: zone.neighborhood_close
+    above: '0'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_boolean.home_empty
+      state: 'on'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: alarm_control_panel.eufy_hub
+        state: disarmed
+  action:
+  - service: alarm_control_panel.alarm_disarm
+    data: {}
+    target:
+      entity_id: alarm_control_panel.eufy_hub
+    continue_on_error: true
+  - service: script.home_surveillance_turn_off_all_cameras
+    data: {}
+    continue_on_error: true
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.home_empty
+    continue_on_error: true
+  - service: notify.signal_edward
+    data:
+      message: Disarming alarm as someone got back home.
+  mode: single
+- alias: Home - Surveillance - Notify when cameras are streaming
+  id: '1663996078108'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.dogs_mat_camera_stream_status
+    - sensor.hall_camera_stream_status
+    - sensor.living_room_camera_stream_status
+    - sensor.office_camera_stream_status
+    not_to:
+      - "StreamStatus.IDLE"
+      - "unknown"
+      - "unavailable"
+    id: started streaming
+  - platform: state
+    entity_id:
+    - switch.dogs_mat_camera_enabled
+    - switch.hall_camera_enabled
+    - switch.living_room_camera_enabled
+    - switch.office_camera_enabled
+    from: 'off'
+    to: 'on'
+    id: was enabled
+  condition: []
+  action:
+  - parallel:
+    - service: notify.signal_group_home
+      continue_on_error: true
+      data:
+        message: Attention, a camera in {{ area_name(trigger.entity_id) }} {{ trigger.id
+          }}
+  mode: single
+- alias: Home - Surveillance - Empty home
+  id: '1663997487123'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - zone.home
+    - zone.neighborhood_close
+    - zone.gamlestaden
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: zone.home
+        state: '0'
+      - condition: state
+        entity_id: zone.neighborhood_close
+        state: '0'
+      - condition: state
+        entity_id: input_boolean.home_empty
+        state: 'off'
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_empty
+        continue_on_error: true
+      - service: notify.signal_edward
+        data:
+          message: No one at home.
+        continue_on_error: true
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.home_empty
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: numeric_state
+          entity_id: zone.home
+          above: 0
+        - condition: numeric_state
+          entity_id: zone.neighborhood_close
+          above: 0
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.home_empty
+        continue_on_error: true
+      - service: notify.signal_edward
+        data:
+          message: '{{ trigger.entity_id }} changed from {{ trigger.from_state.state
+            }} to {{ trigger.to_state.state }}.'
+        continue_on_error: true
+  mode: restart
+- alias: Home - Surveillance - Dogs at home
+  id: '1673675258067'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - person.dory
+  - platform: state
+    entity_id:
+    - person.skal
+  condition: []
+  action:
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.dory
+        state: home
+      - condition: state
+        entity_id: person.skal
+        state: home
+    - condition: state
+      entity_id: input_boolean.home_no_dogs
+      state: 'on'
+    then:
+    - service: notify.signal_edward
+      data:
+        message: Dogs back home
+      continue_on_error: true
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.home_no_dogs
+      continue_on_error: true
+    else:
+    - if:
+      - condition: state
+        entity_id: input_boolean.home_no_dogs
+        state: 'on'
+      - condition: state
+        entity_id: person.dory
+        state: not_home
+      - condition: state
+        entity_id: person.skal
+        state: not_home
+      then:
+      - service: notify.signal_edward
+        data:
+          message: Who let the dogs out?
+        continue_on_error: true
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_no_dogs
+        continue_on_error: true
+  mode: restart
+- alias: Home - Surveillance - Alarm helper
+  id: '1672450352965'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - alarm_control_panel.eufy_hub
+    id: Alarm
+    for:
+      seconds: 2
+  - platform: state
+    entity_id:
+    - input_boolean.home_alarm
+    id: Helper
+    for:
+      seconds: 2
+  - platform: homeassistant
+    event: start
+    id: Start
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: alarm_control_panel.eufy_hub
+      state: unknown
+    - condition: state
+      entity_id: alarm_control_panel.eufy_hub
+      state: unavailable
+  action:
+  - if:
+    - condition: or
+      conditions:
+      - condition: trigger
+        id: Alarm
+      - condition: trigger
+        id: Start
+    then:
+    - if:
+      - condition: state
+        entity_id: alarm_control_panel.eufy_hub
+        state: disarmed
+        for:
+          seconds: 2
+      then:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.home_alarm
+      else:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_alarm
+    else:
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.home_alarm
+          state: 'on'
+        sequence:
+        - service: alarm_control_panel.alarm_arm_home
+          data: {}
+          target:
+            entity_id: alarm_control_panel.eufy_hub
+      - conditions:
+        - condition: state
+          entity_id: input_boolean.home_alarm
+          state: 'off'
+        sequence:
+        - service: alarm_control_panel.alarm_disarm
+          data: {}
+          target:
+            entity_id: alarm_control_panel.eufy_hub
+  mode: single
+
 script:
   camera_toggle:
     alias: Home - Surveillance - Toggle a camera

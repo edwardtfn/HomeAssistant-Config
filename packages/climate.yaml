@@ -1,3 +1,93 @@
+automation:
+- alias: Home - Weather - Windows are open
+  id: '1663627849757'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - weather.home
+    to: rainy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: snowy-rainy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: lightning-rainy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: snowy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: windy
+  - platform: state
+    entity_id:
+    - weather.home
+    to: windy-variant
+  condition:
+  - condition: template
+    value_template: "{{ (\n  states.binary_sensor \n  | selectattr('attributes.device_class',
+      'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
+      'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
+  action:
+  - service: notify.signal_group_home
+    data:
+      message: "The weather is changing and the following windows are open:\n- {{
+        states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
+        \n    | selectattr('attributes.device_class','eq','window') \n    | selectattr('state',
+        'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
+        ') }}"
+  mode: single
+- alias: Home - Weather - Max Sun elevation
+  id: '1665333562720'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sun.sun
+    attribute: rising
+    from:
+    - true
+    - true
+    - 'on'
+    to:
+    - false
+    - false
+    - 'off'
+  condition: []
+  action:
+  - service: input_number.set_value
+    data:
+      value: '{{ state_attr(''sun.sun'', ''elevation'') | float(0) }}'
+    target:
+      entity_id: input_number.home_sun_max_elevation
+  mode: single
+- alias: Home - Humidifiers - At least one humidifier requires attention
+  id: '1638151457747'
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - climate.bedroom_thermostat
+    - climate.kitchen_thermostat
+    - climate.living_room_thermostat
+    - climate.office_thermostat_1
+    attribute: current_humidity
+    below: 35
+    for:
+      minutes: 5
+  action:
+  - service: notify.signal_edward
+    data:
+      message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} has reported
+        low humidity ({{ state_attr(trigger.entity_id, ''current_humidity'') }}%)
+        in the room.
+
+        Please check the water level and power supply.'
+  mode: single
+
+
 sensor:
   - name: Home - Average room temperature
     platform: group

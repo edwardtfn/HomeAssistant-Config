@@ -1,3 +1,55 @@
+automation:
+- alias: Home - People - Phone out of battery
+  id: '1673901325564'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.carols_phone_battery_level
+    to: '0'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    id: Carol's phone
+  - platform: state
+    entity_id:
+    - sensor.carols_phone_battery_level
+    to:
+    - unavailable
+    - unknown
+    for:
+      minutes: 5
+    id: Carol's phone
+  - platform: state
+    entity_id:
+    - sensor.device_tracker_edwards_phone_icloud3_battery
+    to: '0'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    id: Edward's phone
+  - platform: state
+    entity_id:
+    - sensor.device_tracker_edwards_phone_icloud3_battery
+    to:
+    - unavailable
+    - unknown
+    for:
+      minutes: 5
+    id: Edward's phone
+  condition: []
+  action:
+  - service: notify.signal_group_home
+    data:
+      message: 'Phone out of battery:
+
+        Trigger id: {{ trigger.id }}
+
+        Entity: {{ trigger.entity_id }}'
+  mode: single
+
 group:
   hosts:
     name: Hosts

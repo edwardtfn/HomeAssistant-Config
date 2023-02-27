@@ -317,5 +317,5 @@ template:
           }}
 
 #tibber_data: # https://github.com/Danielhiversen/home_assistant_tibber_data
-#email: !secret tibber_email
-#password: !secret tibber_pass
+  #email: !secret tibber_email
+  #password: !secret tibber_pass

@@ -6,7 +6,7 @@ automation:
     path: EdwardTFN/light_switch_toggle.yaml
     input:
       input_entity: binary_sensor.corridor_ceiling_lights_input
-      light_target: light.corridor_lights_all
+      light_target: light.corridor_all_lights
 - alias: Corridor - Lights - Motion
   id: '1668778797533'
   description: ''

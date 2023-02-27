@@ -92,6 +92,33 @@ automation:
       - service: script.media_centre_router_power_cycle
         data: {}
   mode: single
+- alias: Home - Network - New device connected
+  id: '1666531818056'
+  description: Create a HA notification for any new device connected to the local
+    network
+  trigger:
+  - platform: event
+    event_type: asusrouter_device_connected
+  condition: []
+  action:
+  - service: persistent_notification.create
+    data_template:
+      title: Device has joined the local network
+      message: 'MAC: {{trigger.event.data.mac}}, IP: {{trigger.event.data.ip}}, name:
+        {{trigger.event.data.name}}'
+    continue_on_error: true
+  - service: notify.signal_edward
+    data:
+      message: 'A new device joined the local network:
+
+        Name: {{trigger.event.data.name}}
+
+        IP: {{trigger.event.data.ip}}
+
+        MAC: {{trigger.event.data.mac}}'
+    continue_on_error: true
+  mode: queued
+  max: 100
 
 script:
   media_centre_router_power_cycle:
