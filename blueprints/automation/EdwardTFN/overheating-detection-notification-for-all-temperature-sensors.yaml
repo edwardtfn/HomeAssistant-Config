@@ -1,5 +1,6 @@
 blueprint:
   name: Overheating detection for all temperature sensors
+  author: Edward Firmo (https://github.com/edwardtfn)
   description: Regularly test all sensors with 'temperature' device-class for crossing a certain threshold and if so execute an action.
   domain: automation
   input:

@@ -1,5 +1,6 @@
 blueprint:
   name: Blink lights
+  author: Edward Firmo (https://github.com/edwardtfn)
   description: Blink lights (or switches).
   domain: script
   source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/script/EdwardTFN/blink_lights.yaml
