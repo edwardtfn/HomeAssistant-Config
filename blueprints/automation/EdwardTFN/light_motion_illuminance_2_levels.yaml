@@ -130,7 +130,7 @@ blueprint:
     no_motion_wait_to_off:
       name: Dimming wait time
       description: Time to leave the light on after dimmming.
-      default: 15
+      default: 5
       selector:
         number:
           min: 1
