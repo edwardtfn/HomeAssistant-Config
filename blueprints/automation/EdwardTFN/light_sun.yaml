@@ -1,7 +1,7 @@
 blueprint:
   domain: automation
   name: Turn lights on or off at sunset or sunrise
-  author: Edward Firmo (https://github.com/edwardtfn)
+  #author: Edward Firmo (https://github.com/edwardtfn)
   description: This automatioj will turn lights on or off whe  the Sun crossed an elevation threshold.
   source_url: https://community.home-assistant.io/t/code-review-turning-lights-off-on-at-sunset-runrise/473105/8
   input:

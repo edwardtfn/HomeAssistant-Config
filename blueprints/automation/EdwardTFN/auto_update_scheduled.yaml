@@ -1,6 +1,6 @@
 blueprint:
   name: Home Assistant Auto-update on a schedule base
-  author: Edward Firmo (https://github.com/edwardtfn)
+  #author: Edward Firmo (https://github.com/edwardtfn)
   description: >-
     # Home Assistant Auto-update
 

@@ -1,6 +1,6 @@
 blueprint:
   name: Toggle lights when input changes
-  author: Edward Firmo (https://github.com/edwardtfn)
+  #author: Edward Firmo (https://github.com/edwardtfn)
   description: Turn lights on or off when an input (binary sensor) changes from off to on or from on to off.
   domain: automation
   source_url: https://github.com/edwardtfn/HomeAssistant-Config/raw/main/blueprints/automation/EdwardTFN/light_switch_toggle.yaml

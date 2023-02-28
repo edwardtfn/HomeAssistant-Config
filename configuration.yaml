@@ -9,7 +9,7 @@ application_credentials:
 #duplicate automation:
 bluetooth:
 #cloud:
-#conversation:
+conversation:
 counter:
 dhcp:
 energy:
