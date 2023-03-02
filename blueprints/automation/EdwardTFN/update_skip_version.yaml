@@ -1,6 +1,8 @@
 blueprint:
   name: Skip updates based on its versions changes level
-  #author: Edward Firmo (https://github.com/edwardtfn)
+  author: Edward Firmo (https://github.com/edwardtfn)
+  homeassistant:
+    min_version: '2023.3.0'
   description: 'Skip majors, minors or patches updates'
   domain: automation
   #source_url: 

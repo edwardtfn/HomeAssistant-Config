@@ -1,6 +1,8 @@
 blueprint:
   name: Aqara Cube face-based
-  #author: Edward Firmo (https://github.com/edwardtfn)
+  author: Edward Firmo (https://github.com/edwardtfn)
+  homeassistant:
+    min_version: '2023.3.0'
   description: Control devices based on the cube's face.
   domain: automation
   input:

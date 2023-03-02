@@ -1,6 +1,8 @@
 blueprint:
   name: Home Assistant Auto-update on a schedule base
-  #author: Edward Firmo (https://github.com/edwardtfn)
+  author: Edward Firmo (https://github.com/edwardtfn)
+  homeassistant:
+    min_version: '2023.3.0'
   description: >-
     # Home Assistant Auto-update
 
@@ -20,8 +22,6 @@ blueprint:
 
     For questions and suggestions, please use [this thread in Home Assistant Community portal](https://community.home-assistant.io/t/scheduled-auto-update-for-home-assistant/459281).
   domain: automation
-  homeassistant:
-    min_version: '2022.9.0'
   source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/auto_update_scheduled.yaml
   input:
     backup_bool:

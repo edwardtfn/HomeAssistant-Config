@@ -1,6 +1,8 @@
 blueprint:
   name: Set entities based on other entities new on/off state (with a pause entity)
-  #author: Edward Firmo (https://github.com/edwardtfn)
+  author: Edward Firmo (https://github.com/edwardtfn)
+  homeassistant:
+    min_version: '2023.3.0'
   domain: automation
   source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/set_entities_based_on_other_entities.yaml
 

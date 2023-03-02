@@ -87,7 +87,7 @@ automation:
       - service: notify.signal_edward
         continue_on_error: true
         data:
-          message: "List of updates: - {{ updates_list | join(' \n- ') }}"
+          message: "List of updates: \n- {{ updates_list | join(' \n- ') }}"
       pause_entities:
       - input_boolean.home_party_mode
       - input_boolean.home_travelling_mode

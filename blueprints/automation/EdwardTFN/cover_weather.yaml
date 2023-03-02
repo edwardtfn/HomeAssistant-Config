@@ -1,6 +1,8 @@
 blueprint:
-  name: Covers open/close based on the sun position and weather
-  #author: Edward Firmo (https://github.com/edwardtfn)
+  name: Covers open/close based on the sun position and weather (DEV)
+  author: Edward Firmo (https://github.com/edwardtfn)
+  homeassistant:
+    min_version: '2023.3.0'
   description: This automation will open the covers when the heating is working and will close when the sun light is not desired in the room
   domain: automation
   input:

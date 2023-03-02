@@ -133,12 +133,12 @@ template:
       device_class: temperature
       state: "{{ state_attr('weather.home', 'temperature') | default('unknown') }}"
 
-    - name: Home - Average room temperature (rounded)
-      unique_id: 42816c14-97c2-4c6f-804b-723fb1a0ba97
-      unit_of_measurement: "°C"
-      device_class: temperature
-      availability: "{{ is_number(states('sensor.home_average_room_temperature')) }}"
-      state: "{{ states('sensor.home_average_room_temperature') | float(0) | round(1) }}"
+#    - name: Home - Average room temperature (rounded)
+#      unique_id: 42816c14-97c2-4c6f-804b-723fb1a0ba97
+#      unit_of_measurement: "°C"
+#      device_class: temperature
+#      availability: "{{ is_number(states('sensor.home_average_room_temperature')) }}"
+#      state: "{{ states('sensor.home_average_room_temperature') | float(0) | round(1) }}"
 #        {{ expand([
 #          'sensor.bathroom_thermostat_current_temperature', 
 #          'sensor.bedroom_hygrometer_temperature', 

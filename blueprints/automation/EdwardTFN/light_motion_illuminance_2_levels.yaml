@@ -1,7 +1,9 @@
 blueprint:
   # in use
   name: Motion-activated light with illuminance and dimming
-  #author: Edward Firmo (https://github.com/edwardtfn)
+  author: Edward Firmo (https://github.com/edwardtfn)
+  homeassistant:
+    min_version: '2023.3.0'
   description: Turn on a light when motion is detected and the room is dark.
   domain: automation
   #adapted from motion_light.yaml from source_url: https://github.com/home-assistant/core/blob/dev/homeassistant/components/automation/blueprints/motion_light.yaml
