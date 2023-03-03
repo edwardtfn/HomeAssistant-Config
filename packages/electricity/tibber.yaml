@@ -19,7 +19,7 @@ sensor:
       - current
       - today
       - tomorrow
-    value_template: '{{ value_json["data"]["viewer"]["homes"][0]["currentSubscription"]["priceInfo"]["current"]["total"] }}'
+    value_template: "{{ value_json is defined }}"
     headers:
       Authorization: !secret tibber_api_token
       Content-Type: application/json
@@ -31,65 +31,19 @@ template:
         unique_id: d4c04abf-c258-4f0f-a61d-cc0170225081
         unit_of_measurement: "SEK/kWh"
         icon: mdi:currency-usd
-        availability: >-
-          {{ state_attr('sensor.tibber_electricity_price', 'current') | default('unknown') not in ['unknown','unavailable', None]
-          and state_attr('sensor.tibber_electricity_price', 'today') | default('unknown') not in ['unknown','unavailable', None]
-          }}
-        state: >-
-          {% if this.attributes.future_prices | default('unknown') in ['unknown', 'unavailable'] or (this.attributes.future_prices | default([]) | map(attribute='total') | list | count) < 1 %}
-            unknown
-          {% else %}
-            {{ this.attributes.future_prices |  default([]) | map(attribute='total') | list | first | float(0) }}
-          {% endif %}
+        availability: "{{ state_attr('sensor.tibber_electricity_price', 'today') | default('unknown') not in ['unknown','unavailable', None] }}"
+        state: "{{ this.attributes.current.total | float(0) if this.attributes is defined and this.attributes.current is defined and this.attributes.current.total is defined and is_number(this.attributes.current.total) else None }}"
         attributes:
-          current: >-
-            {% if state_attr('sensor.tibber_electricity_price', 'current') %}
-              {{ state_attr('sensor.tibber_electricity_price', 'current') }}
-            {% else %}
-              [ ]
-            {% endif %}
-          today: >-
-            {% if state_attr('sensor.tibber_electricity_price', 'today') %}
-              {{ state_attr('sensor.tibber_electricity_price', 'today') }}
-            {% else %}
-              [ ]
-            {% endif %}
-          tomorrow: >-
-            {% if state_attr('sensor.tibber_electricity_price', 'tomorrow') %}
-              {{ state_attr('sensor.tibber_electricity_price', 'tomorrow') }}
-            {% else %}
-              [ ]
-            {% endif %}
-          all_prices: "{{ this.attributes.today | default([]) + this.attributes.tomorrow | default([]) }}"
-          #today_count: "{{ this.attributes.today | default([]) | map(attribute='total') | list | count }}"
-          #tomorrow_count: "{{ this.attributes.tomorrow | default([]) | map(attribute='total') | list | count }}"
-          #all_prices_count: "{{ this.attributes.all_prices | default([]) | map(attribute='total') | list | count }}"
-          min_price: >-
-            {% if this.attributes.today | default('unknown') in ['unknown','unavailable','none'] or (this.attributes.today | default([]) | map(attribute='total') | list | count) < 1 %}
-              unknown
-            {% else %}
-              {{ this.attributes.today | default([0]) | map(attribute='total') | list | min | float(0) | round(4) }}
-            {% endif %}
-          max_price: >-
-            {% if this.attributes.today | default('unknown') in ['unknown','unavailable','none'] or (this.attributes.today | default([]) | map(attribute='total') | list | count) < 1 %}
-              unknown
-            {% else %}
-              {{ this.attributes.today | default([0]) | map(attribute='total') | list | max | float(0) | round(4) }}
-            {% endif %}
-          avg_price: >-
-            {% if this.attributes.today | default('unknown') in ['unknown','unavailable','none'] or (this.attributes.today | default([]) | map(attribute='total') | list | count) < 1 %}
-              unknown
-            {% elif (this.attributes.today | default([]) | map(attribute='total') | list | count) < 2 %}
-              {{ this.attributes.today | default([0]) | map(attribute='total') | list | max | float(0) | round(4) }}
-            {% else %}
-              {{ this.attributes.today | default([0]) | map(attribute='total') | list | average(0) | float(0) | round(4) }}
-            {% endif %}
-          price_level: >-
-            {% if (this.attributes.current | default('unknown')) in ['unknown','unavailable','none'] %}
-              unknown
-            {% else %}
-              {{ this.attributes.current.level | default('unknown') | replace('_', ' ') | capitalize }}
-            {% endif %}
+          all_prices: "{{ state_attr('sensor.tibber_electricity_price', 'today') | default([]) + state_attr('sensor.tibber_electricity_price', 'tomorrow') | default([]) }}"
+          min_price: "{{ this.attributes.all_prices | map(attribute='total') | list | min if this.attributes.all_prices | count > 0 else None }}"
+          max_price: "{{ this.attributes.all_prices | map(attribute='total') | list | max if this.attributes.all_prices | count > 0 else None }}"
+          avg_price: "{{ this.attributes.all_prices | map(attribute='total') | list | average(0) if this.attributes.all_prices | count > 1 else this.attributes.max_price }}"
+          future: "{{ (this.attributes.all_prices | default([])) | selectattr('startsAt', 'gt', (now() + timedelta(hours=-1)).isoformat()) | list if this.attributes.all_prices is defined else None }}"
+          future_min_price: "{{ this.attributes.future | map(attribute='total') | list | min if this.attributes.future | count > 0 else None }}"
+          future_max_price: "{{ this.attributes.future | map(attribute='total') | list | max if this.attributes.future | count > 0 else None }}"
+          future_avg_price: "{{ this.attributes.future | map(attribute='total') | list | average(0) if this.attributes.future | count > 1 else this.attributes.future_max_price }}"
+          current: "{{ this.attributes.future | first if this.attributes.future | count > 0 else None }}"
+          price_level: "{{ this.attributes.current.level | default('unknown') | replace('_', ' ') | capitalize if this.attributes.current is defined and this.attributes.current.level is defined else None }}"
           price_level_1d: >-
             {% set price_cur = this.state | default(0) | float(0) %}
             {% set price_avg = this.attributes.avg_price | default(0) | float(0) %}
@@ -133,70 +87,14 @@ template:
             {% else %}
               {{ level1 }}
             {% endif %}
-          is_below_average: >-
-            {% if is_number(this.state) and is_number(this.attributes.avg_price) %}
-              {{ (this.state | float(0) < this.attributes.avg_price | float(0)) | lower }}
-            {% else %}
-              unknown
-            {% endif %}
-          is_above_average: >-
-            {% if is_number(this.state) and is_number(this.attributes.avg_price) %}
-              {{ (this.state | float(0) > this.attributes.avg_price | float(0)) | lower}}
-            {% else %}
-              unknown
-            {% endif %}
-          is_at_min: >-
-            {% if is_number(this.state) and is_number(this.attributes.min_price) %}
-              {{ (this.state | float(0) <= this.attributes.min_price | float(0)) | lower }}
-            {% else %}
-              unknown
-            {% endif %}
-          is_at_max: >-
-            {% if is_number(this.state) and is_number(this.attributes.max_price) %}
-              {{ (this.state | float(0) >= this.attributes.max_price | float(0)) | lower }}
-            {% else %}
-              unknown
-            {% endif %}
-          is_close_to_min: >-
-            {% if is_number(this.state) and is_number(this.attributes.min_price) %}
-              {{ (this.state | float(0) <= (1.15 * this.attributes.min_price | float(0))) | lower }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices: >-
-            {% if (this.attributes.all_prices | default('unknown')) in ['unknown','unavailable','none'] %}
-              unknown
-            {% else %}
-              {{ (this.attributes.all_prices | default([])) | selectattr('startsAt', 'gt', (now() - timedelta(hours=1)) | string | replace(' ','T')) | list }}
-            {% endif %}
-          future_prices_totals: >-
-            {% if (this.attributes.future_prices | default('unknown')) in ['unknown','unavailable','none'] %}
-              unknown
-            {% else %}
-              {{ (this.attributes.future_prices | default([])) | map(attribute='total') | list }}
-            {% endif %}
-          #future_prices_count: "{{ (this.attributes.future_prices_totals | default([])) | count }}"
-          future_prices_min: |-
-            {% if this.attributes.future_prices_totals | default([0]) | count > 0 %}
-              {{  this.attributes.future_prices_totals | default([0]) | min | float(0) | round(4) }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_max: |-
-            {% if this.attributes.future_prices_totals | default([0]) | count > 0 %}
-              {{ (this.attributes.future_prices_totals | default([0])) | max | float(0) | round(4) }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_avg: >-
-            {% if this.attributes.future_prices_totals | default([0]) | count > 0 %}
-              {{ (this.attributes.future_prices_totals | default([0])) | average(0) | float(0) | round(4) }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_curr_price_level: >-
+          is_below_average: "{{ (this.state | float(0) < this.attributes.avg_price | float(0)) if is_number(this.state) and is_number(this.attributes.avg_price) else None }}"
+          is_above_average: "{{ (this.state | float(0) > this.attributes.avg_price | float(0)) if is_number(this.state) and is_number(this.attributes.avg_price) else None }}"
+          is_at_min: "{{ (this.state | float(0) <= this.attributes.min_price | float(0)) if is_number(this.state) and is_number(this.attributes.min_price) else None }}"
+          is_at_max: "{{ (this.state | float(0) >= this.attributes.max_price | float(0)) if is_number(this.state) and is_number(this.attributes.max_price) else None }}"
+          is_close_to_min: "{{ (this.state | float(0) <= (1.15 * this.attributes.min_price | float(0))) if is_number(this.state) and is_number(this.attributes.min_price) else None }}"
+          future_price_level: >-
             {% set price_cur = this.state | default(0) | float(0) %}
-            {% set price_avg = this.attributes.future_prices_avg | default(0) | float(0) %}
+            {% set price_avg = this.attributes.future_avg_price | default(0) | float(0) %}
             {% if price_cur == 0 or price_avg == 0 %}
               unknown
             {% else %}
@@ -213,72 +111,6 @@ template:
                 Normal
               {% endif %}
             {% endif %}
-          future_prices_16h: >-
-            {% if (this.attributes.future_prices | default('unknown')) in ['unknown','unavailable','none'] %}
-              unknown
-            {% else %}
-              {{ (this.attributes.future_prices | default([]) | list)[0:16]}}
-            {% endif %}
-          future_prices_16h_totals: >-
-            {% if (this.attributes.future_prices_16h | default('unknown')) in ['unknown','unavailable','none'] %}
-              unknown
-            {% else %}
-              {{ (this.attributes.future_prices_16h | default([])) | map(attribute='total') | list }}
-            {% endif %}
-          #future_prices_16h_count: "{{ (this.attributes.future_prices_16h_totals | default([])) | count }}"
-          future_prices_16h_min: |-
-            {% if this.attributes.future_prices_16h_totals | default([0]) | count > 0 %}
-              {{ (this.attributes.future_prices_16h_totals | default([0])) | min | float(0) | round(4) }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_16h_max: |-
-            {% if this.attributes.future_prices_16h_totals | default([0]) | count > 0 %}
-              {{ (this.attributes.future_prices_16h_totals | default([0])) | max | float(0) | round(4) }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_16h_avg: >-
-            {% if this.attributes.future_prices_16h_totals | default([0]) | count > 0 %}
-              {{ (this.attributes.future_prices_16h_totals | default([0])) | average(0) | float(0) | round(4) }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_16h_current_price_level: >-
-            {% set price_cur = this.state | default(0) | float(0) %}
-            {% set price_avg = this.attributes.future_prices_16h_avg | default(0) | float(0) %}
-            {% if price_cur == 0 or price_avg == 0 %}
-              unknown
-            {% else %}
-              {% set price_ratio = (price_cur / price_avg) %}
-              {% if price_ratio >= 1.4 %}
-                Very expensive
-              {% elif price_ratio >= 1.15 %}
-                Expensive
-              {% elif price_ratio <= 0.6 %}
-                Very cheap
-              {% elif price_ratio <= 0.9 %}
-                Cheap
-              {% else %}
-                Normal
-              {% endif %}
-            {% endif %}
-          future_prices_16h_current_price_is_close_to_min: >-
-            {% if is_number(this.state) and is_number(this.attributes.future_prices_16h_min) %}
-              {{ (this.state | float(0) <= (1.15 * this.attributes.future_prices_16h_min | default(0) | float(0))) | lower }}
-            {% else %}
-              unknown
-            {% endif %}
-          future_prices_16h_current_price_is_at_min: >-
-            {% if this.state | default(0) | float(0) > 0 and this.attributes.future_prices_16h_min | default(0) | float(0) > 0 %}
-              {{ (this.state | default(0) | float(0) <= this.attributes.future_prices_16h_min | default(0) | float(0)) | lower }}
-            {% else %}
-              unknown
-            {% endif %}
-
-#      - name: Temp - Future prices 16h - Current price is at min
-#        unique_id: cec8c55d-6266-46dc-9c8a-b7f7cbfaa4ee
-#        state: "{{ state_attr('sensor.electricity_price', 'future_prices_16h_current_price_is_at_min') | default('unknown') }}"
 
       - name: Total electricity price
         unique_id: 84932203-6512-4e6c-9002-bf51b63d7a52
