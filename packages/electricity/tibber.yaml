@@ -13,7 +13,7 @@ sensor:
     resource: https://api.tibber.com/v1-beta/gql
     method: POST
     scan_interval: 900
-    payload: '{ "query": "{ viewer { homes { currentSubscription { priceInfo { current { total currency level } today { total startsAt level } tomorrow { total startsAt level }}}}}}" }'
+    payload: '{ "query": "{ viewer { homes { currentSubscription { priceInfo { current { total currency level energy tax } today { total startsAt level } tomorrow { total startsAt level }}}}}}" }'
     json_attributes_path: "$.data.viewer.homes[0].currentSubscription.priceInfo"
     json_attributes:
       - current
