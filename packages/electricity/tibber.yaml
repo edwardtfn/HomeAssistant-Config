@@ -31,17 +31,18 @@ template:
         unique_id: d4c04abf-c258-4f0f-a61d-cc0170225081
         unit_of_measurement: "SEK/kWh"
         icon: mdi:currency-usd
+        device_class: monetary
         availability: "{{ state_attr('sensor.tibber_electricity_price', 'today') | default('unknown') not in ['unknown','unavailable', None] }}"
         state: "{{ this.attributes.current.total | float(0) if this.attributes is defined and this.attributes.current is defined and this.attributes.current.total is defined and is_number(this.attributes.current.total) else None }}"
         attributes:
           all_prices: "{{ state_attr('sensor.tibber_electricity_price', 'today') | default([]) + state_attr('sensor.tibber_electricity_price', 'tomorrow') | default([]) }}"
           min_price: "{{ this.attributes.all_prices | map(attribute='total') | list | min if this.attributes.all_prices is defined and this.attributes.all_prices | count > 0 else None }}"
           max_price: "{{ this.attributes.all_prices | map(attribute='total') | list | max if this.attributes.all_prices is defined and this.attributes.all_prices | count > 0 else None }}"
-          avg_price: "{{ this.attributes.all_prices | map(attribute='total') | list | average(0) if this.attributes.all_prices is defined and this.attributes.all_prices | count > 1 else this.attributes.max_price }}"
-          future: "{{ (this.attributes.all_prices | default([])) | selectattr('startsAt', 'gt', (now() + timedelta(hours=-1)).isoformat()) | list if this.attributes.all_prices is defined else None }}"
+          avg_price: "{{ this.attributes.all_prices | map(attribute='total') | list | average(0) if this.attributes.all_prices is defined and this.attributes.all_prices | count > 1 else this.attributes.max_price | default(None) }}"
+          future: "{{ (this.attributes.all_prices | default([])) | selectattr('startsAt', 'gt', (now() + timedelta(hours=-1)).isoformat()) | list if this.attributes.all_prices is defined else [] }}"
           future_min_price: "{{ this.attributes.future | map(attribute='total') | list | min if this.attributes.future is defined and this.attributes.future | count > 0 else None }}"
           future_max_price: "{{ this.attributes.future | map(attribute='total') | list | max if this.attributes.future is defined and this.attributes.future | count > 0 else None }}"
-          future_avg_price: "{{ this.attributes.future | map(attribute='total') | list | average(0) if this.attributes.future is defined and this.attributes.future | count > 1 else this.attributes.future_max_price }}"
+          future_avg_price: "{{ this.attributes.future | map(attribute='total') | list | average(0) if this.attributes.future is defined and this.attributes.future | count > 1 else this.attributes.future_max_price | default(None) }}"
           current: "{{ this.attributes.future | first if this.attributes.future | count > 0 else None }}"
           price_level: "{{ this.attributes.current.level | default('unknown') | replace('_', ' ') | capitalize if this.attributes.current is defined and this.attributes.current.level is defined else None }}"
           price_level_1d: >-
