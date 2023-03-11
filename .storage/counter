@@ -3,17 +3,6 @@
   "minor_version": 1,
   "key": "counter",
   "data": {
-    "items": [
-      {
-        "name": "Home Assistant - Start counter",
-        "icon": "mdi:restart-alert",
-        "minimum": 0,
-        "step": 1,
-        "maximum": null,
-        "initial": 0,
-        "restore": true,
-        "id": "home_assistant_start_counter"
-      }
-    ]
+    "items": []
   }
 }

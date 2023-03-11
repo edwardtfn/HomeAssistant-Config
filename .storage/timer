@@ -1,15 +1,8 @@
 {
-    "version": 1,
-    "minor_version": 1,
-    "key": "timer",
-    "data": {
-        "items": [
-            {
-                "name": "Kitchen - Dishwasher - Timer since last run",
-                "icon": "mdi:dishwasher",
-                "duration": "6:00:00",
-                "id": "kitchen_dishwasher_timer_since_last_run"
-            }
-        ]
-    }
+  "version": 1,
+  "minor_version": 1,
+  "key": "timer",
+  "data": {
+    "items": []
+  }
 }

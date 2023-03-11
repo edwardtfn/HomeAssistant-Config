@@ -3,47 +3,6 @@
   "minor_version": 1,
   "key": "input_boolean",
   "data": {
-    "items": [
-      {
-        "name": "Home Assistant - Boot requested",
-        "id": "data_centre_boot_requested",
-        "icon": "mdi:reload"
-      },
-      {
-        "name": "Guest bathroom - Occupied",
-        "icon": "mdi:human-male-female",
-        "id": "guest_bathroom_occupied"
-      },
-      {
-        "name": "Home - Party mode",
-        "icon": "mdi:balloon",
-        "id": "home_party_mode"
-      },
-      {
-        "name": "Home - Travelling mode",
-        "icon": "mdi:airplane",
-        "id": "home_travelling_mode"
-      },
-      {
-        "name": "Home - Empty",
-        "icon": "mdi:home",
-        "id": "home_empty"
-      },
-      {
-        "name": "Home - Alarm",
-        "icon": "mdi:shield-lock-outline",
-        "id": "home_alarm"
-      },
-      {
-        "name": "Home - Display motion sensors",
-        "icon": "mdi:motion-sensor",
-        "id": "home_display_motion_sensors"
-      },
-      {
-        "name": "Home - No dogs",
-        "icon": "mdi:dog-service",
-        "id": "home_no_dogs"
-      }
-    ]
+    "items": []
   }
 }

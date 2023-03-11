@@ -39,6 +39,9 @@
               }
           - type: alarm-control-panel
             entity: alarm_control_panel.eufy_hub
+            states:
+              - armed_home
+              - armed_away
           - type: conditional
             conditions:
               - entity: input_boolean.home_travelling_mode
