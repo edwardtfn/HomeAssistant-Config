@@ -27,6 +27,17 @@ automation:
       input_entity: binary_sensor.kitchen_ceiling_lights_table_lights_input
       light_target: light.kitchen_table_lights
 
+binary_sensor:
+  - name: Kitchen - Table - Occupancy - Combined
+    platform: group
+    unique_id: 1b8ed9a2-0985-4407-bbc3-084a568cc401
+    device_class: occupancy
+    entities:
+      - binary_sensor.kitchen_table_motion_on_off
+      - binary_sensor.kitchen_table_motion_occupancy
+      - binary_sensor.kitchen_table_occupancy_motion
+      - binary_sensor.kitchen_table_occupancy_occupancy
+
 sensor:
   - name: Kitchen - Table - Motion ratio in the last 10m
     platform: history_stats

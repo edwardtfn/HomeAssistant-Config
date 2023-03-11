@@ -1,0 +1,8 @@
+binary_sensor:
+  - name: Office - Windows
+    platform: group
+    unique_id: 12f95311-f347-4376-8c87-712d322e2df8
+    device_class: window
+    entities:
+      - binary_sensor.office_windows_1
+      - binary_sensor.office_windows_2

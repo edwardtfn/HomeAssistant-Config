@@ -1,0 +1,6 @@
+decluttering_templates: !include_dir_merge_named  /config/lovelace/library/decluttering_templates/
+
+title: Surveillance
+views: #!include_dir_merge_list views/
+  - !include views/surveillance.yaml
+  #- !include views/sandbox.yaml

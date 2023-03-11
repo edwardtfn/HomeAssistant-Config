@@ -11,3 +11,12 @@ sensor:
       - sensor.laundry_bench_outlets_power
       - sensor.laundry_dryer_outlet_power
       - sensor.laundry_washing_machine_power
+
+  - name: Laundry - Total energy
+    platform: integration
+    unique_id: ffd01b7d-fa1c-4af4-83e7-2a7b53471bd4
+    source: sensor.laundry_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

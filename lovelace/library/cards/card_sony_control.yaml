@@ -1,0 +1,102 @@
+type: custom:mod-card
+style:
+  hui-horizontal-stack-card$: |
+    hui-vertical-stack-card {
+      margin-left: 0px !important;
+      margin-right: 0px !important;
+      margin-bottom: 0px !important;
+      width: 79%;
+      flex: unset !important; 
+    }
+    mushroom-light-card {
+      margin-right: 0px !important;
+      margin-bottom: 0px !important;
+      flex: unset !important; 
+    }
+card:
+  type: horizontal-stack
+  cards:
+    - type: custom:vertical-stack-in-card
+      cards:
+        - type: horizontal-stack
+          cards:
+            - type: custom:mushroom-template-card
+              layout: vertical
+              fill_container: true
+              primary_info: none
+              secondary_info: none
+              tap_action:
+                action: call-service
+                service: media_player.volume_down
+                data: {}
+                target:
+                  entity_id: media_player.living_room_tv_sony_universal
+              entity: media_player.living_room_tv_sony_universal
+              icon: mdi:volume-minus
+              icon_color: >-
+                {{ iif(is_state(entity,'idle'), iif(state_attr(entity,
+                'active_child'), 'blue', 'red'), '') }}
+            - type: custom:mushroom-template-card
+              entity: media_player.living_room_tv_sony_universal
+              layout: vertical
+              fill_container: true
+              icon: >-
+                {{ iif(is_state(entity,'idle'), iif(state_attr(entity,
+                'active_child'), 'mdi:television', 'mdi:television-pause'),
+                'mdi:television-off') }}
+              icon_color: >-
+                {{ iif(is_state(entity,'idle'), iif(state_attr(entity,
+                'active_child'), 'blue', 'red'), '') }}
+              primary_info: none
+              secondary_info: none
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+            - type: custom:mushroom-template-card
+              layout: vertical
+              fill_container: true
+              primary_info: none
+              secondary_info: none
+              tap_action:
+                action: call-service
+                service: media_player.volume_up
+                data: {}
+                target:
+                  entity_id: media_player.living_room_tv_sony_universal
+              entity: media_player.living_room_tv_sony_universal
+              icon: mdi:volume-plus
+              icon_color: >-
+                {{ iif(is_state(entity,'idle'), iif(state_attr(entity,
+                'active_child'), 'blue', 'red'), '') }}
+        - type: conditional
+          conditions:
+            - entity: media_player.living_room_tv_sony_universal
+              state: idle
+          card:
+            type: custom:mini-media-player
+            entity: media_player.living_room_tv_sony_universal
+            sound_mode: icon
+            toggle_power: false
+            volume_step: '1'
+            min_volume: '0'
+            info: scroll
+            max_volume: '30'
+            hide:
+              power: true
+              name: true
+              icon: true
+              play_pause: true
+              volume_level: false
+              icon_type: none
+              next: true
+              prev: true
+              source: true
+    - type: custom:mushroom-light-card
+      entity: light.home_all_lights
+      layout: vertical
+      name: All lights
+      fill_container: true
+      show_brightness_control: false
+      collapsible_controls: true
+      secondary_info: none

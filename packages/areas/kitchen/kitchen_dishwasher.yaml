@@ -5,8 +5,8 @@ automation:
   - platform: state
     entity_id:
     - sensor.electricity_price
-    attribute: future_prices_16h_current_price_is_at_min
-    to: 'true'
+    attribute: next_16h_is_at_min
+    to: True
   condition:
   - condition: or
     conditions:
@@ -85,6 +85,13 @@ automation:
 #home_connect:
   #client_id: !secret home_connect_client_id
   #client_secret: !secret home_connect_client_secret
+
+input_datetime:
+  kitchen_dishwasher_last_run:
+    name: Kitchen - Dishwasher - Last run
+    has_date: true
+    has_time: true
+    icon: mdi:dishwasher
 
 template:
   - trigger:

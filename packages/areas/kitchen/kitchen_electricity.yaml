@@ -35,3 +35,12 @@ sensor:
       - sensor.kitchen_refrigeration_freezer_outlet_power
       - sensor.kitchen_refrigeration_fridge_outlet_power
       - sensor.kitchen_windows_wall_outlet_power
+
+  - name: Kitchen - Total energy
+    platform: integration
+    unique_id: 8b737f55-a4c5-4fb9-8306-b6976aee6223
+    source: sensor.kitchen_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

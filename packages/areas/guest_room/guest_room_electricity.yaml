@@ -12,3 +12,12 @@ sensor:
       - sensor.guest_room_door_outlets_ceiling_lights_power
       - sensor.guest_room_door_outlets_outlet_power
       - sensor.guest_room_windows_outlets_power
+
+  - name: Guest room - Total energy
+    platform: integration
+    unique_id: d023fdfc-7999-42a4-a2e5-c00c281e4740
+    source: sensor.guest_room_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

@@ -28,6 +28,13 @@ cover:
             command: "setPosition"
             parameter: "0,ff,{{position | float(0) | round(0)}}"
 
+  - name: Bedroom - Curtains (dual)
+    platform: group
+    unique_id: 0ea29e61-b958-4720-b680-571551ab5a4e
+    entities:
+      - cover.bedroom_curtain_left
+      - cover.bedroom_curtain_right
+
 rest_command:
   switchbot_device_command:
     url: "https://api.switch-bot.com/v1.0/devices/{{ deviceId }}/commands"

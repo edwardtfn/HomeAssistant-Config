@@ -11,3 +11,12 @@ sensor:
       - sensor.guest_bathroom_mirror_lights_power
       - sensor.guest_bathroom_mirror_outlets_power
       - sensor.guest_bathroom_towel_warmer_power
+
+  - name: Guest bathroom - Total energy
+    platform: integration
+    unique_id: c8fade04-c5e1-4f50-87cd-4470168749c5
+    source: sensor.guest_bathroom_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

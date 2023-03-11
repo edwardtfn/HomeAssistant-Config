@@ -1,0 +1,8 @@
+binary_sensor:
+  - name: Office - Motion - All
+    platform: group
+    unique_id: 57a90ee8-8b41-42c9-8754-d45fb82751c7
+    device_class: motion
+    entities:
+      - binary_sensor.office_motion_occupancy
+      - binary_sensor.office_workstation_motion_top_occupancy

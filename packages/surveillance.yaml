@@ -264,6 +264,20 @@ automation:
             entity_id: alarm_control_panel.eufy_hub
   mode: single
 
+input_boolean:
+  home_alarm:
+    name: Home - Alarm
+    icon: mdi:shield-lock-outline
+  home_empty:
+    name: Home - Empty
+    icon: mdi:home
+  home_no_dogs:
+    name: Home - No dogs
+    icon: mdi:dog-service
+  home_travelling_mode:
+    name: Home - Travelling mode
+    icon: mdi:airplane
+
 script:
   camera_toggle:
     alias: Home - Surveillance - Toggle a camera

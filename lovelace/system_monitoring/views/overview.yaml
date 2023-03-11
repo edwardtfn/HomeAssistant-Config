@@ -1,0 +1,774 @@
+    title: System monitoring
+    theme: Backend-selected
+    path: system-monitoring
+    badges: []
+    cards:
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: entities
+            title: Home Assistant
+            icon: mdi:home-assistant
+            entities:
+              - type: custom:text-divider-row
+                text: Host
+                align: left
+            show_header_toggle: true
+          - type: custom:mini-graph-card
+            name: CPU
+            color_thresholds:
+              - color: '#159F3B'
+                value: 0
+              - color: '#F2B528'
+                value: 50
+              - color: '#DD5129'
+                value: 80
+            decimals: 1
+            entities:
+              - entity: sensor.processor_use
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.memory_use_percent
+                name: RAM
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.processor_temperature
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 1
+            line_width: 3
+            points_per_hour: 120
+            update_interval: 10
+            lower_bound: 0
+            upper_bound: 100
+          - type: custom:apexcharts-card
+            chart_type: radialBar
+            header:
+              show: true
+              show_states: true
+              colorize_states: true
+            series:
+              - entity: sensor.disk_use_percent
+                name: SDD usage
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Network interface
+                align: left
+          - type: custom:mini-graph-card
+            name: Throughput
+            decimals: 2
+            entities:
+              - entity: sensor.network_throughput_in_eno1
+                name: In
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.network_throughput_out_eno1
+                name: Out
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 3
+            line_width: 3
+            points_per_hour: 30
+            update_interval: 300
+          - type: grid
+            square: false
+            columns: 3
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.ipv4_address_eno1
+                name: Internal IP
+                primary_info: state
+                secondary_info: name
+                layout: vertical
+                fill_container: true
+                icon: mdi:ip-network
+              - type: entities
+                entities:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.network_in_eno1
+                    name: Network In
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon: ''
+                    fill_container: false
+                    icon_type: none
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.network_out_eno1
+                    name: Network Out
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon_type: none
+              - type: entities
+                entities:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.packets_in_eno1
+                    name: Packets In
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon: ''
+                    fill_container: false
+                    icon_type: none
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.packets_out_eno1
+                    name: Packets Out
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon_type: none
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Statistics
+                align: left
+          - type: entities
+            entities:
+              - type: custom:fold-entity-row
+                padding: 0
+                head:
+                  entity: sensor.home_assistant_entities_count
+                  name: Home Assistant Entities
+                  icon: mdi:devices
+                  tap_action:
+                    action: none
+                entities:
+                  - type: custom:flex-table-card
+                    entities:
+                      include: sensor.home_assistant_entities_count
+                    columns:
+                      - data: domain_list
+                        name: Domain
+                        modify: >-
+                          x.replace(/\w\S*/g,(x.charAt(0).toUpperCase() +
+                          x.substr(1).toLowerCase()).replaceAll("_", " "))
+                      - data: count_list
+                        name: Entities
+                        align: right
+                      - data: unavailable_count_list
+                        name: Unavailable
+                        align: right
+                    sort_by:
+                      - domain_list+
+                      - count_list-
+                    clickable: true
+                    card_mod:
+                      style: |
+                        ha-card {
+                          box-shadow: none;
+                          background: none;
+                        }
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Watchman report
+                align: left
+          - type: entities
+            entities:
+              - type: custom:fold-entity-row
+                padding: 0
+                head:
+                  entity: sensor.watchman_missing_entities
+                  name: Watchman Missing Entities
+                  icon: mdi:shield-half-full
+                  tap_action:
+                    action: none
+                entities:
+                  - type: custom:flex-table-card
+                    entities:
+                      include: sensor.watchman_missing_entities
+                    columns:
+                      - data: entities
+                        name: Watchman report
+                        modify: >-
+                          x.id + " is " +
+                          x.state.replace("unavail","unavailable") + " (" +
+                          x.occurrences + ")"
+                    clickable: false
+                    card_mod:
+                      style: |
+                        ha-card {
+                          box-shadow: none;
+                          background: none;
+                        }
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: entities
+            title: Home - Server - 01 (Pi-hole & SNTP)
+            icon: mdi:earth
+            entities:
+              - type: custom:text-divider-row
+                text: Diagnostics
+                align: left
+          - type: custom:mini-graph-card
+            name: CPU
+            color_thresholds:
+              - color: '#159F3B'
+                value: 0
+              - color: '#F2B528'
+                value: 50
+              - color: '#DD5129'
+                value: 80
+            decimals: 1
+            entities:
+              - entity: sensor.home_server_01_rpi_cpu
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.home_server_01_rpi_temperature
+                name: Temperature
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 1
+            line_width: 3
+            points_per_hour: 120
+            update_interval: 10
+            lower_bound: 0
+            upper_bound: 100
+          - type: custom:apexcharts-card
+            chart_type: radialBar
+            header:
+              show: true
+              show_states: true
+              colorize_states: true
+            series:
+              - entity: sensor.home_server_01_rpi_monitor_ram_used_percentage
+                name: RAM
+              - entity: sensor.home_server_01_rpi_sdcard_used
+                name: SD card
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: DNS queries
+                align: left
+          - type: custom:apexcharts-card
+            stacked: true
+            graph_span: 1d
+            layout: minimal
+            header:
+              show: true
+              show_states: true
+              colorize_states: true
+            all_series_config:
+              type: area
+              float_precision: 1
+              unit: '%'
+              show:
+                legend_value: false
+            series:
+              - entity: sensor.pi_hole_ads_percentage_blocked_today
+                name: Blocked
+                color: '#F56954'
+                type: area
+              - entity: sensor.pi_hole_percentage_cached_today
+                name: Cached
+                color: '#3CFFBC'
+              - entity: sensor.pi_hole_percentage_forwarded_today
+                name: Forwarded
+                color: '#00C0EF'
+              - entity: sensor.pi_hole_percentage_others_today
+                name: Others
+          - type: custom:apexcharts-card
+            chart_type: donut
+            header:
+              show: false
+              show_states: true
+              colorize_states: true
+            all_series_config:
+              float_precision: 1
+              unit: '%'
+            series:
+              - entity: sensor.pi_hole_ads_percentage_blocked_today
+                name: Blocked
+                color: '#F56954'
+              - entity: sensor.pi_hole_percentage_cached_today
+                name: Cached
+                color: '#3CFFBC'
+              - entity: sensor.pi_hole_percentage_forwarded_today
+                name: Forwarded
+                color: '#00C0EF'
+              - entity: sensor.pi_hole_percentage_others_today
+                name: Others
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Diagnostics
+                align: left
+          - type: grid
+            square: false
+            columns: 3
+            cards:
+              - type: custom:mushroom-template-card
+                primary_info: state
+                secondary_info: name
+                layout: vertical
+                fill_container: true
+                entity: sensor.home_server_01_rpi_monitor
+                icon_color: blue
+                icon: mdi:ip-network
+                secondary: Internal IP
+                primary: |-
+                  {% set networking = state_attr(entity, 'networking') %}
+                  {{ networking.eth0.IP }}
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-template-card
+                icon: mdi:restart
+                primary_info: state
+                layout: vertical
+                icon_color: disabled
+                entity: sensor.home_server_01_rpi_monitor
+                secondary: Boot time
+                primary: '{{ state_attr(entity, ''up_time'') }}'
+                fill_container: true
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Controls
+                align: left
+          - type: grid
+            square: false
+            columns: 3
+            cards:
+              - type: custom:mushroom-entity-card
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                  confirmation:
+                    text: Are you sure you want to toggle the Wi-Fi network?
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+                entity: switch.pi_hole
+                name: Pi-Hole
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: entities
+            title: AiMesh router
+            icon: mdi:earth
+            entities:
+              - type: custom:text-divider-row
+                text: Diagnostics
+                align: left
+          - type: custom:mini-graph-card
+            name: CPU
+            color_thresholds:
+              - color: '#159F3B'
+                value: 0
+              - color: '#F2B528'
+                value: 50
+              - color: '#DD5129'
+                value: 80
+            decimals: 1
+            entities:
+              - entity: sensor.aimesh_router_cpu
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.aimesh_router_ram
+                name: RAM
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 1
+            line_width: 3
+            points_per_hour: 120
+            update_interval: 10
+            lower_bound: 0
+            upper_bound: 100
+          - type: custom:mini-graph-card
+            name: Temperature
+            color_thresholds:
+              - color: '#159F3B'
+                value: 0
+              - color: '#F2B528'
+                value: 50
+              - color: '#DD5129'
+                value: 80
+            decimals: 1
+            entities:
+              - entity: sensor.aimesh_router_temperature_cpu
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 1
+            line_width: 3
+            points_per_hour: 120
+            update_interval: 10
+            lower_bound: 0
+            upper_bound: 100
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Internet
+                align: left
+          - type: custom:mini-graph-card
+            name: WAN
+            decimals: 2
+            entities:
+              - entity: sensor.aimesh_router_wan_download_speed
+                name: Download
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.aimesh_router_wan_upload_speed
+                name: Upload
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 3
+            line_width: 3
+            points_per_hour: 30
+            update_interval: 300
+          - type: grid
+            square: false
+            columns: 3
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.aimesh_router_wan_ip
+                name: WAN IP
+                primary_info: state
+                secondary_info: name
+                layout: vertical
+                fill_container: true
+              - type: entities
+                entities:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.aimesh_router_wan_upload_speed
+                    name: Upload
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon: ''
+                    fill_container: false
+                    icon_type: none
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.aimesh_router_wan_download_speed
+                    name: Download
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon_type: none
+              - type: entities
+                entities:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.aimesh_router_wan_upload
+                    name: Upload
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon: ''
+                    fill_container: false
+                    icon_type: none
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.aimesh_router_wan_download
+                    name: Download
+                    primary_info: state
+                    secondary_info: name
+                    layout: horizontal
+                    icon_type: none
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Diagnostics
+                align: left
+          - type: grid
+            square: false
+            columns: 3
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.aimesh_router_connected_devices
+                name: Devices
+                primary_info: state
+                secondary_info: name
+                layout: vertical
+                icon_color: disabled
+              - type: custom:mushroom-entity-card
+                entity: sensor.aimesh_router_boot_time
+                name: Boot time
+                primary_info: state
+                secondary_info: name
+                layout: vertical
+                icon_color: disabled
+              - type: custom:mushroom-template-card
+                primary: >-
+                  {{states(entity) | float(-99) | round(1)}}
+                  {{state_attr(entity, 'unit_of_measurement')}}
+                secondary: CPU
+                icon: mdi:thermometer
+                entity: sensor.aimesh_router_temperature_cpu
+                layout: vertical
+                fill_container: true
+          - type: entities
+            entities:
+              - type: custom:fold-entity-row
+                padding: 0
+                head:
+                  entity: sensor.aimesh_router_connected_devices
+                  name: Connected devices
+                  icon: mdi:router-wireless
+                  tap_action:
+                    action: none
+                entities:
+                  - type: custom:flex-table-card
+                    sort_by:
+                      - devices+
+                    entities:
+                      include: sensor.aimesh_router_connected_devices
+                    columns:
+                      - data: devices
+                        name: IP Address (hidden)
+                        modify: x.ip
+                        hidden: true
+                      - data: devices
+                        name: Device Name
+                        modify: x.name
+                      - data: devices
+                        name: IP Address
+                        modify: x.ip
+                      - data: devices
+                        name: MAC Address
+                        modify: x.mac
+                    card_mod:
+                      style: |
+                        ha-card {
+                          box-shadow: none;
+                          background: none;
+                        }
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Controls
+                align: left
+          - square: false
+            columns: 2
+            type: grid
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: switch.aimesh_router_wireless_5_ghz
+                name: 5 GHz
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                  confirmation:
+                    text: Are you sure you want to toggle the Wi-Fi network?
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-entity-card
+                entity: switch.aimesh_router_wireless_2_4_ghz
+                name: 2.4 GHz
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                  confirmation:
+                    text: Are you sure you want to toggle the Wi-Fi network?
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-light-card
+                entity: light.aimesh_router_led
+                name: LED
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-entity-card
+                entity: sensor.aimesh_router_boot_time
+                name: Reboot router
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                hold_action:
+                  action: more-info
+                tap_action:
+                  action: call-service
+                  service: button.press
+                  data: {}
+                  target:
+                    entity_id: button.aimesh_router_reboot
+                  confirmation:
+                    text: Are you sure you want to restart the router?
+                double_tap_action:
+                  action: none
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: entities
+            title: AiMesh node
+            icon: mdi:earth
+            entities:
+              - type: custom:text-divider-row
+                text: Diagnostics
+                align: left
+          - type: custom:mini-graph-card
+            name: CPU
+            color_thresholds:
+              - color: '#159F3B'
+                value: 0
+              - color: '#F2B528'
+                value: 50
+              - color: '#DD5129'
+                value: 80
+            decimals: 1
+            entities:
+              - entity: sensor.aimesh_node_cpu
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.aimesh_node_ram
+                name: RAM
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 1
+            line_width: 3
+            points_per_hour: 120
+            update_interval: 10
+            lower_bound: 0
+            upper_bound: 100
+          - type: custom:mini-graph-card
+            name: Temperature
+            color_thresholds:
+              - color: '#159F3B'
+                value: 0
+              - color: '#F2B528'
+                value: 50
+              - color: '#DD5129'
+                value: 80
+            decimals: 1
+            entities:
+              - entity: sensor.aimesh_node_temperature_cpu
+                name: CPU
+                show_state: true
+                state_adaptive_color: true
+            font_size: 75
+            hour24: true
+            hours_to_show: 1
+            line_width: 3
+            points_per_hour: 120
+            update_interval: 10
+            lower_bound: 0
+            upper_bound: 100
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Diagnostics
+                align: left
+          - type: grid
+            square: false
+            columns: 3
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.aimesh_node_boot_time
+                name: Boot time
+                primary_info: state
+                secondary_info: name
+                layout: vertical
+                icon_color: disabled
+              - type: custom:mushroom-template-card
+                primary: >-
+                  {{states(entity) | float(-99) | round(1)}}
+                  {{state_attr(entity, 'unit_of_measurement')}}
+                secondary: CPU
+                icon: mdi:thermometer
+                entity: sensor.aimesh_node_temperature_cpu
+                layout: vertical
+                fill_container: true
+          - type: entities
+            entities:
+              - type: custom:text-divider-row
+                text: Controls
+                align: left
+          - square: false
+            columns: 2
+            type: grid
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: switch.aimesh_node_wireless_5_ghz
+                name: 5 GHz
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                  confirmation:
+                    text: Are you sure you want to toggle the Wi-Fi network?
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-entity-card
+                entity: switch.aimesh_node_wireless_2_4_ghz
+                name: 2.4 GHz
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                  confirmation:
+                    text: Are you sure you want to toggle the Wi-Fi network?
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-light-card
+                entity: light.aimesh_node_led
+                name: LED
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+                double_tap_action:
+                  action: none
+              - type: custom:mushroom-entity-card
+                entity: sensor.aimesh_node_boot_time
+                name: Reboot node
+                primary_info: name
+                secondary_info: state
+                layout: vertical
+                hold_action:
+                  action: more-info
+                tap_action:
+                  action: call-service
+                  service: button.press
+                  data: {}
+                  target:
+                    entity_id: button.aimesh_node_reboot
+                  confirmation:
+                    text: Are you sure you want to restart the router?
+                double_tap_action:
+                  action: none

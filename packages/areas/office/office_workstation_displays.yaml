@@ -1,0 +1,7 @@
+switch:
+  - name: Office - Workstation - Outlets - Displays
+    platform: group
+    unique_id: 1802626c-f196-420b-a253-d3809e3b8cf7
+    #icon: mdi:monitor-multiple
+    entities:
+      - switch.office_workstation_power_strip_switch_3

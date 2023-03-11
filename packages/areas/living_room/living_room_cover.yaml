@@ -57,3 +57,13 @@ automation:
         target:
           entity_id: cover.living_room_blinds
   mode: single
+
+cover:
+  - name: Living room - Blinds
+    platform: group
+    unique_id: 958ae6e6-d848-4752-a919-3898739f01a2
+    entities:
+      - cover.living_room_blind_centre_cover
+      - cover.living_room_blind_left_cover_2
+      - cover.living_room_blind_right_cover
+

@@ -12,3 +12,10 @@ automation:
       pause_entities:
       - input_boolean.home_travelling_mode
 
+light:
+  - name: Office - Workstation lights
+    platform: group
+    unique_id: 5e8e02ac-b24c-46fc-8ecf-6ebfed97c0c1
+    entities:
+      - light.office_workstation_lights_left
+      - light.office_workstation_lights_right

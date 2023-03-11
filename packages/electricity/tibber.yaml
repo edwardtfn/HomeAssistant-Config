@@ -112,6 +112,9 @@ template:
                 Normal
               {% endif %}
             {% endif %}
+          next_16h: "{{ (this.attributes.future | default([])) | selectattr('startsAt', 'lt', (now() + timedelta(hours=16)).isoformat()) | list if this.attributes.future is defined else [] }}"
+          next_16h_min_price: "{{ this.attributes.next_16h | map(attribute='total') | list | min if this.attributes.next_16h is defined and this.attributes.future | count > 0 else None }}"
+          next_16h_is_at_min: "{{ (this.state | float(0) <= this.attributes.next_16h_min_price | float(0)) if is_number(this.state) and is_number(this.attributes.next_16h_min_price) else None }}"
 
       - name: Total electricity price
         unique_id: 84932203-6512-4e6c-9002-bf51b63d7a52

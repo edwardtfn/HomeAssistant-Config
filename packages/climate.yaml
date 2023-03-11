@@ -41,29 +41,6 @@ automation:
         'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
         ') }}"
   mode: single
-- alias: Home - Weather - Max Sun elevation
-  id: '1665333562720'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sun.sun
-    attribute: rising
-    from:
-    - true
-    - true
-    - 'on'
-    to:
-    - false
-    - false
-    - 'off'
-  condition: []
-  action:
-  - service: input_number.set_value
-    data:
-      value: '{{ state_attr(''sun.sun'', ''elevation'') | float(0) }}'
-    target:
-      entity_id: input_number.home_sun_max_elevation
-  mode: single
 - alias: Home - Humidifiers - At least one humidifier requires attention
   id: '1638151457747'
   trigger:
@@ -467,6 +444,7 @@ template:
       - name: Sun - Max elevation
         unique_id: 07603c28-6f7d-4589-99b1-5b5862e9bf2c
         unit_of_measurement: "°"
+        icon: mdi:white-balance-sunny
         state: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
         attributes:
           last_update: "{{ now() }}"

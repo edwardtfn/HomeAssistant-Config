@@ -284,6 +284,23 @@ binary_sensor:
   - platform: workday # https://www.home-assistant.io/integrations/workday/
     country: SE
 
+  - name: Home Assistant - Temperature high
+    platform: threshold
+    entity_id: sensor.processor_temperature
+    device_class: heat
+    upper: 65
+    hysteresis: 5
+
+
+counter:
+  home_assistant_start_counter:
+    name: Home Assistant - Start counter
+    icon: mdi:restart-alert
+    restore: true
+    step: 1
+    minimum: 0
+    initial: 0
+
 device_tracker:
   #- platform: bluetooth_tracker
     #track_new_devices: true
@@ -294,6 +311,49 @@ device_tracker:
       #carols_phone_ping: !secret ip_carols_phone
       #edwards_phone_ping: !secret ip_edwards_phone
       pc_1_ping: !secret ip_pc_1
+
+input_datetime:
+  home_assistant_last_start:
+    name: Home Assistant - Last start
+    icon: mdi:restart
+    has_date: true
+    has_time: true
+
+schedule:
+  home_assistant_update_schedule:
+    name: Home Assistant - Update schedule
+    icon: mdi:update
+    monday:
+      - from: "03:00:00"
+        to: "06:00:00"
+      - from: "12:00:00"
+        to: "13:30:00"
+    tuesday:
+      - from: "03:00:00"
+        to: "06:00:00"
+      - from: "12:00:00"
+        to: "13:30:00"
+    wednesday:
+      - from: "03:00:00"
+        to: "06:00:00"
+      - from: "12:00:00"
+        to: "13:30:00"
+    thursday:
+      - from: "03:00:00"
+        to: "06:00:00"
+      - from: "12:00:00"
+        to: "13:30:00"
+    friday:
+      - from: "03:00:00"
+        to: "06:00:00"
+      - from: "12:00:00"
+        to: "13:30:00"
+    saturday:
+      - from: "03:00:00"
+        to: "06:00:00"
+    sunday:
+      - from: "03:00:00"
+        to: "06:00:00"
 
 script:
   home_groups_update:

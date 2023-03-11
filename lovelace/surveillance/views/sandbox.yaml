@@ -1,0 +1,44 @@
+title: Sandbox
+path: sandbox
+badges: []
+cards:
+  - type: grid
+    square: false
+    columns: 1
+    cards:
+      - type: conditional
+        conditions:
+          - entity: camera.hall_camera
+            state: idle
+        card:
+          show_state: true
+          show_name: true
+          type: picture-entity
+          entity: camera.hall_camera
+          camera_image: camera.hall_camera
+          tap_action:
+            action: call-service
+            service: camera.turn_on
+            data: {}
+            target:
+              entity_id: camera.hall_camera
+      - type: conditional
+        conditions:
+          - entity: camera.hall_camera
+            state: streaming
+        card:
+          type: vertical-stack
+          cards:
+            - show_name: true
+              show_icon: false
+              type: button
+              tap_action:
+                action: call-service
+                service: camera.turn_off
+                data: {}
+                target:
+                  entity_id: camera.hall_camera
+              entity: camera.hall_camera
+              name: Stop
+            - type: custom:webrtc-camera
+              entity: camera.hall_camera

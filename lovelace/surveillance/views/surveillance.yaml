@@ -1,0 +1,31 @@
+    title: Surveillance
+    path: surveillance
+    badges: []
+    cards:
+      - type: alarm-panel
+        states:
+          - arm_home
+          - arm_away
+          - arm_custom_2
+        entity: alarm_control_panel.eufy_hub
+        name: Camera mode
+      - type: custom:decluttering-card
+        template: template_camera
+        variables:
+          - camera: camera.hall_camera
+          #- stream_sensor: sensor.hall_camera_stream_status
+      - type: custom:decluttering-card
+        template: template_camera
+        variables:
+          - camera: camera.living_room_camera
+          #- stream_sensor: sensor.living_room_camera_stream_status
+      - type: custom:decluttering-card
+        template: template_camera
+        variables:
+          - camera: camera.office_camera
+          #- stream_sensor: sensor.office_camera_stream_status
+      - type: custom:decluttering-card
+        template: template_camera
+        variables:
+          - camera: camera.dogs_mat_camera
+          #- stream_sensor: sensor.dogs_mat_camera_stream_status

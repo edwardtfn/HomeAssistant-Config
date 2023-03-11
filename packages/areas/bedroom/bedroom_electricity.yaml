@@ -25,3 +25,12 @@ sensor:
       - sensor.bedroom_outlets_carol_power
       - sensor.bedroom_outlets_edward_power
       - sensor.bedroom_tv_rack_power
+
+  - name: Bedroom - Total energy
+    platform: integration
+    unique_id: 5214fe98-81af-411e-819b-06a0603bf47b
+    source: sensor.bedroom_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

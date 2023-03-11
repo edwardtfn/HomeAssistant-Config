@@ -1,0 +1,125 @@
+automation:
+- alias: Home - Electricity - Price level
+  id: '1642002824536'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.electricity_price
+    attribute: future_prices_curr_price_level
+  - platform: homeassistant
+    event: start
+  - platform: state
+    entity_id:
+    - media_player.living_room_tv_sony_universal
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_party_mode
+    state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Very cheap
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+          - switch.laundry_bench_outlets
+        data: {}
+      - if:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: media_player.living_room_tv_sony_universal
+            state: 'on'
+        then:
+        - service: switch.turn_on
+          data: {}
+          target:
+            entity_id:
+            - switch.living_room_charging_strip_1_socket_2
+            - switch.living_room_charging_strip_1_socket_3
+            - switch.living_room_charging_strip_1_socket_4
+            - switch.office_workstation_power_strip_usb
+        else:
+        - service: switch.turn_off
+          data: {}
+          target:
+            entity_id:
+            - switch.living_room_charging_strip_1_socket_2
+            - switch.living_room_charging_strip_1_socket_3
+            - switch.living_room_charging_strip_1_socket_4
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Cheap
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.laundry_bench_outlets
+          - switch.office_workstation_power_strip_usb
+        data: {}
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Normal
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+        data: {}
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Expensive
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: sensor.electricity_price
+        attribute: future_prices_curr_price_level
+        state: Very expensive
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_usb
+          - switch.living_room_charging_strip_1_socket_2
+          - switch.living_room_charging_strip_1_socket_3
+          - switch.living_room_charging_strip_1_socket_4
+          - switch.laundry_bench_outlets
+    default: []
+  mode: restart

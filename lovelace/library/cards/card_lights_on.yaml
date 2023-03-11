@@ -1,0 +1,272 @@
+type: conditional
+conditions:
+  - entity: light.home_all_lights
+    state_not: 'off'
+card:
+  type: vertical-stack
+  cards:
+    - type: custom:mushroom-title-card
+      title: >-
+        {{ iif(is_state('light.home_all_lights', 'on'), 'Lights on:', 'No lights
+        on') }}
+      alignment: center
+    - square: true
+      columns: 2
+      type: grid
+      cards:
+        - type: conditional
+          conditions:
+            - entity: light.balcony_lamp_light
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.balcony_lamp_light
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            layout: vertical
+            name: Balcony - Lamp
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.balcony_string_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.balcony_string_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            layout: vertical
+            name: Balcony - String lights
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.bathroom_all_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.bathroom_all_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Bathroom
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.bedroom_closet_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.bedroom_closet_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Bedroom - Closet
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.bedroom_carol_light
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.bedroom_carol_light
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Bedroom - Carol
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.bedroom_edward_light
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.bedroom_edward_light
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Bedroom - Edward
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.corridor_lights_all
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.corridor_lights_all
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Corridor
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.guest_room_closet_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.guest_room_closet_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Guest room - Closet
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.guest_bathroom_all_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.guest_bathroom_all_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Guest bathroom
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.guest_room_wall_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.guest_room_wall_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Guest room
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.hall_all_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.hall_all_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Hall
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: false
+            show_color_control: false
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.kitchen_bench_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.kitchen_bench_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Kitchen - Bench
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.kitchen_table_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.kitchen_table_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Kitchen - Table
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.office_ceiling_lines
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.office_ceiling_lines
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Office - Lines
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.office_workstation_lights
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.office_workstation_lights
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Office - Workstation
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true
+        - type: conditional
+          conditions:
+            - entity: light.curtains_lights_segment_kitchen
+              state: 'on'
+          card:
+            type: custom:mushroom-light-card
+            entity: light.curtains_lights_segment_kitchen
+            show_brightness_control: true
+            collapsible_controls: true
+            secondary_info: none
+            name: Curtain's lights
+            layout: vertical
+            use_light_color: true
+            show_color_temp_control: true
+            show_color_control: true
+            fill_container: true

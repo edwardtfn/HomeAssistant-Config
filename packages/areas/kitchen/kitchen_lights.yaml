@@ -63,10 +63,19 @@ automation:
   mode: restart
 
 light:
-  - name: "Kitchen - All lights"
+  - name: Kitchen - All lights
     platform: group
     unique_id: ffd1b649-a851-4450-b1c0-5a2f9b366a20
     entities:
       - light.kitchen_bench_lights
       - light.kitchen_table_lights
       - light.curtains_lights_segment_kitchen
+
+  - name: Kitchen - Curtain's lights
+    platform: group
+    unique_id: ab310c80-71d4-460d-987c-8a2bb221ffa3
+    entities:
+      - light.curtain_s_lights_master
+      - light.curtains_lights_segment_kitchen
+      - light.curtain_s_lights_segment_balcony_door
+      - light.curtain_s_lights_segment_living_room

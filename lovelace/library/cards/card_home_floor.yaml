@@ -1,0 +1,647 @@
+type: picture-elements
+image: local/pics/artillerigatan/floor_plant_2d_empty_white.png
+dark_mode_image: local/pics/floor_plant_2d_empty_black.png
+elements:
+  - entity: light.curtains_lights_segment_kitchen
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 78%
+      left: 36%
+  - entity: weather.home
+    type: state-label
+    attribute: temperature
+    suffix: ºC
+    style:
+      top: 97%
+      left: 9%
+      font-size: 15px
+  - entity: weather.home
+    type: state-icon
+    style:
+      top: 88%
+      left: 9%
+  - entity: weather.home
+    type: state-label
+    style:
+      top: 92%
+      left: 9%
+      font-size: 10px
+  - entity: sensor.home_average_room_temperature
+    type: state-label
+    style:
+      top: 10%
+      left: 87%
+      font-size: 15px
+  - entity: cover.balcony_curtain
+    type: state-icon
+    state_color: false
+    style:
+      top: 81%
+      left: 28%
+      transform: rotate(-90deg)
+  - entity: light.balcony_lamp_light
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 90%
+      left: 24%
+      transform: scaleX(-1)
+  - entity: light.balcony_string_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 84%
+      left: 19%
+  - entity: light.bathroom_all_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 34%
+      left: 15%
+  - entity: climate.bathroom_thermostat
+    type: state-label
+    attribute: current_temperature
+    suffix: °C
+    style:
+      top: 28%
+      left: 9%
+      font-size: 10px
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.bathroom_motion
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.bathroom_motion
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 34%
+          left: 23%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.bathroom_door
+        state: 'off'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.bathroom_door
+        type: state-icon
+        icon: mdi:dots-vertical
+        style:
+          top: 33%
+          left: 25%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.bathroom_shower_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.bathroom_shower_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 41%
+          left: 8%
+  - entity: cover.bedroom_curtains_dual
+    type: state-icon
+    state_color: false
+    style:
+      top: 2.5%
+      left: 48%
+  - entity: light.bedroom_edward_light
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 8%
+      left: 61%
+  - entity: light.bedroom_carol_light
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 24%
+      left: 61%
+  - entity: media_player.bedroom_tv_samsung_universal
+    type: state-icon
+    state_color: false
+    tap_action:
+      action: toggle
+    style:
+      color: green
+      top: 12%
+      left: 35%
+      transform: rotate(-90deg)
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.bedroom_dogs_bed_occupied
+        state: 'off'
+    elements:
+      - type: state-icon
+        entity: binary_sensor.bedroom_dogs_bed_occupied
+        state_color: false
+        style:
+          top: 8%
+          left: 40%
+  - entity: sensor.bedroom_hygrometer_temperature
+    type: state-label
+    style:
+      top: 16%
+      left: 55%
+      font-size: 10px
+  - entity: light.bedroom_closet_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 41%
+      left: 44%
+  - entity: light.corridor_all_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 40%
+      left: 31%
+  - entity: sensor.corridor_air_quality_temperature
+    type: state-label
+    style:
+      top: 46%
+      left: 27%
+      font-size: 10px
+      transform: rotate(90deg)
+  - entity: sensor.corridor_air_quality_humidity
+    type: state-label
+    style:
+      top: 46%
+      left: 25%
+      font-size: 10px
+      transform: rotate(90deg)
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.corridor_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.corridor_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 30%
+          left: 31%
+  - entity: light.guest_bathroom_all_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 43%
+      left: 59%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.guest_bathroom_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.guest_bathroom_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 48%
+          left: 61%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.guest_bathroom_shower_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.guest_bathroom_shower_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 37%
+          left: 56%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.guest_bathroom_door
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.guest_bathroom_door
+        type: state-icon
+        icon: mdi:dots-vertical
+        style:
+          top: 53%
+          left: 56%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.guest_room_door
+        state: 'off'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.guest_room_door
+        type: state-icon
+        icon: mdi:dots-horizontal
+        style:
+          top: 61%
+          left: 69%
+  - entity: light.guest_room_closet_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 84%
+      left: 91%
+  - entity: cover.guest_room_shutter_cover
+    type: state-icon
+    state_color: false
+    style:
+      top: 97%
+      left: 77%
+  - entity: light.guest_room_wall_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 88%
+      left: 67%
+  - entity: climate.guest_room_thermostat
+    type: state-label
+    attribute: current_temperature
+    suffix: °C
+    style:
+      top: 73%
+      left: 75%
+      font-size: 10px
+  - entity: climate.guest_room_closet_thermostat
+    type: state-label
+    attribute: current_temperature
+    suffix: °C
+    style:
+      top: 90%
+      left: 91%
+      font-size: 10px
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.guest_room_motion
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.guest_room_motion
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 65%
+          left: 75%
+  - entity: sensor.hall_panel_temperature
+    type: state-label
+    style:
+      top: 52%
+      left: 74%
+      font-size: 10px
+      transform: rotate(90deg)
+  - entity: light.hall_all_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 55%
+      left: 75%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.hall_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.hall_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 59%
+          left: 66%
+  - type: conditional
+    conditions:
+      - entity: device_tracker.hall_intercom
+        state_not: home
+    elements:
+      - entity: device_tracker.hall_intercom
+        type: state-icon
+        style:
+          top: 57%
+          left: 83%
+          '--state-device_tracker-inactive-color': red
+  - entity: light.kitchen_bench_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 53%
+      left: 8%
+  - entity: light.kitchen_table_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 67%
+      left: 25%
+  - entity: climate.kitchen_thermostat
+    type: state-label
+    attribute: current_temperature
+    suffix: °C
+    style:
+      top: 76%
+      left: 19%
+      font-size: 10px
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.kitchen_bench_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.kitchen_bench_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 51%
+          left: 20%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.kitchen_table_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.kitchen_table_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 61%
+          left: 20%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.kitchen_table_occupancy_motion
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.kitchen_table_occupancy_motion
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 69%
+          left: 18%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.kitchen_table_occupancy_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.kitchen_table_occupancy_occupancy
+        type: state-icon
+        icon: mdi:human-non-binary
+        style:
+          top: 69%
+          left: 22%
+  - type: conditional
+    conditions:
+      - entity: sensor.kitchen_dishwasher_operation_state
+        state: Run
+    elements:
+      - entity: sensor.kitchen_dishwasher_operation_state
+        type: state-icon
+        icon: mdi:dishwasher
+        state_color: false
+        style:
+          transform: rotate(-90deg)
+          top: 61%
+          left: 2%
+          color: red
+          '--paper-item-icon-color': var(--rgb-red-color)
+        card_mod:
+          style:
+            ha-icon:
+              $: |
+                ha-svg-icon {
+                  color: red;
+                  animation: wobbling 1s linear infinite alternate;
+                }
+                @keyframes wobbling {
+                  0% {
+                    transform: rotate(-5deg);
+                  }
+                  100% {
+                    transform: rotate(+5deg);
+                  }
+                }
+  - type: conditional
+    conditions:
+      - entity: sensor.laundry_dryer_status
+        state_not: idle
+      - entity: sensor.laundry_dryer_status
+        state_not: drying
+    elements:
+      - entity: sensor.laundry_dryer_status
+        type: state-icon
+        state_color: false
+        style:
+          top: 28%
+          left: 22%
+          color: green
+          '--paper-item-icon-color': var(--rgb-green-color)
+  - type: conditional
+    conditions:
+      - entity: sensor.laundry_dryer_status
+        state: drying
+    elements:
+      - entity: sensor.laundry_dryer_status
+        type: state-icon
+        icon: mdi:tumble-dryer
+        state_color: true
+        style:
+          top: 28%
+          left: 22%
+          '--paper-item-icon-color': red
+  - type: conditional
+    conditions:
+      - entity: sensor.laundry_washing_machine_status
+        state_not: idle
+      - entity: sensor.laundry_washing_machine_status
+        state_not: completed
+    elements:
+      - type: icon
+        icon: mdi:washing-machine
+        style:
+          top: 28%
+          left: 16.5%
+          color: red
+        card_mod:
+          style:
+            ha-icon:
+              $: |
+                ha-svg-icon {
+                  color: red;
+                  animation: wobbling 1s linear infinite alternate;
+                }
+                @keyframes wobbling {
+                  0% {
+                    transform: rotate(-45deg);
+                  }
+                  100% {
+                    transform: rotate(+45deg);
+                  }
+                }
+  - type: conditional
+    conditions:
+      - entity: sensor.laundry_washing_machine_status
+        state: completed
+    elements:
+      - entity: sensor.laundry_washing_machine_status
+        type: state-icon
+        state_color: false
+        style:
+          top: 28%
+          left: 16.5%
+          color: green
+          '--paper-item-icon-color': var(--rgb-green-color)
+  - entity: climate.living_room_thermostat
+    type: state-label
+    attribute: current_temperature
+    suffix: °C
+    style:
+      top: 85%
+      left: 49%
+      font-size: 10px
+  - entity: cover.living_room_blinds
+    type: state-icon
+    state_color: false
+    style:
+      top: 95%
+      left: 49%
+  - entity: media_player.living_room_tv_sony_universal
+    type: state-icon
+    style:
+      '--rgb-state-media-player-on-color': var(--rgb-red-color)
+      '--rgb-state-media-player-color': var(--rgb-amber-color)
+      '--rgb-state-media-player-off-color': var(--state-icon-color)
+      top: 72%
+      left: 54%
+      transform: rotate(90deg)
+    tap_action:
+      action: call-service
+      service: script.living_room_toggle_tv
+  - entity: cover.office_shutter_1_cover
+    type: state-icon
+    state_color: false
+    style:
+      top: 8%
+      left: '-2%'
+      transform: rotate(-90deg)
+  - entity: cover.office_shutter_2_cover
+    type: state-icon
+    state_color: false
+    style:
+      top: 2%
+      left: 16%
+  - entity: light.office_ceiling_lines
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 14%
+      left: 19%
+  - entity: sensor.office_hygrometer_temperature
+    type: state-label
+    style:
+      top: 22%
+      left: 20%
+      font-size: 10px
+  - entity: cover.office_roller_blind_1_cover
+    type: state-icon
+    state_color: false
+    style:
+      top: 13%
+      left: 3%
+      transform: rotate(-90deg)
+  - entity: cover.office_roller_blind_2_cover
+    type: state-icon
+    state_color: false
+    style:
+      top: 2%
+      left: 23%
+  - entity: switch.office_workstation_outlets_displays
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 6%
+      left: 7%
+  - entity: light.office_workstation_lights
+    type: state-icon
+    tap_action:
+      action: toggle
+    style:
+      top: 6%
+      left: 19%
+  - entity: switch.office_workstation_power_strip_switch_1
+    type: state-icon
+    icon: mdi:electron-framework
+    tap_action:
+      action: toggle
+    style:
+      top: 6%
+      left: 27%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.office_motion_occupancy
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.office_motion_occupancy
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 20%
+          left: 32%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.office_workstation_motion
+        state: 'on'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.office_workstation_motion
+        type: state-icon
+        icon: mdi:motion-sensor
+        style:
+          top: 10%
+          left: 12%
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.office_door
+        state: 'off'
+      - entity: input_boolean.home_display_motion_sensors
+        state: 'on'
+    elements:
+      - entity: binary_sensor.office_door
+        type: state-icon
+        icon: mdi:dots-horizontal
+        style:
+          top: 25%
+          left: 32%

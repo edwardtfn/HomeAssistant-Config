@@ -134,3 +134,20 @@ automation:
             }}ºC).'
   mode: single
 
+binary_sensor:
+  - name: Kitchen - Freezer - Temperature normal range
+    platform: threshold
+    entity_id: sensor.kitchen_freezer_hygrometer_temperature
+    device_class: cold
+    lower: -19
+    upper: -10
+    hysteresis: 1
+
+  - name: Kitchen - Frdge - Temperature normal range
+    platform: threshold
+    entity_id: sensor.kitchen_fridge_hygrometer_temperature
+    device_class: cold
+    lower: 1
+    upper: 9
+    hysteresis: 0.5
+

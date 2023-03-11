@@ -10,3 +10,12 @@ sensor:
       - sensor.balcony_lamp_light_power
       - sensor.balcony_lamp_sockets_power
       - sensor.balcony_string_lights_power
+
+  - name: Balcony - Total energy
+    platform: integration
+    unique_id: 7f1885fd-0935-4d2d-91ce-27d7e1146ab0
+    source: sensor.balcony_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

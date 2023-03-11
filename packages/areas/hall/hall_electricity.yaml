@@ -10,3 +10,12 @@ sensor:
       - sensor.hall_light_switch_light_power
       - sensor.hall_light_switch_panel_power
       - sensor.hall_outlets_power
+
+  - name: Hall - Total energy
+    platform: integration
+    unique_id: ae63c847-b4a5-4761-8012-96887d6bb04a
+    source: sensor.hall_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

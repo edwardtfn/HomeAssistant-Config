@@ -69,6 +69,14 @@ automation:
       - a1a8cf45cfc1e7d7ce9a42e2b5248e27
   mode: single
 
+light:
+  - name: Kitchen - Bench lights
+    platform: group
+    unique_id: 9089d532-9cff-4087-b1f5-c8705e02a224
+    entities:
+      - light.kitchen_bench_left_light
+      - light.kitchen_bench_right_light
+
 sensor:
   - name: Kitchen - Bench - Total power
     platform: group

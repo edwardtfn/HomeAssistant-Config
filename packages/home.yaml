@@ -336,6 +336,14 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       name: Curtains lights
       hidden: false
 
+input_boolean:
+  home_display_motion_sensors:
+    name: Home - Display motion sensors
+    icon: mdi:motion-sensor
+  home_party_mode:
+    name: Home - Party mode
+    icon: mdi:balloon
+
 light:
   - name: "Home - All lights"
     platform: group
@@ -366,6 +374,46 @@ light:
       - light.kitchen_all_lights
       - light.living_room_all_lights
       - light.office_all_lights
+
+schedule:
+  home_quite_hours:
+    name: Home - Quite hours
+    icon: mdi:sleep
+    monday:
+      - from: "00:00:00"
+        to: "08:00:00"
+      - from: "22:00:00"
+        to: "23:59:59"
+    tuesday:
+      - from: "00:00:00"
+        to: "08:00:00"
+      - from: "22:00:00"
+        to: "23:59:59"
+    wednesday:
+      - from: "00:00:00"
+        to: "08:00:00"
+      - from: "22:00:00"
+        to: "23:59:59"
+    thursday:
+      - from: "00:00:00"
+        to: "08:00:00"
+      - from: "22:00:00"
+        to: "23:59:59"
+    friday:
+      - from: "00:00:00"
+        to: "08:00:00"
+      - from: "23:00:00"
+        to: "23:59:59"
+    saturday:
+      - from: "00:00:00"
+        to: "09:00:00"
+      - from: "23:00:00"
+        to: "23:59:59"
+    sunday:
+      - from: "00:00:00"
+        to: "09:00:00"
+      - from: "22:00:00"
+        to: "23:59:59"
 
 script:
   home_reboot_all_shelly_devices:

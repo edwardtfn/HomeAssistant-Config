@@ -10,3 +10,12 @@ sensor:
       - sensor.bathroom_ceiling_lights_power
       - sensor.bathroom_mirror_light_power
       - sensor.bathroom_mirror_outlets_power
+
+  - name: Bathroom - Total energy
+    platform: integration
+    unique_id: 3c573277-4585-44e6-8b06-dc987afbbfa4
+    source: sensor.bathroom_total_power
+    round: 2
+    unit_prefix: k
+    unit_time: h
+    method: trapezoidal

@@ -41,6 +41,20 @@ group:
       - climate.office_thermostat_1
       - climate.office_thermostat_2
 
+sensor:
+  - name: Office - Current temperature (mean)
+    platform: group
+    unique_id: f5f11226-ab8d-41eb-80cb-c0303396e45e
+    type: mean
+    unit_of_measurement: °C
+    #icon: mdi:thermometer
+    device_class: temperature
+    state_class: measurement
+    entities:
+      - sensor.office_thermostat_1_current_temperature
+      - sensor.office_thermostat_2_current_temperature
+      - sensor.office_hygrometer_temperature
+
 template:
   - sensor:
       - name: Office - Thermostat Humidity

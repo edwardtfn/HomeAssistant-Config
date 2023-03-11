@@ -1,0 +1,38 @@
+type: grid
+cards:
+  - type: custom:mushroom-entity-card
+    entity: input_boolean.home_party_mode
+    layout: vertical
+    name: Party mode
+    fill_container: true
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+  - type: custom:mushroom-entity-card
+    layout: vertical
+    fill_container: true
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    entity: input_boolean.home_travelling_mode
+    name: Traveling mode
+  - type: custom:mushroom-entity-card
+    layout: vertical
+    fill_container: true
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    entity: input_boolean.home_empty
+    name: Empty home
+  - type: custom:mushroom-entity-card
+    layout: vertical
+    fill_container: true
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    entity: input_boolean.home_display_motion_sensors
+    name: Show motion

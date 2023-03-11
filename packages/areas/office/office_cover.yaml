@@ -88,3 +88,18 @@ automation:
       remote_device: 655699530e3a218357784fa5b32838d2
       cover_entity: cover.office_roller_blinds_all
 
+cover:
+  - name: Office - Shutters - All
+    platform: group
+    unique_id: 270949d7-54b3-40ad-acea-d6efdc22dc5f
+    entities:
+      - cover.office_shutter_1_cover
+      - cover.office_shutter_2_cover
+
+  - name: Office - Roller blinds - All
+    platform: group
+    unique_id: f0c6d5c9-ea29-4531-b564-87ae84ad0b9e
+    entities:
+      - cover.office_roller_blind_1_cover
+      - cover.office_roller_blind_2_cover
+

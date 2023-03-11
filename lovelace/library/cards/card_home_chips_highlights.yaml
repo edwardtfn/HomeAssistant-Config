@@ -1,0 +1,214 @@
+        type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            entity: sensor.electricity_price
+            content: >-
+              {{ state_attr(entity, 'future_price_level') |
+              default('unknown') }}: {{ states(entity) | float(0) | round(2) }}
+              kr/kWh
+            icon: mdi:lightning-bolt-circle
+            card_mod: null
+            style: |
+              @keyframes wobbling {
+                0% {
+                  transform: rotate(-5deg);
+                }
+                100% {
+                  transform: rotate(5deg);
+                }
+              }
+              ha-card {
+                --chip-box-shadow: 0px 0px;
+                animation: wobbling 10s linear infinite alternate;
+                {% set price_level = state_attr('sensor.electricity_price', 'future_price_level') %}
+                {% if price_level == 'Very expensive' %}
+                  animation-duration: 2s;
+                  --chip-background: red;
+                {% elif price_level == 'Expensive' %}
+                  animation-duration: 3s;
+                  --chip-background: orange;
+                {% elif price_level == 'Cheap' %}
+                  animation-duration: 0s;
+                  --chip-background: darkgreen;
+                {% elif price_level == 'Very cheap' %}
+                  animation-duration: 0s;
+                  --chip-background: green;
+                {%- else -%}
+                  animation-duration: 0s;
+                {%- endif %}
+              }
+          - type: alarm-control-panel
+            entity: alarm_control_panel.eufy_hub
+          - type: conditional
+            conditions:
+              - entity: input_boolean.home_travelling_mode
+                state: 'on'
+            chip:
+              type: entity
+              entity: sensor.civil_solar_day_status
+              icon: ''
+          - type: conditional
+            conditions:
+              - entity: device_tracker.vw_passat_position
+                state_not: Parking area at SKF HK3
+            chip:
+              type: entity
+              entity: device_tracker.vw_passat_position
+          - type: conditional
+            conditions:
+              - entity: person.edward_firmo
+                state_not: home
+            chip:
+              type: entity
+              entity: person.edward_firmo
+              use_entity_picture: true
+          - type: conditional
+            conditions:
+              - entity: person.carolina_costa
+                state_not: home
+            chip:
+              type: entity
+              entity: person.carolina_costa
+              use_entity_picture: true
+          - type: conditional
+            conditions:
+              - entity: person.dory
+                state_not: home
+            chip:
+              type: entity
+              entity: person.dory
+              use_entity_picture: true
+          - type: conditional
+            conditions:
+              - entity: person.skal
+                state_not: home
+            chip:
+              type: entity
+              entity: person.skal
+              use_entity_picture: true
+          - type: conditional
+            conditions:
+              - entity: sensor.wv_passat_stopped_and_unlocked
+                state_not: locked
+            chip:
+              type: entity
+              entity: sensor.wv_passat_stopped_and_unlocked
+          - type: conditional
+            conditions:
+              - entity: vacuum.hall_roomba
+                state_not: docked
+            chip:
+              type: entity
+              entity: vacuum.hall_roomba
+          - type: conditional
+            conditions:
+              - entity: light.balcony_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.balcony_all_lights
+              content_info: name
+              name: Balcony
+              use_light_color: true
+              icon: mdi:string-lights
+          - type: conditional
+            conditions:
+              - entity: light.bathroom_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.bathroom_all_lights
+              content_info: name
+              name: Bathroom
+              use_light_color: true
+          - type: conditional
+            conditions:
+              - entity: light.bedroom_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.bedroom_all_lights
+              content_info: name
+              use_light_color: true
+              name: Bedroom
+          - type: conditional
+            conditions:
+              - entity: light.corridor_lights_all
+                state: 'on'
+            chip:
+              type: light
+              entity: light.corridor_lights_all
+              content_info: name
+              use_light_color: true
+              name: Corridor
+          - type: conditional
+            conditions:
+              - entity: light.guest_bathroom_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.guest_bathroom_all_lights
+              content_info: name
+              use_light_color: true
+              name: Guest bathroom
+          - type: conditional
+            conditions:
+              - entity: light.guest_room_wall_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.guest_room_wall_lights
+              content_info: name
+              name: Guest room
+              use_light_color: true
+          - type: conditional
+            conditions:
+              - entity: light.hall_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.hall_all_lights
+              content_info: name
+              name: Hall
+              use_light_color: true
+          - type: conditional
+            conditions:
+              - entity: light.kitchen_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.kitchen_all_lights
+              content_info: name
+              name: Kitchen
+              use_light_color: true
+          - type: conditional
+            conditions:
+              - entity: light.living_room_all_lights
+                state: 'on'
+            chip:
+              type: light
+              entity: light.living_room_all_lights
+              content_info: name
+              name: Living room
+              use_light_color: true
+          - type: conditional
+            conditions:
+              - entity: light.office_ceiling_lines
+                state: 'on'
+            chip:
+              type: light
+              entity: light.office_ceiling_lines
+              content_info: name
+              name: Office
+              use_light_color: true
+              icon: ''
+          - type: conditional
+            conditions:
+              - entity: sensor.kitchen_dishwasher_operation_state
+                state_not: Ready
+              - entity: sensor.kitchen_dishwasher_operation_state
+                state_not: Inactive
+            chip:
+              type: entity
+              entity: sensor.kitchen_dishwasher_operation_state
+              use_entity_picture: false

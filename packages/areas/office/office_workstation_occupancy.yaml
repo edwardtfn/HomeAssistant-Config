@@ -105,6 +105,14 @@ automation:
       entity_id: button.mobile_edwards_laptop_sleep
   mode: restart
 
+binary_sensor:
+  - name: Office - Workstation - Motion
+    platform: group
+    unique_id: 82ac4212-9cd5-4154-8e83-0a525b6c757c
+    device_class: motion
+    entities:
+      - binary_sensor.office_workstation_motion_top_occupancy
+      - binary_sensor.office_workstation_motion_bottom_occupancy
 
 sensor:
   - platform: history_stats

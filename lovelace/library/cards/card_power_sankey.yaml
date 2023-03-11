@@ -1,0 +1,393 @@
+type: custom:sankey-chart
+show_names: true
+wide: true
+sections:
+  - entities:
+      - entity_id: sensor.total_power
+        name: Total
+        remaining:
+          name: Other
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.balcony_total_power
+          - sensor.bathroom_total_power
+          - sensor.bedroom_total_power
+          - sensor.corridor_total_power
+          - sensor.guest_bathroom_total_power
+          - sensor.guest_room_total_power
+          - sensor.hall_total_power
+          - sensor.kitchen_total_power
+          - sensor.laundry_total_power
+          - sensor.living_room_total_power
+          - sensor.media_centre_total_power
+          - sensor.office_total_power
+  - entities:
+      - entity_id: sensor.balcony_total_power
+        name: Balcony
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.balcony_lamp_light_power
+          - sensor.balcony_lamp_sockets_power
+          - sensor.balcony_string_lights_power
+      - entity_id: sensor.bathroom_total_power
+        name: Bathroom
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.bathroom_ceiling_lights_power
+          - sensor.bathroom_mirror_light_power
+          - sensor.bathroom_mirror_outlets_power
+          - sensor.bathroom_towel_warmer_power
+      - entity_id: sensor.bedroom_total_power
+        name: Bedroom
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.bedroom_ceiling_lights_power
+          - sensor.bedroom_closet_lights_power
+          - sensor.bedroom_closet_outlets_power
+          - sensor.bedroom_outlets_carol_power
+          - sensor.bedroom_outlets_edward_power
+          - sensor.bedroom_tv_rack_power
+      - entity_id: sensor.corridor_total_power
+        name: Corridor
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.corridor_ceiling_lights_power
+          - sensor.corridor_outlet_1_power
+      - entity_id: sensor.guest_bathroom_total_power
+        name: Guest bathroom
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.guest_bathroom_ceiling_light_power
+          - sensor.guest_bathroom_mirror_lights_power
+          - sensor.guest_bathroom_mirror_outlets_power
+          - sensor.guest_bathroom_towel_warmer_power
+      - entity_id: sensor.guest_room_total_power
+        name: Guest room
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.guest_room_closet_lights_power
+          - sensor.guest_room_closet_outlets_power
+          - sensor.guest_room_door_outlets_ceiling_lights_power
+          - sensor.guest_room_door_outlets_outlet_power
+          - sensor.guest_room_windows_outlets_power
+      - entity_id: sensor.hall_total_power
+        name: Hall
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.hall_light_switch_light_power
+          - sensor.hall_light_switch_panel_power
+          - sensor.hall_outlets_power
+      - entity_id: sensor.kitchen_total_power
+        name: Kitchen
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.kitchen_bench_total_power
+          - sensor.kitchen_ceiling_lights_table_lights_power
+          - sensor.kitchen_ceiling_lights_windows_lights_power
+          - sensor.kitchen_cooktop_total_power
+          - sensor.kitchen_dishwasher_outlet_power
+          - sensor.kitchen_microwave_power
+          - sensor.kitchen_oven_power
+          - sensor.kitchen_refrigeration_freezer_outlet_power
+          - sensor.kitchen_refrigeration_fridge_outlet_power
+          - sensor.kitchen_windows_wall_outlet_power
+      - entity_id: sensor.laundry_total_power
+        name: Laundry
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.laundry_bench_outlets_power
+          - sensor.laundry_dryer_outlet_power
+          - sensor.laundry_washing_machine_power
+      - entity_id: sensor.living_room_total_power
+        name: Living room
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.living_room_lights_map_wall_power
+          - sensor.living_room_lights_tv_wall_power
+          - sensor.living_room_map_wall_outlets_power
+          - sensor.living_room_tv_rack_outlets_power
+          - sensor.living_room_windows_wall_outlets_power
+      - entity_id: sensor.media_centre_total_power
+        name: Media centre
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.media_centre_switch_outlets_power
+          - sensor.media_centre_switch_power_strip_power
+      - entity_id: sensor.office_total_power
+        name: Office
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+        children:
+          - sensor.office_windows_outlets_ceiling_lights_power
+          - sensor.office_windows_outlets_outlets_power
+  - entities:
+      - entity_id: sensor.balcony_lamp_light_power
+        name: Lamp - Light
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.balcony_lamp_sockets_power
+        name: Lamp - Sockets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.balcony_string_lights_power
+        name: String lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bathroom_ceiling_lights_power
+        name: Ceiling lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bathroom_mirror_light_power
+        name: Mirror''s lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bathroom_mirror_outlets_power
+        name: Mirror''s outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bathroom_towel_warmer_power
+        name: Towel warmer
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bedroom_ceiling_lights_power
+        name: Ceiling lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bedroom_outlets_carol_power
+        name: Outlets - Carol
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bedroom_outlets_edward_power
+        name: Outlets - Edward
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bedroom_tv_rack_power
+        name: TV rack
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bedroom_closet_lights_power
+        name: Lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.bedroom_closet_outlets_power
+        name: Outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.corridor_ceiling_lights_power
+        name: Lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.corridor_outlet_1_power
+        name: Outlets 1
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_bathroom_ceiling_light_power
+        name: Ceiling lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_bathroom_mirror_lights_power
+        name: Mirror''s lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_bathroom_mirror_outlets_power
+        name: Mirror''s outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_bathroom_towel_warmer_power
+        name: Towel warmer
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_room_closet_lights_power
+        name: Closet - Lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_room_closet_outlets_power
+        name: Closet - Outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_room_door_outlets_ceiling_lights_power
+        name: Ceiling lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_room_door_outlets_outlet_power
+        name: Door''s outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.guest_room_windows_outlets_power
+        name: Windows outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.hall_light_switch_light_power
+        name: Lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.hall_light_switch_panel_power
+        name: Panel
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.hall_outlets_power
+        name: Outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_bench_total_power
+        name: Bench
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_ceiling_lights_table_lights_power
+        name: Table''s lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_ceiling_lights_windows_lights_power
+        name: Windows lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_cooktop_total_power
+        name: Cooktop
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_dishwasher_outlet_power
+        name: Dishwasher
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_microwave_power
+        name: Microwave
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_oven_power
+        name: Oven
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_refrigeration_freezer_outlet_power
+        name: Freezer
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_refrigeration_fridge_outlet_power
+        name: Fridge
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.kitchen_windows_wall_outlet_power
+        name: Windows outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.laundry_bench_outlets_power
+        name: Outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.laundry_dryer_outlet_power
+        name: Dryer
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.laundry_washing_machine_power
+        name: Washing machine
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.living_room_lights_map_wall_power
+        name: Map''s lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.living_room_lights_tv_wall_power
+        name: Ceiling lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.living_room_map_wall_outlets_power
+        name: Map''s outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.living_room_tv_rack_outlets_power
+        name: TV rack
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.living_room_windows_wall_outlets_power
+        name: Windows outles
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.media_centre_switch_outlets_power
+        name: Outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.media_centre_switch_power_strip_power
+        name: Outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.office_windows_outlets_ceiling_lights_power
+        name: Ceiling lights
+        color_on_state: true
+        color_limit: 220
+        color_above: red
+      - entity_id: sensor.office_windows_outlets_outlets_power
+        name: Windows outlets
+        color_on_state: true
+        color_limit: 220
+        color_above: red

@@ -63,3 +63,11 @@ sensor:
       - sensor.kitchen_cooktop_l1_outlet_power
       - sensor.kitchen_cooktop_l2_outlet_power
       - sensor.kitchen_cooktop_l3_outlet_power
+
+switch:
+  - name: Kitchen - Cooktop - All phases
+    platform: group
+    entities:
+      - switch.kitchen_cooktop_l1_outlet
+      - switch.kitchen_cooktop_l2_outlet
+      - switch.kitchen_cooktop_l3_outlet

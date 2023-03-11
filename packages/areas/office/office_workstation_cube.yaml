@@ -130,3 +130,11 @@ automation:
       face_2_rotate_counter_clockwise: []
       face_5_rotate_counter_clockwise: []
 
+input_number:
+  office_cube_last_activated_face:
+    name: Office - Cube - Last activated face
+    icon: mdi:cube-outline
+    min: 0
+    max: 6
+    step: 1
+    mode: box

@@ -1,0 +1,42 @@
+template_camera:
+  card:
+    type: grid
+    square: false
+    columns: 1
+    cards:
+      - type: conditional
+        conditions:
+          - entity: '[[camera]]'
+            state: idle
+        card:
+          show_state: true
+          show_name: true
+          type: picture-entity
+          entity: '[[camera]]'
+          camera_image: '[[camera]]'
+          tap_action:
+            action: call-service
+            service: camera.turn_on
+            data: {}
+            target:
+              entity_id: '[[camera]]'
+      - type: conditional
+        conditions:
+          - entity: '[[camera]]'
+            state: streaming
+        card:
+          type: vertical-stack
+          cards:
+            - show_name: true
+              show_icon: false
+              type: button
+              tap_action:
+                action: call-service
+                service: camera.turn_off
+                data: {}
+                target:
+                  entity_id: '[[camera]]'
+              entity: '[[camera]]'
+              name: Stop
+            - type: custom:webrtc-camera
+              entity: '[[camera]]'
