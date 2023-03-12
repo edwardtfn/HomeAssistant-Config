@@ -50,15 +50,15 @@ automation:
   - parallel:
     - service: notify.signal_group_home
       data:
-        message: {{ announcement }}
+        message: "{{ announcement }}"
       continue_on_error: true
     - service: notify.all_devices
       data:
-        message: {{ announcement }}
+        message: "{{ announcement }}"
       continue_on_error: true
     - service: notify.alexa_media
       data:
-        message: {{ announcement }}
+        message: "{{ announcement }}"
         target: Kitchen, Office, Bedroom, Bathroom
       continue_on_error: true
   mode: single
