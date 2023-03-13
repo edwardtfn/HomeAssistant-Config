@@ -3,6 +3,7 @@
     icon: ''
     badges: []
     cards:
+      - type: custom:sun-card
       - type: custom:weather-card
         entity: weather.home
         number_of_forecasts: '7'

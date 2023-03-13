@@ -124,8 +124,8 @@ automation:
     - input_boolean.home_no_dogs
     for:
       hours: 0
-      minutes: 5
-      seconds: 0
+      minutes: 0
+      seconds: 5
     not_from:
     - unknown
     - unavailable
@@ -133,9 +133,10 @@ automation:
   action:
   - service: notify.signal_edward
     data:
-      message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} changed from
-        ''''{{ trigger.from_state.state | capitalize }}'''' to ''''{{ trigger.to_state.state
-        | capitalize }}''''.'
+      message: >
+        {{ state_attr(trigger.entity_id, 'friendly_name') }} changed from {{ trigger.from_state.state | capitalize }} to {{ trigger.to_state.state | capitalize }}.
+
+        Additional info: {{ trigger }}
   mode: single
 - alias: Home Assistant - Start
   id: '1641740150433'

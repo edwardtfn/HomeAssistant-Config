@@ -3,6 +3,16 @@
   "minor_version": 1,
   "key": "counter",
   "data": {
-    "items": []
+    "items": [
+      {
+        "name": "spulmaschine_counter",
+        "minimum": 0,
+        "maximum": null,
+        "step": 1,
+        "restore": true,
+        "initial": 0,
+        "id": "spulmaschine_counter"
+      }
+    ]
   }
 }

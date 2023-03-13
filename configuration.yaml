@@ -82,10 +82,10 @@ lovelace:
   mode: yaml #storage
 
   resources:
-    - url: /hacsfiles/vacuum-card/vacuum-card.js?hacstag=261291295222
+    - url: /local/community/home-assistant-sun-card/home-assistant-sun-card.js
       type: module
 
-    - url: /hacsfiles/home-assistant-sun-card/home-assistant-sun-card.js?hacstag=366482637014
+    - url: /hacsfiles/vacuum-card/vacuum-card.js?hacstag=261291295222
       type: module
 
     - url: /hacsfiles/rgb-light-card/card.js?hacstag=2153271951100

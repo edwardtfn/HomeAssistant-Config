@@ -18,8 +18,10 @@ automation:
   action:
   - service: notify.signal_edward
     data:
-      message: '{{trigger.to_state.name}} changed from {{trigger.from_state.state}}
-        to {{trigger.to_state.state}} by {{ trigger.to_state.attributes.source }}'
+      message: >
+        {{trigger.to_state.name}} changed from {{trigger.from_state.state}} to {{trigger.to_state.state}} by {{ trigger.to_state.attributes.source }}
+
+        Additional info: {{ trigger }}
   mode: parallel
   max: 10
 
