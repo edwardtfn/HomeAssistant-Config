@@ -426,7 +426,8 @@ action:
     else: []
 
   ########## Starting ##########
-  - alias: "Logbook - variables"
+  - &logbook-variables
+    alias: "Logbook - variables"
     continue_on_error: true
     service: logbook.log
     data:
@@ -437,9 +438,15 @@ action:
           input_backup_bool: {{ input_backup_bool }}, 
           input_restart_bool: {{ input_restart_bool }}, 
           input_schedule_monthday: {{ input_schedule_monthday }}, 
-          input_update_exclusions: {{ temp_input_update_exclusions }},
-          input_core_os_update_mode: {{ input_core_os_update_mode }},
-          input_firmware_update_mode: {{ input_firmware_update_mode }},
+          input_update_exclusions: {{ temp_input_update_exclusions }}, 
+          input_core_os_update_mode: {{ input_core_os_update_mode }}, 
+          input_firmware_update_mode: {{ input_firmware_update_mode }}, 
+          input_general_update_mode: {{ input_general_update_mode }}, 
+          core_update_entity: {{ core_update_entity }}, 
+          os_update_entity: {{ os_update_entity }}, 
+          supervisor_update_entity: {{ supervisor_update_entity }}, 
+          firmware_update_entities: {{ firmware_update_entities }}, 
+          general_update_entities; {{ general_update_entities }}, 
           updates_list: {{ updates_list }}
 
   - alias: "Logbook - A new update is available"
@@ -519,27 +526,27 @@ action:
 
   ########## Update add-ons (Standard) ##########
   - *recalc-update-list
+  - *logbook-variables
   - alias: "Update - Standard"
     continue_on_error: true
     repeat: 
       while:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
-            - condition: template
-              value_template: >-
-                {{ ( states.update 
-                  | selectattr('state','eq','on') 
-                  | selectattr('entity_id', 'in', updates_list)
-                  | rejectattr('entity_id', 'in', core_update_entity)
-                  | rejectattr('entity_id', 'in', os_update_entity)
-                  | rejectattr('entity_id', 'in', firmware_update_entities)
-                  | rejectattr('entity_id', 'in', input_update_exclusions)
-                  | map(attribute='entity_id') 
-                  | list | count | int(0) ) > 0
-                  }}
+        - "{{ input_general_update_mode in ['patches', 'major_and_minor', 'all'] }}"
+        - condition: state
+          entity_id: !input schedule_entity
+          state: "on"
+        - condition: template
+          value_template: >-
+            {{ ( states.update 
+              | selectattr('state','eq','on') 
+              | selectattr('entity_id', 'in', updates_list)
+              | rejectattr('entity_id', 'in', core_update_entity)
+              | rejectattr('entity_id', 'in', os_update_entity)
+              | rejectattr('entity_id', 'in', firmware_update_entities)
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='entity_id') 
+              | list | count | int(0) ) > 0
+            }}
       sequence:
         - alias: "Update - Standard - Logbook - Starting"
           continue_on_error: true
@@ -581,27 +588,27 @@ action:
 
   ########## Update core items ##########
   - *recalc-update-list
+  - *logbook-variables
   - alias: "Update - Core"
     continue_on_error: true
     repeat: 
       while:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
-            - condition: template
-              value_template: >-
-                {{ ( states.update 
-                  | selectattr('state','eq','on') 
-                  | selectattr('entity_id', 'in', updates_list)
-                  | selectattr('entity_id', 'in', core_update_entity)
-                  | rejectattr('entity_id', 'in', os_update_entity)
-                  | rejectattr('entity_id', 'in', firmware_update_entities)
-                  | rejectattr('entity_id', 'in', input_update_exclusions)
-                  | map(attribute='entity_id') 
-                  | list | count | int(0) ) > 0
-                  }}
+        - "{{ input_core_os_update_mode in ['patches', 'major_and_minor', 'all'] }}"
+        - condition: state
+          entity_id: !input schedule_entity
+          state: "on"
+        - condition: template
+          value_template: >-
+            {{ ( states.update 
+              | selectattr('state','eq','on') 
+              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', core_update_entity)
+              | rejectattr('entity_id', 'in', os_update_entity)
+              | rejectattr('entity_id', 'in', firmware_update_entities)
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='entity_id') 
+              | list | count | int(0) ) > 0
+            }}
       sequence:
         - alias: "Update - Core - Logbook - Starting"
           continue_on_error: true
@@ -643,27 +650,27 @@ action:
 
   ########## Update OS ##########
   - *recalc-update-list
+  - *logbook-variables
   - alias: "Update - OS"
     continue_on_error: true
     repeat: 
       while:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
-            - condition: template
-              value_template: >-
-                {{ ( states.update 
-                  | selectattr('state','eq','on') 
-                  | selectattr('entity_id', 'in', updates_list)
-                  | rejectattr('entity_id', 'in', core_update_entity)
-                  | selectattr('entity_id', 'in', os_update_entity)
-                  | rejectattr('entity_id', 'in', firmware_update_entities)
-                  | rejectattr('entity_id', 'in', input_update_exclusions)
-                  | map(attribute='entity_id') 
-                  | list | count | int(0) ) > 0
-                  }}
+        - "{{ input_core_os_update_mode in ['patches', 'major_and_minor', 'all'] }}"
+        - condition: state
+          entity_id: !input schedule_entity
+          state: "on"
+        - condition: template
+          value_template: >-
+            {{ ( states.update 
+              | selectattr('state','eq','on') 
+              | selectattr('entity_id', 'in', updates_list)
+              | rejectattr('entity_id', 'in', core_update_entity)
+              | selectattr('entity_id', 'in', os_update_entity)
+              | rejectattr('entity_id', 'in', firmware_update_entities)
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='entity_id') 
+              | list | count | int(0) ) > 0
+            }}
       sequence:
         - alias: "Update - OS - Logbook - Starting"
           continue_on_error: true
@@ -709,23 +716,22 @@ action:
     continue_on_error: true
     repeat: 
       while:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
-            - condition: template
-              value_template: >-
-                {{ ( states.update 
-                  | selectattr('state','eq','on') 
-                  | selectattr('entity_id', 'in', updates_list)
-                  | rejectattr('entity_id', 'in', core_update_entity)
-                  | rejectattr('entity_id', 'in', os_update_entity)
-                  | selectattr('entity_id', 'in', firmware_update_entities)
-                  | rejectattr('entity_id', 'in', input_update_exclusions)
-                  | map(attribute='entity_id') 
-                  | list | count | int(0) ) > 0
-                  }}
+        - "{{ input_firmware_update_mode in ['patches', 'major_and_minor', 'all'] }}"
+        - condition: state
+          entity_id: !input schedule_entity
+          state: "on"
+        - condition: template
+          value_template: >-
+            {{ ( states.update 
+              | selectattr('state','eq','on') 
+              | selectattr('entity_id', 'in', updates_list)
+              | rejectattr('entity_id', 'in', core_update_entity)
+              | rejectattr('entity_id', 'in', os_update_entity)
+              | selectattr('entity_id', 'in', firmware_update_entities)
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='entity_id') 
+              | list | count | int(0) ) > 0
+            }}
       sequence:
         - alias: "Update - Devices firmware - Logbook - Starting"
           continue_on_error: true
@@ -766,41 +772,44 @@ action:
 
   ########## Update all remaining items ########## => this chaches up if some update item was left behind
   - *recalc-update-list
-  - alias: "Update - Remaining"
-    continue_on_error: true
-    if:
-      - condition: state
-        entity_id: !input schedule_entity
-        state: "on"
-    then:
-      - alias: "Update - Remaining - Logbook - Updating"
-        continue_on_error: true
-        service: logbook.log
-        data:
-          name: Auto-update
-          entity_id: '{{ this.entity_id }}'
-          message: Updating all remaining items (if any).
-      - alias: "Update - Remaining - Install"
-        continue_on_error: true
-        service: update.install
-        data: {}
-        target:
-          entity_id: >-
-            {{ states.update 
-            | selectattr('state','eq','on') 
-            | selectattr('entity_id', 'in', updates_list)
-            | rejectattr('entity_id', 'in', input_update_exclusions)
-            | map(attribute='entity_id') 
-            | list 
-            }}
-      - alias: "Update - Remaining - Wait"
-        continue_on_error: true
-        wait_template: >-
-          {{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) < 1 }}
-        continue_on_timeout: true
-        timeout: '3600'
+  - *logbook-variables
+  #- alias: "Update - Remaining"
+  #  continue_on_error: true
+  #  if:
+  #    - condition: state
+  #      entity_id: !input schedule_entity
+  #      state: "on"
+  #  then:
+  #    - alias: "Update - Remaining - Logbook - Updating"
+  #      continue_on_error: true
+  #      service: logbook.log
+  #      data:
+  #        name: Auto-update
+  #        entity_id: '{{ this.entity_id }}'
+  #        message: Updating all remaining items (if any).
+  #    - alias: "Update - Remaining - Install"
+  #      continue_on_error: true
+  #      service: update.install
+  #      data: {}
+  #      target:
+  #        entity_id: >-
+  #          {{ states.update 
+  #          | selectattr('state','eq','on') 
+  #          | selectattr('entity_id', 'in', updates_list)
+  #          | rejectattr('entity_id', 'in', input_update_exclusions)
+  #          | map(attribute='entity_id') 
+  #          | list 
+  #          }}
+  #    - alias: "Update - Remaining - Wait"
+  #      continue_on_error: true
+  #      wait_template: >-
+  #        {{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) < 1 }}
+  #      continue_on_timeout: true
+  #      timeout: '3600'
 
     ########## Finishing ##########
+  - *recalc-update-list
+  - *logbook-variables
   - alias: "Logbook - Updating"
     continue_on_error: true
     service: logbook.log
