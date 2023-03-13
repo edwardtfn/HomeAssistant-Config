@@ -135,8 +135,6 @@ automation:
     data:
       message: >
         {{ state_attr(trigger.entity_id, 'friendly_name') }} changed from {{ trigger.from_state.state | capitalize }} to {{ trigger.to_state.state | capitalize }}.
-
-        Additional info: {{ trigger }}
   mode: single
 - alias: Home Assistant - Start
   id: '1641740150433'
