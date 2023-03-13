@@ -1,0 +1,62 @@
+type: custom:flex-table-card 
+title: Tibber - Electricity price
+entities:
+  include: sensor.electricity_price
+sort:
+  - all_prices+
+columns:
+  - name: Sorting columns
+    data: all_prices
+    modify: x.startsAt
+    hidden: true
+  - name: Starts at
+    data: all_prices
+    modify: >
+      {
+        var colors = [
+            { level: "VERY_EXPENSIVE",  color: "red" },
+            { level: "EXPENSIVE",       color: "goldenrod" },
+            { level: "NORMAL",          color: "green" },
+            { level: "CHEAP",           color: "limegreen" },
+            { level: "VERY_CHEAP",      color: "lightgreen" } ]
+        var startsAt = new Date(x.startsAt)
+        var d = new Date()
+        var sday = ""
+        if (startsAt.getDay() == d.getDay())
+          sday = "Today"
+        else
+          sday = "Tomorrow";
+        '<div style="color: black; background-color: ' + colors.find(c => c.level === x.level).color + '">' 
+          + sday + " at " + startsAt.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2}) +
+        '</div>'
+      }
+  - name: Level
+    data: all_prices
+    modify: >
+      { 
+        var colors = [
+            { level: "VERY_EXPENSIVE",  color: "red" },
+            { level: "EXPENSIVE",       color: "goldenrod" },
+            { level: "NORMAL",          color: "green" },
+            { level: "CHEAP",           color: "limegreen" },
+            { level: "VERY_CHEAP",      color: "lightgreen" } ]
+        '<div style="color: black; background-color: ' + colors.find(c => c.level === x.level).color + '">' 
+          + x.level.charAt(0).toUpperCase() + x.level.slice(1).toLowerCase().replace('_', ' ') + 
+        '</div>'
+      }
+  - name: Price
+    data: all_prices
+    modify: >
+      { 
+        var colors = [
+            { level: "VERY_EXPENSIVE",  color: "red" },
+            { level: "EXPENSIVE",       color: "goldenrod" },
+            { level: "NORMAL",          color: "green" },
+            { level: "CHEAP",           color: "limegreen" },
+            { level: "VERY_CHEAP",      color: "lightgreen" } ]
+        '<div style="color: black; background-color: ' + colors.find(c => c.level === x.level).color + '">' 
+          + x.total.toFixed(3) + 
+        '&nbsp;kr/kWh</div>'
+      }
+      
+    align: right

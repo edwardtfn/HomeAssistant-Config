@@ -1,0 +1,20 @@
+type: custom:apexcharts-card
+#graph_span: 36h
+header:
+  show: false
+now:
+  show: true
+  color: white
+  label: NOW
+series:
+  - entity: sensor.tibber_electricity_price
+    type: column
+    name: Electricity price
+    data_generator: |
+      var a = entity.attributes.today.map((entry) => {
+        return [new Date(entry.startsAt), entry.total];
+      }); 
+      var b= entity.attributes.tomorrow.map((entry) => {
+        return [new Date(entry.startsAt), entry.total];
+      });
+      return a.concat(b);
