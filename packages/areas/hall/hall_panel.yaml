@@ -7,20 +7,21 @@ automation:
     entity_id:
     - light.hall_all_lights
     - binary_sensor.hall_motion_occupancy
+    - binary_sensor.hall_motion_on_off
     - binary_sensor.hall_front_door
     not_to:
     - unknown
     - unavailable
   condition: []
   action:
-  - service: esphome.hall_panel_send_command_printf
-    data:
-      cmd: page home
   - if:
     - condition: or
       conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.hall_motion_on_off
         state: 'on'
       - condition: state
         entity_id: binary_sensor.hall_front_door
@@ -29,25 +30,34 @@ automation:
         entity_id: light.hall_all_lights
         state: 'on'
     - condition: state
-      entity_id: switch.hall_panel_sleep_modus
-      state: 'on'
+      entity_id: sensor.hall_panel_currentpage
+      state: screensaver
     then:
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id:
-        - switch.hall_panel_sleep_modus
-    - if:
-      - condition: state
-        entity_id: sensor.hall_panel_currentpage
-        state: screensaver
-      then:
       - service: esphome.hall_panel_send_command_printf
         data:
           cmd: page home
     else:
-    - service: switch.turn_on
-      data: {}
-      target:
-        entity_id: switch.hall_panel_sleep_modus
-  mode: single
+      - if:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: binary_sensor.hall_motion_occupancy
+            state: 'on'
+          - condition: state
+            entity_id: binary_sensor.hall_motion_on_off
+            state: 'off'
+          - condition: state
+            entity_id: binary_sensor.hall_front_door
+            state: 'on'
+          - condition: state
+            entity_id: light.hall_all_lights
+            state: 'on'
+          - condition: state
+            entity_id: sensor.hall_panel_currentpage
+            state: screensaver
+        then:
+          - delay: 20
+          - service: esphome.hall_panel_send_command_printf
+            data:
+              cmd: page screensaver
+  mode: restart
