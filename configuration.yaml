@@ -1,19 +1,20 @@
-automation: !include automations.yaml
-
 #### default_config ####
 # Configure a default setup of Home Assistant (frontend, api, etc)
 # https://www.home-assistant.io/integrations/default_config/
 #default_config: # Full list: https://github.com/home-assistant/core/blob/dev/homeassistant/components/default_config/manifest.json
 
 application_credentials:
-#duplicate automation:
+automation: !include automations.yaml
 bluetooth:
 #cloud:
 conversation:
 counter:
 dhcp:
 energy:
-#duplicate frontend:
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /local/card-mod.js
 hardware:
 history:
 homeassistant_alerts:
@@ -24,16 +25,17 @@ input_number:
 input_select:
 input_text:
 logbook:
-#duplicate logger:
+logger:
+  #default: warning
 map:
 media_source:
 mobile_app:
 my:
 network:
 person:
-#duplicate scene:
+scene: !include scenes.yaml
 schedule:
-#duplicate script:
+script: !include scripts.yaml
 ssdp: # Simple Service Discovery Protocol
 sun:
 system_health:
@@ -42,19 +44,15 @@ timer:
 usb:
 webhook:
 zeroconf:
-#duplicate zone:
-
-
-frontend:
-  themes: !include_dir_merge_named themes
-  extra_module_url:
-    - /local/card-mod.js
+zone: !include zone.yaml
 
 
 #group: !include groups.yaml
 
 homeassistant:
   packages: !include_dir_named packages
+  #allowlist_external_dirs:
+  #  - "/usr/share/"
 
 #home_connect_alt: #https://github.com/ekutner/home-connect-hass
   #client_id: !secret home_connect_alt_client_id
@@ -69,14 +67,6 @@ http:
   trusted_proxies:
     - !secret trusted_proxy_1
     - !secret trusted_proxy_2
-
-logger:
-  # The next line sets the default logging level, for all python modules.
-  # It seems "recommended" to set it to avoid too much logging.
-  default: warning
-  logs:
-    custom_components.zha_toolkit: debug
-#    homeassistant.components.bluetooth: debug
 
 lovelace:
   mode: yaml #storage
@@ -203,8 +193,6 @@ notify: !include notifications.yaml
 recorder:
   purge_keep_days: 100
 
-scene: !include scenes.yaml
-
 shell_command: !include shell.yaml
 
 # Text to speech
@@ -226,5 +214,3 @@ zha:
       thirdreality_provider: true
 
 zha_toolkit:
-
-zone: !include zone.yaml

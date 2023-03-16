@@ -480,6 +480,10 @@ sensor:
       - "beat"
 
     #- platform: uptime # https://www.home-assistant.io/integrations/uptime/
+  #### Monitoring the backup folder ####
+  #- platform: folder #https://www.home-assistant.io/integrations/folder/
+  #  folder: 
+  #    - backup
 
 shell_command: # https://www.home-assistant.io/common-tasks/os/ and https://www.home-assistant.io/integrations/shell_command/
   host_reboot: ha host reboot
