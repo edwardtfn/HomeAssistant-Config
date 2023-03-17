@@ -3,31 +3,6 @@
   "minor_version": 1,
   "key": "input_number",
   "data": {
-    "items": [
-      {
-        "min": 0.0,
-        "max": 100.0,
-        "name": "Test 1",
-        "mode": "slider",
-        "step": 1.0,
-        "id": "test_1"
-      },
-      {
-        "min": 0.0,
-        "max": 100.0,
-        "name": "Test 2",
-        "mode": "slider",
-        "step": 1.0,
-        "id": "test_2"
-      },
-      {
-        "min": 0.0,
-        "max": 100.0,
-        "name": "Test limit",
-        "mode": "slider",
-        "step": 1.0,
-        "id": "test_limit"
-      }
-    ]
+    "items": []
   }
 }
