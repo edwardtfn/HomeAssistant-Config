@@ -72,7 +72,13 @@ lovelace:
   mode: yaml #storage
 
   resources:
+    #- url: /hacsfiles/lovelace-horizon-card/lovelace-horizon-card.js
+    #  type: module
+
     - url: /local/community/home-assistant-sun-card/home-assistant-sun-card.js
+      type: module
+
+    - url: /local/community/lovelace-horizon-card/lovelace-horizon-card.js
       type: module
 
     - url: /hacsfiles/vacuum-card/vacuum-card.js?hacstag=261291295222
@@ -191,7 +197,7 @@ lovelace:
 notify: !include notifications.yaml
 
 recorder:
-  purge_keep_days: 100
+  purge_keep_days: 21
 
 shell_command: !include shell.yaml
 

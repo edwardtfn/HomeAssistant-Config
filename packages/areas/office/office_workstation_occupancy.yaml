@@ -6,7 +6,7 @@ automation:
   - id: motion
     platform: state
     entity_id:
-    - binary_sensor.office_workstation_motion
+    - binary_sensor.office_workstation_presence
     to: 'on'
   condition: []
   action:
@@ -15,43 +15,52 @@ automation:
     - condition: or
       conditions:
       - condition: state
-        entity_id: switch.office_workstation_outlets_displays
+        entity_id: switch.office_workstation_power_strip_displays
         state: 'off'
       - condition: state
-        entity_id: switch.office_workstation_outlets_docking_station
+        entity_id: switch.office_workstation_power_strip_docking_station
         state: 'off'
     then:
-    - alias: Notification - Turning on the workstation
-      service: notify.edward_s_laptop
-      data:
-        message: Turning on workstation...
-      continue_on_error: true
-    - service: switch.turn_on
-      data: {}
-      target:
-        entity_id:
-        - switch.office_workstation_outlets_displays
-        - switch.office_workstation_outlets_docking_station
-      continue_on_error: true
-    enabled: true
+      - alias: Notification - Turning on the workstation
+        service: notify.edward_s_laptop
+        data:
+          message: Turning on workstation...
+        continue_on_error: true
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id:
+          - switch.office_workstation_power_strip_displays
+          - switch.office_workstation_power_strip_docking_station
+        continue_on_error: true
+    continue_on_error: true
+  - if:
+    - condition: state
+      entity_id: sensor.office_workstation_panel_currentpage
+      state: screensaver
+    then:
+      - service: esphome.hall_panel_send_command_printf
+        data:
+          cmd: page home
+        continue_on_error: true
     continue_on_error: true
   - alias: Wait until there is no motion from device
     wait_for_trigger:
     - platform: state
       entity_id:
-      - binary_sensor.office_workstation_motion
+      - binary_sensor.office_workstation_presence
       from: 'on'
       to: 'off'
   - if:
     - condition: state
-      entity_id: switch.office_workstation_outlets_displays
+      entity_id: switch.office_workstation_power_strip_displays
       state: 'on'
     then:
     - alias: Wait the number of seconds that has been set
       delay: 600
   - if:
     - condition: state
-      entity_id: switch.office_workstation_outlets_displays
+      entity_id: switch.office_workstation_power_strip_displays
       state: 'on'
     then:
     - alias: Notification - Turn off the displays soon
@@ -62,7 +71,7 @@ automation:
     - delay: 300
   - if:
     - condition: state
-      entity_id: switch.office_workstation_outlets_displays
+      entity_id: switch.office_workstation_power_strip_displays
       state: 'on'
     then:
     - alias: Notification - Turning off the displays
@@ -73,15 +82,28 @@ automation:
       continue_on_error: true
     - service: switch.turn_off
       target:
-        entity_id: switch.office_workstation_outlets_displays
+        entity_id: switch.office_workstation_power_strip_displays
       data: {}
-    - delay: 2700
+    continue_on_error: true
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.office_workstation_panel_currentpage
+        state: screensaver
+    then:
+      - service: esphome.hall_panel_send_command_printf
+        data:
+          cmd: page screensaver
+        continue_on_error: true
+    continue_on_error: true
+  - delay: 2700
   - if:
     - condition: state
-      entity_id: switch.office_workstation_outlets_displays
+      entity_id: switch.office_workstation_power_strip_displays
       state: 'off'
     - condition: state
-      entity_id: switch.office_workstation_outlets_docking_station
+      entity_id: switch.office_workstation_power_strip_docking_station
       state: 'off'
     then:
     - stop: Devices already off
@@ -95,10 +117,22 @@ automation:
   - service: homeassistant.turn_off
     target:
       entity_id:
-      - switch.office_workstation_outlets_displays
-      - switch.office_workstation_outlets_docking_station
+      - switch.office_workstation_power_strip_displays
+      - switch.office_workstation_power_strip_docking_station
       - light.office_workstation_lights
     data: {}
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.office_workstation_panel_currentpage
+        state: screensaver
+    then:
+      - service: esphome.hall_panel_send_command_printf
+        data:
+          cmd: page screensaver
+        continue_on_error: true
+    continue_on_error: true
   - service: button.press
     data: {}
     target:
@@ -106,18 +140,18 @@ automation:
   mode: restart
 
 binary_sensor:
-  - name: Office - Workstation - Motion
+  - name: Office - Workstation - Presence
     platform: group
     unique_id: 82ac4212-9cd5-4154-8e83-0a525b6c757c
     device_class: motion
     entities:
-      - binary_sensor.office_workstation_motion_top_occupancy
-      - binary_sensor.office_workstation_motion_bottom_occupancy
+      - binary_sensor.office_workstation_presence_motion
+      - binary_sensor.office_workstation_presence_occupancy
 
 sensor:
   - platform: history_stats
     name: Office - Workstation - Motion ratio in the last 10m
-    entity_id: binary_sensor.office_workstation_motion
+    entity_id: binary_sensor.office_workstation_presence
     state: "on"
     type: ratio
     #start: "{{ (now() + timedelta(minutes=-10)) }}"

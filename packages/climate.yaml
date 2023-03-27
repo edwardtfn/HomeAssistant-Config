@@ -46,23 +46,81 @@ automation:
   trigger:
   - platform: numeric_state
     entity_id:
-    - climate.bedroom_thermostat
+    - climate.bathroom_thermostat
+    - climate.guest_room_thermostat
+    - climate.guest_room_closet_thermostat
     - climate.kitchen_thermostat
     - climate.living_room_thermostat
-    - climate.office_thermostat_1
     attribute: current_humidity
     below: 35
     for:
       minutes: 5
+  - platform: numeric_state
+    entity_id:
+    - sensor.bedroom_hygrometer_humidity
+    - sensor.corridor_air_quality_humidity
+    - sensor.office_hygrometer_humidity
+    below: 35
+    for:
+      minutes: 5
   action:
-  - service: notify.signal_edward
+  - variables:
+      announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | 'the apartment') }}"
+  - service: notify.signal_group_home
     data:
-      message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} has reported
-        low humidity ({{ state_attr(trigger.entity_id, ''current_humidity'') }}%)
-        in the room.
+      message: "{{ announcement }}"
+  - if:
+      - condition: state
+        entity_id: schedule.home_quite_hours
+        state: "off"
+      - condition: state
+        entity_id: input_boolean.home_empty
+        state: "off"
+    then:
+      - service: notify.alexa_media
+        data:
+          message: "{{ announcement }}"
+          target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | 'the apartment')) if area_name(trigger.entity_id) != 'Kitchen' }}"
 
-        Please check the water level and power supply.'
   mode: single
+
+input_select:
+  phrases_low_humidity:
+    name: Phrases - Low humidity in a room
+    #unique_id: cdc79d47-45f7-4afb-8d8b-7f2442ba237d
+    options:
+      - "Alert: Humidity levels are low in room_name."
+      - "Warning: Low humidity levels detected in room_name."
+      - Humidity is below optimal levels in room_name.
+      - "Attention: Low humidity has been detected in room_name."
+      - Humidity levels are dangerously low in room_name.
+      - Low humidity detected in room_name, please take necessary precautions.
+      - Humidity levels are outside the optimal range in room_name.
+      - Humidity readings indicate a low level in room_name.
+      - Low humidity levels may cause discomfort in room_name.
+      - Humidity levels have fallen below the recommended range in room_name.
+      - Please be advised, humidity levels are low in room_name.
+      - Low humidity levels can lead to dryness and discomfort in room_name.
+      - Humidity levels are not at an optimal level in room_name.
+      - Low humidity can negatively impact air quality in room_name.
+      - "Alert: Humidity is too low for comfort in room_name."
+      - Humidity levels are insufficient for healthy living in room_name.
+      - Low humidity can cause dry skin and respiratory issues in room_name.
+      - Humidity levels indicate a dry environment in room_name.
+      - "Warning: Low humidity can damage furniture and wooden floors in room_name."
+      - Low humidity can cause static electricity buildup in room_name.
+      - Humidity levels are too low for proper plant growth in room_name.
+      - "Alert: Low humidity levels can cause allergies and respiratory problems in room_name."
+      - Humidity levels are below the recommended range for indoor comfort in room_name.
+      - Low humidity can lead to dehydration and fatigue in room_name.
+      - "Attention: Low humidity can cause nosebleeds and dry throat in room_name."
+      - Humidity readings suggest a dry and uncomfortable environment in room_name.
+      - Low humidity levels can cause damage to musical instruments in room_name.
+      - Humidity levels are insufficient for maintaining proper indoor humidity in room_name.
+      - Low humidity can cause eye irritation and skin dryness in room_name.
+      - "Alert: Humidity levels are below optimal levels for healthy living in room_name."
+      - Low humidity detected in room_name - please take action.
+      - "Warning: Humidity levels are low in room_name - check the humidity level."
 
 
 sensor:

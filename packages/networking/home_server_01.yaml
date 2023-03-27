@@ -1,4 +1,4 @@
-sensor:
+#sensor:
   #- platform: command_line
   #  name: Chrony clients
   #  command: "ssh -i /config/ssh_keys/id_rsa_homeassistant -o 'StrictHostKeyChecking=no' homeassistant@home-server-01.local sudo chronyc clients | grep '192.168.'' | wc -l"

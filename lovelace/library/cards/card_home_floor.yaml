@@ -584,7 +584,7 @@ elements:
     style:
       top: 2%
       left: 23%
-  - entity: switch.office_workstation_outlets_displays
+  - entity: switch.office_workstation_power_strip_displays
     type: state-icon
     tap_action:
       action: toggle
@@ -598,7 +598,7 @@ elements:
     style:
       top: 6%
       left: 19%
-  - entity: switch.office_workstation_power_strip_switch_1
+  - entity: switch.office_workstation_power_strip_eletronics_bench
     type: state-icon
     icon: mdi:electron-framework
     tap_action:
@@ -608,12 +608,12 @@ elements:
       left: 27%
   - type: conditional
     conditions:
-      - entity: binary_sensor.office_motion_occupancy
+      - entity: binary_sensor.office_motion_all
         state: 'on'
       - entity: input_boolean.home_display_motion_sensors
         state: 'on'
     elements:
-      - entity: binary_sensor.office_motion_occupancy
+      - entity: binary_sensor.office_motion_all
         type: state-icon
         icon: mdi:motion-sensor
         style:
@@ -621,14 +621,14 @@ elements:
           left: 32%
   - type: conditional
     conditions:
-      - entity: binary_sensor.office_workstation_motion
+      - entity: binary_sensor.office_workstation_presence
         state: 'on'
       - entity: input_boolean.home_display_motion_sensors
         state: 'on'
     elements:
-      - entity: binary_sensor.office_workstation_motion
+      - entity: binary_sensor.office_workstation_presence
         type: state-icon
-        icon: mdi:motion-sensor
+        icon: mdi:account
         style:
           top: 10%
           left: 12%

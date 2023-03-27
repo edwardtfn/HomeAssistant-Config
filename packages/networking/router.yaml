@@ -140,9 +140,93 @@ script:
       target:
         entity_id: switch.media_centre_power_strip_socket_1
 
+input_select:
+  home_guest_network_ssid_list:
+    name: Home - Guest network - SSID list
+    options:
+      - Access Point Break
+      - All Your Bandwidth
+      - Bandwidth Bay
+      - Connect Corner
+      - Connection Collect
+      - Don't Hack My WiFi
+      - Get Off My LAN!
+      - House LAN-nister
+      - House of Cards 1x5
+      - Hotspot Drop
+      - Internet's Open Bar
+      - Keep It On The Down
+      - LAN Before Time
+      - LAN of the Free
+      - Net Neutrality
+      - Net Work Cafe
+      - Net Work Your Way
+      - Netgear and Tear
+      - Networking Ninjas
+      - Network Neighbors
+      - Network Nook
+      - Network of Trust
+      - No Wi-Fi for You
+      - Password is...
+      - Social Connection
+      - Super LAN Bros
+      - Surf's Up, WiFi's Up
+      - The LAN Before Time
+      - The LAN Down Under
+      - The Mighty WiFi
+      - The Netmen
+      - The Netpocalypse
+      - The Network Nest
+      - The Promised LAN
+      - The Signal's Calling
+      - The Social Net
+      - The WiFi Awakens
+      - The WiFi Connection
+      - The WiFi Next Door
+      - The WiFi Zone
+      - The Wireless World
+      - The Wireless Wiz
+      - WiFi Fever
+      - WiFi and Chill
+      - WiFi at Last
+      - WiFi for Show
+      - WiFi in the Sky
+      - WiFi or Die
+      - WiFi Wizardry
+      - WiFi-Me-Not
+      - WiFi-nally
+      - Wi-Fi Unchained
+      - Wi-Fi, Why Not?
+      - Wi-Fight, Unite!
+      - Wi-Fry Chicken
+      - Wireless Forest
+      - Wireless Garden
+      - Wireless Wardrobe
+
 template:
   - binary_sensor:
     - name: Media centre - Internet status
       unique_id: c48b19c3-7288-477f-94b8-1c201b6ade7a
       device_class: connectivity
       state: "{{ states('binary_sensor.aimesh_router_wan') }}"
+
+  - trigger:
+      #- platform: time_pattern
+      #  minutes: "/5"
+      - platform: template
+        value_template: "{{ now().weekday() == 3 and now().hour == 4 }}"
+    sensor:
+      #- name: Home - Guest network - SSID
+      #  unique_id: 8e000686-b26c-4e32-badb-6a39fc3a7890
+      #  state: "{{ state_attr('input_select.home_guest_network_ssid_list', 'options') | random }}"
+      - name: Home - Guest network
+        unique_id: 99db9c44-6c34-43b6-90c6-1708b7988926
+        state: "{{ state_attr('input_select.home_guest_network_ssid_list', 'options') | random }}"
+        attributes:
+          password: >
+            {% set char_table = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_+*^!?" %}
+            {%- set ns = namespace( pass = "" ) %}
+            {%- for i in range(1, range(21, 27) | random) | list %}
+              {%- set ns.pass = ns.pass ~ char_table | random %}
+            {%- endfor %}
+            {{ ns.pass }}
