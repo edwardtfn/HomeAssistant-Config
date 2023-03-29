@@ -65,7 +65,7 @@ automation:
       minutes: 5
   action:
   - variables:
-      announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | 'the apartment') }}"
+      announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | default('the apartment')) }}"
   - service: notify.signal_group_home
     data:
       message: "{{ announcement }}"
@@ -79,8 +79,11 @@ automation:
     then:
       - service: notify.alexa_media
         data:
-          message: "{{ announcement }}"
-          target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | 'the apartment')) if area_name(trigger.entity_id) != 'Kitchen' }}"
+          message: >
+            {{ announcement }}
+
+            Humidity: {{ trigger.to_state.state | round(0) }}%
+          target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | default(None)) if area_name(trigger.entity_id) != 'Kitchen' }}"
 
   mode: single
 
@@ -89,20 +92,20 @@ input_select:
     name: Phrases - Low humidity in a room
     #unique_id: cdc79d47-45f7-4afb-8d8b-7f2442ba237d
     options:
-      - "Alert: Humidity levels are low in room_name."
-      - "Warning: Low humidity levels detected in room_name."
-      - Humidity is below optimal levels in room_name.
-      - "Attention: Low humidity has been detected in room_name."
-      - Humidity levels are dangerously low in room_name.
-      - Low humidity detected in room_name, please take necessary precautions.
-      - Humidity levels are outside the optimal range in room_name.
-      - Humidity readings indicate a low level in room_name.
-      - Low humidity levels may cause discomfort in room_name.
-      - Humidity levels have fallen below the recommended range in room_name.
-      - Please be advised, humidity levels are low in room_name.
-      - Low humidity levels can lead to dryness and discomfort in room_name.
-      - Humidity levels are not at an optimal level in room_name.
-      - Low humidity can negatively impact air quality in room_name.
+      - "Alert: Humidity levels in the room_name are low."
+      - "Warning: Low humidity levels detected in the room_name."
+      - Humidity in the room_name is below optimal levels.
+      - "Attention: Low humidity has been detected in the room_name."
+      - Humidity levels are dangerously low in the room_name.
+      - Low humidity detected in the room_name, please take necessary precautions.
+      - Humidity levels in the room_name are outside the optimal range.
+      - Humidity readings indicate a low level in the room_name.
+      - Low humidity levels may cause discomfort in the room_name.
+      - Humidity levels have fallen below the recommended range in the room_name.
+      - Please be advised, humidity levels are low in the room_name.
+      - Low humidity levels in the room_name can lead to dryness and discomfort.
+      - Humidity levels in the room_name are not at an optimal level.
+      - Low humidity can negatively impact air quality in the room_name.
       - "Alert: Humidity is too low for comfort in room_name."
       - Humidity levels are insufficient for healthy living in room_name.
       - Low humidity can cause dry skin and respiratory issues in room_name.

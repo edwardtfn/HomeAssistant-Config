@@ -59,7 +59,7 @@ automation:
     - service: notify.alexa_media
       data:
         message: "{{ announcement }}"
-        target: Kitchen, Office, Bedroom, Bathroom
+        target: Kitchen
       continue_on_error: true
   mode: single
 - alias: Hall - Intercom - No communication
