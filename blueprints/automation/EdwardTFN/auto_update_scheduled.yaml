@@ -287,7 +287,7 @@ action:
       input_schedule_monthday: !input schedule_monthday
       input_core_os_update_mode: !input core_os_update_mode
       input_firmware_update_mode: !input firmware_update_mode
-      input_general_update_mode: !input firmware_update_mode
+      input_general_update_mode: !input general_update_mode
       input_pause_entities: !input pause_entities
 
       core_update_entity: >-
