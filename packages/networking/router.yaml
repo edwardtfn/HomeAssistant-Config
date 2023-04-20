@@ -221,8 +221,9 @@ template:
       #  state: "{{ state_attr('input_select.home_guest_network_ssid_list', 'options') | random }}"
       - name: Home - Guest network
         unique_id: 99db9c44-6c34-43b6-90c6-1708b7988926
-        state: "{{ state_attr('input_select.home_guest_network_ssid_list', 'options') | random }}"
+        state: "{{ this.attributes.ssid is defined and this.attributes.ssid is string }}"
         attributes:
+          ssid: "{{ state_attr('input_select.home_guest_network_ssid_list', 'options') | random }}"
           password: >
             {% set char_table = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_+*^!?" %}
             {%- set ns = namespace( pass = "" ) %}
@@ -230,3 +231,4 @@ template:
               {%- set ns.pass = ns.pass ~ char_table | random %}
             {%- endfor %}
             {{ ns.pass }}
+          qrcode: "WIFI:S:{{ this.attributes.ssid | default('No SSID') }};T:WPA;P:{{ this.attributes.password | default('No password') }};;"

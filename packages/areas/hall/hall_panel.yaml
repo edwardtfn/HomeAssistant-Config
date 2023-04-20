@@ -6,8 +6,7 @@ automation:
   - platform: state
     entity_id:
     - light.hall_all_lights
-    - binary_sensor.hall_motion_occupancy
-    - binary_sensor.hall_motion_on_off
+    - binary_sensor.hall_presence
     - binary_sensor.hall_front_door
     not_to:
     - unknown
@@ -18,10 +17,7 @@ automation:
     - condition: or
       conditions:
       - condition: state
-        entity_id: binary_sensor.hall_motion_occupancy
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.hall_motion_on_off
+        entity_id: binary_sensor.hall_presence
         state: 'on'
       - condition: state
         entity_id: binary_sensor.hall_front_door
@@ -41,11 +37,8 @@ automation:
         - condition: not
           conditions:
           - condition: state
-            entity_id: binary_sensor.hall_motion_occupancy
+            entity_id: binary_sensor.hall_presence
             state: 'on'
-          - condition: state
-            entity_id: binary_sensor.hall_motion_on_off
-            state: 'off'
           - condition: state
             entity_id: binary_sensor.hall_front_door
             state: 'on'

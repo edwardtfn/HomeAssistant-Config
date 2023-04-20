@@ -68,22 +68,22 @@ automation:
       announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | default('the apartment')) }}"
   - service: notify.signal_group_home
     data:
-      message: "{{ announcement }}"
-  - if:
-      - condition: state
-        entity_id: schedule.home_quite_hours
-        state: "off"
-      - condition: state
-        entity_id: input_boolean.home_empty
-        state: "off"
-    then:
-      - service: notify.alexa_media
-        data:
-          message: >
-            {{ announcement }}
+      message: >
+        {{ announcement }}
 
-            Humidity: {{ trigger.to_state.state | round(0) }}%
-          target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | default(None)) if area_name(trigger.entity_id) != 'Kitchen' }}"
+        Humidity: {{ trigger.to_state.state | round(0) }}%
+  #- if:
+  #    - condition: state
+  #      entity_id: schedule.home_quite_hours
+  #      state: "off"
+  #    - condition: state
+  #      entity_id: input_boolean.home_empty
+  #      state: "off"
+  #  then:
+  #    - service: notify.alexa_media
+  #      data:
+  #        message: "{{ announcement }}"
+  #        target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | default(None)) if area_name(trigger.entity_id) != 'Kitchen' }}"
 
   mode: single
 

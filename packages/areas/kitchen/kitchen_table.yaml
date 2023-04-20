@@ -6,13 +6,13 @@ automation:
     path: EdwardTFN/light_motion_illuminance_2_levels.yaml
     input:
       motion_entity: binary_sensor.kitchen_table_occupancy_combined
-      lumens_entity: sensor.kitchen_table_motion_light_level
+      lumens_entity: sensor.kitchen_bench_motion_light_level
       light_target: light.kitchen_table_lights
       light_level_high: 90
       light_level_dimmer: 25
       no_motion_wait_to_dimming: 90
       max_sun_angle: 90
-      max_lumens: 50
+      max_lumens: 15
       pause_entities_on:
       - binary_sensor.living_room_tv_is_on
       - input_boolean.home_party_mode

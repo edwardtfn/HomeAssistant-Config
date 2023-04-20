@@ -6,7 +6,7 @@ generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrosta
     #min_humidity: 0
     #max_humidity: 100
     target_humidity: 45
-    away_humidity: 35
+    away_humidity: 30
     dry_tolerance: 2
     device_class: humidifier
     initial_state: true

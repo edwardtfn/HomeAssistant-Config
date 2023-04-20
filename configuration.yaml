@@ -197,7 +197,7 @@ lovelace:
 notify: !include notifications.yaml
 
 recorder:
-  purge_keep_days: 21
+  purge_keep_days: 15
 
 shell_command: !include shell.yaml
 

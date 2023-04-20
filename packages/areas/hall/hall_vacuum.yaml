@@ -76,3 +76,27 @@ automation:
         {{ state_attr(''vacuum.hall_roomba'', ''error'') }} ({{state_attr(''vacuum.hall_roomba'',
         ''error_code'')}})'
   mode: single
+
+
+switch:
+  - platform: template
+    switches:
+      hall_vacuum:
+        friendly_name: Hall - Vacuum
+        unique_id: 2917b087-741a-440a-bae9-4aa5bcf4dd3e
+        availability_template: "{{ has_value('vacuum.hall_roomba') }}"
+        value_template: "{{ is_state('vacuum.hall_roomba', 'cleaning') }}"
+        turn_on:
+          service: vacuum.start
+          target:
+            entity_id: vacuum.hall_roomba
+        turn_off:
+          service: vacuum.stop
+          target:
+            entity_id: vacuum.hall_roomba
+        icon_template: >-
+          {% if states('vacuum.hall_roomba') in ['cleaning', 'docked', 'returning'] %}
+            mdi:robot-vacuum
+          {% else %}
+            mdi:robot-vacuum-off
+          {% endif %}
