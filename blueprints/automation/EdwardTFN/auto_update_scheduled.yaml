@@ -24,13 +24,29 @@ blueprint:
   domain: automation
   source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/auto_update_scheduled.yaml
   input:
+    verbose_logging_bool:
+      name: Log addon progress with verbosity to the logbook?
+      default: false
+      selector:
+        boolean: {}
     backup_bool:
       name: Create a full backup before start the updates?
       #description: Note => This automation will skip the backup if another backup was completed in the last two hours before starting the updates.
       default: true
       selector:
         boolean:
-
+    max_backup_age:
+      name: Maximum backup age (or zero, to disable)
+      description:
+        This requires the [Google Drive Backup](https://github.com/sabeechen/hassio-google-drive-backup)
+        addon to be installed and configured to automatically backup, and provide
+        a sensor with the backup states. The setting only checks for the age of
+        the automatic backups from that addon, not the backups created internally
+        by this blueprint.
+      default: "00:00:00"
+      selector:
+        duration:
+          enable_day: true
     restart_bool:
       name: Force Home Assistant host to restart if required by any update?
       description: This won't affect updates where a restart is automatic, but for updates requiring a manual restart (quite common on HACS) this blueprint can automatically force a restart by the end of the updates.
@@ -281,8 +297,12 @@ action:
   ########## Refresh update list ##########
   - &recalc-update-list
     variables:
+      input_verbose_logging_bool: !input verbose_logging_bool
       input_backup_bool: !input backup_bool
       input_restart_bool: !input restart_bool
+
+      temp_max_backup_age: !input max_backup_age
+      input_max_backup_age_seconds: "{{ timedelta(days=temp_max_backup_age.days,hours=temp_max_backup_age.hours, minutes=temp_max_backup_age.minutes, seconds=temp_max_backup_age.seconds).total_seconds() }}"
 
       input_schedule_monthday: !input schedule_monthday
       input_core_os_update_mode: !input core_os_update_mode
@@ -424,30 +444,34 @@ action:
     then:
       - stop: Nothing to update
     else: []
-
   ########## Starting ##########
   - &logbook-variables
-    alias: "Logbook - variables"
+    if: "{{ input_verbose_logging_bool }}"
     continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: >-
-        Variables: 
-          input_backup_bool: {{ input_backup_bool }}, 
-          input_restart_bool: {{ input_restart_bool }}, 
-          input_schedule_monthday: {{ input_schedule_monthday }}, 
-          input_update_exclusions: {{ temp_input_update_exclusions }}, 
-          input_core_os_update_mode: {{ input_core_os_update_mode }}, 
-          input_firmware_update_mode: {{ input_firmware_update_mode }}, 
-          input_general_update_mode: {{ input_general_update_mode }}, 
-          core_update_entity: {{ core_update_entity }}, 
-          os_update_entity: {{ os_update_entity }}, 
-          supervisor_update_entity: {{ supervisor_update_entity }}, 
-          firmware_update_entities: {{ firmware_update_entities }}, 
-          general_update_entities; {{ general_update_entities }}, 
-          updates_list: {{ updates_list }}
+    then:
+      - alias: Logbook - variables
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: >-
+            Variables: 
+              input_backup_bool: {{ input_backup_bool }}, 
+              input_restart_bool: {{ input_restart_bool }}, 
+              input_verbose_logging_bool: {{ input_verbose_logging_bool }},
+              input_max_backup_age_seconds: {{ input_max_backup_age_seconds }},
+              input_schedule_monthday: {{ input_schedule_monthday }}, 
+              input_update_exclusions: {{ temp_input_update_exclusions }}, 
+              input_core_os_update_mode: {{ input_core_os_update_mode }}, 
+              input_firmware_update_mode: {{ input_firmware_update_mode }}, 
+              input_general_update_mode: {{ input_general_update_mode }}, 
+              core_update_entity: {{ core_update_entity }}, 
+              os_update_entity: {{ os_update_entity }}, 
+              supervisor_update_entity: {{ supervisor_update_entity }}, 
+              firmware_update_entities: {{ firmware_update_entities }}, 
+              general_update_entities; {{ general_update_entities }}, 
+              updates_list: {{ updates_list }}
 
   - alias: "Logbook - A new update is available"
     continue_on_error: true
@@ -491,6 +515,22 @@ action:
     default: []
 
   ########## Backup ##########
+  - alias: Check existing backups uploaded
+    continue_on_error: true
+    if:
+      - "{{ input_max_backup_age_seconds > 0 }}"
+    then:
+      - alias: Check if backup state is defined
+        if: >-
+          {{ not states.sensor.backup_state.state is defined or 
+          not states.sensor.backup_state.attributes.last_uploaded is defined }}
+        then:
+          - stop: "Backup State sensor not found"
+      - alias: Check age of last uploaded backup
+        if: >-
+          {{ as_timestamp(now()) - as_timestamp(state_attr('sensor.backup_state', 'last_uploaded')) > input_max_backup_age_seconds }}
+        then:
+          - stop: "Last uploaded backup is too old"
   - alias: "Backup"
     continue_on_error: true
     if:
