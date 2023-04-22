@@ -432,27 +432,32 @@ script:
     icon: mdi:restart
     mode: restart
     sequence:
-    - service: button.press
-      data: {}
-      target:
-        entity_id:
-        - button.aimesh_router_reboot
-        - button.aimesh_node_reboot
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 15
-        milliseconds: 0
-    - wait_for_trigger:
-      - platform: state
-        entity_id:
-        - sensor.aimesh_router_boot_time
-      timeout: 300
-    - service: button.press
-      data: {}
-      target:
-        entity_id: '{{ states.button | selectattr(''entity_id'', ''search'', ''reboot'')
-          | map(attribute=''entity_id'') | list }}'
+      - service: button.press
+        data: {}
+        target:
+          entity_id:
+            - button.aimesh_router_reboot
+            - button.aimesh_node_reboot
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 15
+          milliseconds: 0
+      - wait_for_trigger:
+          - platform: state
+            entity_id:
+              - sensor.aimesh_router_boot_time
+        timeout: 300
+      - service: button.press
+        data: {}
+        target:
+          entity_id: >
+            {{
+              states.button
+              | selectattr('entity_id', 'search', 'reboot')
+              | map(attribute='entity_id')
+              | list
+            }}
 
 template:
   - trigger:
