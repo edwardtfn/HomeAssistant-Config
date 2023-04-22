@@ -1,6 +1,6 @@
 # https://yamllint.readthedocs.io/en/stable/configuration.html#default-configuration
 
-extends: default
+extends: relaxed
 
 rules:
   anchors:

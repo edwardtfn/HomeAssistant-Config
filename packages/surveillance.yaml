@@ -282,47 +282,47 @@ script:
   camera_toggle:
     alias: Home - Surveillance - Toggle a camera
     sequence:
-    - variables:
-        switch_entity_id: '{{ (camera | replace(''camera.'',''switch.'')) + ''_enabled''
-          }}'
-    - if:
-      - condition: template
-        value_template: '{{ is_state(switch_entity_id, ''on'') }}'
-      then:
-      - service: camera.turn_off
-        data: {}
-        target:
-          entity_id: '{{ camera }}'
-        continue_on_error: true
-      - service: switch.turn_off
-        data: {}
-        target:
-          entity_id: '{{ switch_entity_id }}'
-        continue_on_error: true
-      else:
-      - service: switch.turn_on
-        data: {}
-        target:
-          entity_id: '{{ switch_entity_id }}'
-        continue_on_error: true
-      - service: camera.turn_on
-        data: {}
-        target:
-          entity_id: '{{ camera }}'
-        continue_on_error: true
+      - variables:
+          switch_entity_id: '{{ (camera | replace(''camera.'',''switch.'')) + ''_enabled''
+            }}'
+      - if:
+          - condition: template
+            value_template: '{{ is_state(switch_entity_id, ''on'') }}'
+        then:
+          - service: camera.turn_off
+            data: {}
+            target:
+              entity_id: '{{ camera }}'
+            continue_on_error: true
+          - service: switch.turn_off
+            data: {}
+            target:
+              entity_id: '{{ switch_entity_id }}'
+            continue_on_error: true
+        else:
+          - service: switch.turn_on
+            data: {}
+            target:
+              entity_id: '{{ switch_entity_id }}'
+            continue_on_error: true
+          - service: camera.turn_on
+            data: {}
+            target:
+              entity_id: '{{ camera }}'
+            continue_on_error: true
     mode: restart
     icon: mdi:cctv
   home_surveillance_turn_on_all_cameras:
     alias: Home - Surveillance - Turn on all cameras
     sequence:
-    - service: switch.turn_on
-      data: {}
-      target:
-        entity_id:
-        - switch.dogs_mat_camera_enabled
-        - switch.hall_camera_enabled
-        - switch.living_room_camera_enabled
-        - switch.office_camera_enabled
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id:
+            - switch.dogs_mat_camera_enabled
+            - switch.hall_camera_enabled
+            - switch.living_room_camera_enabled
+            - switch.office_camera_enabled
     mode: restart
     icon: mdi:cctv
   home_surveillance_turn_off_all_cameras:
@@ -330,11 +330,11 @@ script:
     mode: restart
     icon: mdi:cctv-off
     sequence:
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id:
-        - switch.dogs_mat_camera_enabled
-        - switch.hall_camera_enabled
-        - switch.living_room_camera_enabled
-        - switch.office_camera_enabled
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+            - switch.dogs_mat_camera_enabled
+            - switch.hall_camera_enabled
+            - switch.living_room_camera_enabled
+            - switch.office_camera_enabled

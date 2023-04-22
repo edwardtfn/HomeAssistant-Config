@@ -461,65 +461,65 @@ script:
 
 template:
   - trigger:
-    - id: Motion # When motion is detected
-      platform: state
-      entity_id:
-        - binary_sensor.bathroom_motion
-        - binary_sensor.bathroom_motion_dual_sensors_state
-        - binary_sensor.bathroom_motion_occupancy
-        - binary_sensor.bathroom_shower_motion_occupancy
-        - binary_sensor.guest_bathroom_motion_iaszone
-        - binary_sensor.guest_bathroom_motion_occupancy
-        - binary_sensor.guest_room_motion
-        - binary_sensor.hall_motion_occupancy
-        - binary_sensor.kitchen_bench_motion_occupancy
-        - binary_sensor.kitchen_bench_motion_on_off
-        - binary_sensor.kitchen_table_motion_occupancy
-        - binary_sensor.kitchen_table_motion_on_off
-        - binary_sensor.office_motion_occupancy
-        - binary_sensor.office_workstation_motion
-      from: "off"
-      to: "on"
-    - id: Others # When other activities are detected
-      platform: state
-      entity_id:
-        - binary_sensor.balcony_door
-        - binary_sensor.balcony_string_lights_channel_1_input
-        - binary_sensor.bathroom_ceiling_lights_channel_1_input
-        - binary_sensor.bathroom_door
-        - binary_sensor.bathroom_mirror_light_input
-        - binary_sensor.bedroom_ceiling_lights_input
-        - binary_sensor.bedroom_closet_door
-        - binary_sensor.bedroom_closet_lights_input
-        - binary_sensor.bedroom_dogs_bed_occupied
-        - binary_sensor.guest_bathroom_ceiling_light_input
-        - binary_sensor.guest_bathroom_door
-        - binary_sensor.guest_bathroom_mirror_lights_input
-        - binary_sensor.guest_room_closet_door
-        - binary_sensor.guest_room_closet_lights_input
-        - binary_sensor.guest_room_door
-        - binary_sensor.guest_room_door_outlets_ceiling_lights_input
-        - binary_sensor.hall_front_door
-        - binary_sensor.hall_panel_left_button
-        - binary_sensor.hall_panel_right_button
-        - binary_sensor.kitchen_ceiling_lights_table_lights_input
-        - binary_sensor.kitchen_ceiling_lights_windows_lights_input
-        - binary_sensor.kitchen_bench_left_light_input
-        - binary_sensor.kitchen_bench_right_light_input
-        - binary_sensor.kitchen_dishwasher_door
-        - binary_sensor.kitchen_windows
-        - binary_sensor.living_room_lights_map_wall_input
-        - binary_sensor.living_room_lights_tv_wall_input
-        - binary_sensor.living_room_windows_left
-        - binary_sensor.living_room_windows_right
-        - binary_sensor.office_door
-        - binary_sensor.office_windows_outlets_ceiling_lights_input
-      from:
-        - "on"
-        - "off"
-      to:
-        - "on"
-        - "off"
+      - id: Motion # When motion is detected
+        platform: state
+        entity_id:
+          - binary_sensor.bathroom_motion
+          - binary_sensor.bathroom_motion_dual_sensors_state
+          - binary_sensor.bathroom_motion_occupancy
+          - binary_sensor.bathroom_shower_motion_occupancy
+          - binary_sensor.guest_bathroom_motion_iaszone
+          - binary_sensor.guest_bathroom_motion_occupancy
+          - binary_sensor.guest_room_motion
+          - binary_sensor.hall_motion_occupancy
+          - binary_sensor.kitchen_bench_motion_occupancy
+          - binary_sensor.kitchen_bench_motion_on_off
+          - binary_sensor.kitchen_table_motion_occupancy
+          - binary_sensor.kitchen_table_motion_on_off
+          - binary_sensor.office_motion_occupancy
+          - binary_sensor.office_workstation_motion
+        from: "off"
+        to: "on"
+      - id: Others # When other activities are detected
+        platform: state
+        entity_id:
+          - binary_sensor.balcony_door
+          - binary_sensor.balcony_string_lights_channel_1_input
+          - binary_sensor.bathroom_ceiling_lights_channel_1_input
+          - binary_sensor.bathroom_door
+          - binary_sensor.bathroom_mirror_light_input
+          - binary_sensor.bedroom_ceiling_lights_input
+          - binary_sensor.bedroom_closet_door
+          - binary_sensor.bedroom_closet_lights_input
+          - binary_sensor.bedroom_dogs_bed_occupied
+          - binary_sensor.guest_bathroom_ceiling_light_input
+          - binary_sensor.guest_bathroom_door
+          - binary_sensor.guest_bathroom_mirror_lights_input
+          - binary_sensor.guest_room_closet_door
+          - binary_sensor.guest_room_closet_lights_input
+          - binary_sensor.guest_room_door
+          - binary_sensor.guest_room_door_outlets_ceiling_lights_input
+          - binary_sensor.hall_front_door
+          - binary_sensor.hall_panel_left_button
+          - binary_sensor.hall_panel_right_button
+          - binary_sensor.kitchen_ceiling_lights_table_lights_input
+          - binary_sensor.kitchen_ceiling_lights_windows_lights_input
+          - binary_sensor.kitchen_bench_left_light_input
+          - binary_sensor.kitchen_bench_right_light_input
+          - binary_sensor.kitchen_dishwasher_door
+          - binary_sensor.kitchen_windows
+          - binary_sensor.living_room_lights_map_wall_input
+          - binary_sensor.living_room_lights_tv_wall_input
+          - binary_sensor.living_room_windows_left
+          - binary_sensor.living_room_windows_right
+          - binary_sensor.office_door
+          - binary_sensor.office_windows_outlets_ceiling_lights_input
+        from:
+          - "on"
+          - "off"
+        to:
+          - "on"
+          - "off"
     sensor:
       - name: Home - Last activity
         unique_id: 90dca34c-260c-4c54-92cb-dbc760dcb2d4
