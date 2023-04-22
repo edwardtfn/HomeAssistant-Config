@@ -1,31 +1,31 @@
 automation:
-- alias: Kitchen - Table - Lights - Motion
-  id: '1668453604752'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-    input:
-      motion_entity: binary_sensor.kitchen_table_occupancy_combined
-      lumens_entity: sensor.kitchen_bench_motion_light_level
-      light_target: light.kitchen_table_lights
-      light_level_high: 90
-      light_level_dimmer: 25
-      no_motion_wait_to_dimming: 90
-      max_sun_angle: 90
-      max_lumens: 15
-      pause_entities_on:
-      - binary_sensor.living_room_tv_is_on
-      - input_boolean.home_party_mode
-      #occupancy_ratio_entity: sensor.kitchen_table_motion_ratio_in_the_last_10m
-      #occupancy_ratio_threshold: 10
-- alias: Kitchen - Table - Lights - Wall switch
-  id: '1661932373416'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_switch_toggle.yaml
-    input:
-      input_entity: binary_sensor.kitchen_ceiling_lights_table_lights_input
-      light_target: light.kitchen_table_lights
+  - alias: Kitchen - Table - Lights - Motion
+    id: '1668453604752'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/light_motion_illuminance_2_levels.yaml
+      input:
+        motion_entity: binary_sensor.kitchen_table_occupancy_combined
+        lumens_entity: sensor.kitchen_bench_motion_light_level
+        light_target: light.kitchen_table_lights
+        light_level_high: 90
+        light_level_dimmer: 25
+        no_motion_wait_to_dimming: 90
+        max_sun_angle: 90
+        max_lumens: 15
+        pause_entities_on:
+        - binary_sensor.living_room_tv_is_on
+        - input_boolean.home_party_mode
+        #occupancy_ratio_entity: sensor.kitchen_table_motion_ratio_in_the_last_10m
+        #occupancy_ratio_threshold: 10
+  - alias: Kitchen - Table - Lights - Wall switch
+    id: '1661932373416'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/light_switch_toggle.yaml
+      input:
+        input_entity: binary_sensor.kitchen_ceiling_lights_table_lights_input
+        light_target: light.kitchen_table_lights
 
 binary_sensor:
   - name: Kitchen - Table - Occupancy - Combined

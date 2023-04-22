@@ -1,11 +1,11 @@
 automation:
-- alias: Bedroom - Closet - Lights - Door based
-  id: '1661762745931'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/set_entities_based_on_other_entities.yaml
-    input:
-      input_entities:
-      - binary_sensor.bedroom_closet_door
-      target_entities:
-      - light.bedroom_closet_lights
+  - alias: Bedroom - Closet - Lights - Door based
+    id: '1661762745931'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/set_entities_based_on_other_entities.yaml
+      input:
+        input_entities:
+        - binary_sensor.bedroom_closet_door
+        target_entities:
+        - light.bedroom_closet_lights

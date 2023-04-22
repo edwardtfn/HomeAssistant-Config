@@ -1,27 +1,27 @@
 automation:
-- alias: Office - Lights - Motion based
-  id: '1669505865097'
-  use_blueprint:
-    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-    input:
-      motion_entity: binary_sensor.office_presence
-      lumens_entity: sensor.office_motion_light_level
-      light_target: light.office_ceiling_lines
-      no_motion_wait_to_dimming: 180
-      pause_entities_off:
-      - binary_sensor.office_door
-      light_level_high: 65
-      light_level_dimmer: 30
-      max_lumens: 30
-      occupancy_ratio_entity: []
-- alias: Office - Lights - Wall switch based
-  id: '1660893344529'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_switch_toggle.yaml
-    input:
-      input_entity: binary_sensor.office_windows_outlets_ceiling_lights_input
-      light_target: light.office_ceiling_lines
+  - alias: Office - Lights - Motion based
+    id: '1669505865097'
+    use_blueprint:
+      path: EdwardTFN/light_motion_illuminance_2_levels.yaml
+      input:
+        motion_entity: binary_sensor.office_presence
+        lumens_entity: sensor.office_motion_light_level
+        light_target: light.office_ceiling_lines
+        no_motion_wait_to_dimming: 180
+        pause_entities_off:
+        - binary_sensor.office_door
+        light_level_high: 65
+        light_level_dimmer: 30
+        max_lumens: 30
+        occupancy_ratio_entity: []
+  - alias: Office - Lights - Wall switch based
+    id: '1660893344529'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/light_switch_toggle.yaml
+      input:
+        input_entity: binary_sensor.office_windows_outlets_ceiling_lights_input
+        light_target: light.office_ceiling_lines
 
 light:
   - name: "Office - All lights"

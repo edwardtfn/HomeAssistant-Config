@@ -1,83 +1,83 @@
 automation:
-- alias: Hall - Intercom - Announce when ringing
-  id: '1673810955012'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.hall_intercom_input_channel_2
-    id: ringing
-    from: 'off'
-    to: 'on'
-  - platform: state
-    entity_id:
-    - binary_sensor.hall_intercom_input_channel_2
-    id: stopped
-    from: 'on'
-    to: 'off'
-  condition: []
-  variables:
-    announcement: >
-      {% if trigger.id == 'stopped' %}
-        The intercom stopped ringing.
-      {% else %}
-        {{
-          [
-            "You have a visitor at the front door.",
-            "Someone is at the entrance.",
-            "There's someone waiting for you downstairs.",
-            "You have a guest at the lobby.",
-            "Someone is trying to reach you at the main entrance.",
-            "There's someone waiting to see you downstairs.",
-            "You have a visitor at the intercom.",
-            "Someone is ringing the doorbell.",
-            "There's someone at the front gate.",
-            "You have a guest at the entryway.",
-            "Someone is calling you from the downstairs intercom.",
-            "There's someone waiting for you at the entrance.",
-            "You have a visitor at the building entrance.",
-            "Someone is trying to reach you through the intercom.",
-            "There's someone waiting to speak with you at the lobby.",
-            "You have a guest waiting for you at the main gate.",
-            "Someone is calling from the intercom downstairs.",
-            "There's someone at the door waiting to see you.",
-            "You have a visitor at the ground floor.",
-            "Someone is ringing the intercom, please answer."
-          ] | random
-        }}
-      {% endif %}
-  action:
-  - parallel:
-    - service: notify.signal_group_home
+  - alias: Hall - Intercom - Announce when ringing
+    id: '1673810955012'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.hall_intercom_input_channel_2
+      id: ringing
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id:
+      - binary_sensor.hall_intercom_input_channel_2
+      id: stopped
+      from: 'on'
+      to: 'off'
+    condition: []
+    variables:
+      announcement: >
+        {% if trigger.id == 'stopped' %}
+          The intercom stopped ringing.
+        {% else %}
+          {{
+            [
+              "You have a visitor at the front door.",
+              "Someone is at the entrance.",
+              "There's someone waiting for you downstairs.",
+              "You have a guest at the lobby.",
+              "Someone is trying to reach you at the main entrance.",
+              "There's someone waiting to see you downstairs.",
+              "You have a visitor at the intercom.",
+              "Someone is ringing the doorbell.",
+              "There's someone at the front gate.",
+              "You have a guest at the entryway.",
+              "Someone is calling you from the downstairs intercom.",
+              "There's someone waiting for you at the entrance.",
+              "You have a visitor at the building entrance.",
+              "Someone is trying to reach you through the intercom.",
+              "There's someone waiting to speak with you at the lobby.",
+              "You have a guest waiting for you at the main gate.",
+              "Someone is calling from the intercom downstairs.",
+              "There's someone at the door waiting to see you.",
+              "You have a visitor at the ground floor.",
+              "Someone is ringing the intercom, please answer."
+            ] | random
+          }}
+        {% endif %}
+    action:
+    - parallel:
+      - service: notify.signal_group_home
+        data:
+          message: "{{ announcement }}"
+        continue_on_error: true
+      - service: notify.all_devices
+        data:
+          message: "{{ announcement }}"
+        continue_on_error: true
+      - service: notify.alexa_media
+        data:
+          message: "{{ announcement }}"
+          target: Kitchen
+        continue_on_error: true
+    mode: single
+  - alias: Hall - Intercom - No communication
+    id: '1675431939704'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - device_tracker.hall_intercom
+      for:
+        hours: 0
+        minutes: 30
+        seconds: 0
+      from: home
+    condition: []
+    action:
+    - service: notify.signal_edward
       data:
-        message: "{{ announcement }}"
-      continue_on_error: true
-    - service: notify.all_devices
-      data:
-        message: "{{ announcement }}"
-      continue_on_error: true
-    - service: notify.alexa_media
-      data:
-        message: "{{ announcement }}"
-        target: Kitchen
-      continue_on_error: true
-  mode: single
-- alias: Hall - Intercom - No communication
-  id: '1675431939704'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - device_tracker.hall_intercom
-    for:
-      hours: 0
-      minutes: 30
-      seconds: 0
-    from: home
-  condition: []
-  action:
-  - service: notify.signal_edward
-    data:
-      message: The Shelly device monitoring the Intercom is out since more than 30min
-        ago.
-  mode: single
+        message: The Shelly device monitoring the Intercom is out since more than 30min
+          ago.
+    mode: single

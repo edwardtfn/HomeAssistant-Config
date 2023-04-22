@@ -1,11 +1,11 @@
 automation:
-- alias: Guest room - Closet - Light - Door based
-  id: '1661762547832'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/set_entities_based_on_other_entities.yaml
-    input:
-      input_entities:
-      - binary_sensor.guest_room_closet_door
-      target_entities:
-      - light.guest_room_closet_lights
+  - alias: Guest room - Closet - Light - Door based
+    id: '1661762547832'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/set_entities_based_on_other_entities.yaml
+      input:
+        input_entities:
+        - binary_sensor.guest_room_closet_door
+        target_entities:
+        - light.guest_room_closet_lights

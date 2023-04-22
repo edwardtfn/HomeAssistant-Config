@@ -1,27 +1,27 @@
 automation:
-- alias: Balcony - Covers - Open when the door opens
-  id: '1668275331938'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.balcony_door
-    from: 'off'
-    to: 'on'
-    id: Open
-  condition:
-  - condition: numeric_state
-    entity_id: cover.balcony_curtain
-    attribute: current_position
-    below: 90
-  action:
-  - service: cover.open_cover
-    data: {}
-    target:
+  - alias: Balcony - Covers - Open when the door opens
+    id: '1668275331938'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.balcony_door
+      from: 'off'
+      to: 'on'
+      id: Open
+    condition:
+    - condition: numeric_state
       entity_id: cover.balcony_curtain
-  - service: cover.set_cover_position
-    data:
-      position: 0
-    target:
-      entity_id: cover.balcony_curtain
-  mode: single
+      attribute: current_position
+      below: 90
+    action:
+    - service: cover.open_cover
+      data: {}
+      target:
+        entity_id: cover.balcony_curtain
+    - service: cover.set_cover_position
+      data:
+        position: 0
+      target:
+        entity_id: cover.balcony_curtain
+    mode: single

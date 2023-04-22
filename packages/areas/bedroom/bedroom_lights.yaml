@@ -1,118 +1,118 @@
 automation:
-- alias: Bedroom - Carol - Button
-  id: '1642659938498'
-  description: ''
-  trigger:
-  - device_id: 415ea4e93b7b40bfec831e00e8eed86b
-    domain: zha
-    platform: device
-    type: remote_button_short_press
-    subtype: remote_button_short_press
-    id: Click
-  - device_id: 415ea4e93b7b40bfec831e00e8eed86b
-    domain: zha
-    platform: device
-    type: remote_button_double_press
-    subtype: remote_button_double_press
-    id: Double click
-  - device_id: 415ea4e93b7b40bfec831e00e8eed86b
-    domain: zha
-    platform: device
-    type: remote_button_long_release
-    subtype: remote_button_long_release
-    id: Long press
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: Click
-      sequence:
-      - service: light.toggle
-        target:
-          entity_id:
-          - light.bedroom_carol_light
-        data:
-          transition: 1
-    - conditions:
-      - condition: trigger
-        id: Double click
-      sequence:
-      - service: light.toggle
-        data:
-          transition: 1
-        target:
-          entity_id:
-          - light.bedroom_edward_light
-    - conditions:
-      - condition: trigger
-        id: Long press
-      sequence:
-      - service: rest_command.switchbot_scenes_bedroom_samsung_tv_ok
-        data: {}
-    default: []
-  mode: single
-- alias: Bedroom - Edward - Button
-  id: '1642676595726'
-  description: ''
-  trigger:
-  - device_id: da7cc1e8cd02855ff9b5f6151462a92a
-    domain: zha
-    platform: device
-    type: remote_button_short_press
-    subtype: remote_button_short_press
-    id: Click
-  - device_id: da7cc1e8cd02855ff9b5f6151462a92a
-    domain: zha
-    platform: device
-    type: remote_button_double_press
-    subtype: remote_button_double_press
-    id: Double click
-  - device_id: da7cc1e8cd02855ff9b5f6151462a92a
-    domain: zha
-    platform: device
-    type: remote_button_long_release
-    subtype: remote_button_long_release
-    id: Long press
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: Click
-      sequence:
-      - service: light.toggle
-        target:
-          entity_id:
-          - light.bedroom_edward_light
-        data:
-          transition: 1
-    - conditions:
-      - condition: trigger
-        id: Double click
-      sequence:
-      - service: light.toggle
-        data:
-          transition: 1
-        target:
-          entity_id:
-          - light.bedroom_carol_light
-    - conditions:
-      - condition: trigger
-        id: Long press
-      sequence:
-      - service: rest_command.switchbot_scenes_bedroom_samsung_tv_ok
-        data: {}
-    default: []
-  mode: single
-- alias: Bedroom - Bed''s lights - Wall switch
-  id: '1660893434211'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_switch_toggle.yaml
-    input:
-      input_entity: binary_sensor.bedroom_ceiling_lights_input
-      light_target: light.bedroom_beds_lights
+  - alias: Bedroom - Carol - Button
+    id: '1642659938498'
+    description: ''
+    trigger:
+    - device_id: 415ea4e93b7b40bfec831e00e8eed86b
+      domain: zha
+      platform: device
+      type: remote_button_short_press
+      subtype: remote_button_short_press
+      id: Click
+    - device_id: 415ea4e93b7b40bfec831e00e8eed86b
+      domain: zha
+      platform: device
+      type: remote_button_double_press
+      subtype: remote_button_double_press
+      id: Double click
+    - device_id: 415ea4e93b7b40bfec831e00e8eed86b
+      domain: zha
+      platform: device
+      type: remote_button_long_release
+      subtype: remote_button_long_release
+      id: Long press
+    condition: []
+    action:
+    - choose:
+      - conditions:
+        - condition: trigger
+          id: Click
+        sequence:
+        - service: light.toggle
+          target:
+            entity_id:
+            - light.bedroom_carol_light
+          data:
+            transition: 1
+      - conditions:
+        - condition: trigger
+          id: Double click
+        sequence:
+        - service: light.toggle
+          data:
+            transition: 1
+          target:
+            entity_id:
+            - light.bedroom_edward_light
+      - conditions:
+        - condition: trigger
+          id: Long press
+        sequence:
+        - service: rest_command.switchbot_scenes_bedroom_samsung_tv_ok
+          data: {}
+      default: []
+    mode: single
+  - alias: Bedroom - Edward - Button
+    id: '1642676595726'
+    description: ''
+    trigger:
+    - device_id: da7cc1e8cd02855ff9b5f6151462a92a
+      domain: zha
+      platform: device
+      type: remote_button_short_press
+      subtype: remote_button_short_press
+      id: Click
+    - device_id: da7cc1e8cd02855ff9b5f6151462a92a
+      domain: zha
+      platform: device
+      type: remote_button_double_press
+      subtype: remote_button_double_press
+      id: Double click
+    - device_id: da7cc1e8cd02855ff9b5f6151462a92a
+      domain: zha
+      platform: device
+      type: remote_button_long_release
+      subtype: remote_button_long_release
+      id: Long press
+    condition: []
+    action:
+    - choose:
+      - conditions:
+        - condition: trigger
+          id: Click
+        sequence:
+        - service: light.toggle
+          target:
+            entity_id:
+            - light.bedroom_edward_light
+          data:
+            transition: 1
+      - conditions:
+        - condition: trigger
+          id: Double click
+        sequence:
+        - service: light.toggle
+          data:
+            transition: 1
+          target:
+            entity_id:
+            - light.bedroom_carol_light
+      - conditions:
+        - condition: trigger
+          id: Long press
+        sequence:
+        - service: rest_command.switchbot_scenes_bedroom_samsung_tv_ok
+          data: {}
+      default: []
+    mode: single
+  - alias: Bedroom - Bed''s lights - Wall switch
+    id: '1660893434211'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/light_switch_toggle.yaml
+      input:
+        input_entity: binary_sensor.bedroom_ceiling_lights_input
+        light_target: light.bedroom_beds_lights
 
 light:
   - platform: group

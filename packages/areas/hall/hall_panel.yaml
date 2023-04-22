@@ -1,56 +1,56 @@
 automation:
-- alias: Hall - Panel - Wake up with motion or door
-  id: '1672272202160'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - light.hall_all_lights
-    - binary_sensor.hall_presence
-    - binary_sensor.hall_front_door
-    not_to:
-    - unknown
-    - unavailable
-  condition: []
-  action:
-  - if:
-    - condition: or
-      conditions:
+  - alias: Hall - Panel - Wake up with motion or door
+    id: '1672272202160'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - light.hall_all_lights
+      - binary_sensor.hall_presence
+      - binary_sensor.hall_front_door
+      not_to:
+      - unknown
+      - unavailable
+    condition: []
+    action:
+    - if:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.hall_presence
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.hall_front_door
+          state: 'on'
+        - condition: state
+          entity_id: light.hall_all_lights
+          state: 'on'
       - condition: state
-        entity_id: binary_sensor.hall_presence
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.hall_front_door
-        state: 'on'
-      - condition: state
-        entity_id: light.hall_all_lights
-        state: 'on'
-    - condition: state
-      entity_id: sensor.hall_panel_nspanel_event
-      state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-    then:
-      - service: esphome.hall_panel_send_command_printf
-        data:
-          cmd: page home
-    else:
-      - if:
-        - condition: not
-          conditions:
-          - condition: state
-            entity_id: binary_sensor.hall_presence
-            state: 'on'
-          - condition: state
-            entity_id: binary_sensor.hall_front_door
-            state: 'on'
-          - condition: state
-            entity_id: light.hall_all_lights
-            state: 'on'
-          - condition: state
-            entity_id: sensor.hall_panel_nspanel_event
-            state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-        then:
-          - delay: 20
-          - service: esphome.hall_panel_send_command_printf
-            data:
-              cmd: page screensaver
-  mode: restart
+        entity_id: sensor.hall_panel_nspanel_event
+        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
+      then:
+        - service: esphome.hall_panel_send_command_printf
+          data:
+            cmd: page home
+      else:
+        - if:
+          - condition: not
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.hall_presence
+              state: 'on'
+            - condition: state
+              entity_id: binary_sensor.hall_front_door
+              state: 'on'
+            - condition: state
+              entity_id: light.hall_all_lights
+              state: 'on'
+            - condition: state
+              entity_id: sensor.hall_panel_nspanel_event
+              state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
+          then:
+            - delay: 20
+            - service: esphome.hall_panel_send_command_printf
+              data:
+                cmd: page screensaver
+    mode: restart

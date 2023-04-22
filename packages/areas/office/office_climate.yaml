@@ -1,16 +1,17 @@
 automation:
-- alias: Office - Climate - Windows based
-  id: '1671275373606'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/tado_windows.yaml
-    input:
-      window_entity:
-      - binary_sensor.office_windows_1
-      - binary_sensor.office_windows_2_opening
-      climate_target:
-      - climate.office_thermostat_1
-      - climate.office_thermostat_2
+  - alias: Office - Climate - Windows based
+    id: '1671275373606'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/tado_windows.yaml
+      input:
+        window_entity:
+        - binary_sensor.office_windows_1
+        - binary_sensor.office_windows_2_opening
+        climate_target:
+        - climate.office_thermostat_1
+        - climate.office_thermostat_2
+
 climate:
   - platform: climate_group # https://github.com/daenny/climate_group
     name: Office - Thermostat

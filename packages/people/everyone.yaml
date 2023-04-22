@@ -1,30 +1,29 @@
 automation:
-- alias: Home - Tracker - When person changes
-  id: '1644249978268'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - person.carolina_costa
-    - person.edward_firmo
-    - person.dory
-    - person.skal
-    - lock.vw_passat_door_locked
-    - binary_sensor.vw_passat_vehicle_moving
-  condition:
-  - condition: template
-    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
-    enabled: true
-  action:
-  - service: notify.signal_edward
-    data:
-      message: >
-        {{trigger.to_state.name}} changed from {{trigger.from_state.state}} to {{trigger.to_state.state}} by {{ trigger.to_state.attributes.source }}
+  - alias: Home - Tracker - When person changes
+    id: '1644249978268'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - person.carolina_costa
+      - person.edward_firmo
+      - person.dory
+      - person.skal
+      - lock.vw_passat_door_locked
+      - binary_sensor.vw_passat_vehicle_moving
+    condition:
+    - condition: template
+      value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+      enabled: true
+    action:
+    - service: notify.signal_edward
+      data:
+        message: >
+          {{trigger.to_state.name}} changed from {{trigger.from_state.state}} to {{trigger.to_state.state}} by {{ trigger.to_state.attributes.source }}
 
-        Additional info: {{ trigger }}
-  mode: parallel
-  max: 10
-
+          Additional info: {{ trigger }}
+    mode: parallel
+    max: 10
 
 group:
   everyone:

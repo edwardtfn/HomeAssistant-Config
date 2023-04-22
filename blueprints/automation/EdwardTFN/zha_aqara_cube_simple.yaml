@@ -251,100 +251,100 @@ action:
           - '{{ activated_face == 2 }}'
         sequence:
           - choose:
-            - conditions:
-                - '{{ command == ''flip'' }}'
-              sequence: !input face_2_flip
-            - conditions:
-                - '{{ command == ''knock'' }}'
-              sequence: !input face_2_knock
-            - conditions:
-                - '{{ command == ''rotate_left'' }}'
-              sequence: !input face_2_rotate_counter_clockwise
-            - conditions:
-                - '{{ command == ''rotate_right'' }}'
-              sequence: !input face_2_rotate_clockwise
-            - conditions:
-                - '{{ command == ''slide'' }}'
-              sequence: !input face_2_slide
+              - conditions:
+                  - '{{ command == ''flip'' }}'
+                sequence: !input face_2_flip
+              - conditions:
+                  - '{{ command == ''knock'' }}'
+                sequence: !input face_2_knock
+              - conditions:
+                  - '{{ command == ''rotate_left'' }}'
+                sequence: !input face_2_rotate_counter_clockwise
+              - conditions:
+                  - '{{ command == ''rotate_right'' }}'
+                sequence: !input face_2_rotate_clockwise
+              - conditions:
+                  - '{{ command == ''slide'' }}'
+                sequence: !input face_2_slide
             default: []
       - conditions:
           - '{{ activated_face == 3 }}'
         sequence:
           - choose:
-            - conditions:
-                - '{{ command == ''flip'' }}'
-              sequence: !input face_3_flip
-            - conditions:
-                - '{{ command == ''knock'' }}'
-              sequence: !input face_3_knock
-            - conditions:
-                - '{{ command == ''rotate_left'' }}'
-              sequence: !input face_3_rotate_counter_clockwise
-            - conditions:
-                - '{{ command == ''rotate_right'' }}'
-              sequence: !input face_3_rotate_clockwise
-            - conditions:
-                - '{{ command == ''slide'' }}'
-              sequence: !input face_3_slide
+              - conditions:
+                  - '{{ command == ''flip'' }}'
+                sequence: !input face_3_flip
+              - conditions:
+                  - '{{ command == ''knock'' }}'
+                sequence: !input face_3_knock
+              - conditions:
+                  - '{{ command == ''rotate_left'' }}'
+                sequence: !input face_3_rotate_counter_clockwise
+              - conditions:
+                  - '{{ command == ''rotate_right'' }}'
+                sequence: !input face_3_rotate_clockwise
+              - conditions:
+                  - '{{ command == ''slide'' }}'
+                sequence: !input face_3_slide
             default: []
       - conditions:
           - '{{ activated_face == 4 }}'
         sequence:
           - choose:
-            - conditions:
-                - '{{ command == ''flip'' }}'
-              sequence: !input face_4_flip
-            - conditions:
-                - '{{ command == ''knock'' }}'
-              sequence: !input face_4_knock
-            - conditions:
-                - '{{ command == ''rotate_left'' }}'
-              sequence: !input face_4_rotate_counter_clockwise
-            - conditions:
-                - '{{ command == ''rotate_right'' }}'
-              sequence: !input face_4_rotate_clockwise
-            - conditions:
-                - '{{ command == ''slide'' }}'
-              sequence: !input face_4_slide
+              - conditions:
+                  - '{{ command == ''flip'' }}'
+                sequence: !input face_4_flip
+              - conditions:
+                  - '{{ command == ''knock'' }}'
+                sequence: !input face_4_knock
+              - conditions:
+                  - '{{ command == ''rotate_left'' }}'
+                sequence: !input face_4_rotate_counter_clockwise
+              - conditions:
+                  - '{{ command == ''rotate_right'' }}'
+                sequence: !input face_4_rotate_clockwise
+              - conditions:
+                  - '{{ command == ''slide'' }}'
+                sequence: !input face_4_slide
             default: []
       - conditions:
           - '{{ activated_face == 5 }}'
         sequence:
           - choose:
-            - conditions:
-                - '{{ command == ''flip'' }}'
-              sequence: !input face_5_flip
-            - conditions:
-                - '{{ command == ''knock'' }}'
-              sequence: !input face_5_knock
-            - conditions:
-                - '{{ command == ''rotate_left'' }}'
-              sequence: !input face_5_rotate_counter_clockwise
-            - conditions:
-                - '{{ command == ''rotate_right'' }}'
-              sequence: !input face_5_rotate_clockwise
-            - conditions:
-                - '{{ command == ''slide'' }}'
-              sequence: !input face_5_slide
+              - conditions:
+                  - '{{ command == ''flip'' }}'
+                sequence: !input face_5_flip
+              - conditions:
+                  - '{{ command == ''knock'' }}'
+                sequence: !input face_5_knock
+              - conditions:
+                  - '{{ command == ''rotate_left'' }}'
+                sequence: !input face_5_rotate_counter_clockwise
+              - conditions:
+                  - '{{ command == ''rotate_right'' }}'
+                sequence: !input face_5_rotate_clockwise
+              - conditions:
+                  - '{{ command == ''slide'' }}'
+                sequence: !input face_5_slide
             default: []
       - conditions:
           - '{{ activated_face == 6 }}'
         sequence:
           - choose:
-            - conditions:
-                - '{{ command == ''flip'' }}'
-              sequence: !input face_6_flip
-            - conditions:
-                - '{{ command == ''knock'' }}'
-              sequence: !input face_6_knock
-            - conditions:
-                - '{{ command == ''rotate_left'' }}'
-              sequence: !input face_6_rotate_counter_clockwise
-            - conditions:
-                - '{{ command == ''rotate_right'' }}'
-              sequence: !input face_6_rotate_clockwise
-            - conditions:
-                - '{{ command == ''slide'' }}'
-              sequence: !input face_6_slide
+              - conditions:
+                  - '{{ command == ''flip'' }}'
+                sequence: !input face_6_flip
+              - conditions:
+                  - '{{ command == ''knock'' }}'
+                sequence: !input face_6_knock
+              - conditions:
+                  - '{{ command == ''rotate_left'' }}'
+                sequence: !input face_6_rotate_counter_clockwise
+              - conditions:
+                  - '{{ command == ''rotate_right'' }}'
+                sequence: !input face_6_rotate_clockwise
+              - conditions:
+                  - '{{ command == ''slide'' }}'
+                sequence: !input face_6_slide
             default: []
     default: []

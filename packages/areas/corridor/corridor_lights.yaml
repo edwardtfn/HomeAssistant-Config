@@ -1,23 +1,23 @@
 automation:
-- alias: Corridor - Lights - Wall switch
-  id: '1668689023036'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_switch_toggle.yaml
-    input:
-      input_entity: binary_sensor.corridor_ceiling_lights_input
-      light_target: light.corridor_all_lights
-- alias: Corridor - Lights - Motion
-  id: '1668778797533'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-    input:
-      motion_entity: binary_sensor.corridor_motion_occupancy
-      lumens_entity: sensor.corridor_motion_light_level
-      light_target: light.corridor_all_lights
-      light_level_high: 25
-      light_level_dimmer: 10
+  - alias: Corridor - Lights - Wall switch
+    id: '1668689023036'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/light_switch_toggle.yaml
+      input:
+        input_entity: binary_sensor.corridor_ceiling_lights_input
+        light_target: light.corridor_all_lights
+  - alias: Corridor - Lights - Motion
+    id: '1668778797533'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/light_motion_illuminance_2_levels.yaml
+      input:
+        motion_entity: binary_sensor.corridor_motion_occupancy
+        lumens_entity: sensor.corridor_motion_light_level
+        light_target: light.corridor_all_lights
+        light_level_high: 25
+        light_level_dimmer: 10
 
 light:
   - platform: group

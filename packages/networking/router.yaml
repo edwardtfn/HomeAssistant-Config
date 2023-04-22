@@ -1,124 +1,124 @@
 automation:
-- alias: Media centre - Router - WAN IP changed
-  id: '1670957751694'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - sensor.aimesh_router_wan_ip
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-    not_from:
-    - unknown
-    - unavailable
-  condition: []
-  action:
-  - service: notify.signal_edward
-    data:
-      message: The WAN IP address has changed from {{ trigger.from_state.state }}
-        to {{ trigger.to_state.state }}.
-  mode: single
-- alias: Media centre - Router - Recover when frozen
-  id: '1668551792507'
-  description: ''
-  trigger:
-  - id: Restart HTTP service
-    platform: state
-    entity_id:
-    - sensor.aimesh_router_cpu
-    - sensor.aimesh_router_ram
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
-  - id: Reboot router
-    platform: state
-    entity_id:
-    - sensor.aimesh_router_cpu
-    - sensor.aimesh_router_ram
-    for:
-      hours: 0
-      minutes: 20
-      seconds: 0
-  - id: Power cycle router
-    platform: state
-    entity_id:
-    - sensor.aimesh_router_cpu
-    - sensor.aimesh_router_ram
-    for:
-      minutes: 30
-  condition: []
-  action:
-  - service: notify.signal_edward
-    data:
-      message: 'Router is not updating {{ state_attr(trigger.entity_id, ''friendly_name'')
-        }}.
+  - alias: Media centre - Router - WAN IP changed
+    id: '1670957751694'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - sensor.aimesh_router_wan_ip
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+      not_from:
+      - unknown
+      - unavailable
+    condition: []
+    action:
+    - service: notify.signal_edward
+      data:
+        message: The WAN IP address has changed from {{ trigger.from_state.state }}
+          to {{ trigger.to_state.state }}.
+    mode: single
+  - alias: Media centre - Router - Recover when frozen
+    id: '1668551792507'
+    description: ''
+    trigger:
+    - id: Restart HTTP service
+      platform: state
+      entity_id:
+      - sensor.aimesh_router_cpu
+      - sensor.aimesh_router_ram
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+    - id: Reboot router
+      platform: state
+      entity_id:
+      - sensor.aimesh_router_cpu
+      - sensor.aimesh_router_ram
+      for:
+        hours: 0
+        minutes: 20
+        seconds: 0
+    - id: Power cycle router
+      platform: state
+      entity_id:
+      - sensor.aimesh_router_cpu
+      - sensor.aimesh_router_ram
+      for:
+        minutes: 30
+    condition: []
+    action:
+    - service: notify.signal_edward
+      data:
+        message: 'Router is not updating {{ state_attr(trigger.entity_id, ''friendly_name'')
+          }}.
 
-        State: {{ states(trigger.entity_id) }}
+          State: {{ states(trigger.entity_id) }}
 
-        Last changed: {{ trigger.to_state.last_changed | default(''unavailable'')
-        }}
+          Last changed: {{ trigger.to_state.last_changed | default(''unavailable'')
+          }}
 
-        Recovery action: {{ trigger.id }}.'
-    continue_on_error: true
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: Restart HTTP service
-      sequence:
-      - service: button.press
-        data: {}
-        target:
-          entity_id: button.aimesh_router_restart_http_daemon
-    - conditions:
-      - condition: trigger
-        id: Reboot router
-      sequence:
-      - service: button.press
-        data: {}
-        target:
-          entity_id: button.aimesh_router_reboot
-    - conditions:
-      - condition: trigger
-        id: Power cycle router
-      sequence:
-      - service: script.media_centre_router_power_cycle
-        data: {}
-  mode: single
-- alias: Home - Network - New device connected
-  id: '1666531818056'
-  description: Create a HA notification for any new device connected to the local
-    network
-  trigger:
-  - platform: event
-    event_type: asusrouter_device_connected
-  condition: []
-  action:
-  - service: persistent_notification.create
-    data_template:
-      title: Device has joined the local network
-      message: 'MAC: {{trigger.event.data.mac}}, IP: {{trigger.event.data.ip}}, name:
-        {{trigger.event.data.name}}'
-    continue_on_error: true
-  - service: notify.signal_edward
-    data:
-      message: 'A new device joined the local network:
+          Recovery action: {{ trigger.id }}.'
+      continue_on_error: true
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 5
+        milliseconds: 0
+    - choose:
+      - conditions:
+        - condition: trigger
+          id: Restart HTTP service
+        sequence:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.aimesh_router_restart_http_daemon
+      - conditions:
+        - condition: trigger
+          id: Reboot router
+        sequence:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.aimesh_router_reboot
+      - conditions:
+        - condition: trigger
+          id: Power cycle router
+        sequence:
+        - service: script.media_centre_router_power_cycle
+          data: {}
+    mode: single
+  - alias: Home - Network - New device connected
+    id: '1666531818056'
+    description: Create a HA notification for any new device connected to the local
+      network
+    trigger:
+    - platform: event
+      event_type: asusrouter_device_connected
+    condition: []
+    action:
+    - service: persistent_notification.create
+      data_template:
+        title: Device has joined the local network
+        message: 'MAC: {{trigger.event.data.mac}}, IP: {{trigger.event.data.ip}}, name:
+          {{trigger.event.data.name}}'
+      continue_on_error: true
+    - service: notify.signal_edward
+      data:
+        message: 'A new device joined the local network:
 
-        Name: {{trigger.event.data.name}}
+          Name: {{trigger.event.data.name}}
 
-        IP: {{trigger.event.data.ip}}
+          IP: {{trigger.event.data.ip}}
 
-        MAC: {{trigger.event.data.mac}}'
-    continue_on_error: true
-  mode: queued
-  max: 100
+          MAC: {{trigger.event.data.mac}}'
+      continue_on_error: true
+    mode: queued
+    max: 100
 
 script:
   media_centre_router_power_cycle:

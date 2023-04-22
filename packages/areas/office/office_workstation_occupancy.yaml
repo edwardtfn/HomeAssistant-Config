@@ -1,143 +1,143 @@
 automation:
-- alias: Office - Workstation - Occupation based
-  id: '1668783696394'
-  description: ''
-  trigger:
-  - id: motion
-    platform: state
-    entity_id:
-    - binary_sensor.office_workstation_presence
-    to: 'on'
-  condition: []
-  action:
-  - alias: Turn on the workstation
-    if:
-    - condition: or
-      conditions:
+  - alias: Office - Workstation - Occupation based
+    id: '1668783696394'
+    description: ''
+    trigger:
+    - id: motion
+      platform: state
+      entity_id:
+      - binary_sensor.office_workstation_presence
+      to: 'on'
+    condition: []
+    action:
+    - alias: Turn on the workstation
+      if:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: switch.office_workstation_power_strip_displays
+          state: 'off'
+        - condition: state
+          entity_id: switch.office_workstation_power_strip_docking_station
+          state: 'off'
+      then:
+        - alias: Notification - Turning on the workstation
+          service: notify.edward_s_laptop
+          data:
+            message: Turning on workstation...
+          continue_on_error: true
+        - service: switch.turn_on
+          data: {}
+          target:
+            entity_id:
+            - switch.office_workstation_power_strip_displays
+            - switch.office_workstation_power_strip_docking_station
+          continue_on_error: true
+      continue_on_error: true
+    - if:
+      - condition: state
+        entity_id: sensor.office_workstation_panel_nspanel_event
+        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
+      then:
+        - service: esphome.hall_panel_send_command_printf
+          data:
+            cmd: page home
+          continue_on_error: true
+      continue_on_error: true
+    - alias: Wait until there is no motion from device
+      wait_for_trigger:
+      - platform: state
+        entity_id:
+        - binary_sensor.office_workstation_presence
+        from: 'on'
+        to: 'off'
+    - if:
+      - condition: state
+        entity_id: switch.office_workstation_power_strip_displays
+        state: 'on'
+      then:
+      - alias: Wait the number of seconds that has been set
+        delay: 600
+    - if:
+      - condition: state
+        entity_id: switch.office_workstation_power_strip_displays
+        state: 'on'
+      then:
+      - alias: Notification - Turn off the displays soon
+        service: notify.edward_s_laptop
+        data:
+          message: Workstation will turn off soon...
+        continue_on_error: true
+      - delay: 300
+    - if:
+      - condition: state
+        entity_id: switch.office_workstation_power_strip_displays
+        state: 'on'
+      then:
+      - alias: Notification - Turning off the displays
+        service: notify.edward_s_laptop
+        data:
+          message: Turning off displays...
+        enabled: true
+        continue_on_error: true
+      - service: switch.turn_off
+        target:
+          entity_id: switch.office_workstation_power_strip_displays
+        data: {}
+      continue_on_error: true
+    - if:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.office_workstation_panel_nspanel_event
+          state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
+      then:
+        - service: esphome.hall_panel_send_command_printf
+          data:
+            cmd: page screensaver
+          continue_on_error: true
+      continue_on_error: true
+    - delay: 2700
+    - if:
       - condition: state
         entity_id: switch.office_workstation_power_strip_displays
         state: 'off'
       - condition: state
         entity_id: switch.office_workstation_power_strip_docking_station
         state: 'off'
-    then:
-      - alias: Notification - Turning on the workstation
-        service: notify.edward_s_laptop
-        data:
-          message: Turning on workstation...
-        continue_on_error: true
-      - service: switch.turn_on
-        data: {}
-        target:
-          entity_id:
-          - switch.office_workstation_power_strip_displays
-          - switch.office_workstation_power_strip_docking_station
-        continue_on_error: true
-    continue_on_error: true
-  - if:
-    - condition: state
-      entity_id: sensor.office_workstation_panel_nspanel_event
-      state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-    then:
-      - service: esphome.hall_panel_send_command_printf
-        data:
-          cmd: page home
-        continue_on_error: true
-    continue_on_error: true
-  - alias: Wait until there is no motion from device
-    wait_for_trigger:
-    - platform: state
-      entity_id:
-      - binary_sensor.office_workstation_presence
-      from: 'on'
-      to: 'off'
-  - if:
-    - condition: state
-      entity_id: switch.office_workstation_power_strip_displays
-      state: 'on'
-    then:
-    - alias: Wait the number of seconds that has been set
-      delay: 600
-  - if:
-    - condition: state
-      entity_id: switch.office_workstation_power_strip_displays
-      state: 'on'
-    then:
-    - alias: Notification - Turn off the displays soon
+      then:
+      - stop: Devices already off
+    - alias: Notification - Turning off docking station
       service: notify.edward_s_laptop
       data:
-        message: Workstation will turn off soon...
-      continue_on_error: true
-    - delay: 300
-  - if:
-    - condition: state
-      entity_id: switch.office_workstation_power_strip_displays
-      state: 'on'
-    then:
-    - alias: Notification - Turning off the displays
-      service: notify.edward_s_laptop
-      data:
-        message: Turning off displays...
+        message: Turning off docking station...
       enabled: true
       continue_on_error: true
-    - service: switch.turn_off
+    - delay: 5
+    - service: homeassistant.turn_off
       target:
-        entity_id: switch.office_workstation_power_strip_displays
+        entity_id:
+        - switch.office_workstation_power_strip_displays
+        - switch.office_workstation_power_strip_docking_station
+        - light.office_workstation_lights
       data: {}
-    continue_on_error: true
-  - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: sensor.office_workstation_panel_nspanel_event
-        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-    then:
-      - service: esphome.hall_panel_send_command_printf
-        data:
-          cmd: page screensaver
-        continue_on_error: true
-    continue_on_error: true
-  - delay: 2700
-  - if:
-    - condition: state
-      entity_id: switch.office_workstation_power_strip_displays
-      state: 'off'
-    - condition: state
-      entity_id: switch.office_workstation_power_strip_docking_station
-      state: 'off'
-    then:
-    - stop: Devices already off
-  - alias: Notification - Turning off docking station
-    service: notify.edward_s_laptop
-    data:
-      message: Turning off docking station...
-    enabled: true
-    continue_on_error: true
-  - delay: 5
-  - service: homeassistant.turn_off
-    target:
-      entity_id:
-      - switch.office_workstation_power_strip_displays
-      - switch.office_workstation_power_strip_docking_station
-      - light.office_workstation_lights
-    data: {}
-  - if:
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: sensor.office_workstation_panel_nspanel_event
-        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-    then:
-      - service: esphome.hall_panel_send_command_printf
-        data:
-          cmd: page screensaver
-        continue_on_error: true
-    continue_on_error: true
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.mobile_edwards_laptop_sleep
-  mode: restart
+    - if:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.office_workstation_panel_nspanel_event
+          state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
+      then:
+        - service: esphome.hall_panel_send_command_printf
+          data:
+            cmd: page screensaver
+          continue_on_error: true
+      continue_on_error: true
+    - service: button.press
+      data: {}
+      target:
+        entity_id: button.mobile_edwards_laptop_sleep
+    mode: restart
 
 binary_sensor:
   - name: Office - Workstation - Presence
