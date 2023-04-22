@@ -92,4 +92,3 @@ action:
     data:
       message: "Skipping major updates: {{ list_of_skip_entity_id | join(', ') }}"
     continue_on_error: true
-
