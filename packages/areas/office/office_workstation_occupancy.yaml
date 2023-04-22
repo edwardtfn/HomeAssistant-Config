@@ -36,8 +36,8 @@ automation:
     continue_on_error: true
   - if:
     - condition: state
-      entity_id: sensor.office_workstation_panel_currentpage
-      state: screensaver
+      entity_id: sensor.office_workstation_panel_nspanel_event
+      state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
     then:
       - service: esphome.hall_panel_send_command_printf
         data:
@@ -89,8 +89,8 @@ automation:
     - condition: not
       conditions:
       - condition: state
-        entity_id: sensor.office_workstation_panel_currentpage
-        state: screensaver
+        entity_id: sensor.office_workstation_panel_nspanel_event
+        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
     then:
       - service: esphome.hall_panel_send_command_printf
         data:
@@ -125,8 +125,8 @@ automation:
     - condition: not
       conditions:
       - condition: state
-        entity_id: sensor.office_workstation_panel_currentpage
-        state: screensaver
+        entity_id: sensor.office_workstation_panel_nspanel_event
+        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
     then:
       - service: esphome.hall_panel_send_command_printf
         data:

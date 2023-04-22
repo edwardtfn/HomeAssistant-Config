@@ -26,8 +26,8 @@ automation:
         entity_id: light.hall_all_lights
         state: 'on'
     - condition: state
-      entity_id: sensor.hall_panel_currentpage
-      state: screensaver
+      entity_id: sensor.hall_panel_nspanel_event
+      state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
     then:
       - service: esphome.hall_panel_send_command_printf
         data:
@@ -46,8 +46,8 @@ automation:
             entity_id: light.hall_all_lights
             state: 'on'
           - condition: state
-            entity_id: sensor.hall_panel_currentpage
-            state: screensaver
+            entity_id: sensor.hall_panel_nspanel_event
+            state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
         then:
           - delay: 20
           - service: esphome.hall_panel_send_command_printf
