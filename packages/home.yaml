@@ -21,31 +21,31 @@ automation:
     id: '1662801171931'
     description: ''
     trigger:
-    - platform: state
-      entity_id:
-        - cover.balcony_curtain
-        - cover.bedroom_curtains
-        - cover.bedroom_curtains_dual
-        - cover.bedroom_curtain_left
-        - cover.bedroom_curtain_right
-        - cover.guest_room_shutter_cover
-        - cover.living_room_blinds
-        - cover.living_room_blind_right_cover
-        - cover.living_room_blind_centre_cover
-        - cover.living_room_blind_left_cover_2
-        - cover.office_roller_blind_1_cover
-        - cover.office_roller_blind_2_cover
-        - cover.office_roller_blinds_all
-        - cover.office_shutter_1_cover
-        - cover.office_shutter_2_cover
-        - cover.office_shutters_all
-      for:
-        hours: 0
-        minutes: 2
-        seconds: 0
-      to:
-        - closing
-        - opening
+      - platform: state
+        entity_id:
+          - cover.balcony_curtain
+          - cover.bedroom_curtains
+          - cover.bedroom_curtains_dual
+          - cover.bedroom_curtain_left
+          - cover.bedroom_curtain_right
+          - cover.guest_room_shutter_cover
+          - cover.living_room_blinds
+          - cover.living_room_blind_right_cover
+          - cover.living_room_blind_centre_cover
+          - cover.living_room_blind_left_cover_2
+          - cover.office_roller_blind_1_cover
+          - cover.office_roller_blind_2_cover
+          - cover.office_roller_blinds_all
+          - cover.office_shutter_1_cover
+          - cover.office_shutter_2_cover
+          - cover.office_shutters_all
+        for:
+          hours: 0
+          minutes: 2
+          seconds: 0
+        to:
+          - closing
+          - opening
     condition: []
     action:
       - service: cover.stop_cover
@@ -116,11 +116,11 @@ automation:
                   - if:
                       - condition: not
                         conditions:
-                        - condition: device
-                          device_id: 216297d2524fa8459f265e6a9930f739
-                          domain: vacuum
-                          entity_id: vacuum.hall_roomba
-                          type: is_docked
+                          - condition: device
+                            device_id: 216297d2524fa8459f265e6a9930f739
+                            domain: vacuum
+                            entity_id: vacuum.hall_roomba
+                            type: is_docked
                     then:
                       - service: logbook.log
                         data:
@@ -138,13 +138,13 @@ automation:
                         domain: switch
                     then:
                       - wait_for_trigger:
-                        - platform: numeric_state
-                          entity_id: sensor.laundry_washing_machine_power
-                          for:
-                            hours: 0
-                            minutes: 5
-                            seconds: 0
-                          below: '2'
+                          - platform: numeric_state
+                            entity_id: sensor.laundry_washing_machine_power
+                            for:
+                              hours: 0
+                              minutes: 5
+                              seconds: 0
+                            below: '2'
                         continue_on_timeout: false
                       - type: turn_off
                         device_id: 7718afce3cec294c17968906f186a35f
@@ -158,13 +158,13 @@ automation:
                         domain: switch
                     then:
                       - wait_for_trigger:
-                        - platform: numeric_state
-                          entity_id: sensor.laundry_dryer_outlet_power
-                          for:
-                            hours: 0
-                            minutes: 5
-                            seconds: 0
-                          below: '2'
+                          - platform: numeric_state
+                            entity_id: sensor.laundry_dryer_outlet_power
+                            for:
+                              hours: 0
+                              minutes: 5
+                              seconds: 0
+                            below: '2'
                         continue_on_timeout: false
                       - type: turn_off
                         device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
@@ -175,51 +175,51 @@ automation:
                 id: Quite hours starts
             sequence:
               - parallel:
-                - if:
-                  - condition: not
-                    conditions:
-                    - condition: device
-                      device_id: 216297d2524fa8459f265e6a9930f739
-                      domain: vacuum
-                      entity_id: vacuum.hall_roomba
-                      type: is_docked
-                  then:
-                  - service: vacuum.stop
-                    data: {}
-                    target:
-                      device_id: 216297d2524fa8459f265e6a9930f739
-                - if:
-                  - condition: device
-                    type: is_on
-                    device_id: 7718afce3cec294c17968906f186a35f
-                    entity_id: switch.laundry_washing_machine_outlet
-                    domain: switch
-                  then:
-                  - wait_for_trigger:
-                    - platform: numeric_state
-                      entity_id: sensor.laundry_washing_machine_power
-                      above: '10'
-                    continue_on_timeout: false
-                  - service: notify.signal_group_home
-                    data:
-                      message: Silence hours - Looks like the washer was left running at this
-                        time. Please take a look.
-                - if:
-                  - condition: device
-                    type: is_on
-                    device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-                    entity_id: switch.laundry_dryer_outlet
-                    domain: switch
-                  then:
-                  - wait_for_trigger:
-                    - platform: numeric_state
-                      entity_id: sensor.laundry_dryer_outlet_power
-                      above: '10'
-                    continue_on_timeout: false
-                  - service: notify.signal_group_home
-                    data:
-                      message: Silence hours - Looks like the dryer was left running at this
-                        time. Please take a look.
+                  - if:
+                      - condition: not
+                        conditions:
+                        - condition: device
+                          device_id: 216297d2524fa8459f265e6a9930f739
+                          domain: vacuum
+                          entity_id: vacuum.hall_roomba
+                          type: is_docked
+                    then:
+                      - service: vacuum.stop
+                        data: {}
+                        target:
+                          device_id: 216297d2524fa8459f265e6a9930f739
+                  - if:
+                      - condition: device
+                        type: is_on
+                        device_id: 7718afce3cec294c17968906f186a35f
+                        entity_id: switch.laundry_washing_machine_outlet
+                        domain: switch
+                    then:
+                      - wait_for_trigger:
+                        - platform: numeric_state
+                          entity_id: sensor.laundry_washing_machine_power
+                          above: '10'
+                        continue_on_timeout: false
+                      - service: notify.signal_group_home
+                        data:
+                          message: Silence hours - Looks like the washer was left running at this
+                            time. Please take a look.
+                  - if:
+                      - condition: device
+                        type: is_on
+                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                        entity_id: switch.laundry_dryer_outlet
+                        domain: switch
+                    then:
+                      - wait_for_trigger:
+                        - platform: numeric_state
+                          entity_id: sensor.laundry_dryer_outlet_power
+                          above: '10'
+                        continue_on_timeout: false
+                      - service: notify.signal_group_home
+                        data:
+                          message: Silence hours - Looks like the dryer was left running at this
+                            time. Please take a look.
           - conditions:
               - condition: trigger
                 id: Quite hours ends
