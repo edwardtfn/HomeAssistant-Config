@@ -28,5 +28,3 @@ light:
     unique_id: 7782c1bb-f612-4f4a-9fd2-010a028ea34c
     entities:
       - light.hall_ceiling_light
-
-

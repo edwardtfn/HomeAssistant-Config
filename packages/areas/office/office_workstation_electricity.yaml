@@ -12,4 +12,3 @@ automation:
     target:
       entity_id: switch.office_workstation_power_strip_usb
   mode: single
-

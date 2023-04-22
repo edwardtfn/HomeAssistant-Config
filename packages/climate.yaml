@@ -540,6 +540,3 @@ template:
         state: "{{ states('sensor.home_weather_outdoor_temperature')}}"
         attributes:
           datetime: "{{ now() }}"
-
-
-    

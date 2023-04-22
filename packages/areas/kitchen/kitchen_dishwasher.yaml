@@ -124,4 +124,3 @@ template:
           trigger: "{{ trigger }}"
           door: "{{ states('binary_sensor.kitchen_dishwasher_door') }}"
           operation_state: "{{ states('sensor.kitchen_dishwasher_operation_state') }}"
-

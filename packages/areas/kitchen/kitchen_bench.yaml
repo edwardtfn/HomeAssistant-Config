@@ -93,4 +93,3 @@ sensor:
       - sensor.kitchen_bench_left_light_power
       - sensor.kitchen_bench_right_light_power
       - sensor.kitchen_cooker_hood_power
-

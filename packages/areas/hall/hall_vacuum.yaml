@@ -77,7 +77,6 @@ automation:
         ''error_code'')}})'
   mode: single
 
-
 switch:
   - platform: template
     switches:

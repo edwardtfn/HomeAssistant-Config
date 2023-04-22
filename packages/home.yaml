@@ -266,7 +266,7 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
     light.balcony_string_lights:
       name: String lights
       hidden: false
-   
+
     #### Bathroom ####
     light.bathroom_ceiling_lights:
       name: Ceiling lights
@@ -274,7 +274,7 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
     light.bathroom_mirror_light:
       name: Mirror lights
       hidden: false
-   
+
     #### Bedroom ####
     light.bedroom_carol_light:
       name: "Carol's lights"

@@ -64,5 +64,3 @@ light:
     entities:
       - light.guest_room_wall_lights
       - light.guest_room_closet_lights
-
-

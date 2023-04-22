@@ -150,4 +150,3 @@ binary_sensor:
     lower: 1
     upper: 9
     hysteresis: 0.5
-
