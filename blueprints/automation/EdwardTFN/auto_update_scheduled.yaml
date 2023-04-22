@@ -483,7 +483,7 @@ action:
       message: Running pre-update actions...
 
   - alias: "Run pre-update actions"
-    continue_on_error: true 
+    continue_on_error: true
     choose:
     - conditions:
         - '{{ true }}'
@@ -529,7 +529,7 @@ action:
   - *logbook-variables
   - alias: "Update - Standard"
     continue_on_error: true
-    repeat: 
+    repeat:
       while:
         - "{{ input_general_update_mode in ['patches', 'major_and_minor', 'all'] }}"
         - condition: state
@@ -591,7 +591,7 @@ action:
   - *logbook-variables
   - alias: "Update - Core"
     continue_on_error: true
-    repeat: 
+    repeat:
       while:
         - "{{ input_core_os_update_mode in ['patches', 'major_and_minor', 'all'] }}"
         - condition: state
@@ -619,8 +619,8 @@ action:
             message: "Starting sequence of core items updates..."
         - variables:
             pending_update_list: >-
-              {{ states.update 
-                | selectattr('state','eq','on') 
+              {{ states.update
+                | selectattr('state','eq','on')
                 | selectattr('entity_id', 'in', updates_list)
                 | selectattr('entity_id', 'in', core_update_entity)
                 | rejectattr('entity_id', 'in', os_update_entity)
@@ -653,7 +653,7 @@ action:
   - *logbook-variables
   - alias: "Update - OS"
     continue_on_error: true
-    repeat: 
+    repeat:
       while:
         - "{{ input_core_os_update_mode in ['patches', 'major_and_minor', 'all'] }}"
         - condition: state
@@ -668,7 +668,7 @@ action:
               | selectattr('entity_id', 'in', os_update_entity)
               | rejectattr('entity_id', 'in', firmware_update_entities)
               | rejectattr('entity_id', 'in', input_update_exclusions)
-              | map(attribute='entity_id') 
+              | map(attribute='entity_id')
               | list | count | int(0) ) > 0
             }}
       sequence:
@@ -688,7 +688,7 @@ action:
                 | selectattr('entity_id', 'in', os_update_entity)
                 | rejectattr('entity_id', 'in', firmware_update_entities)
                 | rejectattr('entity_id', 'in', input_update_exclusions)
-                | map(attribute='entity_id') 
+                | map(attribute='entity_id')
                 | list
                 }}
         - alias: "Update - OS - Logbook - Updating"
@@ -714,7 +714,7 @@ action:
   - *recalc-update-list
   - alias: "Update - Devices firmware"
     continue_on_error: true
-    repeat: 
+    repeat:
       while:
         - "{{ input_firmware_update_mode in ['patches', 'major_and_minor', 'all'] }}"
         - condition: state
@@ -742,7 +742,7 @@ action:
             message: "Starting sequence of Devices firmware update..."
         - variables:
             pending_update_list: >-
-              {{ states.update 
+              {{ states.update
                 | selectattr('state','eq','on')
                 | selectattr('entity_id', 'in', updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
@@ -793,12 +793,12 @@ action:
   #      data: {}
   #      target:
   #        entity_id: >-
-  #          {{ states.update 
-  #          | selectattr('state','eq','on') 
+  #          {{ states.update
+  #          | selectattr('state','eq','on')
   #          | selectattr('entity_id', 'in', updates_list)
   #          | rejectattr('entity_id', 'in', input_update_exclusions)
-  #          | map(attribute='entity_id') 
-  #          | list 
+  #          | map(attribute='entity_id')
+  #          | list
   #          }}
   #    - alias: "Update - Remaining - Wait"
   #      continue_on_error: true
@@ -845,15 +845,15 @@ action:
           | selectattr('attributes.release_summary', 'defined')
           | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
           | map(attribute='entity_id')
-          | list 
-          | count 
+          | list
+          | count
           | int(0) }} item(s) pending a restart:
         - {{ states.update
           | selectattr('attributes.release_summary', 'defined')
           | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
           | map(attribute='entity_id')
-          | list 
-          | join(' 
+          | list
+          | join('
         - ') }}
   - alias: "Restart"
     continue_on_error: true
@@ -861,10 +861,10 @@ action:
       - >-
         {{ input_restart_bool and (
           (
-            states.update 
-            | selectattr('attributes.release_summary', 'defined') 
-            | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
-            | map(attribute='entity_id') 
+            states.update
+            | selectattr('attributes.release_summary', 'defined')
+            | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
+            | map(attribute='entity_id')
             | list | count | int(0)
           ) > 0)
         }}
@@ -883,7 +883,7 @@ action:
               entity_id: '{{ this.entity_id }}'
               message: Running pre-restart actions...
           - alias: "Run pre-restart actions"
-            continue_on_error: true 
+            continue_on_error: true
             choose:
             - conditions:
                 - '{{ true }}'
@@ -897,7 +897,7 @@ action:
               entity_id: '{{ this.entity_id }}'
               message: >-
                 Skipping restart process due to notifications of invalid configurations:
-                states.persistent_notification.invalid_config.state = {{ states.persistent_notification.invalid_config.state | default('unavailable') }}, 
+                states.persistent_notification.invalid_config.state = {{ states.persistent_notification.invalid_config.state | default('unavailable') }},
                 states.persistent_notification.homeassistant_check_config.state = {{ states.persistent_notification.homeassistant_check_config.state | default('unavailable') }}
         else:
           - alias: "Restart - Logbook - Restarting"
@@ -921,7 +921,7 @@ action:
       message: Running post-update actions...
 
   - alias: "Run post-update actions"
-    continue_on_error: true 
+    continue_on_error: true
     choose:
     - conditions:
         - '{{ true }}'
