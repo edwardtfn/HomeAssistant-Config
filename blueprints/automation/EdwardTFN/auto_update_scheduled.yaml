@@ -8,8 +8,6 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-
-
     Attention:
 
     * HACS updates NOT included. It may work if you enable "[Experimental features](https://hacs.xyz/docs/configuration/options/#options)" on your HACS integration or when HACS updates funcionality is released.
@@ -17,8 +15,6 @@ blueprint:
     * Home Assistant may restart automatically as part of the update process.
 
     * **Use under your own risk!** Please see the discussions on Home Assistant community around the risks involved on auto-updating the system.
-
-
 
     For questions and suggestions, please use [this thread in Home Assistant Community portal](https://community.home-assistant.io/t/scheduled-auto-update-for-home-assistant/459281).
   domain: automation
@@ -42,7 +38,6 @@ blueprint:
       name: Schedule entity
       description: 'You can create an [Schedule](https://www.home-assistant.io/integrations/schedule) under [Settings > Devices & Services > Helpers](https://my.home-assistant.io/redirect/config_flow_start/?domain=schedule).
 
-
         Note => The schedule windows will define when an update will start. It is possible that a backup, an update or a restart process finishes after the schedule window, but new updates won''t stars outside the schedule windows.'
       default: [ ]
       selector:
@@ -53,7 +48,6 @@ blueprint:
     schedule_monthday:
       name: Earliest day in the month to update Home Assistant
       description: 'Usually a new major version of Home Assistant is available on the begining of every month. Some people consider those releases as not stable enough and prefer to avoid those versions, not updating the system until the mid of the month (day 15).
-
 
         Note => If you select a day higher than 28 the updates won''t run every month.'
       default: 1
@@ -165,7 +159,7 @@ blueprint:
 
 
         => Use this if you want to keep some add-on on an specific version and avoid auto-updates to it.'
-      default: [ ]
+      default: []
       selector:
         entity:
           multiple: true
@@ -181,7 +175,7 @@ blueprint:
         Note => Please be aware that all actions will run right before the update process, which can happens over-night. Take this in account when selecting your actions.
 
         Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
-      default: [ ]
+      default: []
       selector:
         action: {}
 
@@ -197,7 +191,7 @@ blueprint:
         Note => Note all the restarts will be controlled by this automation, like when a Core update is installed. These actions might not be executed in those cases.
 
         Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
-      default: [ ]
+      default: []
       selector:
         action: {}
 
@@ -213,7 +207,7 @@ blueprint:
         Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.
 
         **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed. If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.'
-      default: [ ]
+      default: []
       selector:
         action: {}
 
@@ -222,7 +216,7 @@ blueprint:
       description: 'You can select one or more entities to pause the updates. If any of the selected entities is "On" or "True" the system won''t be updated on the schedule time.
 
         You can use this to hold your updates when you have a party at home, or when you are on vacations and don''t want to be concerned about updates on Home Assistant.'
-      default: [ ]
+      default: []
       selector:
         entity:
           multiple: true
@@ -405,16 +399,11 @@ action:
             }}
 
   - alias: "Refresh update list - update entities"
-    choose:
-    - conditions: '{{ true }}'
-      sequence:
-      - service: homeassistant.update_entity
-        data: {}
-        target:
-          entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
-        continue_on_error: true
-
-    default: []
+    service: homeassistant.update_entity
+    data: {}
+    target:
+      entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
+    continue_on_error: true
 
   ########## Check for skipping core/OS ##########
   - alias: "Re-check conditions"

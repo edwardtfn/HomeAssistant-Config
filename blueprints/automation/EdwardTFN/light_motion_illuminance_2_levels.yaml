@@ -379,4 +379,4 @@ action:
     target:
       entity_id: !input light_target
     data:
-        transition: 5
+      transition: 5
