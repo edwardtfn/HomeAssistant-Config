@@ -311,17 +311,17 @@ action:
               | selectattr('attributes.device_class', 'defined')
               | selectattr('attributes.device_class', 'eq', 'firmware')
               | map(attribute='entity_id')
-              | list 
+              | list
             }}
       general_update_entities: >-
-        {{ states.update 
-          | default([]) 
+        {{ states.update
+          | default([])
           | rejectattr('entity_id', 'in', core_update_entity)
           | rejectattr('entity_id', 'in', os_update_entity)
           | rejectattr('entity_id', 'in', supervisor_update_entity)
           | rejectattr('entity_id', 'in', firmware_update_entities)
           | map(attribute='entity_id')
-          | list 
+          | list
         }}
 
       temp_input_update_exclusions: !input update_exclusions
@@ -401,7 +401,7 @@ action:
               | selectattr('state','eq','on')
               | rejectattr('entity_id', 'in', input_update_exclusions)
               | map(attribute='entity_id')
-              | list 
+              | list
             }}
 
   - alias: "Refresh update list - update entities"
@@ -413,7 +413,7 @@ action:
         target:
           entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
         continue_on_error: true
- 
+
     default: []
 
   ########## Check for skipping core/OS ##########
@@ -434,19 +434,19 @@ action:
       name: Auto-update
       entity_id: '{{ this.entity_id }}'
       message: >-
-        Variables: 
-          input_backup_bool: {{ input_backup_bool }}, 
-          input_restart_bool: {{ input_restart_bool }}, 
-          input_schedule_monthday: {{ input_schedule_monthday }}, 
-          input_update_exclusions: {{ temp_input_update_exclusions }}, 
-          input_core_os_update_mode: {{ input_core_os_update_mode }}, 
-          input_firmware_update_mode: {{ input_firmware_update_mode }}, 
-          input_general_update_mode: {{ input_general_update_mode }}, 
-          core_update_entity: {{ core_update_entity }}, 
-          os_update_entity: {{ os_update_entity }}, 
-          supervisor_update_entity: {{ supervisor_update_entity }}, 
-          firmware_update_entities: {{ firmware_update_entities }}, 
-          general_update_entities; {{ general_update_entities }}, 
+        Variables:
+          input_backup_bool: {{ input_backup_bool }},
+          input_restart_bool: {{ input_restart_bool }},
+          input_schedule_monthday: {{ input_schedule_monthday }},
+          input_update_exclusions: {{ temp_input_update_exclusions }},
+          input_core_os_update_mode: {{ input_core_os_update_mode }},
+          input_firmware_update_mode: {{ input_firmware_update_mode }},
+          input_general_update_mode: {{ input_general_update_mode }},
+          core_update_entity: {{ core_update_entity }},
+          os_update_entity: {{ os_update_entity }},
+          supervisor_update_entity: {{ supervisor_update_entity }},
+          firmware_update_entities: {{ firmware_update_entities }},
+          general_update_entities; {{ general_update_entities }},
           updates_list: {{ updates_list }}
 
   - alias: "Logbook - A new update is available"
