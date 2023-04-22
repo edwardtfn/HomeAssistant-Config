@@ -65,11 +65,11 @@ variables:
     \ set result.sensors = result.sensors + [state.name] %}\n  {% endif %}\n{% endfor\
     \ %} {{result.sensors|join(', ')}}"
 trigger:
-- platform: time
-  at: !input 'time'
+  - platform: time
+    at: !input 'time'
 condition:
-- '{{ sensors != '''' and (day | int == 0 or day | int == now().isoweekday()) }}'
+  - '{{ sensors != '''' and (day | int == 0 or day | int == now().isoweekday()) }}'
 action:
-- choose: []
-  default: !input 'actions'
+  - choose: []
+    default: !input 'actions'
 mode: single
