@@ -10,7 +10,7 @@ blueprint:
     light_entities:
       name: Lights
       description: Please select the lights or switches you want to toggle when the Suj crosses the threshold.
-      default: [ ]
+      default: []
       selector:
         entity:
           multiple: true
@@ -59,7 +59,7 @@ variables:
   sun_entity: !input sun_entity
 
 action:
-  - service: >-
+  - service: >
       homeassistant.turn_{{ iif(state_attr(sun_entity, 'elevation') < sun_threshold, 'on',
       'off') }}
     entity_id: !input light_entities

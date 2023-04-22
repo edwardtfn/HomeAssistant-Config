@@ -26,10 +26,10 @@ blueprint:
           domain: cover
 
 trigger:
-- platform: event
-  event_type: zha_event
-  event_data:
-    device_id: !input remote_device
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: !input remote_device
 
 variables:
   input_cover_entity: !input cover_entity
