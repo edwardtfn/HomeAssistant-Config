@@ -5,7 +5,7 @@ blueprint:
     min_version: '2023.3.0'
   description: 'Skip majors, minors or patches updates'
   domain: automation
-  #source_url: 
+  #source_url:
   input:
     entities_list:
       name: Update entities to skip updates
@@ -17,21 +17,24 @@ blueprint:
 
     skip_major:
       name: Skip major updates
-      description: 'This will skip any major updates, which means if a version changes from "2022.*.*" to "2023.*.*", it will be skipped.'
+      description: >
+        This will skip any major updates, which means if a version changes from "2022.*.*" to "2023.*.*", it will be skipped.
       default: true
       selector:
         boolean:
 
     skip_minor:
       name: Skip minor updates
-      description: 'This will skip any minor updates, which means if a version changes from "2022.10.*" to "2022.11.*", it will be skipped.'
+      description: >
+        This will skip any minor updates, which means if a version changes from "2022.10.*" to "2022.11.*", it will be skipped.
       default: true
       selector:
         boolean:
 
     skip_patch:
       name: Skip patches
-      description: 'This will skip any patches, which means if a version changes from "2022.10.0" to "2022.10.1", it will be skipped.'
+      description: >
+        This will skip any patches, which means if a version changes from "2022.10.0" to "2022.10.1", it will be skipped.
       default: false
       selector:
         boolean:

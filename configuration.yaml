@@ -1,7 +1,7 @@
 #### default_config ####
 # Configure a default setup of Home Assistant (frontend, api, etc)
 # https://www.home-assistant.io/integrations/default_config/
-#default_config: # Full list: https://github.com/home-assistant/core/blob/dev/homeassistant/components/default_config/manifest.json
+#default_config:
 
 application_credentials:
 automation: !include automations.yaml
@@ -209,7 +209,8 @@ zha:
   enable_quirks: true
   custom_quirks_path: /config/zha/quirks
 
-  zigpy_config: # https://github.com/zigpy/zigpy/wiki/OTA-Device-Firmware-Updates
+  # https://github.com/zigpy/zigpy/wiki/OTA-Device-Firmware-Updates
+  zigpy_config:
     ota:
       otau_directory: /config/zha/zigpy_ota
       ikea_provider: true

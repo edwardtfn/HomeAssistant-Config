@@ -43,7 +43,7 @@ blueprint:
       name: Bathroom closed door timeout (in minutes)
       description: >-
         You can skip this field if you are not using this blueprint to automate a bathroom light.
-        
+
         This is catch up for the case where your motion sensor incorrectly detects a movement while the door is closed. The lights will turn off after this time even if the door is kept closed.
 
         Try to select a time that is longer than what is normally the time the bathroom will be occupied.
@@ -245,7 +245,7 @@ variables:
 action:
   - alias: "Turn on the light"
     service: light.turn_on
-    target: 
+    target:
       entity_id: !input light_target
     data:
         brightness_pct: !input light_level_high
@@ -258,7 +258,7 @@ action:
         {% else %}
           false
         {% endif %}
-          
+
   - alias: "Wait until there is no motion from device"
     wait_for_trigger:
       platform: state
@@ -327,7 +327,7 @@ action:
 
   - alias: "Dimming the light"
     service: light.turn_on
-    target: 
+    target:
       entity_id: !input light_target
     data:
         brightness_pct: !input light_level_dimmer
@@ -376,7 +376,7 @@ action:
             seconds: 30
   - alias: "Turn off the light"
     service: light.turn_off
-    target: 
+    target:
       entity_id: !input light_target
     data:
         transition: 5

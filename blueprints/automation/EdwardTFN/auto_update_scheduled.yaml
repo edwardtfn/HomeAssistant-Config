@@ -226,7 +226,7 @@ blueprint:
       selector:
         entity:
           multiple: true
-          domain: 
+          domain:
             - input_boolean
             - binary_sensor
             - switch
@@ -306,11 +306,11 @@ action:
                 {{ u }}
             {% endfor %}
       firmware_update_entities: >-
-            {{ states.update 
-              | default([]) 
-              | selectattr('attributes.device_class', 'defined') 
-              | selectattr('attributes.device_class', 'eq', 'firmware') 
-              | map(attribute='entity_id') 
+            {{ states.update
+              | default([])
+              | selectattr('attributes.device_class', 'defined')
+              | selectattr('attributes.device_class', 'eq', 'firmware')
+              | map(attribute='entity_id')
               | list 
             }}
       general_update_entities: >-
@@ -320,7 +320,7 @@ action:
           | rejectattr('entity_id', 'in', os_update_entity)
           | rejectattr('entity_id', 'in', supervisor_update_entity)
           | rejectattr('entity_id', 'in', firmware_update_entities)
-          | map(attribute='entity_id') 
+          | map(attribute='entity_id')
           | list 
         }}
 
@@ -396,11 +396,11 @@ action:
             {{ exclusions }}
 
       updates_list: >-
-            {{ states.update 
-              | default([]) 
-              | selectattr('state','eq','on') 
-              | rejectattr('entity_id', 'in', input_update_exclusions) 
-              | map(attribute='entity_id') 
+            {{ states.update
+              | default([])
+              | selectattr('state','eq','on')
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='entity_id')
               | list 
             }}
 
@@ -466,11 +466,11 @@ action:
       domain: update
       message: >-
         List of updates:
-        - {{ states.update 
-          | selectattr('state','eq','on') 
+        - {{ states.update
+          | selectattr('state','eq','on')
           | selectattr('entity_id', 'in', updates_list)
           | rejectattr('entity_id', 'in', input_update_exclusions)
-          | map(attribute='name') | list | join(' 
+          | map(attribute='name') | list | join('
 
         - ') }}
 
@@ -537,14 +537,14 @@ action:
           state: "on"
         - condition: template
           value_template: >-
-            {{ ( states.update 
-              | selectattr('state','eq','on') 
+            {{ ( states.update
+              | selectattr('state','eq','on')
               | selectattr('entity_id', 'in', updates_list)
               | rejectattr('entity_id', 'in', core_update_entity)
               | rejectattr('entity_id', 'in', os_update_entity)
               | rejectattr('entity_id', 'in', firmware_update_entities)
               | rejectattr('entity_id', 'in', input_update_exclusions)
-              | map(attribute='entity_id') 
+              | map(attribute='entity_id')
               | list | count | int(0) ) > 0
             }}
       sequence:
@@ -557,14 +557,14 @@ action:
             message: "Starting sequence of standard updates..."
         - variables:
             pending_update_list: >-
-              {{ states.update 
-                | selectattr('state','eq','on') 
+              {{ states.update
+                | selectattr('state','eq','on')
                 | selectattr('entity_id', 'in', updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
                 | rejectattr('entity_id', 'in', os_update_entity)
                 | rejectattr('entity_id', 'in', firmware_update_entities)
                 | rejectattr('entity_id', 'in', input_update_exclusions)
-                | map(attribute='entity_id') 
+                | map(attribute='entity_id')
                 | list
                 }}
         - alias: "Update - Standard - Logbook - Updating"
@@ -599,14 +599,14 @@ action:
           state: "on"
         - condition: template
           value_template: >-
-            {{ ( states.update 
-              | selectattr('state','eq','on') 
+            {{ ( states.update
+              | selectattr('state','eq','on')
               | selectattr('entity_id', 'in', updates_list)
               | selectattr('entity_id', 'in', core_update_entity)
               | rejectattr('entity_id', 'in', os_update_entity)
               | rejectattr('entity_id', 'in', firmware_update_entities)
               | rejectattr('entity_id', 'in', input_update_exclusions)
-              | map(attribute='entity_id') 
+              | map(attribute='entity_id')
               | list | count | int(0) ) > 0
             }}
       sequence:
@@ -626,7 +626,7 @@ action:
                 | rejectattr('entity_id', 'in', os_update_entity)
                 | rejectattr('entity_id', 'in', firmware_update_entities)
                 | rejectattr('entity_id', 'in', input_update_exclusions)
-                | map(attribute='entity_id') 
+                | map(attribute='entity_id')
                 | list
                 }}
         - alias: "Update - Core - Logbook - Updating"
@@ -661,8 +661,8 @@ action:
           state: "on"
         - condition: template
           value_template: >-
-            {{ ( states.update 
-              | selectattr('state','eq','on') 
+            {{ ( states.update
+              | selectattr('state','eq','on')
               | selectattr('entity_id', 'in', updates_list)
               | rejectattr('entity_id', 'in', core_update_entity)
               | selectattr('entity_id', 'in', os_update_entity)
@@ -681,8 +681,8 @@ action:
             message: "Starting sequence of OS update..."
         - variables:
             pending_update_list: >-
-              {{ states.update 
-                | selectattr('state','eq','on') 
+              {{ states.update
+                | selectattr('state','eq','on')
                 | selectattr('entity_id', 'in', updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
                 | selectattr('entity_id', 'in', os_update_entity)
@@ -722,14 +722,14 @@ action:
           state: "on"
         - condition: template
           value_template: >-
-            {{ ( states.update 
-              | selectattr('state','eq','on') 
+            {{ ( states.update
+              | selectattr('state','eq','on')
               | selectattr('entity_id', 'in', updates_list)
               | rejectattr('entity_id', 'in', core_update_entity)
               | rejectattr('entity_id', 'in', os_update_entity)
               | selectattr('entity_id', 'in', firmware_update_entities)
               | rejectattr('entity_id', 'in', input_update_exclusions)
-              | map(attribute='entity_id') 
+              | map(attribute='entity_id')
               | list | count | int(0) ) > 0
             }}
       sequence:
@@ -743,12 +743,12 @@ action:
         - variables:
             pending_update_list: >-
               {{ states.update 
-                | selectattr('state','eq','on') 
+                | selectattr('state','eq','on')
                 | selectattr('entity_id', 'in', updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
                 | rejectattr('entity_id', 'in', os_update_entity)
                 | selectattr('entity_id', 'in', firmware_update_entities)
-                | map(attribute='entity_id') 
+                | map(attribute='entity_id')
                 | list
                 }}
         - alias: "Update - Devices firmware - Logbook - Updating"
@@ -825,11 +825,11 @@ action:
       entity_id: '{{ this.entity_id }}'
       message:  >-
         Remaining updates:
-        - {{ states.update 
+        - {{ states.update
           | selectattr('state','eq','on')
           | selectattr('entity_id', 'in', updates_list)
           | rejectattr('entity_id', 'in', input_update_exclusions)
-          | map(attribute='name') | list | join(' 
+          | map(attribute='name') | list | join('
 
         - ') }}
 
@@ -841,17 +841,17 @@ action:
       name: Auto-update
       entity_id: '{{ this.entity_id }}'
       message:  >-
-        {{ states.update 
-          | selectattr('attributes.release_summary', 'defined') 
-          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
-          | map(attribute='entity_id') 
+        {{ states.update
+          | selectattr('attributes.release_summary', 'defined')
+          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
+          | map(attribute='entity_id')
           | list 
           | count 
           | int(0) }} item(s) pending a restart:
-        - {{ states.update 
-          | selectattr('attributes.release_summary', 'defined') 
-          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>") 
-          | map(attribute='entity_id') 
+        - {{ states.update
+          | selectattr('attributes.release_summary', 'defined')
+          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
+          | map(attribute='entity_id')
           | list 
           | join(' 
         - ') }}
