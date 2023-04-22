@@ -44,7 +44,14 @@ rest:
       - name: Vasttrafik - Departure table
         unique_id: b26d080f-5d90-417b-8141-3ff63b57836f
         device_class: timestamp
-        value_template: "{{ (value_json.DepartureBoard.serverdate + ' ' + value_json.DepartureBoard.servertime) | as_timestamp | timestamp_local }}"
+        value_template: >
+          {{
+            (value_json.DepartureBoard.serverdate + ' ' + value_json.DepartureBoard.servertime) | as_timestamp | timestamp_local
+            if value_json is defined
+              and value_json.DepartureBoard is defined
+              and value_json.DepartureBoard.serverdate is defined
+              and value_json.DepartureBoard.servertime is defined
+          }}
         json_attributes_path: "$.DepartureBoard"
         json_attributes:
           - servertime
