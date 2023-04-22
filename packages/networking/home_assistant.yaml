@@ -3,7 +3,7 @@ alert:
     name: Server CPU temperature
     message: >-
       The temperature in your PC used with Home Assistant is too high ({{ states('sensor.processor_temperature') }}ºC).
-      
+
       Please take some action or the system will shut down automatically.
     done_message: PC temperature is back to normal ({{ states('sensor.processor_temperature') }}ºC).
     entity_id: binary_sensor.home_assistant_temperature_high
@@ -405,10 +405,10 @@ script:
               name: "{{ all_areas[repeat.index - 1]  | capitalize }} - Power sensors"
               icon: mdi:flash
               entities: >-
-                {{ expand(core_power_entities) 
-                  | selectattr('entity_id', 'in', area_entities(all_areas[repeat.index-1])) 
-                  | map(attribute='entity_id') 
-                  | list 
+                {{ expand(core_power_entities)
+                  | selectattr('entity_id', 'in', area_entities(all_areas[repeat.index-1]))
+                  | map(attribute='entity_id')
+                  | list
                 }}
             continue_on_error: true
 
@@ -482,7 +482,7 @@ sensor:
     #- platform: uptime # https://www.home-assistant.io/integrations/uptime/
   #### Monitoring the backup folder ####
   #- platform: folder #https://www.home-assistant.io/integrations/folder/
-  #  folder: 
+  #  folder:
   #    - backup
 
 shell_command: # https://www.home-assistant.io/common-tasks/os/ and https://www.home-assistant.io/integrations/shell_command/

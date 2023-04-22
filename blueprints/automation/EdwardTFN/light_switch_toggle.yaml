@@ -36,5 +36,5 @@ condition: []
 
 action:
   - service: light.toggle
-    target: 
+    target:
       entity_id: !input light_target

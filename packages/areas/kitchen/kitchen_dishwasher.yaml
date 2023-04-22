@@ -115,7 +115,7 @@ template:
       - name: Kitchen - Dishwasher - Door oppened after run
         unique_id: 39cd3a86-5db0-40a0-978d-29751413fc59
         availability: >-
-          {{ states('sensor.kitchen_dishwasher_operation_state') not in ['unknown','unavailable'] 
+          {{ states('sensor.kitchen_dishwasher_operation_state') not in ['unknown','unavailable']
           and states('binary_sensor.kitchen_dishwasher_door') not in ['unknown','unavailable'] }}
         state: "{{ trigger.id == 'Door' }}"
         attributes:

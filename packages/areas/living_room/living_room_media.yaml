@@ -12,7 +12,7 @@ group:
     #TV: 0.0.0.0
     #RPi: 1.0.0.0
     #Fire TV Cube: 2.0.0.0
-  
+ 
 media_player:
   - name: Living room - TV Sony - Universal
     platform: universal # https://www.home-assistant.io/integrations/universal/

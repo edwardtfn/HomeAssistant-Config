@@ -6,12 +6,12 @@ style:
       margin-right: 0px !important;
       margin-bottom: 0px !important;
       width: 79%;
-      flex: unset !important; 
+      flex: unset !important;
     }
     mushroom-light-card {
       margin-right: 0px !important;
       margin-bottom: 0px !important;
-      flex: unset !important; 
+      flex: unset !important;
     }
 card:
   type: horizontal-stack

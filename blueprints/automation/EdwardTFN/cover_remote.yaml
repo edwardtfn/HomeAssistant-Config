@@ -48,12 +48,12 @@ action:
           cover.stop_cover
         {% endif %}
       {% endif %}
-    target: 
+    target:
       entity_id: !input cover_entity
   - wait_for_trigger:
       - platform: state
         entity_id: !input cover_entity
-        to: 
+        to:
           - open
           - closed
     timeout:

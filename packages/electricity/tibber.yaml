@@ -144,7 +144,7 @@ template:
         device_class: monetary
         availability: "{{ is_number(states('sensor.total_electricity_price')) and is_number(states('sensor.total_power')) }}"
         state: >-
-          {{ 
+          {{
             (
               states('sensor.total_electricity_price') | float(0)
               * states('sensor.total_power') | float(0)

@@ -178,18 +178,18 @@ template:
 #      availability: "{{ is_number(states('sensor.home_average_room_temperature')) }}"
 #      state: "{{ states('sensor.home_average_room_temperature') | float(0) | round(1) }}"
 #        {{ expand([
-#          'sensor.bathroom_thermostat_current_temperature', 
-#          'sensor.bedroom_hygrometer_temperature', 
+#          'sensor.bathroom_thermostat_current_temperature',
+#          'sensor.bedroom_hygrometer_temperature',
 #          'sensor.corridor_air_quality_temperature',
-#          'sensor.guest_room_thermostat_current_temperature', 
+#          'sensor.guest_room_thermostat_current_temperature',
 #          'sensor.hall_panel_temperature',
-#          'sensor.kitchen_thermostat_current_temperature', 
+#          'sensor.kitchen_thermostat_current_temperature',
 #          'sensor.living_room_thermostat_current_temperature',
 #          'sensor.office_hygrometer_temperature'
-#          ]) 
-#        | rejectattr('state', 'in', ['unavailable','unknown']) 
-#        | map(attribute='state') 
-#        | map('float') 
+#          ])
+#        | rejectattr('state', 'in', ['unavailable','unknown'])
+#        | map(attribute='state')
+#        | map('float')
 #        | average
 #        | float(0)
 #        | round(1)
@@ -209,9 +209,9 @@ template:
 
 
     #- platform: template
-    #  sensors: weather_just_icon: 
-    #  name: "Home - Weather" 
-    #  icon_template: >- 
+    #  sensors: weather_just_icon:
+    #  name: "Home - Weather"
+    #  icon_template: >-
     #    {% if is_state("weather.climacell_hourly","clear-day") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","sunny") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","clear") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","clear-night") %} mdi:weather-night {% elif is_state("weather.climacell_hourly","rainy") %} mdi:weather-rainy {% elif is_state("weather.climacell_hourly","pouring") %} mdi:weather-pouring {% elif is_state("weather.climacell_hourly","snow") %} mdi:weather-snowy {% elif is_state("weather.climacell_hourly","fog") %} mdi:weather-fog {% elif is_state("weather.climacell_hourly","sleet") %} mdi:weather-partly-snowy-rainy {% elif is_state("weather.climacell_hourly","wind") %} mdi:weather-windy {% elif is_state("weather.climacell_hourly","cloudy") %} mdi:weather-cloudy {% elif is_state("weather.climacell_hourly","partlycloudy") %} mdi:weather-partly-cloudy {% elif is_state("weather.climacell_hourly","partly-cloudy-night") %} mdi:weather-night-partly-cloudy {% elif is_state("weather.climacell_hourly","hail") %} mdi:weather-hail {% elif is_state("weather.climacell_hourly","lightning") %} mdi:weather-lightning {% elif is_state("weather.climacell_hourly","tstorm") %} mdi:weather-lightning-rainy {% endif %}
     - name: Home - Visibility
       unique_id: c0e7b7dc-6d69-4b86-99de-c84553386800

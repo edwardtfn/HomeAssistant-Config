@@ -8,8 +8,8 @@ vacuum: # https://community.home-assistant.io/t/add-wifi-to-an-older-roomba/2328
         unique_id: 290197ee-f618-4dd3-8570-fa1504e11684
         # Vacuum state template
         # NOTE: need to convert to lower case for template to work and "Lost" is not a valid state.
-        # Either change the custom component to use lower case and "idle" for state "lost" or 
-        # change the template here to convert case and convert "lost" state to another valid state 
+        # Either change the custom component to use lower case and "idle" for state "lost" or
+        # change the template here to convert case and convert "lost" state to another valid state
         # (see https://www.home-assistant.io/integrations/vacuum.template/#value_template for possible states)
         # and use one of the below value_templates. FYI, second one is NOT tested!
         value_template: >-

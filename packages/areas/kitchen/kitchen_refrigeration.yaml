@@ -3,7 +3,7 @@ alert:
     name: Kitchen - Freezer - Temperature alert
     message: >-
       The temperature in the freezer is outside the normal range ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
-      
+     
       Please check the door and power supply.
     done_message: The temperature in the freezer is back to normal ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
     entity_id: binary_sensor.kitchen_freezer_temperature_normal_range
