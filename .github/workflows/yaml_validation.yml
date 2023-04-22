@@ -14,4 +14,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Validate YAML files
-        run: yamllint -d relaxed .
+        run: yamllint -c "./.yamllint/rules.yml" .
