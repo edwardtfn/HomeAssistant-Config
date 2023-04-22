@@ -58,7 +58,6 @@ rest:
           - serverdate
           - Departure
 
-
 #sensor:
   # https://www.home-assistant.io/integrations/vasttrafik/
   #- platform: vasttrafik
