@@ -1,0 +1,8 @@
+binary_sensor:
+  - platform: group
+    name: Hall - Presence
+    device_class: presence
+    entities:
+      - binary_sensor.hall_presence_motion
+      - binary_sensor.hall_presence_occupancy
+      - binary_sensor.hall_front_door

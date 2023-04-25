@@ -54,3 +54,27 @@ automation:
               data:
                 cmd: page screensaver
     mode: restart
+
+light:
+  - platform: template
+    lights:
+      hall_panel_display:
+        friendly_name: 'Hall - Panel - Display'
+        availability_template: '{{ states("sensor.hall_panel_nspanel_event") not in ["unavailable", "unknown", "", None] }}'
+        value_template: '{{ "screensaver" not in states("sensor.hall_panel_nspanel_event") }}'
+        icon_template: '{{ "mdi:power-sleep" if "screensaver" in states("sensor.hall_panel_nspanel_event") else "mdi:tablet-dashboard" }}'
+        level_template: '{{ (states("number.hall_panel_display_brightness") | int(0) / 100 * 255) | round(0) }}'
+        turn_on:
+          service: esphome.hall_panel_send_command_printf
+          data:
+            cmd: page home
+        turn_off:
+          service: esphome.hall_panel_send_command_printf
+          data:
+            cmd: page screensaver
+        set_level:
+          service: number.set_value
+          data:
+            value: '{{ (brightness / 255 * 100) | round(0) | int }}'
+          target:
+            entity_id: number.hall_panel_display_brightness

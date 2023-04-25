@@ -14,14 +14,6 @@ automation:
         lumens_entity: sensor.kitchen_bench_motion_light_level
         max_lumens: 15
 
-binary_sensor:
-  - platform: group
-    name: Hall - Presence
-    device_class: presence
-    entities:
-      - binary_sensor.hall_presence_motion
-      - binary_sensor.hall_presence_occupancy
-
 light:
   - name: "Hall - All lights"
     platform: group
