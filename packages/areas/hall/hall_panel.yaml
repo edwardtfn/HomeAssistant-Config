@@ -1,59 +1,70 @@
 automation:
-  - alias: Hall - Panel - Wake up with motion or door
-    id: '1672272202160'
+  - alias: Hall - Panel - Configuration
+    id: '1672253749079'
     description: ''
-    trigger:
-    - platform: state
-      entity_id:
-      - light.hall_all_lights
-      - binary_sensor.hall_presence
-      - binary_sensor.hall_front_door
-      not_to:
-      - unknown
-      - unavailable
-    condition: []
-    action:
-    - if:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: binary_sensor.hall_presence
-          state: 'on'
-        - condition: state
-          entity_id: binary_sensor.hall_front_door
-          state: 'on'
-        - condition: state
-          entity_id: light.hall_all_lights
-          state: 'on'
-      - condition: state
-        entity_id: sensor.hall_panel_nspanel_event
-        state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-      then:
-        - service: esphome.hall_panel_send_command_printf
-          data:
-            cmd: page home
-      else:
-        - if:
-          - condition: not
-            conditions:
-            - condition: state
-              entity_id: binary_sensor.hall_presence
-              state: 'on'
-            - condition: state
-              entity_id: binary_sensor.hall_front_door
-              state: 'on'
-            - condition: state
-              entity_id: light.hall_all_lights
-              state: 'on'
-            - condition: state
-              entity_id: sensor.hall_panel_nspanel_event
-              state: '{"page": "screensaver", "component": "currentpage", "value": "pagechange"}'
-          then:
-            - delay: 20
-            - service: esphome.hall_panel_send_command_printf
-              data:
-                cmd: page screensaver
-    mode: restart
+    use_blueprint:
+      path: Blackymas/nspanel_blueprint_dev.yaml
+      input:
+        nspanel_name: d079c1c6f682bfcf82dbdf4ea3c017f2
+        language: ENG
+        time_format: '%H:%M'
+        date_format: '%-d/%-m'
+        weather_entity: weather.home
+        left_button_entity: light.hall_ceiling_light
+        left_button_name: Lights
+        right_button_entity: switch.vw_passat_electric_climatisation
+        right_button_name: Car heat
+        home_value01: sensor.corridor_air_quality_humidity
+        home_value01_icon: mdi:water-percent
+        home_value02: sensor.total_power
+        home_value02_icon: mdi:flash
+        home_value03: sensor.home_realfeel_temperature
+        home_value03_icon: mdi:weather-partly-snowy-rainy
+        humidity: sensor.corridor_air_quality_humidity
+        climate: climate.living_room_thermostat
+        button_page01_label: Page 1
+        entity01: light.home_all_lights
+        entity01_name: All lights
+        entity02: input_boolean.home_empty
+        entity02_name: Empty home
+        entity03: input_boolean.home_party_mode
+        entity03_name: Party mode
+        entity04: input_boolean.home_travelling_mode
+        entity04_name: Travelling
+        entity05: light.balcony_string_lights
+        entity06: switch.bedroom_power_strip_1_tv_samsung
+        entity06_name: TV Samsung
+        entity07: input_button.living_room_tv_sony_toggle
+        entity08: input_boolean.home_alarm
+        button_page02_label: Page 2
+        button_page03_label: Page 3
+        button_page04_label: Page 4
+        entity07_name: TV Sony
+        entity05_name: Balcony
+        entity09_name: Displays
+        entity09: switch.office_workstation_outlets_displays
+        entity08_name: Alarm
+        qrcode_state: true
+        qrcode_label: WiFi Settings
+        qrcode_enabled: true
+        qrcode_value: !secret wifi_qrcode
+        indoortemp: sensor.corridor_air_quality_temperature
+        sync_value_ha: select_no
+        sync_slider_ha: select_no
+  - alias: Hall - Panel - Presence based
+    id: hall_panel_presence
+    description: Turn on NSPanel with presence
+    use_blueprint:
+      path: EdwardTFN/light_motion_illuminance_2_levels.yaml
+      input:
+        light_level_high: 100
+        light_level_dimmer: 25
+        motion_entity: binary_sensor.hall_presence
+        light_target: light.hall_panel_display
+        no_motion_wait_to_dimming: 30
+        no_motion_wait_to_off: 15
+        #lumens_entity: sensor.kitchen_bench_motion_light_level
+        #max_lumens: 0
 
 light:
   - platform: template
@@ -65,16 +76,20 @@ light:
         icon_template: '{{ "mdi:power-sleep" if "screensaver" in states("sensor.hall_panel_nspanel_event") else "mdi:tablet-dashboard" }}'
         level_template: '{{ (states("number.hall_panel_display_brightness") | int(0) / 100 * 255) | round(0) }}'
         turn_on:
-          service: esphome.hall_panel_send_command_printf
-          data:
-            cmd: page home
+          - service: esphome.hall_panel_send_command_printf
+            data:
+              cmd: page home
         turn_off:
-          service: esphome.hall_panel_send_command_printf
-          data:
-            cmd: page screensaver
+          - service: esphome.hall_panel_send_command_printf
+            data:
+              cmd: page screensaver
         set_level:
-          service: number.set_value
-          data:
-            value: '{{ (brightness / 255 * 100) | round(0) | int }}'
-          target:
-            entity_id: number.hall_panel_display_brightness
+          - service: number.set_value
+            data:
+              value: '{{ (brightness / 255 * 100) | round(0) | int }}'
+            target:
+              entity_id: number.hall_panel_display_brightness
+          - condition: '{{ "screensaver" in states("sensor.hall_panel_nspanel_event") }}'
+          - service: esphome.hall_panel_send_command_printf
+            data:
+              cmd: page home
