@@ -4,7 +4,7 @@ automation:
     use_blueprint:
       path: EdwardTFN/light_motion_illuminance_2_levels.yaml
       input:
-        motion_entity: binary_sensor.office_presence
+        motion_entity: binary_sensor.office_motion_on_off
         lumens_entity: sensor.office_motion_light_level
         light_target: light.office_ceiling_lines
         no_motion_wait_to_dimming: 180

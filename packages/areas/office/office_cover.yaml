@@ -25,9 +25,10 @@ automation:
       entity_id:
       - sensor.civil_solar_day_status
       for:
-        hours: 0
         minutes: 1
-        seconds: 0
+    - platform: state
+      entity_id:
+        - schedule.home_quiet_hours
     condition:
     - condition: state
       entity_id: binary_sensor.office_door
@@ -42,6 +43,9 @@ automation:
       - condition: state
         entity_id: sun.sun
         state: above_horizon
+      - condition: state
+        entity_id: schedule.home_quiet_hours
+        state: off
       then:
       - service: cover.open_cover
         data: {}

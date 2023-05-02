@@ -33,8 +33,6 @@ binary_sensor:
     unique_id: 1b8ed9a2-0985-4407-bbc3-084a568cc401
     device_class: occupancy
     entities:
-      - binary_sensor.kitchen_table_motion_on_off
-      - binary_sensor.kitchen_table_motion_occupancy
       - binary_sensor.kitchen_table_occupancy_motion
       - binary_sensor.kitchen_table_occupancy_occupancy
 

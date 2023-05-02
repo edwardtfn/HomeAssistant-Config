@@ -3,7 +3,7 @@ automation:
     id: '1672253749079'
     description: ''
     use_blueprint:
-      path: Blackymas/nspanel_blueprint_dev.yaml
+      path: Blackymas/nspanel_blueprint.yaml
       input:
         nspanel_name: d079c1c6f682bfcf82dbdf4ea3c017f2
         language: ENG
