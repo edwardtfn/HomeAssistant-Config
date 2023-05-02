@@ -1,0 +1,5 @@
+#sensor:
+  - platform: uptime
+    name: Uptime
+    entity_category: diagnostic
+    icon: "mdi:timer-outline"

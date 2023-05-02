@@ -1,0 +1,24 @@
+packages:
+  time: !include config_sntp.yaml
+
+#bluetooth_proxy:
+#  active: true
+
+button:
+  #- <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+
+api:
+  services:
+    ##### Service to send a command "font id" directly to the display #####
+    - service: send_command_font_id
+      variables:
+        component: string
+        message: int
+      then:
+        - wait_until:
+              switch.is_on: nextion_init
+        - lambda: 'id(disp1).set_component_font(component.c_str(), message);'
+

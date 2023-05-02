@@ -1,0 +1,50 @@
+#substitutions:
+#  ota_password: !secret ota_password
+
+esphome:
+  name: ${device_name}
+  #on_boot:
+  #  - lambda: |-
+  #      id(my_ota).set_auth_password("${ota_password}");
+
+esp32:
+  board: az-delivery-devkit-v4
+
+packages:
+  wifi: !include config_wifi.yaml
+  time: !include config_sntp.yaml
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+
+# Enable over-the-air updates
+ota:
+  password: !secret ota_password
+  id: my_ota
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_admin_password
+
+button:
+  - <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+sensor:
+  - <<: !include sensor_uptime.yaml
+  - <<: !include sensor_wifi.yaml
+  - <<: !include sensor_wifi_signal_percentage.yaml
+text_sensor:
+  - <<: !include text_sensor_version.yaml
+

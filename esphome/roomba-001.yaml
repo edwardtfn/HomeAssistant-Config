@@ -1,0 +1,70 @@
+esphome:
+  name: roomba_001
+  platform: ESP8266
+  board: d1_mini
+  includes:
+    - .esphome/external_components/wburgers/ESPHomeRoombaComponent.h
+  libraries:
+    - Roomba=https://github.com/Apocrathia/Roomba
+
+substitutions:
+  # IMPORTANT NOTE: If you change the substitution name value, the state_topic/command_topic need to change as well.
+  name: "roomba_001"
+  # state topic, command topic, BRC pin, polling interval in milliseconds
+  init: 'RoombaComponent::instance("roomba_001/state", "roomba_001/command", D4, 1000);'
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+mqtt:
+  broker: !secret mqtt_broker
+  discovery: true
+
+logger:
+  baud_rate: 0
+  level: info
+
+ota:
+
+custom_component:
+  - lambda: |-
+      auto r = ${init}
+      return {r};
+
+sensor:
+ - platform: custom
+   lambda: |-
+      auto r = ${init}
+      return {r->distanceSensor, r->voltageSensor, r->currentSensor, r->chargeSensor, r->capacitySensor};
+
+   sensors:
+     - name: "${name} distance"
+       unit_of_measurement: "mm"
+       accuracy_decimals: 0
+     - name: "${name} voltage"
+       unit_of_measurement: "mV"
+       accuracy_decimals: 0
+     - name: "${name} current"
+       unit_of_measurement: "mA"
+       accuracy_decimals: 0
+     - name: "${name} charge"
+       unit_of_measurement: "mAh"
+       accuracy_decimals: 0
+     - name: "${name} capacity"
+       unit_of_measurement: "mAh"
+       accuracy_decimals: 0
+
+binary_sensor:
+  - platform: status
+    name: "${name} Status"
+
+  - platform: custom
+    lambda: |-
+       auto r = ${init}
+       return {r->chargingBinarySensor, r->dockedBinarySensor, r->cleaningBinarySensor};
+
+    binary_sensors:
+      - name: "${name} charging"
+      - name: "${name} docked"
+      - name: "${name} cleaning"

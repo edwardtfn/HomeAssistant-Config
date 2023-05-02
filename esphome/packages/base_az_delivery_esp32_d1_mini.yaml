@@ -1,0 +1,52 @@
+esphome:
+    name: ${device_name}
+
+esp32:
+  board: wemos_d1_mini32
+
+packages:
+  wifi: !include config_wifi.yaml
+  time: !include config_sntp.yaml
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Enable over-the-air updates
+ota:
+  password: !secret ota_password
+  id: my_ota
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_admin_password
+
+# Use the blue LED in the device as a status LED, which will blink if there are warnings (slow) or errors (fast)
+status_led:
+  pin:
+    number: GPIO2
+    inverted: True
+
+binary_sensor:
+  - <<: !include binary_sensor_status.yaml
+
+button:
+  - <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+sensor:
+  - <<: !include sensor_uptime.yaml
+  - <<: !include sensor_wifi.yaml
+  - <<: !include sensor_wifi_signal_percentage.yaml
+
+text_sensor:
+  - <<: !include text_sensor_version.yaml

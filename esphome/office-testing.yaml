@@ -1,0 +1,30 @@
+substitutions:
+  device_name: office-testing
+  device_verbose_name: "Office - Testing board"
+
+packages:
+  device_base: !include packages/base_esp_12f_relay_x4.yaml
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Four relay outputs, exposed as switches in Home Assistant
+switch:
+  - platform: gpio
+    pin: GPIO16
+    name: ${device_verbose_name} Relay 1
+    id: relay1
+  - platform: gpio
+    pin: GPIO14
+    name: ${device_verbose_name} Relay 2
+    id: relay2
+  - platform: gpio
+    pin: GPIO12
+    name: ${device_verbose_name} Relay 3
+    id: relay3
+  - platform: gpio
+    pin: GPIO13
+    name: ${device_verbose_name} Relay 4
+    id: relay4

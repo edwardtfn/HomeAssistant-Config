@@ -1,0 +1,40 @@
+esphome:
+  name: ${device_name}
+  platform: ESP32
+  board: wemos_d1_mini32
+  #build_path: ./build/${node_name}
+
+packages:
+  wifi: !include config_wifi.yaml
+
+bluetooth_proxy:
+  active: true
+
+# I²C Bus
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  frequency: 100kHz
+
+# Enable logging
+logger:
+  #level: ${log_level}
+
+api:
+#  encryption:
+#      key: !secret api_encryption_key
+  reboot_timeout: 1h
+
+button:
+  - <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+sensor:
+  - <<: !include sensor_uptime.yaml
+  - <<: !include sensor_wifi.yaml
+
+text_sensor:
+  - <<: !include text_sensor_version.yaml
+  - <<: !include text_sensor_wifi.yaml

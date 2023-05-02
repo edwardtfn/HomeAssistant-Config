@@ -1,0 +1,12 @@
+substitutions:
+  device_name: guest-room-panel
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+  nextion_update_url: !secret nspanel_local_nextion_eu_update_url_dev
+
+packages:
+  remote_package:
+    url: https://github.com/Blackymas/NSPanel_HA_Blueprint
+    ref: main
+    files: [nspanel_esphome.yaml]
+    refresh: 300s

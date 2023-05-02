@@ -1,0 +1,11 @@
+- platform: copy # Reports the WiFi signal strength in %
+  source_id: wifi_signal_db
+  name: WiFi signal percent
+  filters:
+    - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+  unit_of_measurement: "%"
+  entity_category: diagnostic
+  #icon: "mdi:wifi"
+  #device_class: signal_strength
+  state_class: measurement
+

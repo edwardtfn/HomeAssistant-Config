@@ -1,0 +1,79 @@
+substitutions:
+  device_name: bedroom-presence
+  device_verbose_name: "Bedroom - Presence"
+
+packages:
+  device_base: !include packages/base_az_delivery_esp32_d1_mini.yaml
+  ble_tracker: !include packages/config_ble_tracker.yaml
+  bluetooth_proxy: !include packages/config_bluetooth_proxy.yaml
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+uart:
+  id: uart1bus
+  tx_pin: GPIO18
+  rx_pin: GPIO19
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+
+ld2410:
+  timeout: 150s
+  max_move_distance : 6m
+  max_still_distance: 0.75m
+  g0_move_threshold: 10
+  g0_still_threshold: 20
+  g1_move_threshold: 10
+  g1_still_threshold: 20
+  g2_move_threshold: 20
+  g2_still_threshold: 21
+  g3_move_threshold: 30
+  g3_still_threshold: 31
+  g4_move_threshold: 40
+  g4_still_threshold: 41
+  g5_move_threshold: 50
+  g5_still_threshold: 51
+  g6_move_threshold: 60
+  g6_still_threshold: 61
+  g7_move_threshold: 70
+  g7_still_threshold: 71
+  g8_move_threshold: 80
+  g8_still_threshold: 81
+
+sensor:
+  - platform: ld2410
+    moving_distance:
+      name : Moving Distance
+    still_distance:
+      name: Still Distance
+    moving_energy:
+      name: Move Energy
+    still_energy:
+      name: Still Energy
+    detection_distance:
+      name: Detection Distance
+
+  - platform: ble_rssi
+    mac_address: 42:EA:CA:6E:5C:55
+    name: "Bedroom - LD2410C - BLE RSSI"
+    device_class: signal_strength
+    state_class: measurement
+    icon: mdi:signal
+
+
+binary_sensor:
+  - platform: ld2410
+    has_target:
+      name: Presence
+    has_moving_target:
+      name: Moving Target
+    has_still_target:
+      name: Still Target
+
+  - platform: ble_presence
+    mac_address: 42:EA:CA:6E:5C:55
+    name: "Bedroom - LD2410C - BLE Presence"
+    device_class: connectivity

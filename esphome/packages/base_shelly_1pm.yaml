@@ -1,0 +1,82 @@
+esphome:
+  name: ${device_name}
+  comment: "Shelly 1PM"
+
+esp8266:
+  board: esp01_1m
+
+packages:
+  wifi: !include config_wifi.yaml
+  time: !include config_sntp.yaml
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Enable over-the-air updates
+ota:
+  password: !secret ota_password
+  id: my_ota
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_admin_password
+
+# Shelly 1 detached switch config with fallback in case of wifi or api fail
+
+switch:
+  - platform: gpio
+    name: ${device_name}
+    pin: GPIO4
+    id: shelly_relay
+    # after reboot, keep the relay off. this prevents light turning on after a power outage
+    restore_mode: ALWAYS_ON
+
+binary_sensor:
+  - platform: gpio
+    name: ${device_name} Input
+    pin:
+      number: GPIO5
+    # small delay to prevent debouncing
+    filters:
+      - delayed_on_off: 50ms
+    # config for state change of input button
+    on_state:
+        then:
+          - if:
+              condition:
+                and:
+                  - wifi.connected:
+                  - api.connected:
+                  - switch.is_on: shelly_relay
+              # toggle smart light if wifi and api are connected and relay is on
+              then:
+                - homeassistant.service:
+                    service: light.toggle
+                    data:
+                      entity_id: light.kitchen
+              # else, toggle relay
+              else:
+                - switch.toggle: shelly_relay
+    id: button1
+
+
+button:
+  - <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+sensor:
+  - <<: !include sensor_uptime.yaml
+  - <<: !include sensor_wifi.yaml
+  - <<: !include sensor_wifi_signal_percentage.yaml
+text_sensor:
+  - <<: !include text_sensor_version.yaml

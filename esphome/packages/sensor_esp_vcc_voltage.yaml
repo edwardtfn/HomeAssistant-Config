@@ -1,0 +1,7 @@
+#sensor:
+  - platform: adc #ESP8266 only
+    pin: VCC
+    name: VCC voltage
+    #update_interval: 1s
+    entity_category: diagnostic
+    icon: "mdi:current-dc"

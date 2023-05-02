@@ -1,0 +1,62 @@
+substitutions:
+  device_name: office-roomba-2
+  device_verbose_name: "Office - Roomba 2"
+  # BRC pin, uart_bus, polling interval in milliseconds
+  init: 'RoombaComponent::instance(D5, id(uart_bus), 10000);'
+
+packages:
+  device_base: !include packages/base_d1_mini.yaml
+
+esphome:
+  includes:
+    - .esphome/external_components/wburgers/ESPHomeRoombaComponent.h
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+
+logger:
+  hardware_uart: UART1
+
+custom_component:
+  - lambda: |-
+      auto r = ${init}
+      return {r};
+
+uart:
+  id: uart_bus
+  tx_pin: TX
+  rx_pin: RX
+  baud_rate: 115200
+
+sensor:
+  - platform: custom
+    lambda: |-
+      auto r = ${init}
+      return {r->voltageSensor, r->currentSensor, r->batteryChargeSensor, r->batteryCapacitySensor, r->batteryPercentSensor};
+    sensors:
+      - name: ${device_name} Voltage
+        unit_of_measurement: "V"
+        accuracy_decimals: 2
+      - name: ${device_name} Current
+        unit_of_measurement: "A"
+        accuracy_decimals: 3
+      - name: ${device_name} Charge
+        unit_of_measurement: "Ah"
+        accuracy_decimals: 2
+      - name: ${device_name} Capacity
+        unit_of_measurement: "Ah"
+        accuracy_decimals: 2
+      - name: ${device_name} Battery
+        unit_of_measurement: "%"
+        accuracy_decimals: 0
+
+text_sensor:
+  - platform: custom
+    lambda: |-
+      auto r = ${init}
+      return {r-> chargingSensor, r->activitySensor};
+    text_sensors:
+      - name: ${device_name} Charging state
+      - name: ${device_name} Activity

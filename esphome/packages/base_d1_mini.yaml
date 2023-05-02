@@ -1,0 +1,78 @@
+#substitutions:
+#  ota_password: !secret ota_password
+
+esphome:
+    name: ${device_name}
+    #on_boot:
+    #  - lambda: |-
+    #      id(my_ota).set_auth_password("${ota_password}");
+
+esp8266:
+#  board: d1_mini
+  board: nodemcuv2
+
+packages:
+  wifi: !include config_wifi.yaml
+  time: !include config_sntp.yaml
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Enable over-the-air updates
+ota:
+  password: !secret ota_password
+  id: my_ota
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_admin_password
+
+# Use the blue LED in the device as a status LED, which will blink if there are warnings (slow) or errors (fast)
+status_led:
+  pin:
+    number: GPIO2
+    inverted: True
+
+switch:
+  - platform: gpio
+    pin: GPIO2
+    name: "Wemos Status LED"
+    inverted: true
+    id: wemos_status_led
+    icon: "mdi:led-on"
+    entity_category: config
+
+#light:
+#  - platform: binary
+#    name: "Wemos Status LED"
+#    output: wemos_status_led_output
+#    entity_category: config
+
+#output:
+#  - id: wemos_status_led_output
+#    platform: gpio
+#    pin: GPIO2
+
+button:
+  - <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+
+sensor:
+  - <<: !include sensor_uptime.yaml
+  - <<: !include sensor_wifi.yaml
+  - <<: !include sensor_wifi_signal_percentage.yaml
+  - <<: !include sensor_esp_vcc_voltage.yaml
+
+text_sensor:
+  - <<: !include text_sensor_version.yaml
