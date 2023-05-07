@@ -7,3 +7,4 @@
     #icon: "mdi:wifi"
     device_class: signal_strength
     state_class: measurement
+    disabled_by_default: true

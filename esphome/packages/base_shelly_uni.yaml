@@ -1,0 +1,95 @@
+substitutions:
+  friendly_name: ${device_name}
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp8266:
+  board: esp01_1m
+
+packages:
+  wifi: !include config_wifi.yaml
+  time: !include config_sntp.yaml
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+captive_portal:
+
+binary_sensor:
+  - name: "Switch 1"
+    platform: gpio
+    pin: GPIO12
+    #on_press:
+    #  then:
+    #    - switch.turn_on: "relay_1"
+    #on_release:
+    #  then:
+    #    - switch.turn_off: "relay_1"
+    filters:
+      - delayed_on_off: 50ms
+
+  - name: "Switch 2"
+    platform: gpio
+    pin: GPIO13
+    #on_press:
+    #  then:
+    #    - switch.turn_on: "relay_2"
+    #on_release:
+    #  then:
+    #    - switch.turn_off: "relay_2"
+    filters:
+      - delayed_on_off: 50ms
+
+  - name: "Switch 3"
+    platform: gpio
+    pin: GPIO14
+    #on_press:
+    #  then:
+    #    - switch.turn_on: "relay_x"
+    #on_release:
+    #  then:
+    #    - switch.turn_off: "relay_x"
+    filters:
+      - delayed_on_off: 50ms
+
+button:
+  - <<: !include button_restart.yaml
+  - <<: !include button_restart_safe_mode.yaml
+  - <<: !include button_wifi_restart.yaml
+
+output:
+  - platform: gpio
+    id: "relay_1_output"
+    pin: GPIO15
+  - platform: gpio
+    id: "relay_2_output"
+    pin: GPIO4
+
+sensor:
+  - <<: !include sensor_uptime.yaml
+  - <<: !include sensor_wifi.yaml
+  - <<: !include sensor_wifi_signal_percentage.yaml
+  - <<: !include sensor_esp_vcc_voltage.yaml
+
+switch:
+  - name: "Relay 1"
+    platform: output
+    id: "relay_1"
+    output: "relay_1_output"
+  - name: "Relay 2"
+    platform: output
+    id: "relay_2"
+    output: "relay_2_output"
+
+text_sensor:
+  - <<: !include text_sensor_version.yaml
+
+time:
+  - platform: homeassistant

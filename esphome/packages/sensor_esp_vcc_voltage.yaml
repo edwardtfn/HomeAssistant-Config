@@ -5,3 +5,4 @@
     #update_interval: 1s
     entity_category: diagnostic
     icon: "mdi:current-dc"
+    disabled_by_default: true

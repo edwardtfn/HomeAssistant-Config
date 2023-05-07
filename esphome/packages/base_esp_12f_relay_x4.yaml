@@ -3,6 +3,7 @@
 
 esphome:
   name: ${device_name}
+  friendly_name: ${friendly_name}
   #on_boot:
   #  - lambda: |-
   #      id(my_ota).set_auth_password("${ota_password}");
