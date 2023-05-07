@@ -6,5 +6,5 @@
     on_press:
       then:
         - lambda: |-
-            WiFi.disconnect();
-            WiFi.begin();
+            wifi.disconnect();
+            wifi.begin();

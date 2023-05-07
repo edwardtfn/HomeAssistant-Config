@@ -53,39 +53,6 @@ automation:
           entity_id: '{{ trigger.entity_id }}'
     mode: parallel
     max: 15
-  - alias: Home - Covers - Stop when stuck
-    id: '1673883567332'
-    description: ''
-    trigger:
-      - platform: template
-        value_template: >
-          {{ states.cover
-            | selectattr(''state'', ''in'', [''opening'', ''closing''])
-            | list
-            | count
-            | int(0)
-          }}
-    condition:
-      - condition: template
-        value_template: >
-          {{ states.cover
-            | selectattr(''state'', ''in'', [''opening'', ''closing''])
-            | list
-            | count
-            | int(0) > 0
-          }}
-    action:
-      - service: cover.stop_cover
-        data: {}
-        target:
-          entity_id: >
-            {{
-              states.cover
-              | selectattr(''state'', ''in'', [''opening'', ''closing''])
-              | map(attribute=''entity_id'')
-              | list
-            }}
-    mode: single
   - alias: Home - Silence hours
     id: '1654865795294'
     description: ''

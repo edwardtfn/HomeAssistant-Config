@@ -62,7 +62,7 @@ binary_sensor:
 button:
   - <<: !include button_restart.yaml
   - <<: !include button_restart_safe_mode.yaml
-  - <<: !include button_wifi_restart.yaml
+  #- <<: !include button_wifi_restart.yaml
 
 output:
   - platform: gpio
@@ -77,6 +77,11 @@ sensor:
   - <<: !include sensor_wifi.yaml
   - <<: !include sensor_wifi_signal_percentage.yaml
   - <<: !include sensor_esp_vcc_voltage.yaml
+
+status_led:
+  pin:
+    number: GPIO0
+    inverted: true
 
 switch:
   - name: "Relay 1"

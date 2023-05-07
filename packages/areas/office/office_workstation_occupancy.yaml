@@ -118,7 +118,7 @@ automation:
       target:
         entity_id:
         - switch.office_workstation_power_strip_displays
-        - switch.office_workstation_power_strip_docking_station
+        #- switch.office_workstation_power_strip_docking_station
         - light.office_workstation_lights
       data: {}
     - if:
@@ -133,10 +133,10 @@ automation:
             cmd: page screensaver
           continue_on_error: true
       continue_on_error: true
-    - service: button.press
-      data: {}
-      target:
-        entity_id: button.mobile_edwards_laptop_sleep
+    #- service: button.press
+    #  data: {}
+    #  target:
+    #    entity_id: button.mobile_edwards_laptop_sleep
     mode: restart
 
 binary_sensor:
@@ -145,8 +145,10 @@ binary_sensor:
     unique_id: 82ac4212-9cd5-4154-8e83-0a525b6c757c
     device_class: motion
     entities:
-      - binary_sensor.office_workstation_presence_motion
-      - binary_sensor.office_workstation_presence_occupancy
+      - binary_sensor.office_workstation_1_presence_motion
+      - binary_sensor.office_workstation_1_presence_occupancy
+      - binary_sensor.office_workstation_2_presence_motion
+      - binary_sensor.office_workstation_2_presence_occupancy
 
 sensor:
   - platform: history_stats

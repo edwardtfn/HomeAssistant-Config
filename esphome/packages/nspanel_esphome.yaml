@@ -552,6 +552,10 @@ binary_sensor:
     entity_category: diagnostic
     icon: mdi:tablet-dashboard
 
+  ##### API connection status
+  - platform: status
+    name: ${device_name} Status
+
 ##### START - SENSOR CONFIGURATION #####
 sensor:
 
@@ -773,7 +777,6 @@ switch:
     entity_category: config
     restore_mode: RESTORE_DEFAULT_OFF
     restore_state: true
-
     optimistic: false
     turn_on_action: &sleep_mode-turn_on
       - logger.log: "Sleep mode - Turn on"

@@ -16,7 +16,6 @@ automation:
         right_button_name: Car heat
         home_value01: sensor.corridor_air_quality_humidity
         home_value01_icon: mdi:water-percent
-        home_value02: sensor.total_power
         home_value02_icon: mdi:flash
         home_value03: sensor.home_realfeel_temperature
         home_value03_icon: mdi:weather-partly-snowy-rainy

@@ -4,20 +4,13 @@ substitutions:
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   nextion_update_url: "http://homeassistant.local:8123/local/nspanel/nspanel_blank.tft"
-  #baud_rate: "115200"
 
 packages:
   #device_base: !include packages/base_sonoff_nspanel.yaml
   #debug: !include packages/config_debug_esp32.yaml
-  #local_package: !include packages/nspanel_esphome.yaml
-  remote_package:
-    url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-    ref: dev
-    files: [nspanel_esphome.yaml]
-    refresh: 30s
-
-##### Use this only if you are having issues uploading the TFT for the first time. Then come back here and remove the lines below #####
-#external_components:
-#  - source: github://pr#2956
-#    components: [nextion]
-#    refresh: 1h
+  local_package: !include packages/nspanel_esphome.yaml
+  #remote_package:
+  #  url: https://github.com/Blackymas/NSPanel_HA_Blueprint
+  #  ref: dev
+  #  files: [nspanel_esphome.yaml]
+  #  refresh: 30s

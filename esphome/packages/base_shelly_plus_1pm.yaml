@@ -1,5 +1,5 @@
 substitutions:
-  friendly_name: ${device_name}
+  #friendly_name: ${device_name}
   # Higher value gives lower watt readout
   current_res: "0.001"
   # Lower value gives lower voltage readout
@@ -22,7 +22,7 @@ esp32:
 
 packages:
   wifi: !include config_wifi.yaml
-  time: !include config_sntp.yaml
+  #time: !include config_sntp.yaml
 
 # Enable logging
 logger:
@@ -34,7 +34,7 @@ api:
 ota:
 
 binary_sensor:
-  - <<: !include binary_sensor_status.yaml
+  #- <<: !include binary_sensor_status.yaml
   - platform: gpio
     name: "Switch"
     pin: GPIO4
@@ -58,12 +58,14 @@ output:
     pin: GPIO26
 
 sensor:
-  - <<: !include sensor_uptime.yaml
+  #- <<: !include sensor_uptime.yaml
   - <<: !include sensor_wifi.yaml
-  - <<: !include sensor_wifi_signal_percentage.yaml
-  - platform: ntc
+  #- <<: !include sensor_wifi_signal_percentage.yaml
+  #- <<: !include sensor_api_status.yaml
+
+  - name: "Temperature"
+    platform: ntc
     sensor: temp_resistance_reading
-    name: "Temperature"
     unit_of_measurement: "°C"
     accuracy_decimals: 1
     icon: "mdi:thermometer"
@@ -75,15 +77,13 @@ sensor:
       - above: "80.0"
         then:
           - switch.turn_off: "relay"
-
-  - platform: resistance
-    id: temp_resistance_reading
+  - id: temp_resistance_reading
+    platform: resistance
     sensor: temp_analog_reading
     configuration: DOWNSTREAM
     resistor: 10kOhm
-
-  - platform: adc
-    id: temp_analog_reading
+  - id: temp_analog_reading
+    platform: adc
     pin: GPIO32
     attenuation: 11db
 
@@ -144,8 +144,8 @@ switch:
     name: "Relay"
     output: "relay_output"
 
-text_sensor:
-  - <<: !include text_sensor_version.yaml
+#text_sensor:
+  #- <<: !include text_sensor_version.yaml
 
 time:
   - platform: homeassistant

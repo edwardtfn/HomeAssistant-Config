@@ -8,15 +8,12 @@ esphome:
 packages:
   wifi: !include config_wifi.yaml
 
-bluetooth_proxy:
-  active: true
-
 # I²C Bus
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
-  frequency: 100kHz
+#i2c:
+#  sda: GPIO21
+#  scl: GPIO22
+#  scan: true
+#  frequency: 100kHz
 
 # Enable logging
 logger:
@@ -25,12 +22,14 @@ logger:
 api:
 #  encryption:
 #      key: !secret api_encryption_key
-  reboot_timeout: 1h
+#  reboot_timeout: 1h
+
+ota:
 
 button:
   - <<: !include button_restart.yaml
   - <<: !include button_restart_safe_mode.yaml
-  - <<: !include button_wifi_restart.yaml
+  #- <<: !include button_wifi_restart.yaml
 
 sensor:
   - <<: !include sensor_uptime.yaml

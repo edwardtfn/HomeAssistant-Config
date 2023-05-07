@@ -5,4 +5,6 @@ binary_sensor:
     entities:
       - binary_sensor.hall_presence_motion
       - binary_sensor.hall_presence_occupancy
+      - binary_sensor.hall_motion_motion
+      - binary_sensor.hall_motion_occupancy
       - binary_sensor.hall_front_door
