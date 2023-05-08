@@ -1,3 +1,6 @@
+substitutions:
+  friendly_name: ${device_name}
+
 esphome:
     name: ${device_name}
     friendly_name: ${friendly_name}

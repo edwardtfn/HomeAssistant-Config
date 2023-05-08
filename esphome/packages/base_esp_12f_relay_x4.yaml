@@ -1,5 +1,5 @@
-#substitutions:
-#  ota_password: !secret ota_password
+substitutions:
+  friendly_name: ${device_name}
 
 esphome:
   name: ${device_name}
@@ -74,4 +74,3 @@ sensor:
   - <<: !include sensor_esp_vcc_voltage.yaml
 text_sensor:
   - <<: !include text_sensor_version.yaml
-

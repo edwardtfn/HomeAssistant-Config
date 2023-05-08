@@ -1,5 +1,5 @@
 substitutions:
-  #friendly_name: ${device_name}
+  friendly_name: ${device_name}
   # Higher value gives lower watt readout
   current_res: "0.001"
   # Lower value gives lower voltage readout

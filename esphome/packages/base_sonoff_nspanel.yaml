@@ -1,3 +1,6 @@
+substitutions:
+  friendly_name: ${device_name}
+
 packages:
   time: !include config_sntp.yaml
 
@@ -21,4 +24,3 @@ api:
         - wait_until:
               switch.is_on: nextion_init
         - lambda: 'id(disp1).set_component_font(component.c_str(), message);'
-
