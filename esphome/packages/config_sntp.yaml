@@ -1,0 +1,8 @@
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: Europe/Stockholm
+    servers:
+      - !secret mysntpserver
+      - europe.pool.ntp.org
+      - 0.pool.ntp.org

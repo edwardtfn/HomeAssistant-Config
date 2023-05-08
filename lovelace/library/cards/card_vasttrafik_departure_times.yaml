@@ -41,8 +41,8 @@ card:
       data: Departure
       align: center
       modify: |-
-        if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string") 
-          { 
+        if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string")
+          {
             var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + " " + x.rtTime) - Date.now())/60000));
             if (minutes>=60 || isNaN(minutes))
               {{ x.rtTime }}
@@ -52,7 +52,7 @@ card:
               {{ minutes }}
           }
         else
-          { 
+          {
             var minutes = Math.round(Math.max(0,(Date.parse(x.date + " " + x.time) - Date.now())/60000));
             if (minutes>=60 || isNaN(minutes))
               {{ x.time }}

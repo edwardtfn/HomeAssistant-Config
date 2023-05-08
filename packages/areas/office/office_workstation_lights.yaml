@@ -1,16 +1,16 @@
 automation:
-- alias: Office - Workstation - Lights - Laptop's camera based
-  id: '1662056357187'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/set_entities_based_on_other_entities.yaml
-    input:
-      input_entities:
-      - binary_sensor.mobile_edwards_laptop_webcamactive
-      target_entities:
-      - light.office_workstation_lights
-      pause_entities:
-      - input_boolean.home_travelling_mode
+  - alias: Office - Workstation - Lights - Laptop's camera based
+    id: '1662056357187'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/set_entities_based_on_other_entities.yaml
+      input:
+        input_entities:
+        - binary_sensor.mobile_edwards_laptop_webcamactive
+        target_entities:
+        - light.office_workstation_lights
+        pause_entities:
+        - input_boolean.home_travelling_mode
 
 light:
   - name: Office - Workstation lights

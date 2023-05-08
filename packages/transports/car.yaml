@@ -3,7 +3,7 @@ alert:
     name: VW Passat parking
     message: >-
       VW Passat is parked in the neighborhood streets for too long ({{ states('sensor.vw_passat_parking_time') }}).
-    
+
       Please move it to a parking area.
     done_message: VW Passat was moved!
     entity_id: device_tracker.vw_passat_position

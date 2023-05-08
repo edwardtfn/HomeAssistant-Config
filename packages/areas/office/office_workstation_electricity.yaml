@@ -1,15 +1,14 @@
 automation:
-- alias: Office - Workstation - Turn on USB power when NFC tag is scanned
-  id: '1664282492813'
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: c7b58905-b6b1-4fb5-b9dd-622054bf3df5
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    target:
-      entity_id: switch.office_workstation_power_strip_usb
-  mode: single
-
+  - alias: Office - Workstation - Turn on USB power when NFC tag is scanned
+    id: '1664282492813'
+    description: ''
+    trigger:
+    - platform: tag
+      tag_id: c7b58905-b6b1-4fb5-b9dd-622054bf3df5
+    condition: []
+    action:
+    - service: switch.turn_on
+      data: {}
+      target:
+        entity_id: switch.office_workstation_power_strip_usb
+    mode: single

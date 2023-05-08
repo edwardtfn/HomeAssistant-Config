@@ -1,13 +1,13 @@
 automation:
-- alias: Kitchen - Always on
-  id: f711c2a0-4b8a-4aed-b8bb-5a2ce62aed4f
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/always_on.yaml
-    input:
-      timeout: 60
-      entities_list:
-      - switch.kitchen_cooker_hood
+  - alias: Kitchen - Always on
+    id: f711c2a0-4b8a-4aed-b8bb-5a2ce62aed4f
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/always_on.yaml
+      input:
+        timeout: 60
+        entities_list:
+        - switch.kitchen_cooker_hood
 
 sensor:
   - name: Kitchen - Total power

@@ -1,192 +1,192 @@
 automation:
-- alias: Bathroom - Lights - Door based
-  id: '1641033255729'
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.bathroom_door
-    id: Opening
-    from: 'off'
-    to: 'on'
-  - platform: state
-    entity_id: binary_sensor.bathroom_door
-    id: Closing
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: Opening
-      sequence:
-      - type: turn_on
-        device_id: 3cdd74bfe34c054238c9d0f07cccffb5
-        entity_id: light.bathroom_ceiling_lights
-        domain: light
-        brightness_pct: 15
-    - conditions:
-      - condition: trigger
-        id: Closing
-      sequence:
-      - type: turn_on
-        device_id: 3cdd74bfe34c054238c9d0f07cccffb5
-        entity_id: light.bathroom_ceiling_lights
-        domain: light
-        brightness_pct: 50
-    default: []
-  mode: restart
-- alias: Bathroom - Lights - Motion stops
-  id: '1640068634769'
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.bathroom_motion_dual_sensors_state
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-  condition:
-  - type: is_open
-    condition: device
-    device_id: a2e059c66daa6661b4793e090e03c994
-    entity_id: binary_sensor.bathroom_door
-    domain: binary_sensor
-  - condition: or
-    conditions:
-    - condition: not
-      conditions:
-      - condition: device
-        type: is_off
-        device_id: 3cdd74bfe34c054238c9d0f07cccffb5
-        entity_id: light.bathroom_ceiling_lights
-        domain: light
-    - condition: not
-      conditions:
-      - condition: device
-        type: is_off
-        device_id: f1e32768b729bd9e1f146c4511f96613
-        entity_id: light.bathroom_mirror_light
-        domain: light
-  action:
-  - service: light.turn_off
-    target:
-      entity_id:
-      - light.bathroom_ceiling_lights
-      - light.bathroom_mirror_light
-    data:
-      transition: 5
-  mode: restart
-- alias: Bathroom - Lights - Motion based
-  id: '1641941254795'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.bathroom_motion_dual_sensors_state
-    to: 'on'
-    from: 'off'
-  action:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: not
-          conditions:
-          - condition: state
-            entity_id: light.bathroom_ceiling_lights
-            state: 'on'
-        - condition: numeric_state
+  - alias: Bathroom - Lights - Door based
+    id: '1641033255729'
+    trigger:
+    - platform: state
+      entity_id: binary_sensor.bathroom_door
+      id: Opening
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.bathroom_door
+      id: Closing
+      from: 'on'
+      to: 'off'
+    condition: []
+    action:
+    - choose:
+      - conditions:
+        - condition: trigger
+          id: Opening
+        sequence:
+        - type: turn_on
+          device_id: 3cdd74bfe34c054238c9d0f07cccffb5
           entity_id: light.bathroom_ceiling_lights
-          attribute: brightness
-          below: 9
-      sequence:
-      - service: light.turn_on
-        data:
-          transition: 1
-          brightness_pct: 10
-        target:
+          domain: light
+          brightness_pct: 15
+      - conditions:
+        - condition: trigger
+          id: Closing
+        sequence:
+        - type: turn_on
+          device_id: 3cdd74bfe34c054238c9d0f07cccffb5
           entity_id: light.bathroom_ceiling_lights
-    default: []
-  - wait_for_trigger:
+          domain: light
+          brightness_pct: 50
+      default: []
+    mode: restart
+  - alias: Bathroom - Lights - Motion stops
+    id: '1640068634769'
+    trigger:
     - platform: state
       entity_id:
       - binary_sensor.bathroom_motion_dual_sensors_state
       to: 'off'
-    continue_on_timeout: false
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bathroom_door
-        state: 'off'
-      sequence:
-      - wait_for_trigger:
-        - platform: state
-          entity_id:
-          - binary_sensor.bathroom_door
-          to: 'on'
-        continue_on_timeout: false
-    default: []
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bathroom_door
-        state: 'on'
+      for:
+        hours: 0
+        minutes: 2
+        seconds: 0
+    condition:
+    - type: is_open
+      condition: device
+      device_id: a2e059c66daa6661b4793e090e03c994
+      entity_id: binary_sensor.bathroom_door
+      domain: binary_sensor
+    - condition: or
+      conditions:
       - condition: not
         conditions:
-        - condition: state
+        - condition: device
+          type: is_off
+          device_id: 3cdd74bfe34c054238c9d0f07cccffb5
           entity_id: light.bathroom_ceiling_lights
-          state: 'off'
-      sequence:
-      - service: light.turn_on
-        target:
-          entity_id: light.bathroom_ceiling_lights
-        data:
-          transition: 5
-          brightness_pct: 5
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-    default: []
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bathroom_door
-        state: 'on'
-      - condition: or
+          domain: light
+      - condition: not
         conditions:
-        - condition: state
-          entity_id: light.bathroom_ceiling_lights
-          state: 'on'
-        - condition: state
+        - condition: device
+          type: is_off
+          device_id: f1e32768b729bd9e1f146c4511f96613
           entity_id: light.bathroom_mirror_light
+          domain: light
+    action:
+    - service: light.turn_off
+      target:
+        entity_id:
+        - light.bathroom_ceiling_lights
+        - light.bathroom_mirror_light
+      data:
+        transition: 5
+    mode: restart
+  - alias: Bathroom - Lights - Motion based
+    id: '1641941254795'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.bathroom_motion_dual_sensors_state
+      to: 'on'
+      from: 'off'
+    action:
+    - choose:
+      - conditions:
+        - condition: or
+          conditions:
+          - condition: not
+            conditions:
+            - condition: state
+              entity_id: light.bathroom_ceiling_lights
+              state: 'on'
+          - condition: numeric_state
+            entity_id: light.bathroom_ceiling_lights
+            attribute: brightness
+            below: 9
+        sequence:
+        - service: light.turn_on
+          data:
+            transition: 1
+            brightness_pct: 10
+          target:
+            entity_id: light.bathroom_ceiling_lights
+      default: []
+    - wait_for_trigger:
+      - platform: state
+        entity_id:
+        - binary_sensor.bathroom_motion_dual_sensors_state
+        to: 'off'
+      continue_on_timeout: false
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 10
+        milliseconds: 0
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: binary_sensor.bathroom_door
+          state: 'off'
+        sequence:
+        - wait_for_trigger:
+          - platform: state
+            entity_id:
+            - binary_sensor.bathroom_door
+            to: 'on'
+          continue_on_timeout: false
+      default: []
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: binary_sensor.bathroom_door
           state: 'on'
-      sequence:
-      - service: light.turn_off
-        target:
-          entity_id:
-          - light.bathroom_ceiling_lights
-          - light.bathroom_mirror_light
-        data:
-          transition: 5
-    default: []
-  mode: restart
-- alias: Bathroom - Mirror lights - Mirror's doors based
-  id: '1661764961929'
-  use_blueprint:
-    path: EdwardTFN/set_entities_based_on_other_entities.yaml
-    input:
-      input_entities:
-      - binary_sensor.bathroom_mirror_door
-      target_entities:
-      - light.bathroom_mirror_light
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: light.bathroom_ceiling_lights
+            state: 'off'
+        sequence:
+        - service: light.turn_on
+          target:
+            entity_id: light.bathroom_ceiling_lights
+          data:
+            transition: 5
+            brightness_pct: 5
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 10
+            milliseconds: 0
+      default: []
+    - choose:
+      - conditions:
+        - condition: state
+          entity_id: binary_sensor.bathroom_door
+          state: 'on'
+        - condition: or
+          conditions:
+          - condition: state
+            entity_id: light.bathroom_ceiling_lights
+            state: 'on'
+          - condition: state
+            entity_id: light.bathroom_mirror_light
+            state: 'on'
+        sequence:
+        - service: light.turn_off
+          target:
+            entity_id:
+            - light.bathroom_ceiling_lights
+            - light.bathroom_mirror_light
+          data:
+            transition: 5
+      default: []
+    mode: restart
+  - alias: Bathroom - Mirror lights - Mirror's doors based
+    id: '1661764961929'
+    use_blueprint:
+      path: EdwardTFN/set_entities_based_on_other_entities.yaml
+      input:
+        input_entities:
+        - binary_sensor.bathroom_mirror_door
+        target_entities:
+        - light.bathroom_mirror_light
 
 light:
   - platform: group

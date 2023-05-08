@@ -1,0 +1,19 @@
+#text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP
+      disabled_by_default: true
+      entity_category: diagnostic
+      icon: "mdi:ip"
+
+    ssid:
+      name: SSID
+      disabled_by_default: true
+      entity_category: diagnostic
+      icon: "mdi:wifi"
+
+    bssid:
+      name: BSSID
+      disabled_by_default: true
+      entity_category: diagnostic
+      icon: "mdi:wifi"

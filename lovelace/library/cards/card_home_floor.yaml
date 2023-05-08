@@ -598,22 +598,14 @@ elements:
     style:
       top: 6%
       left: 19%
-  - entity: switch.office_workstation_power_strip_eletronics_bench
-    type: state-icon
-    icon: mdi:electron-framework
-    tap_action:
-      action: toggle
-    style:
-      top: 6%
-      left: 27%
   - type: conditional
     conditions:
-      - entity: binary_sensor.office_motion_all
+      - entity: binary_sensor.office_motion
         state: 'on'
       - entity: input_boolean.home_display_motion_sensors
         state: 'on'
     elements:
-      - entity: binary_sensor.office_motion_all
+      - entity: binary_sensor.office_motion
         type: state-icon
         icon: mdi:motion-sensor
         style:

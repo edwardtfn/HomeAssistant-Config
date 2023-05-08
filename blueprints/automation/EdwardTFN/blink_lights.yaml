@@ -1,5 +1,5 @@
 blueprint:
-  name: Blink lights on a 
+  name: Blink lights
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
     min_version: '2023.3.0'
@@ -9,8 +9,10 @@ blueprint:
   input:
     trigger_entities:
       name: Trigger entities
-      description: 'The lights/switches will "blink" if any of the entities selected here changes it states. Try to avoid a big number of lights or groups as it can take long to change the state on all the entities.'
-      default: [ ]
+      description: >
+        The lights/switches will "blink" if any of the entities selected here changes it states.
+        Try to avoid a big number of lights or groups as it can take long to change the state on all the entities.
+      default: []
       selector:
         entity:
           multiple: true
@@ -35,7 +37,9 @@ blueprint:
 
     blink_duration:
       name: Blink speed (msec)
-      description: The time (in milliseconds) the entities will stay on each state (on or off). Try to increase this time if you are using too many lights or if you have long transition time for the lights.
+      description: >
+        The time (in milliseconds) the entities will stay on each state (on or off).
+        Try to increase this time if you are using too many lights or if you have long transition time for the lights.
       default: 1000
       selector:
         number:
@@ -45,10 +49,12 @@ blueprint:
 
     pause_entities:
       name: (Optional) Pause update entities
-      description: 'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the system won''t blink the lights on a trigger.
+      description: >
+        You can select one or more entities to pause this automation.
+        If any of the selected entities is "On" or "True" the system won''t blink the lights on a trigger.
 
-        You can use this to hold this automation when you have a party or you are not at home.'
-      default: [ ]
+        You can use this to hold this automation when you have a party or you are not at home.
+      default: []
       selector:
         entity:
           multiple: true

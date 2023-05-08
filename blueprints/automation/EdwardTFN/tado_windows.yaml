@@ -23,23 +23,23 @@ blueprint:
           domain: climate
   #source_url: https://github.com/SmartLiving-Rocks/Blueprint/blob/main/tado
 trigger:
-- platform: state
-  entity_id: !input 'window_entity'
-  to:
-    - "on"
-condition: []
-action:
-- service: climate.turn_off
-  entity_id: !input 'climate_target'
-- wait_for_trigger:
   - platform: state
     entity_id: !input 'window_entity'
-    to: 'off'
-  continue_on_timeout: false
-- service: climate.turn_on
-  entity_id: !input 'climate_target'
-- service: climate.set_hvac_mode
-  target:
+    to:
+      - "on"
+condition: []
+action:
+  - service: climate.turn_off
     entity_id: !input 'climate_target'
-  data:
-    hvac_mode: auto
+  - wait_for_trigger:
+      - platform: state
+        entity_id: !input 'window_entity'
+        to: 'off'
+    continue_on_timeout: false
+  - service: climate.turn_on
+    entity_id: !input 'climate_target'
+  - service: climate.set_hvac_mode
+    target:
+      entity_id: !input 'climate_target'
+    data:
+      hvac_mode: auto

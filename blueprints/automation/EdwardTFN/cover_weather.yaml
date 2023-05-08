@@ -120,7 +120,7 @@ blueprint:
       description: 'You can select one or more entities to pause this automation. If any of the selected entities is "On" or "True" the system won''t be controlling your covers.
 
         You can use this to hold this automation when you are travelling, just as an example.'
-      default: [ ]
+      default: []
       selector:
         entity:
           multiple: true

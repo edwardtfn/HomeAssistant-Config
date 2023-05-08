@@ -1,244 +1,206 @@
 automation:
-- alias: Home - Battery - Low battery devices
-  id: '1653260609920'
-  description: ''
-  use_blueprint:
-    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
-    input:
-      exclude:
+  - alias: Home - Battery - Low battery devices
+    id: '1653260609920'
+    description: ''
+    use_blueprint:
+      path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+      input:
+        exclude:
+          entity_id:
+            - sensor.carols_laptop_internal_battery_level
+            - sensor.carols_phone_battery_level
+            - sensor.edwards_phone_battery_level
+            - sensor.edwards_tablet_battery_level
+            - sensor.vw_passat_battery_level
+        actions:
+          - service: notify.signal_group_home
+            data:
+              message: 'Low battery warning for: {{sensors}}'
+        threshold: 15
+  - alias: Home - Covers - Reset when stuck in a state
+    id: '1662801171931'
+    description: ''
+    trigger:
+      - platform: state
         entity_id:
-        - sensor.carols_laptop_internal_battery_level
-        - sensor.carols_phone_battery_level
-        - sensor.edwards_phone_battery_level
-        - sensor.edwards_tablet_battery_level
-        - sensor.vw_passat_battery_level
-      actions:
-      - service: notify.signal_group_home
-        data:
-          message: 'Low battery warning for: {{sensors}}'
-      threshold: 15
-- alias: Home - Covers - Reset when stuck in a state
-  id: '1662801171931'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - cover.balcony_curtain
-    - cover.bedroom_curtains
-    - cover.bedroom_curtains_dual
-    - cover.bedroom_curtain_left
-    - cover.bedroom_curtain_right
-    - cover.guest_room_shutter_cover
-    - cover.living_room_blinds
-    - cover.living_room_blind_right_cover
-    - cover.living_room_blind_centre_cover
-    - cover.living_room_blind_left_cover_2
-    - cover.office_roller_blind_1_cover
-    - cover.office_roller_blind_2_cover
-    - cover.office_roller_blinds_all
-    - cover.office_shutter_1_cover
-    - cover.office_shutter_2_cover
-    - cover.office_shutters_all
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-    to:
-    - closing
-    - opening
-  condition: []
-  action:
-  - service: cover.stop_cover
-    target:
-      entity_id: '{{ trigger.entity_id }}'
-  mode: parallel
-  max: 15
-- alias: Home - Covers - Stop when stuck
-  id: '1673883567332'
-  description: ''
-  trigger:
-  - platform: template
-    value_template: '{{ states.cover
-
-      | selectattr(''state'', ''in'', [''opening'', ''closing''])
-
-      | list
-
-      | count
-
-      | int(0)
-
-      }}'
-  condition:
-  - condition: template
-    value_template: '{{ states.cover
-
-      | selectattr(''state'', ''in'', [''opening'', ''closing''])
-
-      | list
-
-      | count
-
-      | int(0) > 0
-
-      }}
-
-      '
-  action:
-  - service: cover.stop_cover
-    data: {}
-    target:
-      entity_id: '{{ states.cover | selectattr(''state'', ''in'', [''opening'', ''closing''])
-        | map(attribute=''entity_id'') | list }}'
-  mode: single
-- alias: Home - Silence hours
-  id: '1654865795294'
-  description: ''
-  trigger:
-  - platform: time
-    at: '21:30:00'
-    id: Prepare for quite hours
-  - platform: time
-    at: 07:30:00
-    id: Quite hours starts
-  - platform: time
-    at: 08:00:00
-    id: Quite hours ends
-  condition:
-  - condition: state
-    entity_id: input_boolean.home_party_mode
-    state: 'off'
-  - condition: state
-    entity_id: input_boolean.home_travelling_mode
-    state: 'off'
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
+          - cover.balcony_curtain
+          - cover.bedroom_curtains
+          - cover.bedroom_curtains_dual
+          - cover.bedroom_curtain_left
+          - cover.bedroom_curtain_right
+          - cover.guest_room_shutter_cover
+          - cover.living_room_blinds
+          - cover.living_room_blind_right_cover
+          - cover.living_room_blind_centre_cover
+          - cover.living_room_blind_left_cover_2
+          - cover.office_roller_blind_1_cover
+          - cover.office_roller_blind_2_cover
+          - cover.office_roller_blinds_all
+          - cover.office_shutter_1_cover
+          - cover.office_shutter_2_cover
+          - cover.office_shutters_all
+        for:
+          hours: 0
+          minutes: 2
+          seconds: 0
+        to:
+          - closing
+          - opening
+    condition: []
+    action:
+      - service: cover.stop_cover
+        target:
+          entity_id: '{{ trigger.entity_id }}'
+    mode: parallel
+    max: 15
+  - alias: Home - Silence hours
+    id: '1654865795294'
+    description: ''
+    trigger:
+      - platform: time
+        at: '21:30:00'
         id: Prepare for quite hours
-      sequence:
-      - parallel:
-        - if:
-          - condition: not
-            conditions:
-            - condition: device
-              device_id: 216297d2524fa8459f265e6a9930f739
-              domain: vacuum
-              entity_id: vacuum.hall_roomba
-              type: is_docked
-          then:
-          - service: logbook.log
-            data:
-              name: Silent hours (preparing)
-              message: Sending roomba to it's docking station.
-          - device_id: 216297d2524fa8459f265e6a9930f739
-            domain: vacuum
-            entity_id: vacuum.hall_roomba
-            type: dock
-        - if:
-          - condition: device
-            type: is_on
-            device_id: 7718afce3cec294c17968906f186a35f
-            entity_id: switch.laundry_washing_machine_outlet
-            domain: switch
-          then:
-          - wait_for_trigger:
-            - platform: numeric_state
-              entity_id: sensor.laundry_washing_machine_power
-              for:
-                hours: 0
-                minutes: 5
-                seconds: 0
-              below: '2'
-            continue_on_timeout: false
-          - type: turn_off
-            device_id: 7718afce3cec294c17968906f186a35f
-            entity_id: switch.laundry_washing_machine_outlet
-            domain: switch
-        - if:
-          - condition: device
-            type: is_on
-            device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-            entity_id: switch.laundry_dryer_outlet
-            domain: switch
-          then:
-          - wait_for_trigger:
-            - platform: numeric_state
-              entity_id: sensor.laundry_dryer_outlet_power
-              for:
-                hours: 0
-                minutes: 5
-                seconds: 0
-              below: '2'
-            continue_on_timeout: false
-          - type: turn_off
-            device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-            entity_id: switch.laundry_dryer_outlet
-            domain: switch
-    - conditions:
-      - condition: trigger
+      - platform: time
+        at: 07:30:00
         id: Quite hours starts
-      sequence:
-      - parallel:
-        - if:
-          - condition: not
-            conditions:
-            - condition: device
-              device_id: 216297d2524fa8459f265e6a9930f739
-              domain: vacuum
-              entity_id: vacuum.hall_roomba
-              type: is_docked
-          then:
-          - service: vacuum.stop
-            data: {}
-            target:
-              device_id: 216297d2524fa8459f265e6a9930f739
-        - if:
-          - condition: device
-            type: is_on
-            device_id: 7718afce3cec294c17968906f186a35f
-            entity_id: switch.laundry_washing_machine_outlet
-            domain: switch
-          then:
-          - wait_for_trigger:
-            - platform: numeric_state
-              entity_id: sensor.laundry_washing_machine_power
-              above: '10'
-            continue_on_timeout: false
-          - service: notify.signal_group_home
-            data:
-              message: Silence hours - Looks like the washer was left running at this
-                time. Please take a look.
-        - if:
-          - condition: device
-            type: is_on
-            device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-            entity_id: switch.laundry_dryer_outlet
-            domain: switch
-          then:
-          - wait_for_trigger:
-            - platform: numeric_state
-              entity_id: sensor.laundry_dryer_outlet_power
-              above: '10'
-            continue_on_timeout: false
-          - service: notify.signal_group_home
-            data:
-              message: Silence hours - Looks like the dryer was left running at this
-                time. Please take a look.
-    - conditions:
-      - condition: trigger
+      - platform: time
+        at: 08:00:00
         id: Quite hours ends
-      sequence:
-      - type: turn_on
-        device_id: 7718afce3cec294c17968906f186a35f
-        entity_id: switch.laundry_washing_machine_outlet
-        domain: switch
-      - type: turn_on
-        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-        entity_id: switch.laundry_dryer_outlet
-        domain: switch
-    default: []
-  mode: restart
+    condition:
+      - condition: state
+        entity_id: input_boolean.home_party_mode
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.home_travelling_mode
+        state: 'off'
+    action:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id: Prepare for quite hours
+            sequence:
+              - parallel:
+                  - if:
+                      - condition: not
+                        conditions:
+                          - condition: device
+                            device_id: 216297d2524fa8459f265e6a9930f739
+                            domain: vacuum
+                            entity_id: vacuum.hall_roomba
+                            type: is_docked
+                    then:
+                      - service: logbook.log
+                        data:
+                          name: Silent hours (preparing)
+                          message: Sending roomba to it's docking station.
+                      - device_id: 216297d2524fa8459f265e6a9930f739
+                        domain: vacuum
+                        entity_id: vacuum.hall_roomba
+                        type: dock
+                  - if:
+                      - condition: device
+                        type: is_on
+                        device_id: 7718afce3cec294c17968906f186a35f
+                        entity_id: switch.laundry_washing_machine_outlet
+                        domain: switch
+                    then:
+                      - wait_for_trigger:
+                          - platform: numeric_state
+                            entity_id: sensor.laundry_washing_machine_power
+                            for:
+                              hours: 0
+                              minutes: 5
+                              seconds: 0
+                            below: '2'
+                        continue_on_timeout: false
+                      - type: turn_off
+                        device_id: 7718afce3cec294c17968906f186a35f
+                        entity_id: switch.laundry_washing_machine_outlet
+                        domain: switch
+                  - if:
+                      - condition: device
+                        type: is_on
+                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                        entity_id: switch.laundry_dryer_outlet
+                        domain: switch
+                    then:
+                      - wait_for_trigger:
+                          - platform: numeric_state
+                            entity_id: sensor.laundry_dryer_outlet_power
+                            for:
+                              hours: 0
+                              minutes: 5
+                              seconds: 0
+                            below: '2'
+                        continue_on_timeout: false
+                      - type: turn_off
+                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                        entity_id: switch.laundry_dryer_outlet
+                        domain: switch
+          - conditions:
+              - condition: trigger
+                id: Quite hours starts
+            sequence:
+              - parallel:
+                  - if:
+                      - condition: not
+                        conditions:
+                          - condition: device
+                            device_id: 216297d2524fa8459f265e6a9930f739
+                            domain: vacuum
+                            entity_id: vacuum.hall_roomba
+                            type: is_docked
+                    then:
+                      - service: vacuum.stop
+                        data: {}
+                        target:
+                          device_id: 216297d2524fa8459f265e6a9930f739
+                  - if:
+                      - condition: device
+                        type: is_on
+                        device_id: 7718afce3cec294c17968906f186a35f
+                        entity_id: switch.laundry_washing_machine_outlet
+                        domain: switch
+                    then:
+                      - wait_for_trigger:
+                          - platform: numeric_state
+                            entity_id: sensor.laundry_washing_machine_power
+                            above: '10'
+                        continue_on_timeout: false
+                      - service: notify.signal_group_home
+                        data:
+                          message: Silence hours - Looks like the washer was left running at this
+                            time. Please take a look.
+                  - if:
+                      - condition: device
+                        type: is_on
+                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                        entity_id: switch.laundry_dryer_outlet
+                        domain: switch
+                    then:
+                      - wait_for_trigger:
+                          - platform: numeric_state
+                            entity_id: sensor.laundry_dryer_outlet_power
+                            above: '10'
+                        continue_on_timeout: false
+                      - service: notify.signal_group_home
+                        data:
+                          message: Silence hours - Looks like the dryer was left running at this
+                            time. Please take a look.
+          - conditions:
+              - condition: trigger
+                id: Quite hours ends
+            sequence:
+              - type: turn_on
+                device_id: 7718afce3cec294c17968906f186a35f
+                entity_id: switch.laundry_washing_machine_outlet
+                domain: switch
+              - type: turn_on
+                device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                entity_id: switch.laundry_dryer_outlet
+                domain: switch
+        default: []
+    mode: restart
 
 emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
   host_ip: !secret ip_home_assistant
@@ -266,7 +228,7 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
     light.balcony_string_lights:
       name: String lights
       hidden: false
-    
+
     #### Bathroom ####
     light.bathroom_ceiling_lights:
       name: Ceiling lights
@@ -274,7 +236,7 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
     light.bathroom_mirror_light:
       name: Mirror lights
       hidden: false
-    
+
     #### Bedroom ####
     light.bedroom_carol_light:
       name: "Carol's lights"
@@ -419,12 +381,17 @@ script:
   home_reboot_all_shelly_devices:
     alias: Home - Reboot all Shelly devices
     sequence:
-    - service: button.press
-      data: {}
-      target:
-        entity_id: '{{ expand(integration_entities(''shelly'')) | selectattr(''domain'',
-          ''eq'', ''button'') | selectattr(''entity_id'', ''search'', ''_reboot'') |
-          map(attribute=''entity_id'') | list }}'
+      - service: button.press
+        data: {}
+        target:
+          entity_id: >
+            {{
+              expand(integration_entities('shelly'))
+              | selectattr('domain', 'eq', 'button')
+              | selectattr('entity_id', 'search', '_reboot')
+              | map(attribute='entity_id')
+              | list
+            }}
     mode: restart
 
   home_reboot_network:
@@ -432,89 +399,94 @@ script:
     icon: mdi:restart
     mode: restart
     sequence:
-    - service: button.press
-      data: {}
-      target:
-        entity_id:
-        - button.aimesh_router_reboot
-        - button.aimesh_node_reboot
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 15
-        milliseconds: 0
-    - wait_for_trigger:
-      - platform: state
-        entity_id:
-        - sensor.aimesh_router_boot_time
-      timeout: 300
-    - service: button.press
-      data: {}
-      target:
-        entity_id: '{{ states.button | selectattr(''entity_id'', ''search'', ''reboot'')
-          | map(attribute=''entity_id'') | list }}'
+      - service: button.press
+        data: {}
+        target:
+          entity_id:
+            - button.aimesh_router_reboot
+            - button.aimesh_node_reboot
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 15
+          milliseconds: 0
+      - wait_for_trigger:
+          - platform: state
+            entity_id:
+              - sensor.aimesh_router_boot_time
+        timeout: 300
+      - service: button.press
+        data: {}
+        target:
+          entity_id: >
+            {{
+              states.button
+              | selectattr('entity_id', 'search', 'reboot')
+              | map(attribute='entity_id')
+              | list
+            }}
 
 template:
   - trigger:
-    - id: Motion # When motion is detected
-      platform: state
-      entity_id:
-        - binary_sensor.bathroom_motion
-        - binary_sensor.bathroom_motion_dual_sensors_state
-        - binary_sensor.bathroom_motion_occupancy
-        - binary_sensor.bathroom_shower_motion_occupancy
-        - binary_sensor.guest_bathroom_motion_iaszone
-        - binary_sensor.guest_bathroom_motion_occupancy
-        - binary_sensor.guest_room_motion
-        - binary_sensor.hall_motion_occupancy
-        - binary_sensor.kitchen_bench_motion_occupancy
-        - binary_sensor.kitchen_bench_motion_on_off
-        - binary_sensor.kitchen_table_motion_occupancy
-        - binary_sensor.kitchen_table_motion_on_off
-        - binary_sensor.office_motion_occupancy
-        - binary_sensor.office_workstation_motion
-      from: "off"
-      to: "on"
-    - id: Others # When other activities are detected
-      platform: state
-      entity_id:
-        - binary_sensor.balcony_door
-        - binary_sensor.balcony_string_lights_channel_1_input
-        - binary_sensor.bathroom_ceiling_lights_channel_1_input
-        - binary_sensor.bathroom_door
-        - binary_sensor.bathroom_mirror_light_input
-        - binary_sensor.bedroom_ceiling_lights_input
-        - binary_sensor.bedroom_closet_door
-        - binary_sensor.bedroom_closet_lights_input
-        - binary_sensor.bedroom_dogs_bed_occupied
-        - binary_sensor.guest_bathroom_ceiling_light_input
-        - binary_sensor.guest_bathroom_door
-        - binary_sensor.guest_bathroom_mirror_lights_input
-        - binary_sensor.guest_room_closet_door
-        - binary_sensor.guest_room_closet_lights_input
-        - binary_sensor.guest_room_door
-        - binary_sensor.guest_room_door_outlets_ceiling_lights_input
-        - binary_sensor.hall_front_door
-        - binary_sensor.hall_panel_left_button
-        - binary_sensor.hall_panel_right_button
-        - binary_sensor.kitchen_ceiling_lights_table_lights_input
-        - binary_sensor.kitchen_ceiling_lights_windows_lights_input
-        - binary_sensor.kitchen_bench_left_light_input
-        - binary_sensor.kitchen_bench_right_light_input
-        - binary_sensor.kitchen_dishwasher_door
-        - binary_sensor.kitchen_windows
-        - binary_sensor.living_room_lights_map_wall_input
-        - binary_sensor.living_room_lights_tv_wall_input
-        - binary_sensor.living_room_windows_left
-        - binary_sensor.living_room_windows_right
-        - binary_sensor.office_door
-        - binary_sensor.office_windows_outlets_ceiling_lights_input
-      from:
-        - "on"
-        - "off"
-      to:
-        - "on"
-        - "off"
+      - id: Motion # When motion is detected
+        platform: state
+        entity_id:
+          - binary_sensor.bathroom_motion
+          - binary_sensor.bathroom_motion_dual_sensors_state
+          - binary_sensor.bathroom_motion_occupancy
+          - binary_sensor.bathroom_shower_motion_occupancy
+          - binary_sensor.guest_bathroom_motion_iaszone
+          - binary_sensor.guest_bathroom_motion_occupancy
+          - binary_sensor.guest_room_motion
+          - binary_sensor.hall_motion_occupancy
+          - binary_sensor.kitchen_bench_motion_occupancy
+          - binary_sensor.kitchen_bench_motion_on_off
+          - binary_sensor.kitchen_table_motion_occupancy
+          - binary_sensor.kitchen_table_motion_on_off
+          - binary_sensor.office_motion_occupancy
+          - binary_sensor.office_workstation_motion
+        from: "off"
+        to: "on"
+      - id: Others # When other activities are detected
+        platform: state
+        entity_id:
+          - binary_sensor.balcony_door
+          - binary_sensor.balcony_string_lights_channel_1_input
+          - binary_sensor.bathroom_ceiling_lights_channel_1_input
+          - binary_sensor.bathroom_door
+          - binary_sensor.bathroom_mirror_light_input
+          - binary_sensor.bedroom_ceiling_lights_input
+          - binary_sensor.bedroom_closet_door
+          - binary_sensor.bedroom_closet_lights_input
+          - binary_sensor.bedroom_dogs_bed_occupied
+          - binary_sensor.guest_bathroom_ceiling_light_input
+          - binary_sensor.guest_bathroom_door
+          - binary_sensor.guest_bathroom_mirror_lights_input
+          - binary_sensor.guest_room_closet_door
+          - binary_sensor.guest_room_closet_lights_input
+          - binary_sensor.guest_room_door
+          - binary_sensor.guest_room_door_outlets_ceiling_lights_input
+          - binary_sensor.hall_front_door
+          - binary_sensor.hall_panel_left_button
+          - binary_sensor.hall_panel_right_button
+          - binary_sensor.kitchen_ceiling_lights_table_lights_input
+          - binary_sensor.kitchen_ceiling_lights_windows_lights_input
+          - binary_sensor.kitchen_bench_left_light_input
+          - binary_sensor.kitchen_bench_right_light_input
+          - binary_sensor.kitchen_dishwasher_door
+          - binary_sensor.kitchen_windows
+          - binary_sensor.living_room_lights_map_wall_input
+          - binary_sensor.living_room_lights_tv_wall_input
+          - binary_sensor.living_room_windows_left
+          - binary_sensor.living_room_windows_right
+          - binary_sensor.office_door
+          - binary_sensor.office_windows_outlets_ceiling_lights_input
+        from:
+          - "on"
+          - "off"
+        to:
+          - "on"
+          - "off"
     sensor:
       - name: Home - Last activity
         unique_id: 90dca34c-260c-4c54-92cb-dbc760dcb2d4

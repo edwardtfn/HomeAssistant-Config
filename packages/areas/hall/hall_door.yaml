@@ -1,17 +1,17 @@
 automation:
-- alias: Hall - Door - Announce to Alexa
-  id: '1669284651718'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.hall_front_door
-    from: 'off'
-    to: 'on'
-  condition: []
-  action:
-  - service: notify.alexa_media
-    data:
-      target: Kitchen
-      message: The front door is open.
-  mode: single
+  - alias: Hall - Door - Announce to Alexa
+    id: '1669284651718'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.hall_front_door
+      from: 'off'
+      to: 'on'
+    condition: []
+    action:
+    - service: notify.alexa_media
+      data:
+        target: Kitchen
+        message: The front door is open.
+    mode: single

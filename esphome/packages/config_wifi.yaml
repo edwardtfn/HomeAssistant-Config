@@ -1,0 +1,11 @@
+wifi:
+  networks:
+    ssid: !secret wifi_ssid
+    password: !secret wifi_password
+  domain: !secret lan_domain
+  fast_connect: true
+  ap:
+    ssid: "ESPHome fallback"
+    password: !secret fallback_password
+    ap_timeout:
+      minutes: 5

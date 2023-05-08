@@ -94,4 +94,3 @@ template:
           trigger: "{{ trigger }}"
           door: "{{ states('binary_sensor.guest_bathroom_door') }}"
           motion: "{{ states('binary_sensor.guest_bathroom_motion_iaszone') }}"
-

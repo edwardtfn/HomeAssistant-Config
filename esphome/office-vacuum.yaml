@@ -1,0 +1,78 @@
+substitutions:
+  device_name: office-vacuum
+  device_verbose_name: "Office - Vacuum"
+  friendly_name: "Office - Vacuum"
+  device_platform: ESP8266
+  device_board: d1_mini
+  device_ip: 192.168.12.176
+  # IMPORTANT NOTE: If you change the substitution name value, the state_topic/command_topic need to change as well.
+  name: "office-vacuum"
+  # state topic, command topic, BRC pin, polling interval in milliseconds
+  init: 'RoombaComponent::instance("office-vacuum/state", "office-vacuum/command", D4, 1000);'
+
+
+packages:
+  device_base: !include packages/base_d1_mini.yaml
+
+esphome:
+  includes:
+    - .esphome/external_components/mannkind/ESPHomeRoombaComponent.h
+  libraries:
+    - Roomba=https://github.com/Apocrathia/Roomba
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+########################## new
+
+mqtt:
+  broker: !secret mqtt_broker
+  discovery: true
+
+logger:
+  baud_rate: 0
+  level: info
+
+custom_component:
+  - lambda: |-
+      auto r = ${init}
+      return {r};
+
+sensor:
+ - platform: custom
+   lambda: |-
+      auto r = ${init}
+      return {r->distanceSensor, r->voltageSensor, r->currentSensor, r->chargeSensor, r->capacitySensor};
+
+   sensors:
+     - name: "${name} distance"
+       unit_of_measurement: "mm"
+       accuracy_decimals: 0
+     - name: "${name} voltage"
+       unit_of_measurement: "mV"
+       accuracy_decimals: 0
+     - name: "${name} current"
+       unit_of_measurement: "mA"
+       accuracy_decimals: 0
+     - name: "${name} charge"
+       unit_of_measurement: "mAh"
+       accuracy_decimals: 0
+     - name: "${name} capacity"
+       unit_of_measurement: "mAh"
+       accuracy_decimals: 0
+
+binary_sensor:
+  - platform: status
+    name: "${name} Status"
+
+  - platform: custom
+    lambda: |-
+       auto r = ${init}
+       return {r->chargingBinarySensor, r->dockedBinarySensor, r->cleaningBinarySensor};
+
+    binary_sensors:
+      - name: "${name} charging"
+      - name: "${name} docked"
+      - name: "${name} cleaning"

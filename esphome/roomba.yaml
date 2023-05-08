@@ -1,0 +1,80 @@
+esphome:
+  name: roomba
+  platform: ESP8266
+  board: d1_mini
+  includes:
+    - .esphome/external_components/wburgers/ESPHomeRoombaComponent.h
+
+substitutions:
+  name: "roomba"
+  # BRC pin, uart_bus, polling interval in milliseconds
+  init: 'RoombaComponent::instance(D5, id(uart_bus), 10000);'
+
+uart:
+  id: uart_bus
+  tx_pin: D1
+  rx_pin: D2
+  baud_rate: 115200
+
+# Enable logging
+logger:
+  hardware_uart: UART1
+
+# Enable Home Assistant API
+api:
+  password: !secret api_encryption_key
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Roomba Fallback Hotspot"
+    password: !secret fallback_password
+
+captive_portal:
+
+status_led:
+  pin:
+    number: GPIO2
+    inverted: True
+
+custom_component:
+  - lambda: |-
+      auto r = ${init}
+      return {r};
+
+sensor:
+ - platform: custom
+   lambda: |-
+      auto r = ${init}
+      return {r->voltageSensor, r->currentSensor, r->batteryChargeSensor, r->batteryCapacitySensor, r->batteryPercentSensor};
+   sensors:
+     - name: "${name} voltage"
+       unit_of_measurement: "V"
+       accuracy_decimals: 2
+     - name: "${name} current"
+       unit_of_measurement: "A"
+       accuracy_decimals: 3
+     - name: "${name} charge"
+       unit_of_measurement: "Ah"
+       accuracy_decimals: 2
+     - name: "${name} capacity"
+       unit_of_measurement: "Ah"
+       accuracy_decimals: 2
+     - name: "${name} battery"
+       unit_of_measurement: "%"
+       accuracy_decimals: 0
+
+text_sensor:
+  - platform: custom
+    lambda: |-
+      auto r = ${init}
+      return {r-> chargingSensor, r->activitySensor};
+    text_sensors:
+      - name: "${name} charging state"
+      - name: "${name} activity"

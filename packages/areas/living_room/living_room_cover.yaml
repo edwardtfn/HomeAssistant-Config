@@ -1,62 +1,62 @@
 automation:
-- alias: Living room - Blind - Remote controlled 1
-  id: '1661594962285'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_remote.yaml
-    input:
-      remote_device: 1188e374d52a2d07be16ae487c015ae6
-      cover_entity: cover.living_room_blinds
-- alias: Living room - Blind - Remote controlled 2
-  id: '1661594981370'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_remote.yaml
-    input:
-      remote_device: f41cbbee76718b71a93d78f6a427a121
-      cover_entity: cover.living_room_blinds
-- alias: Living room - Blind - Remote controlled 3
-  id: '1661595001872'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_remote.yaml
-    input:
-      remote_device: a21afeab3f95ed7dfe61884228d9d901
-      cover_entity: cover.living_room_blinds
-- alias: Living room - Cover - TV based
-  id: '1662933462551'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.living_room_tv_is_on
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.living_room_tv_is_on
-        state: 'on'
-      - condition: not
-        conditions:
+  - alias: Living room - Blind - Remote controlled 1
+    id: '1661594962285'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_remote.yaml
+      input:
+        remote_device: 1188e374d52a2d07be16ae487c015ae6
+        cover_entity: cover.living_room_blinds
+  - alias: Living room - Blind - Remote controlled 2
+    id: '1661594981370'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_remote.yaml
+      input:
+        remote_device: f41cbbee76718b71a93d78f6a427a121
+        cover_entity: cover.living_room_blinds
+  - alias: Living room - Blind - Remote controlled 3
+    id: '1661595001872'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_remote.yaml
+      input:
+        remote_device: a21afeab3f95ed7dfe61884228d9d901
+        cover_entity: cover.living_room_blinds
+  - alias: Living room - Cover - TV based
+    id: '1662933462551'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.living_room_tv_is_on
+    condition: []
+    action:
+    - choose:
+      - conditions:
         - condition: state
-          entity_id: sensor.civil_solar_day_status
-          state: night
-      sequence:
-      - service: cover.close_cover
-        data: {}
-        target:
-          entity_id: cover.living_room_blinds
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.living_room_tv_is_on
-        state: 'off'
-      sequence:
-      - service: cover.open_cover
-        data: {}
-        target:
-          entity_id: cover.living_room_blinds
-  mode: single
+          entity_id: binary_sensor.living_room_tv_is_on
+          state: 'on'
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: sensor.civil_solar_day_status
+            state: night
+        sequence:
+        - service: cover.close_cover
+          data: {}
+          target:
+            entity_id: cover.living_room_blinds
+      - conditions:
+        - condition: state
+          entity_id: binary_sensor.living_room_tv_is_on
+          state: 'off'
+        sequence:
+        - service: cover.open_cover
+          data: {}
+          target:
+            entity_id: cover.living_room_blinds
+    mode: single
 
 cover:
   - name: Living room - Blinds
@@ -66,4 +66,3 @@ cover:
       - cover.living_room_blind_centre_cover
       - cover.living_room_blind_left_cover_2
       - cover.living_room_blind_right_cover
-

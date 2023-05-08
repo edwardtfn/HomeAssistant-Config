@@ -46,7 +46,7 @@ card:
         - fn: |-
             (params) => {
               const ys = [];
-              ys.push(0); 
+              ys.push(0);
               for (let i = 1; i < params.statistics.length; i++){
                 ys.push(Math.max(0,params.statistics[i].state-params.statistics[i-1].state));
               }

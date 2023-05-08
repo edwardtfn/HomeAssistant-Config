@@ -1,14 +1,14 @@
 automation:
-- alias: Guest room - Climate - Windows based
-  id: '1671275057270'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/tado_windows.yaml
-    input:
-      window_entity:
-      - binary_sensor.guest_room_windows
-      climate_target:
-      - climate.guest_room_thermostat
+  - alias: Guest room - Climate - Windows based
+    id: '1671275057270'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/tado_windows.yaml
+      input:
+        window_entity:
+        - binary_sensor.guest_room_windows
+        climate_target:
+        - climate.guest_room_thermostat
 
 template:
   - sensor:

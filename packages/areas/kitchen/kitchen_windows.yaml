@@ -1,17 +1,17 @@
 automation:
-- alias: Kitchen - Windows - Announce to Alexa
-  id: '1669284800498'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.kitchen_windows
-    from: 'off'
-    to: 'on'
-  condition: []
-  action:
-  - service: notify.alexa_media
-    data:
-      target: Kitchen
-      message: The kitchen''s windows are open.
-  mode: single
+  - alias: Kitchen - Windows - Announce to Alexa
+    id: '1669284800498'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.kitchen_windows
+      from: 'off'
+      to: 'on'
+    condition: []
+    action:
+    - service: notify.alexa_media
+      data:
+        target: Kitchen
+        message: The kitchen''s windows are open.
+    mode: single

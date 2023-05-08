@@ -97,7 +97,7 @@
             --mdc-icon-size: 16px;
           }
           #Vasttrafik tr td:nth-child(2n){
-           font-weight : bold
+            font-weight : bold
           }
           th, td {
           border-bottom: 1px solid #ddd;
@@ -152,8 +152,8 @@
             data: Departure
             align: center
             modify: |-
-              if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string") 
-                { 
+              if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string")
+                {
                   var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + " " + x.rtTime) - Date.now())/60000));
                   if (minutes>=60)
                     {{ x.rtTime }}
@@ -161,7 +161,7 @@
                     {{ minutes }}
                 }
               else
-                { 
+                {
                   var minutes = Math.round(Math.max(0,(Date.parse(x.Date + " " + x.Time) - Date.now())/60000));
                   if (minutes>=60)
                     {{ x.Time }}
@@ -173,7 +173,7 @@
             align: center
             modify: >-
               x.track + '&nbsp;<ha-icon icon="mdi:' +
-              x.type.toLowerCase().replace("tram", "tram-side") + 
+              x.type.toLowerCase().replace("tram", "tram-side") +
               '"></ha-icon>'
         css: null
         style: |

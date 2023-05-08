@@ -26,10 +26,10 @@ blueprint:
           domain: cover
 
 trigger:
-- platform: event
-  event_type: zha_event
-  event_data:
-    device_id: !input remote_device
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: !input remote_device
 
 variables:
   input_cover_entity: !input cover_entity
@@ -48,12 +48,12 @@ action:
           cover.stop_cover
         {% endif %}
       {% endif %}
-    target: 
+    target:
       entity_id: !input cover_entity
   - wait_for_trigger:
       - platform: state
         entity_id: !input cover_entity
-        to: 
+        to:
           - open
           - closed
     timeout:

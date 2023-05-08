@@ -1,9 +1,29 @@
 # For screen issues, take a look at https://docs.nspanel.pky.eu/prepare_nspanel/
 
-#automation:
-group:
-  dummy:
-    name: Dummy group
-    entities:
-      - climate.office_thermostat_1
-      - climate.office_thermostat_2
+light:
+  - platform: template
+    lights:
+      office_workstation_panel_display:
+        friendly_name: 'Office - Workstation - Panel - Display'
+        availability_template: '{{ states("sensor.office_workstation_panel_nspanel_event") not in ["unavailable", "unknown", "", None] }}'
+        value_template: '{{ "screensaver" not in states("sensor.office_workstation_panel_nspanel_event") }}'
+        icon_template: '{{ "mdi:power-sleep" if "screensaver" in states("sensor.office_workstation_panel_nspanel_event") else "mdi:cellphone-text" }}'
+        level_template: '{{ (states("number.office_workstation_panel_display_brightness") | int(0) / 100 * 255) | round(0) }}'
+        turn_on:
+          - service: esphome.office_workstation_panel_send_command_printf
+            data:
+              cmd: page home
+        turn_off:
+          - service: esphome.office_workstation_panel_send_command_printf
+            data:
+              cmd: page screensaver
+        set_level:
+          - service: number.set_value
+            data:
+              value: '{{ (brightness / 255 * 100) | round(0) | int }}'
+            target:
+              entity_id: number.office_workstation_panel_display_brightness
+          - condition: '{{ "screensaver" in states("sensor.office_workstation_panel_nspanel_event") }}'
+          - service: esphome.office_workstation_panel_send_command_printf
+            data:
+              cmd: page home

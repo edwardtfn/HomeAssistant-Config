@@ -1,0 +1,5 @@
+- platform: safe_mode
+  name: Restart (Safe mode)
+  entity_category: config
+  disabled_by_default: true
+  icon: "mdi:restart"

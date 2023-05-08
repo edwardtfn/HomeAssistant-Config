@@ -2,7 +2,7 @@ blueprint:
   name: Blink lights (old)
   description: Blink lights (or switches).
   domain: script
-  #source_url: 
+  #source_url:
   input:
     entities_list:
       name: Lights and switches to blink

@@ -21,7 +21,7 @@ template:
       unit_of_measurement: "%"
       availability: >-
         {% set memory = state_attr('sensor.home_server_01_rpi_monitor', 'memory') | default('unknown') %}
-        {{ memory not in ['unknown','unavailable','none', None] 
+        {{ memory not in ['unknown','unavailable','none', None]
           and memory
           and memory.free_mb | default(-1) | float(-1) >= 0
           and memory.size_mb | default(-1) | float(-1) >= 0

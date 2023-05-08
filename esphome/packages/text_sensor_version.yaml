@@ -1,0 +1,6 @@
+#text_sensor:
+  - platform: version
+    name: ESPhome version
+    disabled_by_default: true
+    entity_category: diagnostic
+    icon: "mdi:chip"

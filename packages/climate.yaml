@@ -1,108 +1,111 @@
 automation:
-- alias: Home - Weather - Windows are open
-  id: '1663627849757'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - weather.home
-    to: rainy
-  - platform: state
-    entity_id:
-    - weather.home
-    to: snowy-rainy
-  - platform: state
-    entity_id:
-    - weather.home
-    to: lightning-rainy
-  - platform: state
-    entity_id:
-    - weather.home
-    to: snowy
-  - platform: state
-    entity_id:
-    - weather.home
-    to: windy
-  - platform: state
-    entity_id:
-    - weather.home
-    to: windy-variant
-  condition:
-  - condition: template
-    value_template: "{{ (\n  states.binary_sensor \n  | selectattr('attributes.device_class',
-      'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
-      'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
-  action:
-  - service: notify.signal_group_home
-    data:
-      message: "The weather is changing and the following windows are open:\n- {{
-        states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
-        \n    | selectattr('attributes.device_class','eq','window') \n    | selectattr('state',
-        'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
-        ') }}"
-  mode: single
-- alias: Home - Humidifiers - At least one humidifier requires attention
-  id: '1638151457747'
-  trigger:
-  - platform: numeric_state
-    entity_id:
-    - climate.bathroom_thermostat
-    - climate.guest_room_thermostat
-    - climate.guest_room_closet_thermostat
-    - climate.kitchen_thermostat
-    - climate.living_room_thermostat
-    attribute: current_humidity
-    below: 35
-    for:
-      minutes: 5
-  - platform: numeric_state
-    entity_id:
-    - sensor.bedroom_hygrometer_humidity
-    - sensor.corridor_air_quality_humidity
-    - sensor.office_hygrometer_humidity
-    below: 35
-    for:
-      minutes: 5
-  action:
-  - variables:
-      announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | 'the apartment') }}"
-  - service: notify.signal_group_home
-    data:
-      message: "{{ announcement }}"
-  - if:
-      - condition: state
-        entity_id: schedule.home_quite_hours
-        state: "off"
-      - condition: state
-        entity_id: input_boolean.home_empty
-        state: "off"
-    then:
-      - service: notify.alexa_media
-        data:
-          message: "{{ announcement }}"
-          target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | 'the apartment')) if area_name(trigger.entity_id) != 'Kitchen' }}"
+  - alias: Home - Weather - Windows are open
+    id: '1663627849757'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - weather.home
+      to: rainy
+    - platform: state
+      entity_id:
+      - weather.home
+      to: snowy-rainy
+    - platform: state
+      entity_id:
+      - weather.home
+      to: lightning-rainy
+    - platform: state
+      entity_id:
+      - weather.home
+      to: snowy
+    - platform: state
+      entity_id:
+      - weather.home
+      to: windy
+    - platform: state
+      entity_id:
+      - weather.home
+      to: windy-variant
+    condition:
+    - condition: template
+      value_template: "{{ (\n  states.binary_sensor \n  | selectattr('attributes.device_class',
+        'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
+        'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
+    action:
+    - service: notify.signal_group_home
+      data:
+        message: "The weather is changing and the following windows are open:\n- {{
+          states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
+          \n    | selectattr('attributes.device_class','eq','window') \n    | selectattr('state',
+          'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
+          ') }}"
+    mode: single
+  - alias: Home - Humidifiers - At least one humidifier requires attention
+    id: '1638151457747'
+    trigger:
+    - platform: numeric_state
+      entity_id:
+      - climate.bathroom_thermostat
+      - climate.guest_room_thermostat
+      - climate.guest_room_closet_thermostat
+      - climate.kitchen_thermostat
+      - climate.living_room_thermostat
+      attribute: current_humidity
+      below: 35
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id:
+      - sensor.bedroom_hygrometer_humidity
+      - sensor.corridor_air_quality_humidity
+      - sensor.office_hygrometer_humidity
+      below: 35
+      for:
+        minutes: 5
+    action:
+    - variables:
+        announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | default('the apartment')) }}"
+    - service: notify.signal_group_home
+      data:
+        message: >
+          {{ announcement }}
 
-  mode: single
+          Humidity: {{ trigger.to_state.state | round(0) }}%
+    #- if:
+    #    - condition: state
+    #      entity_id: schedule.home_quite_hours
+    #      state: "off"
+    #    - condition: state
+    #      entity_id: input_boolean.home_empty
+    #      state: "off"
+    #  then:
+    #    - service: notify.alexa_media
+    #      data:
+    #        message: "{{ announcement }}"
+    #        target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | default(None)) if area_name(trigger.entity_id) != 'Kitchen' }}"
+
+    mode: single
 
 input_select:
   phrases_low_humidity:
     name: Phrases - Low humidity in a room
     #unique_id: cdc79d47-45f7-4afb-8d8b-7f2442ba237d
     options:
-      - "Alert: Humidity levels are low in room_name."
-      - "Warning: Low humidity levels detected in room_name."
-      - Humidity is below optimal levels in room_name.
-      - "Attention: Low humidity has been detected in room_name."
-      - Humidity levels are dangerously low in room_name.
-      - Low humidity detected in room_name, please take necessary precautions.
-      - Humidity levels are outside the optimal range in room_name.
-      - Humidity readings indicate a low level in room_name.
-      - Low humidity levels may cause discomfort in room_name.
-      - Humidity levels have fallen below the recommended range in room_name.
-      - Please be advised, humidity levels are low in room_name.
-      - Low humidity levels can lead to dryness and discomfort in room_name.
-      - Humidity levels are not at an optimal level in room_name.
-      - Low humidity can negatively impact air quality in room_name.
+      - "Alert: Humidity levels in the room_name are low."
+      - "Warning: Low humidity levels detected in the room_name."
+      - Humidity in the room_name is below optimal levels.
+      - "Attention: Low humidity has been detected in the room_name."
+      - Humidity levels are dangerously low in the room_name.
+      - Low humidity detected in the room_name, please take necessary precautions.
+      - Humidity levels in the room_name are outside the optimal range.
+      - Humidity readings indicate a low level in the room_name.
+      - Low humidity levels may cause discomfort in the room_name.
+      - Humidity levels have fallen below the recommended range in the room_name.
+      - Please be advised, humidity levels are low in the room_name.
+      - Low humidity levels in the room_name can lead to dryness and discomfort.
+      - Humidity levels in the room_name are not at an optimal level.
+      - Low humidity can negatively impact air quality in the room_name.
       - "Alert: Humidity is too low for comfort in room_name."
       - Humidity levels are insufficient for healthy living in room_name.
       - Low humidity can cause dry skin and respiratory issues in room_name.
@@ -175,18 +178,18 @@ template:
 #      availability: "{{ is_number(states('sensor.home_average_room_temperature')) }}"
 #      state: "{{ states('sensor.home_average_room_temperature') | float(0) | round(1) }}"
 #        {{ expand([
-#          'sensor.bathroom_thermostat_current_temperature', 
-#          'sensor.bedroom_hygrometer_temperature', 
+#          'sensor.bathroom_thermostat_current_temperature',
+#          'sensor.bedroom_hygrometer_temperature',
 #          'sensor.corridor_air_quality_temperature',
-#          'sensor.guest_room_thermostat_current_temperature', 
+#          'sensor.guest_room_thermostat_current_temperature',
 #          'sensor.hall_panel_temperature',
-#          'sensor.kitchen_thermostat_current_temperature', 
+#          'sensor.kitchen_thermostat_current_temperature',
 #          'sensor.living_room_thermostat_current_temperature',
 #          'sensor.office_hygrometer_temperature'
-#          ]) 
-#        | rejectattr('state', 'in', ['unavailable','unknown']) 
-#        | map(attribute='state') 
-#        | map('float') 
+#          ])
+#        | rejectattr('state', 'in', ['unavailable','unknown'])
+#        | map(attribute='state')
+#        | map('float')
 #        | average
 #        | float(0)
 #        | round(1)
@@ -206,9 +209,9 @@ template:
 
 
     #- platform: template
-    #  sensors: weather_just_icon: 
-    #  name: "Home - Weather" 
-    #  icon_template: >- 
+    #  sensors: weather_just_icon:
+    #  name: "Home - Weather"
+    #  icon_template: >-
     #    {% if is_state("weather.climacell_hourly","clear-day") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","sunny") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","clear") %} mdi:weather-sunny {% elif is_state("weather.climacell_hourly","clear-night") %} mdi:weather-night {% elif is_state("weather.climacell_hourly","rainy") %} mdi:weather-rainy {% elif is_state("weather.climacell_hourly","pouring") %} mdi:weather-pouring {% elif is_state("weather.climacell_hourly","snow") %} mdi:weather-snowy {% elif is_state("weather.climacell_hourly","fog") %} mdi:weather-fog {% elif is_state("weather.climacell_hourly","sleet") %} mdi:weather-partly-snowy-rainy {% elif is_state("weather.climacell_hourly","wind") %} mdi:weather-windy {% elif is_state("weather.climacell_hourly","cloudy") %} mdi:weather-cloudy {% elif is_state("weather.climacell_hourly","partlycloudy") %} mdi:weather-partly-cloudy {% elif is_state("weather.climacell_hourly","partly-cloudy-night") %} mdi:weather-night-partly-cloudy {% elif is_state("weather.climacell_hourly","hail") %} mdi:weather-hail {% elif is_state("weather.climacell_hourly","lightning") %} mdi:weather-lightning {% elif is_state("weather.climacell_hourly","tstorm") %} mdi:weather-lightning-rainy {% endif %}
     - name: Home - Visibility
       unique_id: c0e7b7dc-6d69-4b86-99de-c84553386800
@@ -537,6 +540,3 @@ template:
         state: "{{ states('sensor.home_weather_outdoor_temperature')}}"
         attributes:
           datetime: "{{ now() }}"
-
-
-    

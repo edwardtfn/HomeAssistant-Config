@@ -1,0 +1,56 @@
+substitutions:
+  device_name: living-room-map-lights
+  device_verbose_name: "Living room - Map - Lights"
+
+packages:
+  device_base: !include packages/base_az_delivery_devkit_v4.yaml
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+light:
+#  - platform: fastled_clockless
+#    chipset: WS2812B
+#    pin: GPIO05
+#    #num_leds: 6903
+#    num_leds: 936
+#    rgb_order: GRB
+#    name: "Living room - Map"
+#    id: led_matrix_light
+#    default_transition_length: 0s
+#    color_correct: [50%, 50%, 50%]
+#    restore_mode: ALWAYS_ON
+
+  - platform: neopixelbus
+    type: GRB
+    variant: WS2812X
+    pin: GPIO23
+    num_leds: 6903
+    name: ${device_name} Lights
+    id: led_matrix_light
+
+display:
+  - platform: addressable_light
+    id: led_matrix_display
+    addressable_light_id: led_matrix_light
+    width: 117
+    height: 59
+    #height: 8
+    rotation: 180°
+    update_interval: 16ms
+    lambda: |-
+          // Draw a bulls-eye pattern
+          Color red = Color(0xFF0000);
+          Color green = Color(0x00FF00);
+          Color blue = Color(0x0000FF);
+          it.rectangle(0, 0, 8, 8, red);
+          it.rectangle(1, 1, 6, 6, green);
+          it.rectangle(2, 2, 4, 4, blue);
+          it.rectangle(3, 3, 2, 2, red);
+
+interval:
+  - interval: 300s
+    then:
+      - component.update: led_matrix_display

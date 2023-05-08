@@ -53,7 +53,7 @@
                 data_generator: |
                   var a = entity.attributes.today.map((entry) => {
                     return [new Date(entry.startsAt), entry.total];
-                  }); 
+                  });
                   var b= entity.attributes.tomorrow.map((entry) => {
                     return [new Date(entry.startsAt), entry.total];
                   });

@@ -1,66 +1,66 @@
 automation:
-- alias: Kitchen - Curtain's lights
-  id: '1672609137203'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - light.home_curtain_s_lights_reference
-  - platform: state
-    entity_id:
-    - sensor.electricity_price
-    attribute: future_prices_curr_price_level
-  - platform: state
-    entity_id:
-    - sensor.civil_solar_day_status
-  condition:
-  - condition: state
-    entity_id: input_boolean.home_party_mode
-    state: 'off'
-  - condition: state
-    entity_id: binary_sensor.living_room_tv_is_on
-    state: 'off'
-  - condition: state
-    entity_id: input_boolean.home_empty
-    state: 'off'
-  action:
-  - if:
+  - alias: Kitchen - Curtain's lights
+    id: '1672609137203'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - light.home_curtain_s_lights_reference
+    - platform: state
+      entity_id:
+      - sensor.electricity_price
+      attribute: future_prices_curr_price_level
+    - platform: state
+      entity_id:
+      - sensor.civil_solar_day_status
+    condition:
     - condition: state
-      entity_id: light.home_curtain_s_lights_reference
-      state: 'on'
-    - condition: not
-      conditions:
-      - condition: state
-        entity_id: sensor.civil_solar_day_status
-        state: day
-      - condition: state
-        entity_id: sensor.electricity_price
-        attribute: future_prices_curr_price_level
-        state: Very expensive
-      - condition: state
-        entity_id: sensor.electricity_price
-        attribute: future_prices_curr_price_level
-        state: Expensive
-    then:
+      entity_id: input_boolean.home_party_mode
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.living_room_tv_is_on
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.home_empty
+      state: 'off'
+    action:
     - if:
       - condition: state
-        entity_id: light.kitchen_curtain_s_lights
-        state: 'off'
+        entity_id: light.home_curtain_s_lights_reference
+        state: 'on'
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.civil_solar_day_status
+          state: day
+        - condition: state
+          entity_id: sensor.electricity_price
+          attribute: future_prices_curr_price_level
+          state: Very expensive
+        - condition: state
+          entity_id: sensor.electricity_price
+          attribute: future_prices_curr_price_level
+          state: Expensive
       then:
-      - service: light.turn_on
+      - if:
+        - condition: state
+          entity_id: light.kitchen_curtain_s_lights
+          state: 'off'
+        then:
+        - service: light.turn_on
+          data:
+            transition: 5
+          target:
+            entity_id:
+            - light.kitchen_curtain_s_lights
+      else:
+      - service: light.turn_off
         data:
           transition: 5
         target:
           entity_id:
           - light.kitchen_curtain_s_lights
-    else:
-    - service: light.turn_off
-      data:
-        transition: 5
-      target:
-        entity_id:
-        - light.kitchen_curtain_s_lights
-  mode: restart
+    mode: restart
 
 light:
   - name: Kitchen - All lights

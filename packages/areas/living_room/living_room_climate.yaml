@@ -1,60 +1,60 @@
 automation:
-- alias: Living room - Humidifier - Toggle twice
-  id: '1671969025950'
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  - platform: time_pattern
-    minutes: '00'
-  condition:
-  - condition: state
-    entity_id: switch.living_room_charging_strip_1_socket_1
-    state: 'on'
-  action:
-  - service: switch.turn_off
-    data: {}
-    target:
+  - alias: Living room - Humidifier - Toggle twice
+    id: '1671969025950'
+    description: ''
+    trigger:
+    - platform: homeassistant
+      event: start
+    - platform: time_pattern
+      minutes: '00'
+    condition:
+    - condition: state
       entity_id: switch.living_room_charging_strip_1_socket_1
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-  - service: switch.turn_on
-    data: {}
-    target:
-      entity_id: switch.living_room_charging_strip_1_socket_1
-  mode: single
-- alias: Living room  - Climate - Windows based
-  id: '1671275182297'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/tado_windows.yaml
-    input:
-      window_entity:
-      - binary_sensor.kitchen_windows
-      - binary_sensor.living_room_windows_left
-      - binary_sensor.living_room_windows_right
-      - binary_sensor.balcony_door
-      climate_target:
-      - climate.living_room_thermostat
-      - climate.kitchen_thermostat
+      state: 'on'
+    action:
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.living_room_charging_strip_1_socket_1
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 5
+        milliseconds: 0
+    - service: switch.turn_on
+      data: {}
+      target:
+        entity_id: switch.living_room_charging_strip_1_socket_1
+    mode: single
+  - alias: Living room  - Climate - Windows based
+    id: '1671275182297'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/tado_windows.yaml
+      input:
+        window_entity:
+        - binary_sensor.kitchen_windows
+        - binary_sensor.living_room_windows_left
+        - binary_sensor.living_room_windows_right
+        - binary_sensor.balcony_door
+        climate_target:
+        - climate.living_room_thermostat
+        - climate.kitchen_thermostat
 
-generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
-  - name: Living room - Hygrostat
-    #unique_id: 10a13674-0435-4580-b517-52542e6b441e
-    humidifier: switch.living_room_charging_strip_1_socket_1
-    target_sensor: sensor.kitchen_thermostat_humidity
-    #min_humidity: 0
-    #max_humidity: 100
-    target_humidity: 45
-    away_humidity: 35
-    dry_tolerance: 2
-    device_class: humidifier
-    initial_state: true
-    min_cycle_duration:
-      minutes: 5
+#generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
+#  - name: Living room - Hygrostat
+#    #unique_id: 10a13674-0435-4580-b517-52542e6b441e
+#    humidifier: switch.living_room_charging_strip_1_socket_1
+#    target_sensor: sensor.kitchen_thermostat_humidity
+#    #min_humidity: 0
+#    #max_humidity: 100
+#    target_humidity: 45
+#    away_humidity: 30
+#    dry_tolerance: 2
+#    device_class: humidifier
+#    initial_state: true
+#    min_cycle_duration:
+#      minutes: 5
 
 template:
   - sensor:

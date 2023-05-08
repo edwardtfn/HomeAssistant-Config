@@ -1,92 +1,90 @@
 automation:
-- alias: Office - Covers - Remote controlled (door)
-  id: '1661507182774'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_remote.yaml
-    input:
-      remote_device: 5acfbea46187a1d3c06c2dca49bd717b
-      cover_entity: cover.office_shutters_all
-- alias: Office - Covers - Remote controlled 2
-  id: '1661507207658'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_remote.yaml
-    input:
-      remote_device: d420aff39bfba16f659c207dc05e2743
-      cover_entity: cover.office_shutters_all
-- alias: Office - Covers - Sunset/sunrise based
-  id: '1662154991151'
-  description: ''
-  trigger:
-  #- platform: homeassistant
-  #  event: start
-  - platform: state
-    entity_id:
-    - sensor.civil_solar_day_status
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 0
-  condition:
-  - condition: state
-    entity_id: binary_sensor.office_door
-    state: 'on'
-  action:
-  - service: cover.open_cover
-    data: {}
-    target:
+  - alias: Office - Covers - Remote controlled (door)
+    id: '1661507182774'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_remote.yaml
+      input:
+        remote_device: 5acfbea46187a1d3c06c2dca49bd717b
+        cover_entity: cover.office_shutters_all
+  - alias: Office - Covers - Remote controlled 2
+    id: '1661507207658'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_remote.yaml
+      input:
+        remote_device: d420aff39bfba16f659c207dc05e2743
+        cover_entity: cover.office_shutters_all
+  - alias: Office - Covers - Bunkebergsgatan - Weather based
+    id: '1663594463162'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_weather.yaml
+      input:
+        cover_list:
+        - cover.office_shutter_1_cover
+        weather_entity: weather.home
+        windows_azimuth: '255'
+  - alias: Office - Covers - School - Weather based
+    id: '1663594596961'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_weather.yaml
+      input:
+        cover_list:
+        - cover.office_shutter_2_cover
+        weather_entity: weather.home
+        windows_azimuth: '345'
+  - alias: Office - Roller blind 1 - Remote controlled
+    id: '1661506655442'
+    description: ''
+    use_blueprint:
+      path: EdwardTFN/cover_remote.yaml
+      input:
+        remote_device: 655699530e3a218357784fa5b32838d2
+        cover_entity: cover.office_roller_blinds_all
+  - alias: Office - Covers - Sunset/sunrise based
+    id: '1662154991151'
+    description: ''
+    trigger:
+    - platform: state
       entity_id:
-      - cover.office_roller_blinds_all
-  - if:
+      - sensor.civil_solar_day_status
+      for:
+        minutes: 1
+    - platform: state
+      entity_id:
+      - schedule.home_quite_hours
+    condition:
     - condition: state
-      entity_id: sun.sun
-      state: above_horizon
-    then:
+      entity_id: binary_sensor.office_door
+      state: 'on'
+    action:
     - service: cover.open_cover
       data: {}
       target:
         entity_id:
-        - cover.office_shutters_all
-    else:
-    - service: cover.set_cover_position
-      data:
-        position: 25
-      target:
-        entity_id: cover.office_shutter_1_cover
-    - service: cover.close_cover
-      data: {}
-      target:
-        entity_id: cover.office_shutter_2_cover
-  mode: restart
-- alias: Office - Covers - Bunkebergsgatan - Weather based
-  id: '1663594463162'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_weather.yaml
-    input:
-      cover_list:
-      - cover.office_shutter_1_cover
-      weather_entity: weather.home
-      windows_azimuth: '255'
-- alias: Office - Covers - School - Weather based
-  id: '1663594596961'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_weather.yaml
-    input:
-      cover_list:
-      - cover.office_shutter_2_cover
-      weather_entity: weather.home
-      windows_azimuth: '345'
-- alias: Office - Roller blind 1 - Remote controlled
-  id: '1661506655442'
-  description: ''
-  use_blueprint:
-    path: EdwardTFN/cover_remote.yaml
-    input:
-      remote_device: 655699530e3a218357784fa5b32838d2
-      cover_entity: cover.office_roller_blinds_all
+        - cover.office_roller_blinds_all
+    - if:
+      - condition: state
+        entity_id: sun.sun
+        state: above_horizon
+      - condition: state
+        entity_id: schedule.home_quite_hours
+        state: 'off'
+      then:
+      - service: cover.open_cover
+        data: {}
+        target:
+          entity_id:
+          - cover.office_shutters_all
+      else:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id:
+          - cover.office_shutters_all
+    mode: restart
 
 cover:
   - name: Office - Shutters - All

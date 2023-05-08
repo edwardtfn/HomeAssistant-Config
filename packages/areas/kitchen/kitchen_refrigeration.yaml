@@ -3,7 +3,7 @@ alert:
     name: Kitchen - Freezer - Temperature alert
     message: >-
       The temperature in the freezer is outside the normal range ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
-      
+
       Please check the door and power supply.
     done_message: The temperature in the freezer is back to normal ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
     entity_id: binary_sensor.kitchen_freezer_temperature_normal_range
@@ -29,110 +29,110 @@ alert:
       #- signal_group_artillerigatan
 
 automation:
-- alias: Kitchen - Refrigeration - Temperature alarm
-  id: '1639343967055'
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.kitchen_freezer_hygrometer_temperature
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 15
-    above: -10
-    id: Freezer - High
-  - platform: numeric_state
-    entity_id: sensor.kitchen_freezer_hygrometer_temperature
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 15
-    below: -19
-    id: Freezer - Low
-  - platform: numeric_state
-    entity_id: sensor.kitchen_freezer_hygrometer_temperature
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 15
-    above: -19
-    below: -10
-    id: Freezer - Normal
-  - platform: numeric_state
-    entity_id: sensor.kitchen_fridge_hygrometer_temperature
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 15
-    above: 10.5
-    id: Fridge - High
-  - platform: numeric_state
-    entity_id: sensor.kitchen_fridge_hygrometer_temperature
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 15
-    below: 1
-    id: Frige - Low
-  - platform: numeric_state
-    entity_id: sensor.kitchen_fridge_hygrometer_temperature
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 15
-    above: 1
-    below: 10.5
-    id: Fridge - Normal
-  condition: []
-  action:
-  - service: notify.signal_edward
-    data:
-      message: Refrigeration temperature alarm triggered
-  - service: notify.signal_edward
-    data:
-      message: Triggered by {{ trigger.entity_id }} when changing from {{ trigger.from_state
-        }} to {{ trigger.to_state }}. Trigger id is {{ trigger.id }}.
-  - condition: not
-    conditions:
-    - condition: template
-      value_template: '{{ trigger.from_state.state in [''unknown'', ''unavailable'']
-        }}'
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: trigger
-          id: Freezer - High
-        - condition: trigger
-          id: Freezer - Low
-        - condition: trigger
-          id: Fridge - High
-        - condition: trigger
-          id: Fridge - Low
-      sequence:
-      - service: notify.signal_group_home
-        data:
-          message: "Abnormal temperature! \n{{ state_attr(trigger.entity_id, 'friendly_name')
-            }} is {{states(trigger.entity_id) | float(-99) | round(1) }}ºC.\nPlease
-            check the door and power supply."
-      - service: switch.turn_on
-        data: {}
-        target:
-          device_id: a76e3b3b1f35880f7709ec5c3f9c20c5
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: trigger
-          id: Freezer - Normal
-        - condition: trigger
-          id: Fridge - Normal
-      sequence:
-      - service: notify.signal_group_home
-        data:
-          message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} temperature
-            is back to normal ({{states(trigger.entity_id) | float(-99) | round(1)
-            }}ºC).'
-  mode: single
+  - alias: Kitchen - Refrigeration - Temperature alarm
+    id: '1639343967055'
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.kitchen_freezer_hygrometer_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 15
+      above: -10
+      id: Freezer - High
+    - platform: numeric_state
+      entity_id: sensor.kitchen_freezer_hygrometer_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 15
+      below: -19
+      id: Freezer - Low
+    - platform: numeric_state
+      entity_id: sensor.kitchen_freezer_hygrometer_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 15
+      above: -19
+      below: -10
+      id: Freezer - Normal
+    - platform: numeric_state
+      entity_id: sensor.kitchen_fridge_hygrometer_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 15
+      above: 10.5
+      id: Fridge - High
+    - platform: numeric_state
+      entity_id: sensor.kitchen_fridge_hygrometer_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 15
+      below: 1
+      id: Frige - Low
+    - platform: numeric_state
+      entity_id: sensor.kitchen_fridge_hygrometer_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 15
+      above: 1
+      below: 10.5
+      id: Fridge - Normal
+    condition: []
+    action:
+    - service: notify.signal_edward
+      data:
+        message: Refrigeration temperature alarm triggered
+    - service: notify.signal_edward
+      data:
+        message: Triggered by {{ trigger.entity_id }} when changing from {{ trigger.from_state
+          }} to {{ trigger.to_state }}. Trigger id is {{ trigger.id }}.
+    - condition: not
+      conditions:
+      - condition: template
+        value_template: '{{ trigger.from_state.state in [''unknown'', ''unavailable'']
+          }}'
+    - choose:
+      - conditions:
+        - condition: or
+          conditions:
+          - condition: trigger
+            id: Freezer - High
+          - condition: trigger
+            id: Freezer - Low
+          - condition: trigger
+            id: Fridge - High
+          - condition: trigger
+            id: Fridge - Low
+        sequence:
+        - service: notify.signal_group_home
+          data:
+            message: "Abnormal temperature! \n{{ state_attr(trigger.entity_id, 'friendly_name')
+              }} is {{states(trigger.entity_id) | float(-99) | round(1) }}ºC.\nPlease
+              check the door and power supply."
+        - service: switch.turn_on
+          data: {}
+          target:
+            device_id: a76e3b3b1f35880f7709ec5c3f9c20c5
+      - conditions:
+        - condition: or
+          conditions:
+          - condition: trigger
+            id: Freezer - Normal
+          - condition: trigger
+            id: Fridge - Normal
+        sequence:
+        - service: notify.signal_group_home
+          data:
+            message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} temperature
+              is back to normal ({{states(trigger.entity_id) | float(-99) | round(1)
+              }}ºC).'
+    mode: single
 
 binary_sensor:
   - name: Kitchen - Freezer - Temperature normal range
@@ -150,4 +150,3 @@ binary_sensor:
     lower: 1
     upper: 9
     hysteresis: 0.5
-
