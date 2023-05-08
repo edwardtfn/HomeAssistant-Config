@@ -249,8 +249,7 @@ trigger_variables:
   input_schedule_monthday: !input schedule_monthday
   input_pause_entities: !input pause_entities
   temp_input_update_exclusions: !input update_exclusions
-  input_update_exclusions: "{{ temp_input_update_exclusions | default([]) }}"
-  #updates_list: "{{ states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | map(attribute='entity_id') | list }}"
+  input_update_exclusions: !input update_exclusions
 
 trigger:
   - id: HA Schedule based
@@ -287,22 +286,32 @@ condition:
         entity_id: !input pause_entities
         state: 'off'
 
+variables:
+  input_verbose_logging_bool: !input verbose_logging_bool
+  input_backup_bool: !input backup_bool
+  input_restart_bool: !input restart_bool
+
+  temp_max_backup_age: !input max_backup_age
+
+  input_schedule_monthday: !input schedule_monthday
+  input_core_os_update_mode: !input core_os_update_mode
+  input_firmware_update_mode: !input firmware_update_mode
+  input_general_update_mode: !input general_update_mode
+  input_pause_entities: !input pause_entities
+
 action:
   ########## Refresh update list ##########
   - &recalc-update-list
     variables:
-      input_verbose_logging_bool: !input verbose_logging_bool
-      input_backup_bool: !input backup_bool
-      input_restart_bool: !input restart_bool
-
-      temp_max_backup_age: !input max_backup_age
-      input_max_backup_age_seconds: "{{ timedelta(days=temp_max_backup_age.days,hours=temp_max_backup_age.hours, minutes=temp_max_backup_age.minutes, seconds=temp_max_backup_age.seconds).total_seconds() }}"
-
-      input_schedule_monthday: !input schedule_monthday
-      input_core_os_update_mode: !input core_os_update_mode
-      input_firmware_update_mode: !input firmware_update_mode
-      input_general_update_mode: !input general_update_mode
-      input_pause_entities: !input pause_entities
+      input_max_backup_age_seconds: >
+        {{
+          timedelta(
+            days=temp_max_backup_age.days,
+            hours=temp_max_backup_age.hours,
+            minutes=temp_max_backup_age.minutes,
+            seconds=temp_max_backup_age.seconds
+          ).total_seconds()
+        }}
 
       core_update_entity: >
             {% for u in integration_entities('hassio') | select('search', '^update[.]')
@@ -338,7 +347,6 @@ action:
           | list
         }}
 
-      temp_input_update_exclusions: !input update_exclusions
       input_update_exclusions: >
             {% set exclusions = temp_input_update_exclusions | default([]) %}
 
@@ -436,7 +444,6 @@ action:
   ########## Starting ##########
   - &logbook-variables
     if: "{{ input_verbose_logging_bool }}"
-    continue_on_error: true
     then:
       - alias: Logbook - variables
         continue_on_error: true
@@ -451,7 +458,7 @@ action:
               input_verbose_logging_bool: {{ input_verbose_logging_bool }},
               input_max_backup_age_seconds: {{ input_max_backup_age_seconds }},
               input_schedule_monthday: {{ input_schedule_monthday }}, 
-              input_update_exclusions: {{ temp_input_update_exclusions }}, 
+              input_update_exclusions: {{ input_update_exclusions }}, 
               input_core_os_update_mode: {{ input_core_os_update_mode }}, 
               input_firmware_update_mode: {{ input_firmware_update_mode }}, 
               input_general_update_mode: {{ input_general_update_mode }}, 
@@ -461,39 +468,41 @@ action:
               firmware_update_entities: {{ firmware_update_entities }}, 
               general_update_entities; {{ general_update_entities }}, 
               updates_list: {{ updates_list }}
-
-  - alias: "Logbook - A new update is available"
     continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      domain: update
-      message: A new update is available for Home Assistant.
-  - alias: "Logbook - List of updates"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      domain: update
-      message: >
-        List of updates:
-        - {{ states.update
-          | selectattr('state','eq','on')
-          | selectattr('entity_id', 'in', updates_list)
-          | rejectattr('entity_id', 'in', input_update_exclusions)
-          | map(attribute='name') | list | join('
 
-        - ') }}
+  - if: "{{ input_verbose_logging_bool }}"
+    then:
+      - alias: "Logbook - A new update is available"
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          domain: update
+          message: A new update is available for Home Assistant.
+      - alias: "Logbook - List of updates"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          domain: update
+          message: >
+            List of updates:
+            - {{ states.update
+              | selectattr('state','eq','on')
+              | selectattr('entity_id', 'in', updates_list)
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='name') | list | join('
 
-  - alias: "Logbook: Running pre-update actions"
+            - ') }}
+      - alias: "Logbook: Running pre-update actions"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: Running pre-update actions...
     continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: Running pre-update actions...
 
   - alias: "Run pre-update actions"
     continue_on_error: true
@@ -526,13 +535,15 @@ action:
       - "{{ input_backup_bool }}"
 #          {{ ( input_backup_bool ) and ((as_timestamp(now()) - as_timestamp(state_attr('sensor.backup_state', 'last_backup'))) > 7200) }}
     then:
-      - alias: "Logbook - Backing up"
-        continue_on_error: true
-        service: logbook.log
-        data:
-          name: Auto-update
-          entity_id: '{{ this.entity_id }}'
-          message: Backing up Home Assistant.
+      - if: "{{ input_verbose_logging_bool }}"
+        then:
+          - alias: "Logbook - Backing up"
+            continue_on_error: true
+            service: logbook.log
+            data:
+              name: Auto-update
+              entity_id: '{{ this.entity_id }}'
+              message: Backing up Home Assistant.
       - alias: "Call backup service"
         continue_on_error: true
         service: hassio.backup_full
@@ -542,13 +553,15 @@ action:
 #          {{ ((as_timestamp(now()) - as_timestamp(state_attr('sensor.backup_state', 'last_backup'))) <= 7200) }}
 #        continue_on_timeout: true
 #        timeout: '3600' #3600
-      - alias: "Backup triggered"
-        continue_on_error: true
-        service: logbook.log
-        data:
-          name: Auto-update
-          entity_id: '{{ this.entity_id }}'
-          message: Backup triggered.
+      - if: "{{ input_verbose_logging_bool }}"
+        then:
+          - alias: "Backup triggered"
+            continue_on_error: true
+            service: logbook.log
+            data:
+              name: Auto-update
+              entity_id: '{{ this.entity_id }}'
+              message: Backup triggered.
       - alias: "Give 1h for the backup" # There's no sensor for when the backup finishes
         delay: 3600
     else: []
@@ -577,13 +590,15 @@ action:
               | list | count | int(0) ) > 0
             }}
       sequence:
-        - alias: "Update - Standard - Logbook - Starting"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Starting sequence of standard updates..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - Standard - Logbook - Starting"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Starting sequence of standard updates..."
         - variables:
             pending_update_list: >
               {{ states.update
@@ -596,20 +611,22 @@ action:
                 | map(attribute='entity_id')
                 | list
                 }}
-        - alias: "Update - Standard - Logbook - Updating"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - Standard - Logbook - Updating"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - Standard - Install"
           continue_on_error: true
           service: update.install
           data: {}
           target:
             entity_id: '{{ pending_update_list[0] }}'
-        - alias: "Update - Standard - Logbook - Install"
+        - alias: "Update - Standard - wait"
           continue_on_error: true
           wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
           continue_on_timeout: true
@@ -639,13 +656,15 @@ action:
               | list | count | int(0) ) > 0
             }}
       sequence:
-        - alias: "Update - Core - Logbook - Starting"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Starting sequence of core items updates..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - Core - Logbook - Starting"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Starting sequence of core items updates..."
         - variables:
             pending_update_list: >
               {{ states.update
@@ -658,13 +677,15 @@ action:
                 | map(attribute='entity_id')
                 | list
                 }}
-        - alias: "Update - Core - Logbook - Updating"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - Core - Logbook - Updating"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - Core - Install"
           continue_on_error: true
           service: update.install
@@ -701,13 +722,15 @@ action:
               | list | count | int(0) ) > 0
             }}
       sequence:
-        - alias: "Update - OS - Logbook - Starting"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Starting sequence of OS update..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - OS - Logbook - Starting"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Starting sequence of OS update..."
         - variables:
             pending_update_list: >
               {{ states.update
@@ -720,13 +743,15 @@ action:
                 | map(attribute='entity_id')
                 | list
                 }}
-        - alias: "Update - OS - Logbook - Updating"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - OS - Logbook - Updating"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - OS - Install"
           continue_on_error: true
           service: update.install
@@ -762,13 +787,15 @@ action:
               | list | count | int(0) ) > 0
             }}
       sequence:
-        - alias: "Update - Devices firmware - Logbook - Starting"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Starting sequence of Devices firmware update..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - Devices firmware - Logbook - Starting"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Starting sequence of Devices firmware update..."
         - variables:
             pending_update_list: >
               {{ states.update
@@ -780,13 +807,15 @@ action:
                 | map(attribute='entity_id')
                 | list
                 }}
-        - alias: "Update - Devices firmware - Logbook - Updating"
-          continue_on_error: true
-          service: logbook.log
-          data:
-            name: Auto-update
-            entity_id: '{{ this.entity_id }}'
-            message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
+        - if: "{{ input_verbose_logging_bool }}"
+          then:
+            - alias: "Update - Devices firmware - Logbook - Updating"
+              continue_on_error: true
+              service: logbook.log
+              data:
+                name: Auto-update
+                entity_id: '{{ this.entity_id }}'
+                message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - Devices firmware - Install"
           continue_on_error: true
           service: update.install
@@ -799,91 +828,58 @@ action:
           continue_on_timeout: true
           timeout: '3600'
 
-  ########## Update all remaining items ########## => this chaches up if some update item was left behind
-  - *recalc-update-list
-  - *logbook-variables
-  #- alias: "Update - Remaining"
-  #  continue_on_error: true
-  #  if:
-  #    - condition: state
-  #      entity_id: !input schedule_entity
-  #      state: "on"
-  #  then:
-  #    - alias: "Update - Remaining - Logbook - Updating"
-  #      continue_on_error: true
-  #      service: logbook.log
-  #      data:
-  #        name: Auto-update
-  #        entity_id: '{{ this.entity_id }}'
-  #        message: Updating all remaining items (if any).
-  #    - alias: "Update - Remaining - Install"
-  #      continue_on_error: true
-  #      service: update.install
-  #      data: {}
-  #      target:
-  #        entity_id: >
-  #          {{ states.update
-  #          | selectattr('state','eq','on')
-  #          | selectattr('entity_id', 'in', updates_list)
-  #          | rejectattr('entity_id', 'in', input_update_exclusions)
-  #          | map(attribute='entity_id')
-  #          | list
-  #          }}
-  #    - alias: "Update - Remaining - Wait"
-  #      continue_on_error: true
-  #      wait_template: >
-  #        {{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) < 1 }}
-  #      continue_on_timeout: true
-  #      timeout: '3600'
-
     ########## Finishing ##########
   - *recalc-update-list
   - *logbook-variables
-  - alias: "Logbook - Updating"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: Finishing update process.
-  - alias: "Logbook - Remaining updates"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: >
-        Remaining updates:
-        - {{ states.update
-          | selectattr('state','eq','on')
-          | selectattr('entity_id', 'in', updates_list)
-          | rejectattr('entity_id', 'in', input_update_exclusions)
-          | map(attribute='name') | list | join('
+  - if: "{{ input_verbose_logging_bool }}"
+    then:
+      - alias: "Logbook - Updating"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: Finishing update process.
+      - alias: "Logbook - Remaining updates"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: >
+            Remaining updates:
+            - {{ states.update
+              | selectattr('state','eq','on')
+              | selectattr('entity_id', 'in', updates_list)
+              | rejectattr('entity_id', 'in', input_update_exclusions)
+              | map(attribute='name') | list | join('
 
-        - ') }}
+            - ') }}
 
   ########## Restart Home Assistant ##########
-  - alias: "Restart - Logbook"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: >
-        {{ states.update
-          | selectattr('attributes.release_summary', 'defined')
-          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
-          | map(attribute='entity_id')
-          | list
-          | count
-          | int(0) }} item(s) pending a restart:
-        - {{ states.update
-          | selectattr('attributes.release_summary', 'defined')
-          | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
-          | map(attribute='entity_id')
-          | list
-          | join('
-        - ') }}
+  - if: "{{ input_verbose_logging_bool }}"
+    then:
+      - alias: "Restart - Logbook"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: >
+            {{ states.update
+              | selectattr('attributes.release_summary', 'defined')
+              | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
+              | map(attribute='entity_id')
+              | list
+              | count
+              | int(0) }} item(s) pending a restart:
+            - {{ states.update
+              | selectattr('attributes.release_summary', 'defined')
+              | selectattr('attributes.release_summary', 'search', "<ha-alert alert-type='error'>")
+              | map(attribute='entity_id')
+              | list
+              | join('
+            - ') }}
   - alias: "Restart"
     continue_on_error: true
     if:
@@ -904,13 +900,15 @@ action:
       - if:
           - "{{ states.persistent_notification.invalid_config.state | default('unavailable') == 'notifying' or states.persistent_notification.homeassistant_check_config.state | default('unavailable') == 'notifying' }}"
         then:
-          - alias: "Logbook: Running pre-restart actions"
-            continue_on_error: true
-            service: logbook.log
-            data:
-              name: Auto-update
-              entity_id: '{{ this.entity_id }}'
-              message: Running pre-restart actions...
+          - if: "{{ input_verbose_logging_bool }}"
+            then:
+              - alias: "Logbook: Running pre-restart actions"
+                continue_on_error: true
+                service: logbook.log
+                data:
+                  name: Auto-update
+                  entity_id: '{{ this.entity_id }}'
+                  message: Running pre-restart actions...
           - alias: "Run pre-restart actions"
             continue_on_error: true
             choose:
@@ -918,16 +916,18 @@ action:
                   - '{{ true }}'
                 sequence: !input actions_pre_restart
             default: []
-          - alias: "Restart - Logbook - Skipping restart"
-            continue_on_error: true
-            service: logbook.log
-            data:
-              name: Auto-update
-              entity_id: '{{ this.entity_id }}'
-              message: >
-                Skipping restart process due to notifications of invalid configurations:
-                states.persistent_notification.invalid_config.state = {{ states.persistent_notification.invalid_config.state | default('unavailable') }},
-                states.persistent_notification.homeassistant_check_config.state = {{ states.persistent_notification.homeassistant_check_config.state | default('unavailable') }}
+          - if: "{{ input_verbose_logging_bool }}"
+            then:
+              - alias: "Restart - Logbook - Skipping restart"
+                continue_on_error: true
+                service: logbook.log
+                data:
+                  name: Auto-update
+                  entity_id: '{{ this.entity_id }}'
+                  message: >
+                    Skipping restart process due to notifications of invalid configurations:
+                    states.persistent_notification.invalid_config.state = {{ states.persistent_notification.invalid_config.state | default('unavailable') }},
+                    states.persistent_notification.homeassistant_check_config.state = {{ states.persistent_notification.homeassistant_check_config.state | default('unavailable') }}
         else:
           - alias: "Restart - Logbook - Restarting"
             continue_on_error: true
@@ -941,13 +941,15 @@ action:
             service: hassio.host_reboot
 
     ########## Post-update actions ##########
-  - alias: "Logbook - Post-actions"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: Running post-update actions...
+  - if: "{{ input_verbose_logging_bool }}"
+    then:
+      - alias: "Logbook - Post-actions"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: Running post-update actions...
 
   - alias: "Run post-update actions"
     continue_on_error: true
@@ -958,10 +960,12 @@ action:
     default: []
 
     ########## Done! ##########
-  - alias: "Logbook - Done"
-    continue_on_error: true
-    service: logbook.log
-    data:
-      name: Auto-update
-      entity_id: '{{ this.entity_id }}'
-      message: Done!
+  - if: "{{ input_verbose_logging_bool }}"
+    then:
+      - alias: "Logbook - Done"
+        continue_on_error: true
+        service: logbook.log
+        data:
+          name: Auto-update
+          entity_id: '{{ this.entity_id }}'
+          message: Done!
