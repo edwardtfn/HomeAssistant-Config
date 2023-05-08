@@ -69,7 +69,7 @@ sensor:
      - name: "${name} battery"
        unit_of_measurement: "%"
        accuracy_decimals: 0
-      
+
 text_sensor:
   - platform: custom
     lambda: |-
