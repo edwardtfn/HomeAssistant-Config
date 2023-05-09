@@ -3,87 +3,87 @@ automation:
     id: '1663627849757'
     description: ''
     trigger:
-    - platform: state
-      entity_id:
-      - weather.home
-      to: rainy
-    - platform: state
-      entity_id:
-      - weather.home
-      to: snowy-rainy
-    - platform: state
-      entity_id:
-      - weather.home
-      to: lightning-rainy
-    - platform: state
-      entity_id:
-      - weather.home
-      to: snowy
-    - platform: state
-      entity_id:
-      - weather.home
-      to: windy
-    - platform: state
-      entity_id:
-      - weather.home
-      to: windy-variant
+      - platform: state
+        entity_id:
+        - weather.home
+        to: rainy
+      - platform: state
+        entity_id:
+        - weather.home
+        to: snowy-rainy
+      - platform: state
+        entity_id:
+        - weather.home
+        to: lightning-rainy
+      - platform: state
+        entity_id:
+        - weather.home
+        to: snowy
+      - platform: state
+        entity_id:
+        - weather.home
+        to: windy
+      - platform: state
+        entity_id:
+        - weather.home
+        to: windy-variant
     condition:
-    - condition: template
-      value_template: "{{ (\n  states.binary_sensor \n  | selectattr('attributes.device_class',
-        'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
-        'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
+      - condition: template
+        value_template: "{{ (\n  states.binary_sensor \n  | selectattr('attributes.device_class',
+          'defined') \n  | selectattr('attributes.device_class','eq','window') \n  | selectattr('state',
+          'eq', 'on') \n  | map(attribute='name') \n  | list \n  | count) > 0 \n}}"
     action:
-    - service: notify.signal_group_home
-      data:
-        message: "The weather is changing and the following windows are open:\n- {{
-          states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
-          \n    | selectattr('attributes.device_class','eq','window') \n    | selectattr('state',
-          'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
-          ') }}"
+      - service: notify.signal_group_home
+        data:
+          message: "The weather is changing and the following windows are open:\n- {{
+            states.binary_sensor \n    | selectattr('attributes.device_class', 'defined')
+            \n    | selectattr('attributes.device_class','eq','window') \n    | selectattr('state',
+            'eq', 'on') \n    | map(attribute='name') \n    | list \n    | join('\n    -
+            ') }}"
     mode: single
   - alias: Home - Humidifiers - At least one humidifier requires attention
     id: '1638151457747'
     trigger:
-    - platform: numeric_state
-      entity_id:
-      - climate.bathroom_thermostat
-      - climate.guest_room_thermostat
-      - climate.guest_room_closet_thermostat
-      - climate.kitchen_thermostat
-      - climate.living_room_thermostat
-      attribute: current_humidity
-      below: 35
-      for:
-        minutes: 5
-    - platform: numeric_state
-      entity_id:
-      - sensor.bedroom_hygrometer_humidity
-      - sensor.corridor_air_quality_humidity
-      - sensor.office_hygrometer_humidity
-      below: 35
-      for:
-        minutes: 5
+      - platform: numeric_state
+        entity_id:
+        - climate.bathroom_thermostat
+        - climate.guest_room_thermostat
+        - climate.guest_room_closet_thermostat
+        - climate.kitchen_thermostat
+        - climate.living_room_thermostat
+        attribute: current_humidity
+        below: 35
+        for:
+          minutes: 5
+      - platform: numeric_state
+        entity_id:
+        - sensor.bedroom_hygrometer_humidity
+        - sensor.corridor_air_quality_humidity
+        - sensor.office_hygrometer_humidity
+        below: 35
+        for:
+          minutes: 5
     action:
-    - variables:
-        announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | default('the apartment')) }}"
-    - service: notify.signal_group_home
-      data:
-        message: >
-          {{ announcement }}
+      - variables:
+          announcement: "{{ (state_attr('input_select.phrases_low_humidity', 'options') | random).replace('room_name', area_name(trigger.entity_id) | default('the apartment')) }}"
+      - service: notify.signal_group_home
+        data:
+          message: >
+            {{ announcement }}
 
-          Humidity: {{ trigger.to_state.state | round(0) }}%
-    #- if:
-    #    - condition: state
-    #      entity_id: schedule.home_quite_hours
-    #      state: "off"
-    #    - condition: state
-    #      entity_id: input_boolean.home_empty
-    #      state: "off"
-    #  then:
-    #    - service: notify.alexa_media
-    #      data:
-    #        message: "{{ announcement }}"
-    #        target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | default(None)) if area_name(trigger.entity_id) != 'Kitchen' }}"
+            Humidity: {{ trigger.to_state.state | round(0) }}%
+      #- if:
+      #    - condition: state
+      #      entity_id: schedule.home_quite_hours
+      #      state: "off"
+      #    - condition: state
+      #      entity_id: input_boolean.home_empty
+      #      state: "off"
+      #  then:
+      #    - service: notify.alexa_media
+      #      data:
+      #        message: "{{ announcement }}"
+      #        target: "Kitchen{{ (', ' ~ area_name(trigger.entity_id) | default(None)) if area_name(trigger.entity_id) != 'Kitchen' }}"
 
     mode: single
 
