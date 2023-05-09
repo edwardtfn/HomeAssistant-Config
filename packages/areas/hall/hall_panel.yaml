@@ -5,7 +5,7 @@ automation:
     use_blueprint:
       path: Blackymas/nspanel_blueprint.yaml
       input:
-        nspanel_name: d079c1c6f682bfcf82dbdf4ea3c017f2
+        nspanel_name: 9dcfee873c17035039322267d329c161
         language: ENG
         time_format: '%H:%M'
         date_format: '%-d/%-m'
