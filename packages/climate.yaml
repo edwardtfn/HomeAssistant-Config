@@ -150,19 +150,19 @@ script:
     icon: mdi:thermometer
     mode: restart
     sequence:
-    - service: climate.set_hvac_mode
-      data_template:
-        hvac_mode: '{{ iif(is_state(climate, ''off''), ''auto'', ''off'') }}'
-        entity_id: '{{ climate }}'
+      - service: climate.set_hvac_mode
+        data_template:
+          hvac_mode: '{{ iif(is_state(climate, ''off''), ''auto'', ''off'') }}'
+          entity_id: '{{ climate }}'
 
 template:
   - binary_sensor:
-    - name: Home - Heating
-      unique_id: ccdc9413-8b08-4d95-837a-8883886df7f6
-      device_class: heat
-      state: "{{ (this.attributes.entities | default([]) | count | int(0)) > 0 }}"
-      attributes:
-        entities: "{{ expand(integration_entities('HomeKit Controller - Tado')) | selectattr('domain', 'eq', 'climate') | selectattr('attributes.hvac_action', 'eq', 'heating') | map(attribute='entity_id') | list }}"
+      - name: Home - Heating
+        unique_id: ccdc9413-8b08-4d95-837a-8883886df7f6
+        device_class: heat
+        state: "{{ (this.attributes.entities | default([]) | count | int(0)) > 0 }}"
+        attributes:
+          entities: "{{ expand(integration_entities('HomeKit Controller - Tado')) | selectattr('domain', 'eq', 'climate') | selectattr('attributes.hvac_action', 'eq', 'heating') | map(attribute='entity_id') | list }}"
 
   - sensor:
     - name: Home - Weather - Outdoor temperature
@@ -366,7 +366,7 @@ template:
       unique_id: 0cc6c07f-267f-43ba-b9a3-3c574108d85c
       unit_of_measurement: "%"
       state: >-
-         {{ (((states('sensor.home_artillerigatan_sun_index_1') | float(0))+(states('sensor.home_artillerigatan_sun_index_3') | float(0)))/2) | float(0) | round(2) }}
+        {{ (((states('sensor.home_artillerigatan_sun_index_1') | float(0))+(states('sensor.home_artillerigatan_sun_index_3') | float(0)))/2) | float(0) | round(2) }}
 
     # sun-window angular similarity
     # https://community.home-assistant.io/t/incident-angle-of-sunlight/444646
@@ -524,7 +524,6 @@ template:
         state: "{{ states('sensor.home_weather_outdoor_temperature')}}"
         attributes:
           datetime: "{{ now() }}"
-
 
   - trigger:
     - platform: time
