@@ -49,26 +49,26 @@ custom_component:
       return {r};
 
 sensor:
- - platform: custom
-   lambda: |-
+  - platform: custom
+    lambda: |-
       auto r = ${init}
       return {r->voltageSensor, r->currentSensor, r->batteryChargeSensor, r->batteryCapacitySensor, r->batteryPercentSensor};
-   sensors:
-     - name: "${name} voltage"
-       unit_of_measurement: "V"
-       accuracy_decimals: 2
-     - name: "${name} current"
-       unit_of_measurement: "A"
-       accuracy_decimals: 3
-     - name: "${name} charge"
-       unit_of_measurement: "Ah"
-       accuracy_decimals: 2
-     - name: "${name} capacity"
-       unit_of_measurement: "Ah"
-       accuracy_decimals: 2
-     - name: "${name} battery"
-       unit_of_measurement: "%"
-       accuracy_decimals: 0
+    sensors:
+      - name: "${name} voltage"
+        unit_of_measurement: "V"
+        accuracy_decimals: 2
+      - name: "${name} current"
+        unit_of_measurement: "A"
+        accuracy_decimals: 3
+      - name: "${name} charge"
+        unit_of_measurement: "Ah"
+        accuracy_decimals: 2
+      - name: "${name} capacity"
+        unit_of_measurement: "Ah"
+        accuracy_decimals: 2
+      - name: "${name} battery"
+        unit_of_measurement: "%"
+        accuracy_decimals: 0
 
 text_sensor:
   - platform: custom

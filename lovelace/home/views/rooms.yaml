@@ -2897,7 +2897,12 @@ cards:
             icon_color: >-
               {% if states(entity) not in ['unavailable','unknown','none'])
               %}
-                {% if ((states('sensor.epson_wf_3720_series_black_ink') | float(0) | round(0)) < 10) or ((states('sensor.epson_wf_3720_series_cyan_ink') | float(0) | round(0)) < 10) or ((states('sensor.epson_wf_3720_series_magenta_ink') | float(0) | round(0)) < 10) or ((states('sensor.epson_wf_3720_series_yellow_ink') | float(0) | round(0)) < 10) %}
+                {% if
+                  ((states('sensor.epson_wf_3720_series_black_ink') | float(0) | round(0)) < 10) or
+                  ((states('sensor.epson_wf_3720_series_cyan_ink') | float(0) | round(0)) < 10) or
+                  ((states('sensor.epson_wf_3720_series_magenta_ink') | float(0) | round(0)) < 10) or
+                  ((states('sensor.epson_wf_3720_series_yellow_ink') | float(0) | round(0)) < 10)
+                %}
                   red
                 {% elif is_state(entity, 'idle') %}
                   blue

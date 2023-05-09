@@ -33,27 +33,26 @@ custom_component:
       return {r};
 
 sensor:
- - platform: custom
-   lambda: |-
+  - platform: custom
+    lambda: |-
       auto r = ${init}
       return {r->distanceSensor, r->voltageSensor, r->currentSensor, r->chargeSensor, r->capacitySensor};
-
-   sensors:
-     - name: "${name} distance"
-       unit_of_measurement: "mm"
-       accuracy_decimals: 0
-     - name: "${name} voltage"
-       unit_of_measurement: "mV"
-       accuracy_decimals: 0
-     - name: "${name} current"
-       unit_of_measurement: "mA"
-       accuracy_decimals: 0
-     - name: "${name} charge"
-       unit_of_measurement: "mAh"
-       accuracy_decimals: 0
-     - name: "${name} capacity"
-       unit_of_measurement: "mAh"
-       accuracy_decimals: 0
+    sensors:
+      - name: "${name} distance"
+        unit_of_measurement: "mm"
+        accuracy_decimals: 0
+      - name: "${name} voltage"
+        unit_of_measurement: "mV"
+        accuracy_decimals: 0
+      - name: "${name} current"
+        unit_of_measurement: "mA"
+        accuracy_decimals: 0
+      - name: "${name} charge"
+        unit_of_measurement: "mAh"
+        accuracy_decimals: 0
+      - name: "${name} capacity"
+        unit_of_measurement: "mAh"
+        accuracy_decimals: 0
 
 binary_sensor:
   - platform: status
@@ -61,9 +60,8 @@ binary_sensor:
 
   - platform: custom
     lambda: |-
-       auto r = ${init}
-       return {r->chargingBinarySensor, r->dockedBinarySensor, r->cleaningBinarySensor};
-
+      auto r = ${init}
+      return {r->chargingBinarySensor, r->dockedBinarySensor, r->cleaningBinarySensor};
     binary_sensors:
       - name: "${name} charging"
       - name: "${name} docked"

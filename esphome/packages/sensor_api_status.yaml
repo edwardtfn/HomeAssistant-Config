@@ -1,3 +1,0 @@
-  ##### API connection status
-  - platform: status
-    name: ${device_name} Status

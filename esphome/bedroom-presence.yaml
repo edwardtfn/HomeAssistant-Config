@@ -22,7 +22,7 @@ uart:
 
 ld2410:
   timeout: 150s
-  max_move_distance : 6m
+  max_move_distance: 6m
   max_still_distance: 0.75m
   g0_move_threshold: 10
   g0_still_threshold: 20
@@ -46,7 +46,7 @@ ld2410:
 sensor:
   - platform: ld2410
     moving_distance:
-      name : Moving Distance
+      name: Moving Distance
     still_distance:
       name: Still Distance
     moving_energy:
