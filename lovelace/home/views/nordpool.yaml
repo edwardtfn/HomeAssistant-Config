@@ -1,91 +1,91 @@
-    title: NordPool
-    theme: Backend-selected
-    path: nordpool
-    subview: true
-    type: panel
-    badges: []
-    cards:
-      - type: custom:plotly-graph
-        time_offset: 1.5d
-        refresh_interval: 300
-        hours_to_show: 84
-        layout:
-          xaxis:
-            rangeselector:
-              'y': 1.2
-              buttons:
-                - count: 7
-                  step: day
-                - count: 12
-                  step: day
-          yaxis:
-            rangemode: tozero
-            tickformat: .1f
-          yaxis2:
-            rangemode: tozero
-            tickformat: .2f
-            fixrange: true
-          yaxis9:
-            visible: false
-            fixedrange: true
-        round: 2
-        default: null
-        entities:
-          - entity: sensor.total_energy_utility_meter
-            name: Energy consumption
-            type: bar
-            marker:
-              color: rgba(165,165,0,0.6)
-            texttemplate: ' %{y:.2f} kr/kWh'
-            statistic: state
-            period: hour
-            filters:
-              - fn: |-
-                  (params) => {
-                    const ys = [];
-                    ys.push(0);
-                    for (let i = 1; i < params.statistics.length; i++){
-                      ys.push(params.statistics[i].state-params.statistics[i-1].state);
-                    }
-                    return { ys };
-                  }
-          - entity: sensor.nordpool_kwh_se3_sek_3_10_025
-            name: Electricity price
-            yaxis: y2
-            unit_of_measurement: kr/kWh
-            line:
-              color: rgba(255, 165, 0, 1)
-              width: 3
-            filters:
-              - store_var: electricity_price
-              - exponential_moving_average:
-                  alpha: 1
-            show_value: true
-            texttemplate: ' %{y:.2f} kr/kWh'
-          - entity: sensor.nordpool_kwh_se3_sek_3_10_025
-            yaxis: y2
-            name: Future price
-            fill: tozeroy
-            fillcolor: rgba(255, 165, 0,.1)
-            line:
-              color: rgba(255, 165, 0, 1)
-              width: 1
-              dash: dot
-            filters:
-              - fn: |-
-                  ({ meta, vars }) => ({
-                    xs: [vars.electricity_price.xs.slice(-1)[0],...meta.raw_today.concat(...meta.raw_tomorrow).map(({ start }) => new Date(start))],
-                    ys: [vars.electricity_price.ys.slice(-1)[0],...meta.raw_today.concat(...meta.raw_tomorrow).map(({ value }) => value)],
-                  })
-              - exponential_moving_average:
-                  alpha: 1
-          - entity: ''
-            name: Now
-            yaxis: y9
-            showlegend: false
-            line:
-              width: 1
-              dash: dot
-              color: deepskyblue
-            x: $fn () => [Date.now(), Date.now()]
-            'y': $fn () => [0,1]
+title: NordPool
+theme: Backend-selected
+path: nordpool
+subview: true
+type: panel
+badges: []
+cards:
+  - type: custom:plotly-graph
+    time_offset: 1.5d
+    refresh_interval: 300
+    hours_to_show: 84
+    layout:
+      xaxis:
+        rangeselector:
+          'y': 1.2
+          buttons:
+            - count: 7
+              step: day
+            - count: 12
+              step: day
+      yaxis:
+        rangemode: tozero
+        tickformat: .1f
+      yaxis2:
+        rangemode: tozero
+        tickformat: .2f
+        fixrange: true
+      yaxis9:
+        visible: false
+        fixedrange: true
+    round: 2
+    default: null
+    entities:
+      - entity: sensor.total_energy_utility_meter
+        name: Energy consumption
+        type: bar
+        marker:
+          color: rgba(165,165,0,0.6)
+        texttemplate: ' %{y:.2f} kr/kWh'
+        statistic: state
+        period: hour
+        filters:
+          - fn: |-
+              (params) => {
+                const ys = [];
+                ys.push(0);
+                for (let i = 1; i < params.statistics.length; i++){
+                  ys.push(params.statistics[i].state-params.statistics[i-1].state);
+                }
+                return { ys };
+              }
+      - entity: sensor.nordpool_kwh_se3_sek_3_10_025
+        name: Electricity price
+        yaxis: y2
+        unit_of_measurement: kr/kWh
+        line:
+          color: rgba(255, 165, 0, 1)
+          width: 3
+        filters:
+          - store_var: electricity_price
+          - exponential_moving_average:
+              alpha: 1
+        show_value: true
+        texttemplate: ' %{y:.2f} kr/kWh'
+      - entity: sensor.nordpool_kwh_se3_sek_3_10_025
+        yaxis: y2
+        name: Future price
+        fill: tozeroy
+        fillcolor: rgba(255, 165, 0,.1)
+        line:
+          color: rgba(255, 165, 0, 1)
+          width: 1
+          dash: dot
+        filters:
+          - fn: |-
+              ({ meta, vars }) => ({
+                xs: [vars.electricity_price.xs.slice(-1)[0],...meta.raw_today.concat(...meta.raw_tomorrow).map(({ start }) => new Date(start))],
+                ys: [vars.electricity_price.ys.slice(-1)[0],...meta.raw_today.concat(...meta.raw_tomorrow).map(({ value }) => value)],
+              })
+          - exponential_moving_average:
+              alpha: 1
+      - entity: ''
+        name: Now
+        yaxis: y9
+        showlegend: false
+        line:
+          width: 1
+          dash: dot
+          color: deepskyblue
+        x: $fn () => [Date.now(), Date.now()]
+        'y': $fn () => [0,1]

@@ -1,680 +1,680 @@
-    title: Climate
-    path: climate
-    icon: ''
-    badges: []
+title: Climate
+path: climate
+icon: ''
+badges: []
+cards:
+  - type: custom:sun-card
+  - type: custom:horizon-card
+  - type: custom:weather-card
+    entity: weather.home
+    number_of_forecasts: '7'
+    details: true
+    forecast: false
+    hourly_forecast: true
+    current: true
+  - square: false
+    columns: 2
+    title: Bathroom
+    type: grid
     cards:
-      - type: custom:sun-card
-      - type: custom:horizon-card
-      - type: custom:weather-card
-        entity: weather.home
-        number_of_forecasts: '7'
-        details: true
-        forecast: false
-        hourly_forecast: true
-        current: true
-      - square: false
-        columns: 2
-        title: Bathroom
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.bathroom_thermostat_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.bathroom_thermostat_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.bathroom_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.bathroom_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - square: false
-        columns: 2
-        title: Bedroom
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.bedroom_thermostat_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.bedroom_thermostat_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.bedroom_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.bedroom_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - square: false
-        columns: 2
-        title: Guest room
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.guest_room_thermostat_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.guest_room_thermostat_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.guest_room_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.guest_room_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - square: false
-        columns: 2
-        title: Guest room - Closet
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.guest_room_closet_thermostat_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.guest_room_closet_thermostat_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.guest_room_closet_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.guest_room_closet_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - square: false
-        columns: 2
-        title: Kitchen
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.kitchen_thermostat_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.kitchen_thermostat_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.kitchen_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.kitchen_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - square: false
-        columns: 2
-        title: Living room
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.living_room_thermostat_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.living_room_thermostat_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.living_room_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.living_room_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - square: false
-        columns: 2
-        title: Office
-        type: grid
-        cards:
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 1
-            group: false
-            animate: true
-            show:
-              legend: false
-              state: true
-              icon: false
-            entities:
-              - entity: sensor.office_thermostat_1_current_temperature
-                name: Temperature
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 15
-                color: red
-              - value: 18
-                color: blue
-              - value: 20
-                color: green
-              - value: 23
-                color: orange
-              - value: 24
-                color: red
-          - type: custom:mini-graph-card
-            hours_to_show: 24
-            points_per_hour: 6
-            decimals: 0
-            group: false
-            animate: true
-            lower_bound: 0
-            show:
-              legend: false
-              state: true
-              icon: false
-              extrema: false
-            entities:
-              - entity: sensor.office_thermostat_1_current_humidity
-                name: Humidity
-                show_state: true
-                show_graph: true
-            color_thresholds:
-              - value: 65
-                color: red
-              - value: 60
-                color: blue
-              - value: 43
-                color: green
-              - value: 37
-                color: orange
-              - value: 30
-                color: red
-          - type: conditional
-            conditions:
-              - entity: sensor.office_thermostat_cloud_heating
-                state_not: '0.0'
-            card:
-              type: custom:mini-graph-card
-              hours_to_show: 24
-              points_per_hour: 6
-              decimals: 1
-              group: false
-              animate: true
-              lower_bound: 0
-              show:
-                legend: false
-                state: true
-                icon: false
-              entities:
-                - entity: sensor.office_thermostat_cloud_heating
-                  name: Heating
-                  show_state: true
-                  show_graph: true
-              color_thresholds:
-                - value: 0
-                  color: green
-                - value: 25
-                  color: orange
-                - value: 100
-                  color: red
-      - type: grid
-        title: Humidifiers
-        cards:
-          - show_name: true
-            show_icon: true
-            type: button
-            tap_action:
-              action: toggle
-            name: Bedroom
-            icon: mdi:water-percent
-            show_state: true
-            entity: switch.bedroom_power_strip_1_humidifier
-          - show_name: true
-            show_icon: true
-            type: button
-            tap_action:
-              action: toggle
-            name: Living room
-            icon: mdi:water-percent
-            show_state: true
-            entity: switch.living_room_charging_strip_1_socket_1
-          - show_name: true
-            show_icon: true
-            type: button
-            tap_action:
-              action: toggle
-            name: Office
-            icon: mdi:water-percent
-            show_state: true
-            entity: switch.office_workstation_power_strip_switch_1
-      - type: custom:plotly-graph
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
         entities:
           - entity: sensor.bathroom_thermostat_current_temperature
-            name: Bathroom
-          - entity: sensor.bedroom_thermostat_current_temperature
-            name: Bedroom
-          - entity: sensor.corridor_air_quality_temperature
-            name: Corridor
-          - entity: sensor.guest_room_thermostat_current_temperature
-            name: Guest room
-          - entity: sensor.living_room_thermostat_current_temperature
-            name: Living room
-          - entity: sensor.corridor_air_quality_temperature
-            name: Corridor
-        layout:
-          dragmode: pan
-          showlegend: true
-          yaxis:
-            rangemode: tozero
-            title:
-              text: Temperature
-            fixedrange: true
-          yaxis2:
-            visible: false
-        title: Climate
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
         hours_to_show: 24
-        refresh_interval: auto
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.bathroom_thermostat_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.bathroom_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.bathroom_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - square: false
+    columns: 2
+    title: Bedroom
+    type: grid
+    cards:
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
+        entities:
+          - entity: sensor.bedroom_thermostat_current_temperature
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.bedroom_thermostat_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.bedroom_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.bedroom_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - square: false
+    columns: 2
+    title: Guest room
+    type: grid
+    cards:
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
+        entities:
+          - entity: sensor.guest_room_thermostat_current_temperature
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.guest_room_thermostat_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.guest_room_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.guest_room_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - square: false
+    columns: 2
+    title: Guest room - Closet
+    type: grid
+    cards:
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
+        entities:
+          - entity: sensor.guest_room_closet_thermostat_current_temperature
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.guest_room_closet_thermostat_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.guest_room_closet_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.guest_room_closet_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - square: false
+    columns: 2
+    title: Kitchen
+    type: grid
+    cards:
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
+        entities:
+          - entity: sensor.kitchen_thermostat_current_temperature
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.kitchen_thermostat_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.kitchen_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.kitchen_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - square: false
+    columns: 2
+    title: Living room
+    type: grid
+    cards:
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
+        entities:
+          - entity: sensor.living_room_thermostat_current_temperature
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.living_room_thermostat_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.living_room_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.living_room_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - square: false
+    columns: 2
+    title: Office
+    type: grid
+    cards:
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 1
+        group: false
+        animate: true
+        show:
+          legend: false
+          state: true
+          icon: false
+        entities:
+          - entity: sensor.office_thermostat_1_current_temperature
+            name: Temperature
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 15
+            color: red
+          - value: 18
+            color: blue
+          - value: 20
+            color: green
+          - value: 23
+            color: orange
+          - value: 24
+            color: red
+      - type: custom:mini-graph-card
+        hours_to_show: 24
+        points_per_hour: 6
+        decimals: 0
+        group: false
+        animate: true
+        lower_bound: 0
+        show:
+          legend: false
+          state: true
+          icon: false
+          extrema: false
+        entities:
+          - entity: sensor.office_thermostat_1_current_humidity
+            name: Humidity
+            show_state: true
+            show_graph: true
+        color_thresholds:
+          - value: 65
+            color: red
+          - value: 60
+            color: blue
+          - value: 43
+            color: green
+          - value: 37
+            color: orange
+          - value: 30
+            color: red
+      - type: conditional
+        conditions:
+          - entity: sensor.office_thermostat_cloud_heating
+            state_not: '0.0'
+        card:
+          type: custom:mini-graph-card
+          hours_to_show: 24
+          points_per_hour: 6
+          decimals: 1
+          group: false
+          animate: true
+          lower_bound: 0
+          show:
+            legend: false
+            state: true
+            icon: false
+          entities:
+            - entity: sensor.office_thermostat_cloud_heating
+              name: Heating
+              show_state: true
+              show_graph: true
+          color_thresholds:
+            - value: 0
+              color: green
+            - value: 25
+              color: orange
+            - value: 100
+              color: red
+  - type: grid
+    title: Humidifiers
+    cards:
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        name: Bedroom
+        icon: mdi:water-percent
+        show_state: true
+        entity: switch.bedroom_power_strip_1_humidifier
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        name: Living room
+        icon: mdi:water-percent
+        show_state: true
+        entity: switch.living_room_charging_strip_1_socket_1
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        name: Office
+        icon: mdi:water-percent
+        show_state: true
+        entity: switch.office_workstation_power_strip_switch_1
+  - type: custom:plotly-graph
+    entities:
+      - entity: sensor.bathroom_thermostat_current_temperature
+        name: Bathroom
+      - entity: sensor.bedroom_thermostat_current_temperature
+        name: Bedroom
+      - entity: sensor.corridor_air_quality_temperature
+        name: Corridor
+      - entity: sensor.guest_room_thermostat_current_temperature
+        name: Guest room
+      - entity: sensor.living_room_thermostat_current_temperature
+        name: Living room
+      - entity: sensor.corridor_air_quality_temperature
+        name: Corridor
+    layout:
+      dragmode: pan
+      showlegend: true
+      yaxis:
+        rangemode: tozero
+        title:
+          text: Temperature
+        fixedrange: true
+      yaxis2:
+        visible: false
+    title: Climate
+    hours_to_show: 24
+    refresh_interval: auto

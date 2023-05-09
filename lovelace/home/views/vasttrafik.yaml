@@ -1,11 +1,11 @@
-    title: Vasttrafik
-    theme: Backend-selected
-    path: vasttrafik
-    type: panel
-    icon: mdi:tram-side
-    badges: []
-    cards:
-      - type: iframe
-        url: >-
-          https://avgangstavla.vasttrafik.se/?source=vasttrafikse-stopareadetailspage&stopAreaGid=9021014005862000
-        aspect_ratio: 300%
+title: Vasttrafik
+theme: Backend-selected
+path: vasttrafik
+type: panel
+icon: mdi:tram-side
+badges: []
+cards:
+  - type: iframe
+    url: >-
+      https://avgangstavla.vasttrafik.se/?source=vasttrafikse-stopareadetailspage&stopAreaGid=9021014005862000
+    aspect_ratio: 300%

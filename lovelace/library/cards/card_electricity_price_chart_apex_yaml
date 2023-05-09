@@ -1,110 +1,110 @@
-            type: custom:apexcharts-card
-            apex_config:
-              chart:
-                height: 500px
-            header:
-              show: true
-              title: Energy stats
-              show_states: true
-              colorize_states: true
-            now:
-              show: true
-              color: white
-              label: NOW
-            hours_12: false
-            graph_span: 60h
-            span:
-              start: day
-              offset: '-12h'
-            yaxis:
-              - id: kWh
-                decimals: 0
-                opposite: true
-                min: 0
-                apex_config:
-                  tickAmount: 4
-              - id: EUR
-                min: 0
-            series:
-              - entity: sensor.total_power
-                type: column
-                show:
-                  extremas: true
-                name: Usage
-                stroke_width: 3
-                color: '#64511c'
-                opacity: 0.3
-                yaxis_id: kWh
-                group_by:
-                  func: avg
-                  duration: 1h
-              - entity: sensor.electricity_price
-                type: line
-                stroke_width: 2
-                color: blue
-                curve: smooth
-                show:
-                  legend_value: false
-                  extremas: true
-                  in_header: false
-                extend_to: now
-                yaxis_id: EUR
-                name: Predicted all
-                data_generator: |
-                  var a = entity.attributes.today.map((entry) => {
-                    return [new Date(entry.startsAt), entry.total];
-                  });
-                  var b= entity.attributes.tomorrow.map((entry) => {
-                    return [new Date(entry.startsAt), entry.total];
-                  });
-                  return a.concat(b);
-              - entity: sensor.electricity_price
-                extend_to: now
-                show:
-                  extremas: true
-                color: pink
-                stroke_width: 5
-                yaxis_id: EUR
-                name: price
-              - entity: sensor.electricity_price
-                stroke_width: 2
-                show:
-                  legend_value: false
-                  extremas: true
-                curve: smooth
-                attribute: min_price
-                name: MIN
-                color: green
-                yaxis_id: EUR
-                type: line
-                group_by:
-                  duration: 24hours
-                  func: min
-              - entity: sensor.electricity_price
-                stroke_width: 2
-                yaxis_id: EUR
-                name: AVG
-                attribute: avg_price
-                color: violet
-                curve: smooth
-                type: line
-                show:
-                  legend_value: false
-                  extremas: true
-                group_by:
-                  duration: 24hours
-                  func: avg
-              - entity: sensor.electricity_price
-                attribute: max_price
-                stroke_width: 2
-                curve: smooth
-                show:
-                  legend_value: false
-                  extremas: true
-                name: MAX
-                color: red
-                yaxis_id: EUR
-                type: line
-                group_by:
-                  duration: 24hours
-                  func: max
+type: custom:apexcharts-card
+apex_config:
+  chart:
+    height: 500px
+header:
+  show: true
+  title: Energy stats
+  show_states: true
+  colorize_states: true
+now:
+  show: true
+  color: white
+  label: NOW
+hours_12: false
+graph_span: 60h
+span:
+  start: day
+  offset: '-12h'
+yaxis:
+  - id: kWh
+    decimals: 0
+    opposite: true
+    min: 0
+    apex_config:
+      tickAmount: 4
+  - id: EUR
+    min: 0
+series:
+  - entity: sensor.total_power
+    type: column
+    show:
+      extremas: true
+    name: Usage
+    stroke_width: 3
+    color: '#64511c'
+    opacity: 0.3
+    yaxis_id: kWh
+    group_by:
+      func: avg
+      duration: 1h
+  - entity: sensor.electricity_price
+    type: line
+    stroke_width: 2
+    color: blue
+    curve: smooth
+    show:
+      legend_value: false
+      extremas: true
+      in_header: false
+    extend_to: now
+    yaxis_id: EUR
+    name: Predicted all
+    data_generator: |
+      var a = entity.attributes.today.map((entry) => {
+        return [new Date(entry.startsAt), entry.total];
+      });
+      var b= entity.attributes.tomorrow.map((entry) => {
+        return [new Date(entry.startsAt), entry.total];
+      });
+      return a.concat(b);
+  - entity: sensor.electricity_price
+    extend_to: now
+    show:
+      extremas: true
+    color: pink
+    stroke_width: 5
+    yaxis_id: EUR
+    name: price
+  - entity: sensor.electricity_price
+    stroke_width: 2
+    show:
+      legend_value: false
+      extremas: true
+    curve: smooth
+    attribute: min_price
+    name: MIN
+    color: green
+    yaxis_id: EUR
+    type: line
+    group_by:
+      duration: 24hours
+      func: min
+  - entity: sensor.electricity_price
+    stroke_width: 2
+    yaxis_id: EUR
+    name: AVG
+    attribute: avg_price
+    color: violet
+    curve: smooth
+    type: line
+    show:
+      legend_value: false
+      extremas: true
+    group_by:
+      duration: 24hours
+      func: avg
+  - entity: sensor.electricity_price
+    attribute: max_price
+    stroke_width: 2
+    curve: smooth
+    show:
+      legend_value: false
+      extremas: true
+    name: MAX
+    color: red
+    yaxis_id: EUR
+    type: line
+    group_by:
+      duration: 24hours
+      func: max

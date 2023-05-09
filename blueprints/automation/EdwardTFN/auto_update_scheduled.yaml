@@ -463,7 +463,7 @@ action:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
           message: >-
-            Variables: 
+            Variables:
               input_backup_bool: {{ input_backup_bool }},
               input_restart_bool: {{ input_restart_bool }},
               input_verbose_logging_bool: {{ input_verbose_logging_bool }},
@@ -530,9 +530,11 @@ action:
       - "{{ input_max_backup_age_seconds > 0 }}"
     then:
       - alias: Check if backup state is defined
-        if: >-
-          {{ not states.sensor.backup_state.state is defined or 
-          not states.sensor.backup_state.attributes.last_uploaded is defined }}
+        if: >
+          {{
+            not states.sensor.backup_state.state is defined or
+            not states.sensor.backup_state.attributes.last_uploaded is defined
+          }}
         then:
           - stop: "Backup State sensor not found"
       - alias: Check age of last uploaded backup

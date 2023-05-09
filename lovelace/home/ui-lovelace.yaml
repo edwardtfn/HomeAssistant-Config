@@ -6,4 +6,3 @@ views: #!include_dir_merge_list views/
   - !include views/power.yaml
   - !include views/rooms.yaml
   - !include views/climate.yaml
-
