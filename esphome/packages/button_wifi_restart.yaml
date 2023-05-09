@@ -1,10 +1,9 @@
-
-  - platform: template
-    name: WiFi restart
-    entity_category: config
-    icon: "mdi:wifi-refresh"
-    on_press:
-      then:
-        - lambda: |-
-            wifi.disconnect();
-            wifi.begin();
+- platform: template
+  name: WiFi restart
+  entity_category: config
+  icon: "mdi:wifi-refresh"
+  on_press:
+    then:
+      - lambda: |-
+          wifi.disconnect();
+          wifi.begin();

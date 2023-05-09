@@ -1,6 +1,6 @@
 #button:
-  - platform: restart
-    name: Restart
-    id: restart_esp
-    entity_category: config
-    icon: "mdi:restart"
+- platform: restart
+  name: Restart
+  id: restart_esp
+  entity_category: config
+  icon: "mdi:restart"

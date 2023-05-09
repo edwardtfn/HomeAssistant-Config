@@ -1,4 +1,4 @@
 #binary_sensor:
-  - platform: status
-    name: Status
-    entity_category: diagnostic
+- platform: status
+  name: Status
+  entity_category: diagnostic
