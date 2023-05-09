@@ -38,43 +38,43 @@ ble_client:
     id: ${ld2410_id}
     on_disconnect:
       then:
-      - binary_sensor.template.publish:
-          id: "${ld2410_id}_ble_connected"
-          state: OFF
-      - logger.log:
-          format: "disconnected"
-          tag: "${ld2410_id}_connect"
-      - delay: 100ms
-      - lambda: |-
-          id(${ld2410_id}_motion_detected).publish_state(false);
-          id(${ld2410_id}_occupancy_detected).publish_state(false);
-          id(${ld2410_id}_static_distance).publish_state(NAN);
-          id(${ld2410_id}_motion_distance).publish_state(NAN);
-          id(${ld2410_id}_static_energy).publish_state(NAN);
-          id(${ld2410_id}_moving_energy).publish_state(NAN);
-          id(${ld2410_id}_detection_distance).publish_state(NAN);
+        - binary_sensor.template.publish:
+            id: "${ld2410_id}_ble_connected"
+            state: OFF
+        - logger.log:
+            format: "disconnected"
+            tag: "${ld2410_id}_connect"
+        - delay: 100ms
+        - lambda: |-
+            id(${ld2410_id}_motion_detected).publish_state(false);
+            id(${ld2410_id}_occupancy_detected).publish_state(false);
+            id(${ld2410_id}_static_distance).publish_state(NAN);
+            id(${ld2410_id}_motion_distance).publish_state(NAN);
+            id(${ld2410_id}_static_energy).publish_state(NAN);
+            id(${ld2410_id}_moving_energy).publish_state(NAN);
+            id(${ld2410_id}_detection_distance).publish_state(NAN);
     on_connect:
       then:
-      - logger.log:
-          format: "connecting"
-          tag: "${ld2410_id}_connect"
-      - delay: 100ms
-      - ble_client.ble_write:
-          id: ${ld2410_id}
-          service_uuid: 0000fff0-0000-1000-8000-00805f9b34fb
-          characteristic_uuid: 0000fff2-0000-1000-8000-00805f9b34fb
-          value: !lambda |-
-            // data starts with preamble
-            std::vector<uint8_t> data = { 0xfd, 0xfc, 0xfb, 0xfa, 0x08, 0x00, 0xa8, 0x00 };
-            // postamble
-            std::vector<uint8_t> postamble = { 0x04, 0x03, 0x02, 0x01 };
-            std::string pw = {"${ld2410_password}"};
-            ESP_LOGD("2410_ble_auth", "password for ${mac_address} = %s", pw.c_str());
-            for (auto& c : pw) {
-              data.push_back(c);
-            }
-            data.insert(data.end(), postamble.begin(), postamble.end());
-            return data;
+        - logger.log:
+            format: "connecting"
+            tag: "${ld2410_id}_connect"
+        - delay: 100ms
+        - ble_client.ble_write:
+            id: ${ld2410_id}
+            service_uuid: 0000fff0-0000-1000-8000-00805f9b34fb
+            characteristic_uuid: 0000fff2-0000-1000-8000-00805f9b34fb
+            value: !lambda |-
+              // data starts with preamble
+              std::vector<uint8_t> data = { 0xfd, 0xfc, 0xfb, 0xfa, 0x08, 0x00, 0xa8, 0x00 };
+              // postamble
+              std::vector<uint8_t> postamble = { 0x04, 0x03, 0x02, 0x01 };
+              std::string pw = {"${ld2410_password}"};
+              ESP_LOGD("2410_ble_auth", "password for ${mac_address} = %s", pw.c_str());
+              for (auto& c : pw) {
+                data.push_back(c);
+              }
+              data.insert(data.end(), postamble.begin(), postamble.end());
+              return data;
       - delay: 250ms
       - ble_client.ble_write:
           id: ${ld2410_id}
@@ -150,14 +150,14 @@ binary_sensor:
     id: ${ld2410_id}_motion_detected
     device_class: motion
     filters:
-    - delayed_on_off: ${binary_sensor_debounce}
+      - delayed_on_off: ${binary_sensor_debounce}
 
   - name: "${ld2410_name} Occupancy"
     platform: template
     id: ${ld2410_id}_occupancy_detected
     device_class: occupancy
     filters:
-    - delayed_on_off: ${binary_sensor_debounce}
+      - delayed_on_off: ${binary_sensor_debounce}
 
   - name: "${ld2410_name} LD2410 Connected"
     platform: template
@@ -183,7 +183,7 @@ sensor:
     device_class: distance
     unit_of_measurement: "cm"
     filters:
-    - throttle: ${sensor_throttle}
+      - throttle: ${sensor_throttle}
     disabled_by_default: true
 
   - name: "${ld2410_name} Static distance"
@@ -193,7 +193,7 @@ sensor:
     device_class: distance
     unit_of_measurement: "cm"
     filters:
-    - throttle: ${sensor_throttle}
+      - throttle: ${sensor_throttle}
     disabled_by_default: true
 
   - name: "${ld2410_name} Static energy"
@@ -202,7 +202,7 @@ sensor:
     update_interval: never
     unit_of_measurement: "%"
     filters:
-    - throttle: ${sensor_throttle}
+      - throttle: ${sensor_throttle}
     disabled_by_default: true
 
   - name: "${ld2410_name} Moving energy"
@@ -211,7 +211,7 @@ sensor:
     update_interval: never
     unit_of_measurement: "%"
     filters:
-    - throttle: ${sensor_throttle}
+      - throttle: ${sensor_throttle}
     disabled_by_default: true
 
   - name: "${ld2410_name} Detection distance"
@@ -221,7 +221,7 @@ sensor:
     device_class: distance
     unit_of_measurement: "cm"
     filters:
-    - throttle: ${sensor_throttle}
+      - throttle: ${sensor_throttle}
     disabled_by_default: true
 
   - platform: ble_client
@@ -233,7 +233,7 @@ sensor:
     notify: False
     internal: True
     filters:
-    - throttle: ${sensor_throttle}
+      - throttle: ${sensor_throttle}
     id: ${ld2410_id}_internal_parser
     lambda: |-
       // Only report connected once we have seen the first update

@@ -256,7 +256,7 @@ api:
         value: float
       then:
         - wait_until:
-              switch.is_on: nextion_init
+            switch.is_on: nextion_init
         - lambda: |-
             //ESP_LOGD("nextion", "thermostat sendig value %f", value);
             int v = int(2 * std::min(std::max(value - 13.5, 0.0), 5.0));
@@ -837,7 +837,7 @@ switch:
       - globals.set:
           id: sleep_modus_global
           value: '0'
-      - lambda:  id(disp1).set_component_value("settings.a02",0);
+      - lambda: id(disp1).set_component_value("settings.a02",0);
     on_turn_on:
       - lambda: id(disp1).send_command_printf("home.sleepmodus.val=1");
       - globals.set:

@@ -73,4 +73,3 @@ sensor:
   - <<: !include packages/sensor_esp_vcc_voltage.yaml
 text_sensor:
   - <<: !include packages/text_sensor_version.yaml
-
