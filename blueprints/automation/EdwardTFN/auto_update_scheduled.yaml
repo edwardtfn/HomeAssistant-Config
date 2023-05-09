@@ -39,7 +39,11 @@ blueprint:
         a sensor with the backup states. The setting only checks for the age of
         the automatic backups from that addon, not the backups created internally
         by this blueprint.
-      default: "00:00:00"
+      default:
+        days: 0
+        hours: 0
+        minutes: 0
+        seconds: 0
       selector:
         duration:
           enable_day: true
@@ -268,6 +272,9 @@ trigger:
   - id: Automations reloaded
     platform: event
     event_type: automation_reloaded
+  - id: Pause entities changed
+    platform: state
+    entity_id: !input pause_entities
 
 condition:
   - condition: template
@@ -292,6 +299,15 @@ variables:
   input_restart_bool: !input restart_bool
 
   temp_max_backup_age: !input max_backup_age
+  input_max_backup_age_seconds: >
+    {{
+      timedelta(
+        days=temp_max_backup_age.days,
+        hours=temp_max_backup_age.hours,
+        minutes=temp_max_backup_age.minutes,
+        seconds=temp_max_backup_age.seconds
+      ).total_seconds()
+    }}
 
   input_schedule_monthday: !input schedule_monthday
   input_core_os_update_mode: !input core_os_update_mode
@@ -303,16 +319,6 @@ action:
   ########## Refresh update list ##########
   - &recalc-update-list
     variables:
-      input_max_backup_age_seconds: >
-        {{
-          timedelta(
-            days=temp_max_backup_age.days,
-            hours=temp_max_backup_age.hours,
-            minutes=temp_max_backup_age.minutes,
-            seconds=temp_max_backup_age.seconds
-          ).total_seconds()
-        }}
-
       core_update_entity: >
             {% for u in integration_entities('hassio') | select('search', '^update[.]')
                     if (device_attr(u, 'identifiers') | first)[1] == 'core' %}
