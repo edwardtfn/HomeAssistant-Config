@@ -67,9 +67,11 @@ blueprint:
 
     schedule_monthday:
       name: Earliest day in the month to update Home Assistant
-      description: 'Usually a new major version of Home Assistant is available on the begining of every month. Some people consider those releases as not stable enough and prefer to avoid those versions, not updating the system until the mid of the month (day 15).
+      description: >
+        Usually a new major version of Home Assistant is available on the begining of every month.
+        Some people consider those releases as not stable enough and prefer to avoid those versions, not updating the system until the mid of the month (day 15).
 
-        Note => If you select a day higher than 28 the updates won''t run every month.'
+        Note => If you select a day higher than 28 the updates won't run every month.
       default: 1
       selector:
         number:
@@ -217,16 +219,19 @@ blueprint:
 
     actions_pos_update:
       name: (optional) Post-update actions
-      description: 'Actions to execute AFTER the update process finishes.
+      description: >
+        Actions to execute AFTER the update process finishes.
 
         You can use this to send notifications, turn on/off devices or activate scenes after applying  the updates.
 
 
-        Note => Please be aware that all actions will run right after the update process, which can happens over-night. Take this in account when selecting your actions.
+        Note => Please be aware that all actions will run right after the update process, which can happens over-night.
+        Take this in account when selecting your actions.
 
         Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.
 
-        **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed. If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.'
+        **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed.
+        If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.
       default: []
       selector:
         action: {}
@@ -459,20 +464,20 @@ action:
           entity_id: '{{ this.entity_id }}'
           message: >-
             Variables: 
-              input_backup_bool: {{ input_backup_bool }}, 
-              input_restart_bool: {{ input_restart_bool }}, 
+              input_backup_bool: {{ input_backup_bool }},
+              input_restart_bool: {{ input_restart_bool }},
               input_verbose_logging_bool: {{ input_verbose_logging_bool }},
               input_max_backup_age_seconds: {{ input_max_backup_age_seconds }},
-              input_schedule_monthday: {{ input_schedule_monthday }}, 
-              input_update_exclusions: {{ input_update_exclusions }}, 
-              input_core_os_update_mode: {{ input_core_os_update_mode }}, 
-              input_firmware_update_mode: {{ input_firmware_update_mode }}, 
-              input_general_update_mode: {{ input_general_update_mode }}, 
-              core_update_entity: {{ core_update_entity }}, 
-              os_update_entity: {{ os_update_entity }}, 
-              supervisor_update_entity: {{ supervisor_update_entity }}, 
-              firmware_update_entities: {{ firmware_update_entities }}, 
-              general_update_entities; {{ general_update_entities }}, 
+              input_schedule_monthday: {{ input_schedule_monthday }},
+              input_update_exclusions: {{ input_update_exclusions }},
+              input_core_os_update_mode: {{ input_core_os_update_mode }},
+              input_firmware_update_mode: {{ input_firmware_update_mode }},
+              input_general_update_mode: {{ input_general_update_mode }},
+              core_update_entity: {{ core_update_entity }},
+              os_update_entity: {{ os_update_entity }},
+              supervisor_update_entity: {{ supervisor_update_entity }},
+              firmware_update_entities: {{ firmware_update_entities }},
+              general_update_entities; {{ general_update_entities }},
               updates_list: {{ updates_list }}
     continue_on_error: true
 
