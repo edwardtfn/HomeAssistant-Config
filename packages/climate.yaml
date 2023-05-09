@@ -5,27 +5,27 @@ automation:
     trigger:
       - platform: state
         entity_id:
-        - weather.home
+          - weather.home
         to: rainy
       - platform: state
         entity_id:
-        - weather.home
+          - weather.home
         to: snowy-rainy
       - platform: state
         entity_id:
-        - weather.home
+          - weather.home
         to: lightning-rainy
       - platform: state
         entity_id:
-        - weather.home
+          - weather.home
         to: snowy
       - platform: state
         entity_id:
-        - weather.home
+          - weather.home
         to: windy
       - platform: state
         entity_id:
-        - weather.home
+          - weather.home
         to: windy-variant
     condition:
       - condition: template
@@ -46,20 +46,20 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id:
-        - climate.bathroom_thermostat
-        - climate.guest_room_thermostat
-        - climate.guest_room_closet_thermostat
-        - climate.kitchen_thermostat
-        - climate.living_room_thermostat
+          - climate.bathroom_thermostat
+          - climate.guest_room_thermostat
+          - climate.guest_room_closet_thermostat
+          - climate.kitchen_thermostat
+          - climate.living_room_thermostat
         attribute: current_humidity
         below: 35
         for:
           minutes: 5
       - platform: numeric_state
         entity_id:
-        - sensor.bedroom_hygrometer_humidity
-        - sensor.corridor_air_quality_humidity
-        - sensor.office_hygrometer_humidity
+          - sensor.bedroom_hygrometer_humidity
+          - sensor.corridor_air_quality_humidity
+          - sensor.office_hygrometer_humidity
         below: 35
         for:
           minutes: 5
