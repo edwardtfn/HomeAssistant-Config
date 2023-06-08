@@ -11,7 +11,6 @@ automation:
             - sensor.carols_phone_battery_level
             - sensor.edwards_phone_battery_level
             - sensor.edwards_tablet_battery_level
-            - sensor.vw_passat_battery_level
         actions:
           - service: notify.signal_group_home
             data:

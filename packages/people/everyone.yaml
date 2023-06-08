@@ -9,8 +9,9 @@ automation:
       - person.edward_firmo
       - person.dory
       - person.skal
-      - lock.vw_passat_door_locked
-      - binary_sensor.vw_passat_vehicle_moving
+      - person.lara
+      - lock.car_door_locked
+      - binary_sensor.car_vehicle_moving
     condition:
     - condition: template
       value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
@@ -29,6 +30,11 @@ group:
   everyone:
     name: Everyone
     entities:
-      - group.hosts
+      - group.humans
       - group.pets
-      #- group.guests
+
+  humans:
+    name: Humans
+    entities:
+      - group.hosts
+      - group.guests

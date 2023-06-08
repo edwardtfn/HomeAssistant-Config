@@ -12,7 +12,7 @@ automation:
         weather_entity: weather.home
         left_button_entity: light.hall_ceiling_light
         left_button_name: Lights
-        right_button_entity: switch.vw_passat_electric_climatisation
+        right_button_entity: switch.car_electric_climatisation
         right_button_name: Car heat
         home_value01: sensor.corridor_air_quality_humidity
         home_value01_icon: mdi:water-percent

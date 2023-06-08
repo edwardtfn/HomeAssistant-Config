@@ -290,6 +290,15 @@ binary_sensor:
     upper: 65
     hysteresis: 5
 
+command_line:
+  - sensor:
+      name: Processor temperature
+      unique_id: 6b274566-fcb2-42e0-99f1-146b4161ca16
+      command: "cat /sys/class/thermal/thermal_zone2/temp"
+      unit_of_measurement: "°C"
+      #device_class: temperature
+      #state_class: measurement
+      value_template: '{{ value | multiply(0.001) | round(1) }}'
 
 counter:
   home_assistant_start_counter:
@@ -459,14 +468,6 @@ sensor:
     #command: "cat /sys/class/thermal/thermal_zone1/temp"
     #unit_of_measurement: "°C"
     #value_template: '{{ value | multiply(0.001) | round(1) }}'
-
-  - platform: command_line
-    name: Processor temperature
-    command: "cat /sys/class/thermal/thermal_zone2/temp"
-    unit_of_measurement: "°C"
-    #device_class: temperature
-    #state_class: measurement
-    value_template: '{{ value | multiply(0.001) | round(1) }}'
 
   - platform: time_date
     display_options:

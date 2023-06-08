@@ -115,11 +115,17 @@ automation:
         light_target: light.bedroom_beds_lights
 
 light:
-  - platform: group
-    name: "Bedroom - All lights"
+  - name: "Bedroom - All lights"
+    platform: group
     unique_id: 1a7bc5c6-c863-4e8b-bb4f-0637ef1f02cc
     entities:
       - light.bedroom_ceiling_lights
       - light.bedroom_carol_light
       - light.bedroom_edward_light
       - light.bedroom_closet_lights
+  - name: "Bedroom - Bed's - Lights"
+    platform: group
+    unique_id: 6f1483fc-a62c-478f-a850-f692100e1212
+    entities:
+      - light.bedroom_carol_light
+      - light.bedroom_edward_light

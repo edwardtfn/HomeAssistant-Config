@@ -56,6 +56,10 @@ group:
     entities:
       - person.edward_firmo
       - person.carolina_costa
+  guests:
+    name: Guests
+    entities:
+      - person.lara
 
 proximity:
   edward_firmo:

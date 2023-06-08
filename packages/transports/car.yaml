@@ -1,12 +1,12 @@
 alert:
   car_neighborhood_streets:
-    name: VW Passat parking
+    name: Car parking
     message: >-
-      VW Passat is parked in the neighborhood streets for too long ({{ states('sensor.vw_passat_parking_time') }}).
+      Car is parked in the neighborhood streets for too long ({{ states('sensor.car_parking_time') }}).
 
       Please move it to a parking area.
-    done_message: VW Passat was moved!
-    entity_id: device_tracker.vw_passat_position
+    done_message: Car was moved!
+    entity_id: device_tracker.car_position
     state: "Close to home"
     repeat: 25
     can_acknowledge: true
@@ -15,13 +15,13 @@ alert:
       - signal_group_artillerigatan
 
   car_door_unlocked:
-    name: VW Passat unlocked
+    name: Car unlocked
     message: >-
-      VW Passat is unlocked for too long ({{ states.sensor.wv_passat_stopped_and_unlocked.last_changed.isoformat() }}).
+      Car is unlocked for too long ({{ states.sensor.car_stopped_and_unlocked.last_changed.isoformat() }}).
 
       Please lock it as soon as possible.
-    done_message: WV Passat is now locked!
-    entity_id: sensor.wv_passat_stopped_and_unlocked
+    done_message: Car is now locked!
+    entity_id: sensor.car_stopped_and_unlocked
     state: "unlocked"
     repeat: 2500
     can_acknowledge: true
@@ -30,13 +30,13 @@ alert:
       - signal_group_artillerigatan
 
 automation:
-  - alias: VW Passat - Lock automatically when stopped
+  - alias: Car - Lock automatically when stopped
     id: '1646444632458'
     description: ''
     trigger:
     - platform: state
       entity_id:
-      - sensor.wv_passat_stopped_and_unlocked
+      - sensor.car_stopped_and_unlocked
       to: unlocked
       for:
         hours: 0
@@ -46,7 +46,7 @@ automation:
     - type: is_not_moving
       condition: device
       device_id: 39f38da7888f9019b44f408bf6e9bc1d
-      entity_id: binary_sensor.vw_passat_vehicle_moving
+      entity_id: binary_sensor.car_vehicle_moving
       domain: binary_sensor
       for:
         hours: 0
@@ -55,7 +55,7 @@ automation:
     - type: is_not_locked
       condition: device
       device_id: 39f38da7888f9019b44f408bf6e9bc1d
-      entity_id: binary_sensor.vw_passat_doors_locked
+      entity_id: binary_sensor.car_doors_locked
       domain: binary_sensor
       for:
         hours: 0
@@ -64,13 +64,13 @@ automation:
     action:
     - service: notify.signal_edward
       data:
-        message: Locking VW Passat.
+        message: Locking Car.
     - repeat:
         until:
         - condition: device
           device_id: 39f38da7888f9019b44f408bf6e9bc1d
           domain: lock
-          entity_id: lock.vw_passat_door_locked
+          entity_id: lock.car_door_locked
           type: is_locked
         sequence:
         - service: lock.lock
@@ -78,8 +78,8 @@ automation:
             code: '8234'
           target:
             entity_id:
-            - lock.vw_passat_door_locked
-            - lock.vw_passat_trunk_locked
+            - lock.car_door_locked
+            - lock.car_trunk_locked
         - delay:
             hours: 0
             minutes: 0
@@ -91,12 +91,12 @@ automation:
             seconds: 20
             milliseconds: 0
     mode: single
-  - alias: VW Passat - Charging - Stop at 80%
+  - alias: Car - Charging - Stop at 80%
     id: '1664262486026'
     description: ''
     trigger:
     - platform: numeric_state
-      entity_id: sensor.vw_passat_battery_level
+      entity_id: sensor.car_battery_level
       for:
         hours: 0
         minutes: 5
@@ -106,40 +106,40 @@ automation:
     action:
     - service: notify.signal_edward
       data:
-        message: "Stopping VW Passat charging.\nBattery level: {{ states('sensor.vw_passat_battery_level')
-          | float(-99) | round(0) }}% (+{{ states('sensor.vw_passat_fuel_level') }}%/{{((states('sensor.vw_passat_fuel_level')
-          | float(0)) * 0.55) | round(0) }}l) \nTime left to full: {{ states('sensor.vw_passat_charging_time_left')
-          }}h\nElectric range: {{ states('sensor.vw_passat_electric_range') }}Km (+{{
-          states('sensor.vw_passat_combustion_range') }}Km)"
+        message: "Stopping car charging.\nBattery level: {{ states('sensor.car_battery_level')
+          | float(-99) | round(0) }}% (+{{ states('sensor.car_fuel_level') }}%/{{((states('sensor.car_fuel_level')
+          | float(0)) * 0.55) | round(0) }}l) \nTime left to full: {{ states('sensor.car_charging_time_left')
+          }}h\nElectric range: {{ states('sensor.car_electric_range') }}Km (+{{
+          states('sensor.car_combustion_range') }}Km)"
       continue_on_error: true
     - service: switch.turn_off
       data: {}
       target:
-        entity_id: switch.vw_passat_charging
+        entity_id: switch.car_charging
       continue_on_error: true
     mode: restart
 
 proximity:
   car:
     devices:
-      - device_tracker.vw_passat_position
+      - device_tracker.car_position
     tolerance: 50
     unit_of_measurement: m
 
 template:
   - sensor:
-      - name: WV Passat - Stopped and unlocked
+      - name: Car - Stopped and unlocked
         unique_id: 4cf3367f-b24c-469b-88d3-0e328641fe93
         availability: >-
           {{
-            (states('lock.vw_passat_door_locked') | default('unknown') not in ['unknown', 'unavailable', 'none'] )
+            (states('lock.car_door_locked') | default('unknown') not in ['unknown', 'unavailable', 'none'] )
             and
-            (states('binary_sensor.vw_passat_vehicle_moving') | default('unknown') not in ['unknown', 'unavailable', 'none'] )
+            (states('binary_sensor.car_vehicle_moving') | default('unknown') not in ['unknown', 'unavailable', 'none'] )
           }}
         state: >-
-          {% set door_locked = states('lock.vw_passat_door_locked') %}
-          {% set trunk_locked = states('lock.vw_passat_trunk_locked') %}
-          {% set vehicle_moving = states('binary_sensor.vw_passat_vehicle_moving') %}
+          {% set door_locked = states('lock.car_door_locked') %}
+          {% set trunk_locked = states('lock.car_trunk_locked') %}
+          {% set vehicle_moving = states('binary_sensor.car_vehicle_moving') %}
           {% if door_locked in ['unknown', 'unavailable', 'none'] or trunk_locked in ['unknown', 'unavailable', 'none'] or vehicle_moving in ['unknown', 'unavailable', 'none'] %}
             unknown
           {% elif vehicle_moving == 'on' %}

@@ -1,8 +1,8 @@
 type: picture-elements
-image: /local/pics/passat.png
+image: /local/pics/vw-id4.png
 elements:
   - type: image
-    entity: switch.vw_passat_electric_climatisation
+    entity: switch.car_electric_climatisation
     image: /local/pics/blank.png
     style:
       top: 39.5%
@@ -11,7 +11,7 @@ elements:
     state_image:
       'on': /local/pics/passat_heat.png
   - type: image
-    entity: binary_sensor.vw_passat_external_power
+    entity: binary_sensor.car_external_power
     image: /local/pics/blank.png
     style:
       top: 62.8%
@@ -20,7 +20,7 @@ elements:
     state_image:
       'on': /local/pics/passatcharging.png
   - type: image
-    entity: binary_sensor.vw_passat_parking_light
+    entity: binary_sensor.car_parking_light
     image: /local/pics/blank.png
     style:
       top: 66.8%
@@ -29,7 +29,7 @@ elements:
     state_image:
       'on': /local/pics/passat_light.png
   - type: image
-    entity: lock.vw_passat_door_locked
+    entity: lock.car_door_locked
     image: /local/pics/blank.png
     style:
       top: 42.3%
@@ -39,11 +39,11 @@ elements:
       locked: /local/pics/blink.gif
   - type: conditional
     conditions:
-      - entity: lock.vw_passat_door_locked
+      - entity: lock.car_door_locked
         state_not: locked
     elements:
       - type: state-icon
-        entity: lock.vw_passat_door_locked
+        entity: lock.car_door_locked
         style:
           top: 90%
           left: 35%
@@ -51,57 +51,57 @@ elements:
     icon: mdi:details
     style:
       top: 50%
-      left: 10%
+      left: 93%
     tap_action:
       action: navigate
       navigation_path: /config/devices/device/39f38da7888f9019b44f408bf6e9bc1d
   - type: state-icon
-    entity: switch.vw_passat_electric_climatisation
+    entity: switch.car_electric_climatisation
     hold_action: toggle
     style:
       top: 90%
       left: 45%
   - type: state-icon
-    entity: switch.vw_passat_window_heater
+    entity: switch.car_window_heater
     hold_action: toggle
     style:
       top: 90%
       left: 55%
   - type: state-icon
-    entity: switch.vw_passat_charging
+    entity: switch.car_charging
     style:
       top: 85%
       left: 75%
   - type: state-label
-    entity: sensor.vw_passat_electric_range
+    entity: sensor.car_electric_range
     style:
       top: 95%
       left: 75%
   - type: state-icon
-    entity: sensor.vw_passat_fuel_level
+    entity: sensor.car_fuel_level
     style:
       top: 85%
       left: 90%
   - type: state-label
-    entity: sensor.vw_passat_combustion_range
+    entity: sensor.car_combustion_range
     style:
       top: 95%
       left: 90%
   - type: state-label
-    entity: sensor.vw_passat_last_connected
+    entity: sensor.car_last_connected
     prefix: 'Last connected: '
     style:
       top: 5%
       left: 75%
       font-size: 10px
   - type: state-label
-    entity: sensor.vw_passat_battery_level
+    entity: sensor.car_battery_level
     style:
       top: 78%
       left: 75%
       font-size: 8px
   - type: state-label
-    entity: binary_sensor.vw_passat_vehicle_moving
+    entity: binary_sensor.car_vehicle_moving
     style:
       top: 5%
       left: 25%

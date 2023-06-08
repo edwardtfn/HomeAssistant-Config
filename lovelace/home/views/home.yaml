@@ -7,7 +7,7 @@ cards:
   - !include /config/lovelace/library/cards/card_samsung_control.yaml
   - !include /config/lovelace/library/cards/card_home_floor.yaml
   #- !include /config/lovelace/library/cards/card_power_sankey.yaml
-  - !include /config/lovelace/library/cards/card_vwpassat.yaml
+  - !include /config/lovelace/library/cards/card_car.yaml
   - !include /config/lovelace/library/cards/card_sony_control.yaml
   - !include /config/lovelace/library/cards/card_select_modes.yaml
   - !include /config/lovelace/library/cards/card_lights_on.yaml

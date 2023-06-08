@@ -19,3 +19,16 @@ sensor:
     unit_prefix: k
     unit_time: h
     method: trapezoidal
+
+zha:
+  device_config:
+    70:b3:d5:2b:60:01:20:b2_1:
+      type: "switch"
+    70:b3:d5:2b:60:01:20:b2_2:
+      type: "switch"
+    70:b3:d5:2b:60:01:20:b2_3:
+      type: "switch"
+    70:b3:d5:2b:60:01:20:b2_4:
+      type: "switch"
+    70:b3:d5:2b:60:01:20:b2_5:
+      type: "switch"

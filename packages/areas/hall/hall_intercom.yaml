@@ -5,13 +5,13 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - binary_sensor.hall_intercom_input_channel_2
+      - binary_sensor.hall_intercom_ringing
       id: ringing
       from: 'off'
       to: 'on'
     - platform: state
       entity_id:
-      - binary_sensor.hall_intercom_input_channel_2
+      - binary_sensor.hall_intercom_input_ringing
       id: stopped
       from: 'on'
       to: 'off'

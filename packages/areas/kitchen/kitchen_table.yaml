@@ -37,6 +37,18 @@ binary_sensor:
       - binary_sensor.kitchen_table_occupancy_occupancy
       - binary_sensor.kitchen_table_motion_motion
       - binary_sensor.kitchen_table_motion_occupancy
+      - binary_sensor.kitchen_table_presence
+
+
+light:
+  - platform: group
+    name: "Kitchen - Table - Lights"
+    unique_id: 2b57238c-783e-48a1-a40e-f985bcf91953
+    #icon: mdi:ceiling-light-multiple
+    entities:
+      - light.corridor_lights_1_huelight
+      - light.corridor_lights_2_huelight
+      - light.corridor_lights_3_huelight
 
 sensor:
   - name: Kitchen - Table - Motion ratio in the last 10m

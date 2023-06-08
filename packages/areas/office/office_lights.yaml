@@ -20,7 +20,7 @@ automation:
     use_blueprint:
       path: EdwardTFN/light_switch_toggle.yaml
       input:
-        input_entity: binary_sensor.office_windows_outlets_ceiling_lights_input
+        input_entity: binary_sensor.office_lights_outlet_input
         light_target: light.office_ceiling_lines
 
 light:

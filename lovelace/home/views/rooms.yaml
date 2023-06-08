@@ -1040,7 +1040,7 @@ cards:
             collapsible_controls: true
           - type: custom:mushroom-template-card
             primary: Mirror's outlets
-            entity: switch.guest_bathroom_mirror_outlets
+            entity: switch.guest_bathroom_mirror_s_outlets
             secondary: |-
               {% if is_state(entity, 'on') %}
                 {{ states(entity | replace('switch.', 'sensor.') + '_power') | float(-99) | round(1) }}W
@@ -1095,12 +1095,12 @@ cards:
             icon: >-
               {{ iif((states('sensor.guest_bathroom_towel_warmer_power') |
               float(-99)) >5 , 'mdi:radiator', 'mdi:radiator-disabled') }}
-            entity: switch.guest_bathroom_towel_warmer
+            entity: switch.guest_bathroom_towels_warmer
             fill_container: true
             layout: vertical
             multiline_secondary: true
             icon_color: >-
-              {{ iif((states('sensor.guest_bathroom_towel_warmer_power') |
+              {{ iif((states('sensor.guest_bathroom_towels_warmer_power') |
               float(-99)) >5 , 'red', '') }}
             tap_action:
               action: more-info
@@ -2526,7 +2526,7 @@ cards:
               action: more-info
           - type: custom:mushroom-template-card
             primary: Camera
-            secondary: '{{ states(''camera.living_room_camera'') | capitalize }}'
+            secondary: '{{ states("camera.living_room_camera") | capitalize }}'
             icon: >-
               {{ iif(is_state(entity, 'True'), 'mdi:cctv', 'mdi:cctv-off')
               }}
@@ -2537,7 +2537,7 @@ cards:
               {{ iif(is_state(entity, 'True'), 'red',
               iif(is_state('switch.living_room_camera_enabled', 'on'),
               'gold', '')) }}
-            badge_icon: '{{ iif(is_state(entity, ''True''), ''mdi:wifi'', '''') }}'
+            badge_icon: '{{ iif(is_state(entity, "True"), "mdi:wifi", "") }}'
             badge_color: red
             tap_action:
               action: call-service

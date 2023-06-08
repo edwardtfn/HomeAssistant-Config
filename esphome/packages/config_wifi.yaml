@@ -9,3 +9,57 @@ wifi:
     password: !secret fallback_password
     ap_timeout:
       minutes: 5
+
+#button:
+#  - platform: template
+#    name: WiFi restart
+#    entity_category: config
+#    icon: "mdi:wifi-refresh"
+#    on_press:
+#      then:
+#        - lambda: |-
+#            wifi.disconnect();
+#            wifi.begin();
+
+sensor:
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: WiFi signal
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: diagnostic
+    #icon: "mdi:wifi"
+    device_class: signal_strength
+    state_class: measurement
+    disabled_by_default: true
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: WiFi signal percent
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "%"
+    entity_category: diagnostic
+    #icon: "mdi:wifi"
+    #device_class: signal_strength
+    state_class: measurement
+    disabled_by_default: true
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP
+      disabled_by_default: true
+      entity_category: diagnostic
+      icon: "mdi:ip"
+
+    ssid:
+      name: SSID
+      disabled_by_default: true
+      entity_category: diagnostic
+      icon: "mdi:wifi"
+
+    bssid:
+      name: BSSID
+      disabled_by_default: true
+      entity_category: diagnostic
+      icon: "mdi:wifi"

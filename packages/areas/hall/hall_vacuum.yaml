@@ -7,7 +7,7 @@ automation:
       minutes: '00'
     - platform: state
       entity_id:
-      - group.hosts
+      - group.humans
       for:
         hours: 0
         minutes: 10
