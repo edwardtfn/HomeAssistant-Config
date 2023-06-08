@@ -64,12 +64,12 @@ light:
 button:
   - <<: !include packages/button_restart.yaml
   - <<: !include packages/button_restart_safe_mode.yaml
-  - <<: !include packages/button_wifi_restart.yaml
+  #- <<: !include packages/button_wifi_restart.yaml
 
 sensor:
   - <<: !include packages/sensor_uptime.yaml
-  - <<: !include packages/sensor_wifi.yaml
-  - <<: !include packages/sensor_wifi_signal_percentage.yaml
+  #- <<: !include packages/sensor_wifi.yaml
+  #- <<: !include packages/sensor_wifi_signal_percentage.yaml
   - <<: !include packages/sensor_esp_vcc_voltage.yaml
 text_sensor:
   - <<: !include packages/text_sensor_version.yaml

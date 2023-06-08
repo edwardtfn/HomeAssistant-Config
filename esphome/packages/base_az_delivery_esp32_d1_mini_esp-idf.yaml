@@ -39,8 +39,8 @@ button:
 
 sensor:
   - <<: !include sensor_uptime.yaml
-  - <<: !include sensor_wifi.yaml
-  - <<: !include sensor_wifi_signal_percentage.yaml
+  #- <<: !include sensor_wifi.yaml
+  #- <<: !include sensor_wifi_signal_percentage.yaml
 
 text_sensor:
   - <<: !include text_sensor_version.yaml

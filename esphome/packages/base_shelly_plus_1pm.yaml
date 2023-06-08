@@ -59,7 +59,7 @@ output:
 
 sensor:
   #- <<: !include sensor_uptime.yaml
-  - <<: !include sensor_wifi.yaml
+  #- <<: !include sensor_wifi.yaml
   #- <<: !include sensor_wifi_signal_percentage.yaml
   #- <<: !include sensor_api_status.yaml
 

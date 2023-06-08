@@ -1,13 +1,17 @@
-esphome:
-  name: living-room-proxy
+substitutions:
+  device_name: living-room-proxy
   friendly_name: Living room - Proxy
+
+#esphome:
+  #name: living-room-proxy
+  #friendly_name: Living room - Proxy
 
 packages:
   #wifi: !include packages/config_wifi.yaml
   device_base: !include packages/base_az_delivery_esp32_d1_mini_esp-idf.yaml
   # https://github.com/home-assistant/core/issues/90100#issuecomment-1483832015
   hall_presence: !include { file: packages/config_ld2410ble.yaml, vars: { mac_address: 'D7:EB:A7:A5:49:A5', ld2410_name: 'Hall - Presence ', ld2410_id: 'hall_presence_' } }
-  kitchen_table_presence: !include { file: packages/config_ld2410ble.yaml, vars: { mac_address: 'C5:69:CB:7F:A3:F4', ld2410_name: 'Kitchen - Table - Presence ', ld2410_id: 'kitchen_table_presence_' } }
+  #kitchen_table_presence: !include { file: packages/config_ld2410ble.yaml, vars: { mac_address: 'C5:69:CB:7F:A3:F4', ld2410_name: 'Kitchen - Table - Presence ', ld2410_id: 'kitchen_table_presence_' } }
   #temp: !include { file: packages/config_ld2410ble.yaml, vars: { mac_address: '12:9A:88:63:19:A7', ld2410_name: 'Temp ', ld2410_id: 'temp_' } }
   ld2410_provision: !include packages/config_ld2410ble_mac_discovery.yaml
 

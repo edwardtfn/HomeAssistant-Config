@@ -1,6 +1,6 @@
 substitutions:
   device_name: bedroom-presence
-  friendly_name: "Bedroom - Presence"
+  friendly_name: Bedroom - Presence
 
 packages:
   device_base: !include packages/base_az_delivery_esp32_d1_mini.yaml

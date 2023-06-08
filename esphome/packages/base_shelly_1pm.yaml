@@ -64,7 +64,7 @@ binary_sensor:
             - homeassistant.service:
                 service: light.toggle
                 data:
-                  entity_id: light.kitchen
+                  entity_id: light.kitchen_table_lights
           # else, toggle relay
           else:
             - switch.toggle: shelly_relay
@@ -74,11 +74,11 @@ binary_sensor:
 button:
   - <<: !include button_restart.yaml
   - <<: !include button_restart_safe_mode.yaml
-  - <<: !include button_wifi_restart.yaml
+  #- <<: !include button_wifi_restart.yaml
 
 sensor:
   - <<: !include sensor_uptime.yaml
-  - <<: !include sensor_wifi.yaml
-  - <<: !include sensor_wifi_signal_percentage.yaml
+  #- <<: !include sensor_wifi.yaml
+  #- <<: !include sensor_wifi_signal_percentage.yaml
 text_sensor:
   - <<: !include text_sensor_version.yaml

@@ -10,7 +10,7 @@ packages:
 button:
   #- <<: !include button_restart.yaml
   - <<: !include button_restart_safe_mode.yaml
-  - <<: !include button_wifi_restart.yaml
+  #- <<: !include button_wifi_restart.yaml
 
 
 api:

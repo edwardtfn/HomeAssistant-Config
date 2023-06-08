@@ -1,9 +1,10 @@
 substitutions:
   device_name: office-workstation-panel
-  #friendly_name: "Office - Workstation - Panel"
+  friendly_name: My panel #"Office - Workstation - Panel"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   nextion_update_url: "http://homeassistant.local:8123/local/nspanel/nspanel_blank.tft"
+
 
 packages:
   #device_base: !include packages/base_sonoff_nspanel.yaml
@@ -13,4 +14,4 @@ packages:
   #  url: https://github.com/Blackymas/NSPanel_HA_Blueprint
   #  ref: dev
   #  files: [nspanel_esphome.yaml]
-  #  refresh: 30s
+  #  refresh: 300s
