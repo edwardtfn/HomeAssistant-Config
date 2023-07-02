@@ -9,3 +9,11 @@ binary_sensor:
       - binary_sensor.kitchen_cooking_area_presence
       - binary_sensor.kitchen_table_presence
       - binary_sensor.kitchen_presence
+  - name: Kitchen - Bench - Presence
+    platform: group
+    unique_id: e2180f6f-e09d-4824-9363-9009bc76c47d
+    device_class: occupancy
+    entities:
+      - binary_sensor.kitchen_bench_motion_occupancy
+      - binary_sensor.kitchen_cooking_area_presence
+      - binary_sensor.kitchen_presence

@@ -8,7 +8,10 @@ automation:
       entity_id:
       - binary_sensor.office_workstation_presence
       to: 'on'
-    condition: []
+    condition:
+      - condition: state
+        entity_id: binary_sensor.office_door
+        state: 'on'
     action:
     - alias: Turn on the workstation
       if:

@@ -2,7 +2,7 @@ type: picture-elements
 image: /local/pics/vw-id4.png
 elements:
   - type: image
-    entity: switch.car_electric_climatisation
+    entity: sensor.car_climatisation_state
     image: /local/pics/blank.png
     style:
       top: 39.5%
@@ -11,7 +11,7 @@ elements:
     state_image:
       'on': /local/pics/passat_heat.png
   - type: image
-    entity: binary_sensor.car_external_power
+    entity: sensor.car_plug_connection_state
     image: /local/pics/blank.png
     style:
       top: 62.8%
@@ -29,7 +29,7 @@ elements:
     state_image:
       'on': /local/pics/passat_light.png
   - type: image
-    entity: lock.car_door_locked
+    entity: sensor.car_door_front_left_lock_status
     image: /local/pics/blank.png
     style:
       top: 42.3%
@@ -39,11 +39,41 @@ elements:
       locked: /local/pics/blink.gif
   - type: conditional
     conditions:
-      - entity: lock.car_door_locked
+      - entity: sensor.car_door_front_left_lock_status
         state_not: locked
     elements:
       - type: state-icon
-        entity: lock.car_door_locked
+        entity: sensor.car_door_front_left_lock_status
+        style:
+          top: 90%
+          left: 35%
+  - type: conditional
+    conditions:
+      - entity: sensor.car_door_front_right_lock_status
+        state_not: locked
+    elements:
+      - type: state-icon
+        entity: sensor.car_door_front_right_lock_status
+        style:
+          top: 90%
+          left: 35%
+  - type: conditional
+    conditions:
+      - entity: sensor.car_door_rear_left_lock_status
+        state_not: locked
+    elements:
+      - type: state-icon
+        entity: sensor.car_door_rear_left_lock_status
+        style:
+          top: 90%
+          left: 35%
+  - type: conditional
+    conditions:
+      - entity: sensor.car_door_rear_right_lock_status
+        state_not: locked
+    elements:
+      - type: state-icon
+        entity: sensor.car_door_rear_right_lock_status
         style:
           top: 90%
           left: 35%
@@ -54,54 +84,64 @@ elements:
       left: 93%
     tap_action:
       action: navigate
-      navigation_path: /config/devices/device/39f38da7888f9019b44f408bf6e9bc1d
+      navigation_path: /config/devices/device/f91e2639ebfd2487dd1ba7795b5dde3c
   - type: state-icon
-    entity: switch.car_electric_climatisation
-    hold_action: toggle
+    entity: sensor.car_climatisation_state
     style:
       top: 90%
       left: 45%
   - type: state-icon
-    entity: switch.car_window_heater
-    hold_action: toggle
+    entity: binary_sensor.car_front_window_heating_state
     style:
       top: 90%
       left: 55%
   - type: state-icon
-    entity: switch.car_charging
+    entity: sensor.car_plug_connection_state
     style:
       top: 85%
       left: 75%
   - type: state-label
-    entity: sensor.car_electric_range
+    entity: sensor.car_range
     style:
       top: 95%
       left: 75%
-  - type: state-icon
-    entity: sensor.car_fuel_level
-    style:
-      top: 85%
-      left: 90%
+  - type: conditional
+    conditions:
+      - entity: sensor.car_charging_state
+        state: charging
+    elements:
+      - type: state-label
+        entity: sensor.car_charge_power
+        style:
+          top: 78%
+          left: 90%
+          font-size: 8px
+      - type: state-icon
+        entity: sensor.car_remaining_charging_time
+        style:
+          top: 85%
+          left: 90%
+      - type: state-label
+        entity: sensor.car_remaining_charging_time
+        style:
+          top: 95%
+          left: 90%
   - type: state-label
-    entity: sensor.car_combustion_range
-    style:
-      top: 95%
-      left: 90%
-  - type: state-label
-    entity: sensor.car_last_connected
-    prefix: 'Last connected: '
+    entity: binary_sensor.car_is_online
+    prefix: 'Connection: '
     style:
       top: 5%
       left: 75%
       font-size: 10px
   - type: state-label
-    entity: sensor.car_battery_level
+    entity: sensor.car_state_of_charge
     style:
       top: 78%
       left: 75%
       font-size: 8px
   - type: state-label
-    entity: binary_sensor.car_vehicle_moving
+    entity: binary_sensor.car_is_active
+    prefix: 'Active: '
     style:
       top: 5%
       left: 25%

@@ -207,14 +207,12 @@ elements:
       left: 59%
   - type: conditional
     conditions:
-      - entity: binary_sensor.guest_bathroom_motion_occupancy
-        state: 'on'
-      - entity: input_boolean.home_display_motion_sensors
+      - entity: binary_sensor.guest_bathroom_presence_combined
         state: 'on'
     elements:
-      - entity: binary_sensor.guest_bathroom_motion_occupancy
+      - entity: binary_sensor.guest_bathroom_presence_combined
         type: state-icon
-        icon: mdi:motion-sensor
+        icon: mdi:account
         style:
           top: 48%
           left: 61%

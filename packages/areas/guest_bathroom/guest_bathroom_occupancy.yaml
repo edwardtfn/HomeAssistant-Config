@@ -42,13 +42,14 @@ binary_sensor:
         prob_given_true: 0.4
         prob_given_false: 0.1
 
-  - name: Guest bathroom - Motion - Dual sensors state
+  - name: Guest bathroom - Presence - Combined
     platform: group
     unique_id: 0b69d9d8-00f7-4599-ab48-1b156cbfb0eb
-    device_class: motion
+    device_class: occupancy
     entities:
       - binary_sensor.guest_bathroom_motion_iaszone
       - binary_sensor.guest_bathroom_shower_motion_occupancy
+      - binary_sensor.guest_bathroom_presence
 
 input_boolean:
   guest_bathroom_occupied:

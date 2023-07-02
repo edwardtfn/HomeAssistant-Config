@@ -5,74 +5,153 @@ conditions:
   - entity: sensor.vasttrafik_departure_table
     state_not: unavailable
 card:
-  type: custom:flex-table-card
-  title: Västtrafik - SKF
-  strict: true
-  max_rows: 20
-  sort_by:
-    - Departure+
-  entities:
-    include: sensor.vasttrafik_departure_table
-  columns:
-    - name: Sort column
-      data: Departure
-      align: center
-      hidden: true
-      modify: >-
-        Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + " " + (x.rtTime
-        ? x.rtTime : x.Time)) - Date.now())/60000)
-    - name: Line
-      data: Departure
-      modify: x.sname
-      align: center
-      hidden: true
-      style: '''background-color: '' + x.bgColor + '';'' + ''color: '' + x.fgColor + '';'''
-    - name: Line
-      data: Departure
-      modify: >-
-        '<div style="padding: 1px 1px 4px 1px; height: 16px; color: ' +
-        x.fgColor + '; background-color: ' + x.bgColor + '">&nbsp;' + x.sname +
-        '&nbsp;</div>'
-      align: center
-    - name: Direction
-      data: Departure
-      modify: x.direction
-    - name: Departure
-      data: Departure
-      align: center
-      modify: |-
-        if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string")
-          {
-            var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + " " + x.rtTime) - Date.now())/60000));
-            if (minutes>=60 || isNaN(minutes))
-              {{ x.rtTime }}
-            else if (minutes == 0)
-              "Now"
-            else
-              {{ minutes }}
+  type: custom:tabbed-card
+  tabs:
+    - attributes:
+        label: To city centre
+      card:
+        type: custom:flex-table-card
+        title: Västtrafik - SKF
+        strict: true
+        max_rows: 20
+        sort_by:
+          - Departure+
+        entities:
+          include: sensor.vasttrafik_departure_table
+        columns:
+          - name: Sort column
+            data: Departure
+            align: center
+            hidden: true
+            modify: >-
+              Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + " " + (x.rtTime
+              ? x.rtTime : x.Time)) - Date.now())/60000)
+          - name: Line
+            data: Departure
+            modify: x.sname
+            align: center
+            hidden: true
+            style: '''background-color: '' + x.bgColor + '';'' + ''color: '' + x.fgColor + '';'''
+          - name: Line
+            data: Departure
+            modify: >-
+              '<div style="padding: 1px 1px 4px 1px; height: 16px; color: ' +
+              x.fgColor + '; background-color: ' + x.bgColor + '">&nbsp;' + x.sname +
+              '&nbsp;</div>'
+            align: center
+          - name: Direction
+            data: Departure
+            modify: x.direction
+          - name: Departure
+            data: Departure
+            align: center
+            modify: |-
+              if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string")
+                {
+                  var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + " " + x.rtTime) - Date.now())/60000));
+                  if (minutes>=60 || isNaN(minutes))
+                    {{ x.rtTime }}
+                  else if (minutes == 0)
+                    "Now"
+                  else
+                    {{ minutes }}
+                }
+              else
+                {
+                  var minutes = Math.round(Math.max(0,(Date.parse(x.date + " " + x.time) - Date.now())/60000));
+                  if (minutes>=60 || isNaN(minutes))
+                    {{ x.time }}
+                  else if (minutes == 0)
+                    "Now"
+                  else
+                    {{ minutes }}
+                }
+          - name: Platform
+            data: Departure
+            align: center
+            modify: >-
+              x.track + '&nbsp;<ha-icon icon="mdi:' +
+              x.type.toLowerCase().replace("tram", "tram-side") +  '"></ha-icon>'
+        css:
+          tbody tr:nth-child(odd): 'background-color: #535B64;'
+          tbody tr:nth-child(even): 'background-color: #3C4650;'
+        style: |
+          ha-card {
+            --mdc-icon-size: 16px;
+            background-color: #3C4650;
+            color: #f2f2f2;
           }
-        else
-          {
-            var minutes = Math.round(Math.max(0,(Date.parse(x.date + " " + x.time) - Date.now())/60000));
-            if (minutes>=60 || isNaN(minutes))
-              {{ x.time }}
-            else if (minutes == 0)
-              "Now"
-            else
-              {{ minutes }}
+    - attributes:
+        label: To Bergsjon
+      card:
+        type: custom:flex-table-card
+        title: Västtrafik - SKF
+        strict: true
+        max_rows: 20
+        sort_by:
+          - Departure+
+        entities:
+          include: sensor.vasttrafik_departure_table
+        columns:
+          - name: Sort column
+            data: Departure
+            align: center
+            hidden: true
+            modify: >-
+              Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + " " + (x.rtTime
+              ? x.rtTime : x.Time)) - Date.now())/60000)
+          - name: Line
+            data: Departure
+            modify: x.sname
+            align: center
+            hidden: true
+            style: '''background-color: '' + x.bgColor + '';'' + ''color: '' + x.fgColor + '';'''
+          - name: Line
+            data: Departure
+            modify: >-
+              '<div style="padding: 1px 1px 4px 1px; height: 16px; color: ' +
+              x.fgColor + '; background-color: ' + x.bgColor + '">&nbsp;' + x.sname +
+              '&nbsp;</div>'
+            align: center
+          - name: Direction
+            data: Departure
+            modify: x.direction
+          - name: Departure
+            data: Departure
+            align: center
+            modify: |-
+              if (typeof(x.rtTime) == "string" & typeof(x.rtDate) == "string")
+                {
+                  var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + " " + x.rtTime) - Date.now())/60000));
+                  if (minutes>=60 || isNaN(minutes))
+                    {{ x.rtTime }}
+                  else if (minutes == 0)
+                    "Now"
+                  else
+                    {{ minutes }}
+                }
+              else
+                {
+                  var minutes = Math.round(Math.max(0,(Date.parse(x.date + " " + x.time) - Date.now())/60000));
+                  if (minutes>=60 || isNaN(minutes))
+                    {{ x.time }}
+                  else if (minutes == 0)
+                    "Now"
+                  else
+                    {{ minutes }}
+                }
+          - name: Platform
+            data: Departure
+            align: center
+            modify: >-
+              x.track + '&nbsp;<ha-icon icon="mdi:' +
+              x.type.toLowerCase().replace("tram", "tram-side") +  '"></ha-icon>'
+        css:
+          tbody tr:nth-child(odd): 'background-color: #535B64;'
+          tbody tr:nth-child(even): 'background-color: #3C4650;'
+        style: |
+          ha-card {
+            --mdc-icon-size: 16px;
+            background-color: #3C4650;
+            color: #f2f2f2;
           }
-    - name: Platform
-      data: Departure
-      align: center
-      modify: >-
-        x.track + '&nbsp;<ha-icon icon="mdi:' +
-        x.type.toLowerCase().replace("tram", "tram-side") +  '"></ha-icon>'
-  css:
-    tbody tr:nth-child(odd): 'background-color: #535B64;'
-    tbody tr:nth-child(even): 'background-color: #3C4650;'
-  style: |
-    ha-card {
-      --mdc-icon-size: 16px;
-      background-color: #3C4650;
-      color: #f2f2f2;
-    }

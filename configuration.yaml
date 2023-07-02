@@ -75,6 +75,9 @@ lovelace:
     #- url: /hacsfiles/lovelace-horizon-card/lovelace-horizon-card.js
     #  type: module
 
+    - url: /local/community/tabbed-card/tabbed-card.js
+      type: module
+
     - url: /local/community/home-assistant-sun-card/home-assistant-sun-card.js
       type: module
 

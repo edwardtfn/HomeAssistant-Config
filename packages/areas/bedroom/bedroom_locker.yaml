@@ -1,49 +1,49 @@
-automation:
-  - alias: Bedroom - Locker - Door opened
-    id: '1642068751469'
-    description: ''
-    trigger:
-    - type: vibration
-      platform: device
-      device_id: 6b3504557997cb46fea2e699d75e287b
-      entity_id: binary_sensor.bedroom_locker_vibration
-      domain: binary_sensor
-    - device_id: 6b3504557997cb46fea2e699d75e287b
-      domain: zha
-      platform: device
-      type: device_tilted
-      subtype: device_tilted
-    condition:
-    - condition: not
-      conditions:
-      - condition: zone
-        entity_id: person.carolina_costa
-        zone: zone.home
-      - condition: not
-        conditions:
-        - condition: zone
-          entity_id: person.edward_firmo
-          zone: zone.home
-    action:
-    - service: script.home_surveillance_turn_on_all_cameras
-      data: {}
-      continue_on_error: true
-    - service: alarm_control_panel.alarm_arm_home
-      data: {}
-      target:
-        entity_id: alarm_control_panel.eufy_hub
-      continue_on_error: true
-    - service: notify.signal_group_home
-      data:
-        message: Attention!! Vibration detected on the lockers door. Home Assistant
-          is turning on the cameras.
-      continue_on_error: true
-    mode: single
+#automation:
+#  - alias: Bedroom - Locker - Door opened
+#    id: '1642068751469'
+#    description: ''
+#    trigger:
+#    - type: vibration
+#      platform: device
+#      device_id: 6b3504557997cb46fea2e699d75e287b
+#      entity_id: binary_sensor.bedroom_locker_vibration
+#      domain: binary_sensor
+#    - device_id: 6b3504557997cb46fea2e699d75e287b
+#      domain: zha
+#      platform: device
+#      type: device_tilted
+#      subtype: device_tilted
+#    condition:
+#    - condition: not
+#      conditions:
+#      - condition: zone
+#        entity_id: person.carolina_costa
+#        zone: zone.home
+#      - condition: not
+#        conditions:
+#        - condition: zone
+#          entity_id: person.edward_firmo
+#          zone: zone.home
+#    action:
+#    - service: script.home_surveillance_turn_on_all_cameras
+#      data: {}
+#      continue_on_error: true
+#    - service: alarm_control_panel.alarm_arm_home
+#      data: {}
+#      target:
+#        entity_id: alarm_control_panel.eufy_hub
+#      continue_on_error: true
+#    - service: notify.signal_group_home
+#      data:
+#        message: Attention!! Vibration detected on the lockers door. Home Assistant
+#          is turning on the cameras.
+#      continue_on_error: true
+#    mode: single
 
-template:
-  - binary_sensor:
-    - name: Bedroom - Locker - Temperature is high
-      unique_id: 62606665-c789-4b10-8578-0dcf8b876df3
-      device_class: problem
-      availability: "{{ is_number(states('sensor.bedroom_locker_vibration_device_temperature')) }}"
-      state: "{{ states('sensor.bedroom_locker_vibration_device_temperature') | float(0) > 40 }}"
+#template:
+#  - binary_sensor:
+#    - name: Bedroom - Locker - Temperature is high
+#      unique_id: 62606665-c789-4b10-8578-0dcf8b876df3
+#      device_class: problem
+#      availability: "{{ is_number(states('sensor.bedroom_locker_vibration_device_temperature')) }}"
+#      state: "{{ states('sensor.bedroom_locker_vibration_device_temperature') | float(0) > 40 }}"

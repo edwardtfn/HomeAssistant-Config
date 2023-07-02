@@ -2,7 +2,7 @@ substitutions:
   device_name: "hall-panel"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
-  nextion_update_url: !secret nspanel_local_nextion_eu_update_url_dev
+  nextion_update_url: !secret nspanel_local_nextion_eu_update_url
 
 packages:
   remote_package:

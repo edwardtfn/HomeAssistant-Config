@@ -46,9 +46,9 @@ light:
     unique_id: 2b57238c-783e-48a1-a40e-f985bcf91953
     #icon: mdi:ceiling-light-multiple
     entities:
-      - light.corridor_lights_1_huelight
-      - light.corridor_lights_2_huelight
-      - light.corridor_lights_3_huelight
+      - light.kitchen_table_light_1
+      - light.kitchen_table_light_2
+      - light.kitchen_table_light_3
 
 sensor:
   - name: Kitchen - Table - Motion ratio in the last 10m

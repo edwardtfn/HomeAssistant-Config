@@ -52,11 +52,11 @@ chips:
       icon: ''
   - type: conditional
     conditions:
-      - entity: device_tracker.vw_passat_position
+      - entity: device_tracker.car_tracker
         state_not: Parking area at SKF HK3
     chip:
       type: entity
-      entity: device_tracker.vw_passat_position
+      entity: device_tracker.car_tracker
   - type: conditional
     conditions:
       - entity: person.edward_firmo

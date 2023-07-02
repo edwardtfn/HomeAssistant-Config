@@ -15,7 +15,8 @@ automation:
           - service: notify.signal_group_home
             data:
               message: 'Low battery warning for: {{sensors}}'
-        threshold: 15
+        threshold: 10
+        time: '18:00:00'
   - alias: Home - Covers - Reset when stuck in a state
     id: '1662801171931'
     description: ''
