@@ -1,18 +1,18 @@
-alert:
-  kitchen_freezer_temperature:
-    name: Kitchen - Freezer - Temperature alert
-    message: >-
-      The temperature in the freezer is outside the normal range ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
+#alert:
+  #kitchen_freezer_temperature:
+#    name: Kitchen - Freezer - Temperature alert
+  #  message: >-
+#      The temperature in the freezer is outside the normal range ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
 
-      Please check the door and power supply.
-    done_message: The temperature in the freezer is back to normal ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
-    entity_id: binary_sensor.kitchen_freezer_temperature_normal_range
-    state: 'off'
-    repeat: 150
-    can_acknowledge: true
-    skip_first: true
-    notifiers:
-      - signal_group_artillerigatan
+  #    Please check the door and power supply.
+ #   done_message: The temperature in the freezer is back to normal ({{ states('sensor.kitchen_freezer_hygrometer_temperature') }}ºC).
+ #   entity_id: binary_sensor.kitchen_freezer_temperature_normal_range
+ #   state: 'off'
+#    repeat: 150
+ #   can_acknowledge: true
+ #   skip_first: true
+ #   notifiers:
+   #   - signal_group_artillerigatan
   #kitchen_fridge_temperature:
     #name: Kitchen - Fridge - Temperature alert
     #message: >-
@@ -83,7 +83,8 @@ automation:
       above: 1
       below: 10.5
       id: Fridge - Normal
-    condition: []
+    condition:
+      - '{{ trigger.from_state.state not in ["unavailable", "unknown", None] }}'
     action:
     - service: notify.signal_edward
       data:

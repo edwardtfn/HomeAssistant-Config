@@ -1,41 +1,208 @@
 substitutions:
+  ###### CHANGE ME START ######
   device_name: office-workstation-panel
-  friendly_name: My panel #"Office - Workstation - Panel"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
-  nextion_update_url: "http://homeassistant.local:8123/local/nspanel/nspanel_blank.tft"
-  embedded_thermostat_disabled: "false"
-  embedded_thermostat_heater_relay: "1"
-  embedded_thermostat_min_heating_off_time: "300"
-  embedded_thermostat_min_heating_run_time: "300"
-  embedded_thermostat_min_idle_time: "30"
 
+  nextion_update_url: "http://homeassistant.local:8123/local/nspanel/dev/nspanel_us_land.tft"
+  nextion_update_blank_url: "http://homeassistant.local:8123/local/nspanel/sonoff/nspanel.tft"
+  #upload_tft_chunk_size_max: "81920000"
+  heater_relay: "1"
+  temp_min: "15"
+  temp_max: "25"
+  temp_step: "0.5"
+
+  ##### CHANGE ME END #####
 
 packages:
-  #device_base: !include packages/base_sonoff_nspanel.yaml
+  nspanel_package: !include packages/Blackymas/nspanel_esphome.yaml
+  #heat_package: !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
+  #cool_package: !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
+  #advanced_package: !include packages/Blackymas/nspanel_esphome_advanced.yaml
+  #nspanel_core: !include packages/Blackymas/nspanel_esphome_core.yaml
+  #nspanel_upload_tft: !include packages/Blackymas/nspanel_esphome_addon_upload_tft.yaml
   #debug: !include packages/config_debug_esp32.yaml
-  local_package: !include packages/nspanel_esphome.yaml
   #remote_package:
   #  url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-  #  ref: dev
-  #  files: [nspanel_esphome.yaml]
-  #  refresh: 300s
+  #  ref: main
+  #  refresh: 1s
+  #  files:
+  #    - nspanel_esphome.yaml # Base package
+  #    - nspanel_esphome_addon_climate_heat.yaml
+      #- advanced/esphome/nspanel_esphome_advanced.yaml
+      #- nspanel_esphome_core.yaml # Base package
+      #- nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
 
+#logger:
+#  level: VERBOSE
 
-climate:
-  - platform: thermostat
-    name: ${device_name} Thermostat
-    sensor: temp_nspanel
-    min_heating_off_time: ${embedded_thermostat_min_heating_off_time}s
-    min_heating_run_time: ${embedded_thermostat_min_heating_run_time}s
-    min_idle_time: ${embedded_thermostat_min_idle_time}s
-    heat_action:
-      - switch.turn_on: relay_${embedded_thermostat_heater_relay}
-    idle_action:
-      - switch.turn_off: relay_${embedded_thermostat_heater_relay}
-    default_preset: Home
-    preset:
-      - name: Home
-        default_target_temperature_low: 21 °C
-    internal: ${embedded_thermostat_disabled}
+esp32:
+  framework:
+    #type: arduino
+    type: esp-idf
+    #version: 5.0.2
+    #platform_version: 6.3.2
 
+# Set Nextion comm's baud rate to 921600 bps
+#uart:
+#  - id: !extend tf_uart
+#    baud_rate: 115200
+
+#web_server:
+#  auth:
+#    username: me5
+#    password: C0mp13xPa$$w0rd5
+
+#display:
+  #- id: !extend disp1
+    #exit_reparse_on_start: true
+#uart:
+#  - id: !extend tf_uart
+#    baud_rate: [115200, 921600]
+
+time:
+  - id: !extend time_provider
+    on_time:
+      - seconds: /15
+        then:
+          - lambda: |-
+              ESP_LOGD("DEBUG", "Version: ${version}");
+              ESP_LOGD("DEBUG", "Baud rate: %d", tf_uart->get_baud_rate());
+              //disp1->set_component_text_printf("home.date", "bauds=%d", tf_uart->get_baud_rate());
+              #ifdef ARDUINO
+              ESP_LOGD("DEBUG", "Free heap: %d", ESP.getFreeHeap());
+              //disp1->set_component_text_printf("home.time", "%d", ESP.getFreeHeap());
+              #elif defined(USE_ESP_IDF)
+              ESP_LOGD("DEBUG", "Free heap: %d", esp_get_free_heap_size());
+              //disp1->set_component_text_printf("home.time", "%d", esp_get_free_heap_size());
+              #endif
+              ESP_LOGD("DEBUG", "disp1->is_detected(): %s", disp1->is_detected() ? "True" : "False");
+              ESP_LOGD("DEBUG", "disp1->is_setup(): %s", disp1->is_setup() ? "True" : "False");
+
+#external_components:
+#  - source: github://pr#5825
+#    components: [nextion]
+#    refresh: 1s
+#  - source: github://pr#5825
+#    components: [nextion]
+#    refresh: 1s
+#  - source: github://pr#5930
+#    components:
+#      - uart
+#    refresh: 1s
+#  - source: github://pr#5829
+#    components:
+#      - nextion
+#    refresh: 1s
+#  - source: github://pr#5868 #5825 #5683 # Remove this when that pr is merged and released
+#  - source:
+#      type: git
+#      url: https://github.com/edwardtfn/esphome
+#      ref: nextion-09
+#    components:
+#      - nextion
+#    refresh: 1s
+#  - source:
+#      type: git
+#      url: https://github.com/edwardtfn/esphome
+#      ref: uart-03
+#    components:
+#      - uart
+#    refresh: 1s
+
+# Use my global OTA password
+#ota:
+#  password: !secret wifi_password
+
+#bluetooth_proxy:
+
+#esphome:
+#  platformio_options:
+#    board_upload.flash_size: 16MB
+#    board_upload.maximum_ram_size: 327680
+#    board_upload.maximum_size: 16777216
+#    board_build.partitions: "../../../custom_partitions.csv"
+
+##### My customization - Start #####
+
+#psram:
+#  id: std_psram
+
+#display:
+#  - id: !extend disp1
+#    on_touch:
+#      lambda: |-
+#        ESP_LOGW("display.disp1.on_touch", "NEXTION TOUCH EVENT DETECTED");
+#        ESP_LOGW("display.disp1.on_page", "Page: %i", page_id);
+#        ESP_LOGW("display.disp1.on_page", "Component: %i", component_id);
+#        ESP_LOGW("display.disp1.on_page", "Event: %s", touch_event ? "Press" : "Release");
+
+#logger:
+#  baud_rate: 0
+
+##### My customization - End #####
+
+#qr_code:
+#  - id: homepage_qr
+#    value: "This is a test"
+
+#image:
+#  - file: mdi:alert-outline
+#    id: alert
+#    resize: 80x80
+
+#button:
+#  - id: nextion_try
+#    name: ${device_name} Nextion try
+#    platform: template
+#    internal: false
+#    on_press:
+#      - lambda: |-
+#          disp1->line(10, 10, 100, 100, "65535");
+#          auto red = Color(255, 0, 0);
+#          auto green = Color(0, 255, 0);
+#          auto blue = Color(0, 0, 255);
+#          auto white = Color(255, 255, 255);
+#          disp1->rectangle(20, 50, 30, 30, white);
+#          disp1->rectangle(25, 55, 30, 30, red);
+#          disp1->rectangle(30, 60, 30, 30, green);
+#          disp1->rectangle(35, 65, 30, 30, blue);
+#          // Draw the QR-code at position [x=50,y=0] with white color and a 2x scale
+#          homepage_qr->set_value("Another test");
+#          disp1->qr_code(50, 0, id(homepage_qr), Color(255,255,255), 4);
+#          // Draw the image my_image at position [x=0,y=0]
+#          disp1->image(100, 100, id(alert));
+
+select:
+  - id: change_baud_rate
+    name: DEBUG Baud rate
+    platform: template
+    options:
+      - "2400"
+      - "4800"
+      - "9600"
+      - "19200"
+      - "31250"
+      - "38400"
+      - "57600"
+      - "115200"
+      - "230400"
+      - "250000"
+      - "256000"
+      - "512000"
+      - "921600"
+    initial_option: "115200"
+    optimistic: true
+    restore_value: True
+    internal: false
+    entity_category: config
+    icon: mdi:swap-horizontal
+    set_action:
+      - lambda: |-
+          ESP_LOGD("DEBUG", "Baud rate changed to %s", x.c_str());
+          disp1->set_component_text_printf("home.date", "nbauds=%s", x.c_str());
+          disp1->send_command_printf("bauds=%s", x.c_str());
+          tf_uart->flush();
+          ESP_LOGD("DEBUG", "Set new baud rate to %i", stoi(x));
+          tf_uart->set_baud_rate(stoi(x));
+          tf_uart->load_settings();

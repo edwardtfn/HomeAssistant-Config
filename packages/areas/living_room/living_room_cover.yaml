@@ -30,6 +30,13 @@ automation:
     - platform: state
       entity_id:
       - binary_sensor.living_room_tv_is_on
+    - platform: state
+      entity_id:
+      - binary_sensor.living_room_tv_is_on
+      - sensor.civil_solar_day_status
+      - cover.living_room_blinds
+      for:
+        minutes: 5
     condition: []
     action:
     - choose:
@@ -63,6 +70,6 @@ cover:
     platform: group
     unique_id: 958ae6e6-d848-4752-a919-3898739f01a2
     entities:
-      - cover.living_room_blind_centre_cover
-      - cover.living_room_blind_left_cover_2
-      - cover.living_room_blind_right_cover
+      - cover.living_room_roller_blind_centre
+      - cover.living_room_roller_blind_left
+      - cover.living_room_roller_blind_right

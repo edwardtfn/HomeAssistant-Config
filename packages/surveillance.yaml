@@ -127,11 +127,11 @@ automation:
           target:
             entity_id: input_boolean.home_empty
           continue_on_error: true
-        - service: notify.signal_edward
-          data:
-            message: '{{ trigger.entity_id }} changed from {{ trigger.from_state.state
-              }} to {{ trigger.to_state.state }}.'
-          continue_on_error: true
+        #- service: notify.signal_edward
+        #  data:
+        #    message: '{{ trigger.entity_id }} changed from {{ trigger.from_state.state
+        #      }} to {{ trigger.to_state.state }}.'
+        #  continue_on_error: true
     mode: restart
   - alias: Home - Surveillance - Dogs at home
     id: '1673675258067'

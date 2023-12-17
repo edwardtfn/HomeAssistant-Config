@@ -58,6 +58,36 @@ rest:
           - serverdate
           - Departure
 
+template:
+  sensor:
+    - name: Vasttrafik - Departure table - City centre
+      unique_id: 60a7bb81-b0f8-4f04-abe1-e0708f60ecf2
+      device_class: timestamp
+      availability: '{{ has_value("sensor.vasttrafik_departure_table") }}'
+      state: '{{ states("sensor.vasttrafik_departure_table") }}'
+      attributes:
+        Departure: >
+          {{
+            state_attr("sensor.vasttrafik_departure_table", "Departure")
+            | selectattr("track", "defined")
+            | selectattr("track", "in", ["A","a", "C", "c"])
+            | list
+          }}
+
+    - name: Vasttrafik - Departure table - Suburb
+      unique_id: 0f584435-a362-4427-8c5c-710ceb291885
+      device_class: timestamp
+      availability: '{{ has_value("sensor.vasttrafik_departure_table") }}'
+      state: '{{ states("sensor.vasttrafik_departure_table") }}'
+      attributes:
+        Departure: >
+          {{
+            state_attr("sensor.vasttrafik_departure_table", "Departure")
+            | selectattr("track", "defined")
+            | selectattr("track", "in", ["B","b"])
+            | list
+          }}
+
 #sensor:
   # https://www.home-assistant.io/integrations/vasttrafik/
   #- platform: vasttrafik

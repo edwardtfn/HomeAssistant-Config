@@ -50,45 +50,4 @@ automation:
         indoortemp: sensor.corridor_air_quality_temperature
         sync_value_ha: select_no
         sync_slider_ha: select_no
-  - alias: Hall - Panel - Presence based
-    id: hall_panel_presence
-    description: Turn on NSPanel with presence
-    use_blueprint:
-      path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-      input:
-        light_level_high: 100
-        light_level_dimmer: 25
-        motion_entity: binary_sensor.hall_presence
-        light_target: light.hall_panel_display
-        no_motion_wait_to_dimming: 30
-        no_motion_wait_to_off: 15
-        #lumens_entity: sensor.kitchen_bench_motion_light_level
-        #max_lumens: 0
-
-light:
-  - platform: template
-    lights:
-      hall_panel_display:
-        friendly_name: 'Hall - Panel - Display'
-        availability_template: '{{ states("sensor.hall_panel_nspanel_event") not in ["unavailable", "unknown", "", None] }}'
-        value_template: '{{ "screensaver" not in states("sensor.hall_panel_nspanel_event") }}'
-        icon_template: '{{ "mdi:power-sleep" if "screensaver" in states("sensor.hall_panel_nspanel_event") else "mdi:tablet-dashboard" }}'
-        level_template: '{{ (states("number.hall_panel_display_brightness") | int(0) / 100 * 255) | round(0) }}'
-        turn_on:
-          - service: esphome.hall_panel_send_command_printf
-            data:
-              cmd: page home
-        turn_off:
-          - service: esphome.hall_panel_send_command_printf
-            data:
-              cmd: page screensaver
-        set_level:
-          - service: number.set_value
-            data:
-              value: '{{ (brightness / 255 * 100) | round(0) | int }}'
-            target:
-              entity_id: number.hall_panel_display_brightness
-          - condition: '{{ "screensaver" in states("sensor.hall_panel_nspanel_event") }}'
-          - service: esphome.hall_panel_send_command_printf
-            data:
-              cmd: page home
+        alarm: alarm_control_panel.artillerigatan

@@ -6,6 +6,7 @@ binary_sensor:
     entities:
       - binary_sensor.office_motion_motion
       - binary_sensor.office_motion_occupancy
+      - binary_sensor.office_workstation_motion_occupancy
       - binary_sensor.office_workstation_1_presence_motion
       - binary_sensor.office_workstation_1_presence_occupancy
       - binary_sensor.office_workstation_2_presence_motion
@@ -18,3 +19,4 @@ binary_sensor:
     entities:
       - binary_sensor.office_motion_motion
       - binary_sensor.office_motion_occupancy
+      - binary_sensor.office_workstation_motion_occupancy

@@ -32,7 +32,7 @@ automation:
       target:
         entity_id: counter.home_assistant_start_counter
     mode: single
-  - alias: Home Assistant - Auto-update - Reload HACS
+  - alias: Home Assistant - Auto-update - Refresh update entities
     id: '1673610635217'
     description: ''
     trigger:
@@ -42,9 +42,31 @@ automation:
       to: 'on'
     condition: []
     action:
+    - service: button.press
+      data: {}
+      target:
+        entity_id: >
+          {{
+            states.button
+            | selectattr("entity_id", "search", "boot")
+            | rejectattr("entity_id", "in", ["button.rt_ax95q_reboot"])
+            | map(attribute="entity_id")
+            | list
+          }}
     - service: homeassistant.reload_config_entry
       data:
         entry_id: 06a4100f9631a82c9da4ef0e5e8dad62
+    - delay:
+        seconds: 30
+    - service: homeassistant.update_entity
+      data: {}
+      target:
+        entity_id: >
+          {{
+            states.update
+            | map(attribute="entity_id")
+            | list
+          }}
     mode: single
   - alias: Home Assistant - CPU temperature is too high
     id: '1640565042133'
@@ -232,10 +254,10 @@ automation:
         minutes: 0
         seconds: 15
         milliseconds: 0
-    - service: watchman.report
-      data: {}
-      continue_on_error: true
-      enabled: true
+    #- service: watchman.report
+    #  data: {}
+    #  continue_on_error: true
+    #  enabled: true
     - delay:
         hours: 0
         minutes: 4
@@ -244,15 +266,15 @@ automation:
     - service: script.home_groups_update
       data: {}
       continue_on_error: true
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 15
-        milliseconds: 0
-    - service: watchman.report
-      data: {}
-      continue_on_error: true
-      enabled: true
+    #- delay:
+    #    hours: 0
+    #    minutes: 0
+    #    seconds: 15
+    #    milliseconds: 0
+    #- service: watchman.report
+    #  data: {}
+    #  continue_on_error: true
+    #  enabled: true
     mode: single
   - alias: Home Assistant - Shutdown
     id: '1641740244441'
@@ -274,15 +296,6 @@ automation:
     max: 10
 
 binary_sensor:
-  #- platform: ping # https://www.home-assistant.io/integrations/ping/#binary-sensor
-    #host: !secret ip_pc_1
-    #name: "Living room - PC-1"
-    #count: 2
-    #scan_interval: 30
-
-  - platform: workday # https://www.home-assistant.io/integrations/workday/
-    country: SE
-
   - name: Home Assistant - Temperature high
     platform: threshold
     entity_id: sensor.processor_temperature
@@ -314,11 +327,6 @@ device_tracker:
     #track_new_devices: true
   #- platform: bluetooth_le_tracker
     #track_new_devices: true
-  - platform: ping # https://www.home-assistant.io/integrations/ping/#presence-detection
-    hosts:
-      #carols_phone_ping: !secret ip_carols_phone
-      #edwards_phone_ping: !secret ip_edwards_phone
-      pc_1_ping: !secret ip_pc_1
 
 input_datetime:
   home_assistant_last_start:

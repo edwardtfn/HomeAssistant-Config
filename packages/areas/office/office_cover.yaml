@@ -7,43 +7,7 @@ automation:
       input:
         remote_device: 5acfbea46187a1d3c06c2dca49bd717b
         cover_entity: cover.office_shutters_all
-  - alias: Office - Covers - Remote controlled 2
-    id: '1661507207658'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/cover_remote.yaml
-      input:
-        remote_device: d420aff39bfba16f659c207dc05e2743
-        cover_entity: cover.office_shutters_all
-  - alias: Office - Covers - Bunkebergsgatan - Weather based
-    id: '1663594463162'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/cover_weather.yaml
-      input:
-        cover_list:
-        - cover.office_shutter_1_cover
-        weather_entity: weather.home
-        windows_azimuth: '255'
-  - alias: Office - Covers - School - Weather based
-    id: '1663594596961'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/cover_weather.yaml
-      input:
-        cover_list:
-        - cover.office_shutter_2_cover
-        weather_entity: weather.home
-        windows_azimuth: '345'
-  - alias: Office - Roller blind 1 - Remote controlled
-    id: '1661506655442'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/cover_remote.yaml
-      input:
-        remote_device: 655699530e3a218357784fa5b32838d2
-        cover_entity: cover.office_roller_blinds_all
-  - alias: Office - Covers - Sunset/sunrise based
+  - alias: Office - Covers - Shutters - Sunset/sunrise based
     id: '1662154991151'
     description: ''
     trigger:
@@ -60,11 +24,6 @@ automation:
       entity_id: binary_sensor.office_door
       state: 'on'
     action:
-    - service: cover.open_cover
-      data: {}
-      target:
-        entity_id:
-        - cover.office_roller_blinds_all
     - if:
       - condition: state
         entity_id: sun.sun
@@ -85,6 +44,113 @@ automation:
           entity_id:
           - cover.office_shutters_all
     mode: restart
+  - alias: Office - Cover - Roller blind 1
+    id: '1690925441280'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - weather.home
+      - sun.sun
+      - cover.office_shutter_1_cover
+    condition: []
+    action:
+    - if:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: 6
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: weather.home
+          state: sunny
+        - condition: state
+          entity_id: weather.home
+          state: partlycloudy
+        alias: It's is sunny
+      - condition: state
+        entity_id: cover.office_shutter_1_cover
+        state: open
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: azimuth
+        above: 210
+        below: 300
+      then:
+      - if:
+        - condition: state
+          entity_id: cover.office_roller_blind_1_cover
+          state: open
+        then:
+        - service: cover.close_cover
+          data: {}
+          target:
+            entity_id: cover.office_roller_blind_1_cover
+      else:
+      - if:
+        - condition: state
+          entity_id: cover.office_roller_blind_1_cover
+          state: closed
+        then:
+        - service: cover.open_cover
+          data: {}
+          target:
+            entity_id: cover.office_roller_blind_1_cover
+    mode: single
+  - alias: Office - Cover - Roller blind 2
+    id: '1690925441280b'
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - weather.home
+      - sun.sun
+      - cover.office_shutter_2_cover
+    condition: []
+    action:
+    - if:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: 6
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: weather.home
+          state: sunny
+        - condition: state
+          entity_id: weather.home
+          state: partlycloudy
+        alias: It's is sunny
+      - condition: state
+        entity_id: cover.office_shutter_2_cover
+        state: open
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: azimuth
+        above: 255
+      then:
+      - if:
+        - condition: state
+          entity_id: cover.office_roller_blind_1_cover
+          state: open
+        then:
+        - service: cover.close_cover
+          data: {}
+          target:
+            entity_id: cover.office_roller_blind_2_cover
+      else:
+      - if:
+        - condition: state
+          entity_id: cover.office_roller_blind_2_cover
+          state: closed
+        then:
+        - service: cover.open_cover
+          data: {}
+          target:
+            entity_id: cover.office_roller_blind_2_cover
+    mode: single
 
 cover:
   - name: Office - Shutters - All

@@ -16,4 +16,4 @@ cards:
   #- !include /config/lovelace/library/cards/sandbox.yaml
   #- !include /config/lovelace/library/cards/card_electricity_price_table.yaml
   #- !include /config/lovelace/library/cards/card_electricity_price_chart_apex_bars.yaml
-  - !include /config/lovelace/library/cards/card_virtual_alarm.yaml
+  #- !include /config/lovelace/library/cards/card_virtual_alarm.yaml

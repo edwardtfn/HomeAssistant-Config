@@ -7,7 +7,7 @@ alert:
       Please move it to a parking area.
     done_message: Car was moved!
     entity_id: device_tracker.car_tracker
-    state: "Close to home"
+    state: home
     repeat: 25
     can_acknowledge: true
     skip_first: true

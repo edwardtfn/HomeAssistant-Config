@@ -17,7 +17,7 @@ card:
         sort_by:
           - Departure+
         entities:
-          include: sensor.vasttrafik_departure_table
+          include: sensor.vasttrafik_departure_table_city_centre
         columns:
           - name: Sort column
             data: Departure
@@ -91,7 +91,7 @@ card:
         sort_by:
           - Departure+
         entities:
-          include: sensor.vasttrafik_departure_table
+          include: sensor.vasttrafik_departure_table_suburb
         columns:
           - name: Sort column
             data: Departure

@@ -7,11 +7,10 @@ automation:
         motion_entity: binary_sensor.office_motion
         lumens_entity: sensor.office_motion_illuminance
         light_target: light.office_ceiling_lines
-        no_motion_wait_to_dimming: 180
-        pause_entities_off:
-        - binary_sensor.office_door
-        light_level_high: 65
-        light_level_dimmer: 30
+        no_motion_wait_to_dimming: 60
+        no_motion_wait_to_off: 30
+        light_level_high: 35
+        light_level_dimmer: 15
         max_lumens: 30
         occupancy_ratio_entity: []
   - alias: Office - Lights - Wall switch based

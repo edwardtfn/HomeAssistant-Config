@@ -14,8 +14,11 @@ automation:
         actions:
           - service: notify.signal_group_home
             data:
-              message: 'Low battery warning for: {{sensors}}'
-        threshold: 10
+              message: >
+                Low battery warning for:
+
+                - {{sensors}}
+        threshold: 15
         time: '18:00:00'
   - alias: Home - Covers - Reset when stuck in a state
     id: '1662801171931'
@@ -24,30 +27,33 @@ automation:
       - platform: state
         entity_id:
           - cover.balcony_curtain
-          - cover.bedroom_curtains
-          - cover.bedroom_curtains_dual
+          #- cover.bedroom_curtains
+          #- cover.bedroom_curtains_dual
           - cover.bedroom_curtain_left
           - cover.bedroom_curtain_right
           - cover.guest_room_shutter_cover
-          - cover.living_room_blinds
+          #- cover.living_room_blinds
           - cover.living_room_blind_right_cover
           - cover.living_room_blind_centre_cover
           - cover.living_room_blind_left_cover_2
           - cover.office_roller_blind_1_cover
           - cover.office_roller_blind_2_cover
-          - cover.office_roller_blinds_all
+          #- cover.office_roller_blinds_all
           - cover.office_shutter_1_cover
           - cover.office_shutter_2_cover
-          - cover.office_shutters_all
+          #- cover.office_shutters_all
         for:
           hours: 0
-          minutes: 2
+          minutes: 15
           seconds: 0
         to:
           - closing
           - opening
     condition: []
     action:
+      - service: notify.signal_edward
+        data:
+          message: 'Cover {{ trigger.entity_id }} is stuck on state "{{ states(trigger.entity_id) }}. Sending a stop call.'
       - service: cover.stop_cover
         target:
           entity_id: '{{ trigger.entity_id }}'
@@ -89,10 +95,6 @@ automation:
                             entity_id: vacuum.hall_roomba
                             type: is_docked
                     then:
-                      - service: logbook.log
-                        data:
-                          name: Silent hours (preparing)
-                          message: Sending roomba to it's docking station.
                       - device_id: 216297d2524fa8459f265e6a9930f739
                         domain: vacuum
                         entity_id: vacuum.hall_roomba

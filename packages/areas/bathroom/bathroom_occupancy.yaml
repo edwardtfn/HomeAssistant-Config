@@ -4,7 +4,7 @@ binary_sensor:
     unique_id: fb0a26b1-c832-406d-8e07-fbef740a6654
     device_class: motion
     entities:
-      - binary_sensor.bathroom_motion_occupancy
+      - binary_sensor.bathroom_motion
       - binary_sensor.bathroom_shower_motion_occupancy
 
   - name: Bathroom - Mirro's cabinet doors

@@ -1,5 +1,5 @@
 debug:
-  update_interval: 5s
+#  update_interval: 1s
 
 text_sensor:
   - platform: debug
@@ -21,4 +21,4 @@ sensor:
 
 # Logger must be at least debug (default)
 logger:
-  level: debug
+  level: VERBOSE

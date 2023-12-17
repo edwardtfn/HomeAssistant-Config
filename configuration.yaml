@@ -223,4 +223,4 @@ zha:
       sonoff_provider: true
       thirdreality_provider: true
 
-zha_toolkit:
+#zha_toolkit:
