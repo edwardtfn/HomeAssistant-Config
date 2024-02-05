@@ -143,7 +143,7 @@ blueprint:
 #              value: "major_and_minor"
 
     general_update_mode:
-      name: Update mode for genaral updates
+      name: Update mode for general updates
       description: >
         Please select the update mode for everything that is not a device's firmware or a core component of Home Assistant.
 
