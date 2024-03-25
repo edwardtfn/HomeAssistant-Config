@@ -13,7 +13,7 @@ automation:
         minutes: 10
         seconds: 0
     - platform: numeric_state
-      entity_id: sensor.hall_roomba_battery_level
+      entity_id: sensor.roborock_q_revo_battery
       above: 75
     - platform: state
       entity_id:
@@ -24,7 +24,7 @@ automation:
       - input_boolean.home_no_dogs
     condition:
     - condition: numeric_state
-      entity_id: sensor.hall_roomba_battery_level
+      entity_id: sensor.roborock_q_revo_battery
       above: '75'
     - condition: state
       entity_id: input_boolean.home_party_mode
@@ -38,10 +38,10 @@ automation:
     - condition: not
       conditions:
       - condition: state
-        entity_id: vacuum.hall_roomba
+        entity_id: vacuum.roborock_q_revo
         state: cleaning
       - condition: state
-        entity_id: vacuum.hall_roomba
+        entity_id: vacuum.roborock_q_revo
         state: error
     - condition: state
       entity_id: group.hosts
@@ -50,7 +50,7 @@ automation:
     - service: vacuum.start
       data: {}
       target:
-        entity_id: vacuum.hall_roomba
+        entity_id: vacuum.roborock_q_revo
     - service: notify.signal_edward
       data:
         message: Starting cleaning as nobody is in the apartment.
@@ -61,19 +61,19 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - vacuum.hall_roomba
+      - vacuum.roborock_q_revo
       attribute: error_code
     condition:
     - condition: numeric_state
-      entity_id: vacuum.hall_roomba
+      entity_id: vacuum.roborock_q_revo
       attribute: error_code
       above: 0
     action:
     - service: notify.signal_group_home
       data:
-        message: 'The Roomba from hall reported an error!
+        message: 'Roborock reported an error!
 
-          {{ state_attr(''vacuum.hall_roomba'', ''error'') }} ({{state_attr(''vacuum.hall_roomba'',
+          {{ state_attr(''vacuum.roborock_q_revo'', ''error'') }} ({{state_attr(''vacuum.roborock_q_revo'',
           ''error_code'')}})'
     mode: single
 
@@ -83,18 +83,18 @@ switch:
       hall_vacuum:
         friendly_name: Hall - Vacuum
         unique_id: 2917b087-741a-440a-bae9-4aa5bcf4dd3e
-        availability_template: "{{ has_value('vacuum.hall_roomba') }}"
-        value_template: "{{ is_state('vacuum.hall_roomba', 'cleaning') }}"
+        availability_template: "{{ has_value('vacuum.roborock_q_revo') }}"
+        value_template: "{{ is_state('vacuum.roborock_q_revo', 'cleaning') }}"
         turn_on:
           service: vacuum.start
           target:
-            entity_id: vacuum.hall_roomba
+            entity_id: vacuum.roborock_q_revo
         turn_off:
           service: vacuum.stop
           target:
-            entity_id: vacuum.hall_roomba
+            entity_id: vacuum.roborock_q_revo
         icon_template: >-
-          {% if states('vacuum.hall_roomba') in ['cleaning', 'docked', 'returning'] %}
+          {% if states('vacuum.roborock_q_revo') in ['cleaning', 'docked', 'returning'] %}
             mdi:robot-vacuum
           {% else %}
             mdi:robot-vacuum-off

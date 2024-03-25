@@ -54,8 +54,6 @@ automation:
         lumens_entity: sensor.guest_room_motion_illuminance
         light_target: light.guest_room_wall_lights
         no_motion_wait_to_dimming: 120
-        pause_entities_off:
-        - binary_sensor.guest_room_door
 
 light:
   - platform: group

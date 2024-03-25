@@ -89,22 +89,18 @@ automation:
                   - if:
                       - condition: not
                         conditions:
-                          - condition: device
-                            device_id: 216297d2524fa8459f265e6a9930f739
-                            domain: vacuum
-                            entity_id: vacuum.hall_roomba
-                            type: is_docked
+                          - condition: state
+                            entity_id: vacuum.roborock_q_revo
+                            state: "is_docked"
                     then:
-                      - device_id: 216297d2524fa8459f265e6a9930f739
-                        domain: vacuum
-                        entity_id: vacuum.hall_roomba
-                        type: dock
+                      - service: vacuum.return_to_base
+                        data: {}
+                        target:
+                          entity_id: vacuum.roborock_q_revo
                   - if:
-                      - condition: device
-                        type: is_on
-                        device_id: 7718afce3cec294c17968906f186a35f
+                      - condition: state
                         entity_id: switch.laundry_washing_machine_outlet
-                        domain: switch
+                        state: "on"
                     then:
                       - wait_for_trigger:
                           - platform: numeric_state
@@ -115,16 +111,14 @@ automation:
                               seconds: 0
                             below: '2'
                         continue_on_timeout: false
-                      - type: turn_off
-                        device_id: 7718afce3cec294c17968906f186a35f
-                        entity_id: switch.laundry_washing_machine_outlet
-                        domain: switch
+                      - service: switch.turn_off
+                        data: {}
+                        target:
+                          entity_id: switch.laundry_washing_machine_outlet
                   - if:
-                      - condition: device
-                        type: is_on
-                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                      - condition: state
                         entity_id: switch.laundry_dryer_outlet
-                        domain: switch
+                        state: "on"
                     then:
                       - wait_for_trigger:
                           - platform: numeric_state
@@ -135,10 +129,10 @@ automation:
                               seconds: 0
                             below: '2'
                         continue_on_timeout: false
-                      - type: turn_off
-                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-                        entity_id: switch.laundry_dryer_outlet
-                        domain: switch
+                      - service: switch.turn_off
+                        data: {}
+                        target:
+                          entity_id: switch.laundry_dryer_outlet
           - conditions:
               - condition: trigger
                 id: Quite hours starts
@@ -147,22 +141,18 @@ automation:
                   - if:
                       - condition: not
                         conditions:
-                          - condition: device
-                            device_id: 216297d2524fa8459f265e6a9930f739
-                            domain: vacuum
-                            entity_id: vacuum.hall_roomba
-                            type: is_docked
+                          - condition: state
+                            entity_id: vacuum.roborock_q_revo
+                            state: "is_docked"
                     then:
                       - service: vacuum.stop
                         data: {}
                         target:
-                          device_id: 216297d2524fa8459f265e6a9930f739
+                          entity_id: vacuum.roborock_q_revo
                   - if:
-                      - condition: device
-                        type: is_on
-                        device_id: 7718afce3cec294c17968906f186a35f
+                      - condition: state
                         entity_id: switch.laundry_washing_machine_outlet
-                        domain: switch
+                        state: "on"
                     then:
                       - wait_for_trigger:
                           - platform: numeric_state
@@ -174,11 +164,9 @@ automation:
                           message: Silence hours - Looks like the washer was left running at this
                             time. Please take a look.
                   - if:
-                      - condition: device
-                        type: is_on
-                        device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
+                      - condition: state
                         entity_id: switch.laundry_dryer_outlet
-                        domain: switch
+                        state: "on"
                     then:
                       - wait_for_trigger:
                           - platform: numeric_state
@@ -193,14 +181,12 @@ automation:
               - condition: trigger
                 id: Quite hours ends
             sequence:
-              - type: turn_on
-                device_id: 7718afce3cec294c17968906f186a35f
-                entity_id: switch.laundry_washing_machine_outlet
-                domain: switch
-              - type: turn_on
-                device_id: 2c49b2bf8698ed0b83f542d31f7de1b6
-                entity_id: switch.laundry_dryer_outlet
-                domain: switch
+              - service: switch.turn_on
+                data: {}
+                target:
+                  entity_id:
+                    - switch.laundry_washing_machine_outlet
+                    - switch.laundry_dryer_outlet
         default: []
     mode: restart
 

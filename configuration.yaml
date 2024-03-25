@@ -1,51 +1,55 @@
 #### default_config ####
 # Configure a default setup of Home Assistant (frontend, api, etc)
 # https://www.home-assistant.io/integrations/default_config/
-#default_config:
+default_config:
 
-application_credentials:
+#application_credentials:
+#assist_pipeline:
 automation: !include automations.yaml
-bluetooth:
+#backup:
+#bluetooth:
 #cloud:
-conversation:
-counter:
-dhcp:
-energy:
-frontend:
-  themes: !include_dir_merge_named themes
-  extra_module_url:
-    - /local/card-mod.js
-hardware:
-history:
-homeassistant_alerts:
-input_boolean:
-input_button:
-input_datetime:
-input_number:
-input_select:
-input_text:
-logbook:
-logger:
-  default: warning
-map:
-media_source:
-mobile_app:
-my:
-network:
-person:
+#config:
+#conversation:
+#counter:
+#dhcp:
+#energy:
+#frontend:
+#  themes: !include_dir_merge_named themes
+#  extra_module_url:
+#    - /local/card-mod.js
+#hardware:
+#history:
+#homeassistant_alerts:
+#image_upload:
+#input_boolean:
+#input_button:
+#input_datetime:
+#input_number:
+#input_select:
+#input_text:
+#logbook:
+#logger:
+#  default: warning
+#map:
+#media_source:
+#mobile_app:
+#my:
+#network:
+#person:
 scene: !include scenes.yaml
-schedule:
+#schedule:
 script: !include scripts.yaml
-ssdp: # Simple Service Discovery Protocol
-sun:
-system_health:
-tag:
-timer:
-usb:
-webhook:
-zeroconf:
+#ssdp: # Simple Service Discovery Protocol
+#stream:
+#sun:
+#system_health:
+#tag:
+#timer:
+#usb:
+#webhook:
+#zeroconf:
 zone: !include zone.yaml
-
 
 #group: !include groups.yaml
 
@@ -53,8 +57,10 @@ homeassistant:
   packages: !include_dir_named packages
   #allowlist_external_dirs:
   #  - "/usr/share/"
+  #unit_system: imperial
+  #temperature_unit: F
 
-#home_connect_alt: #https://github.com/ekutner/home-connect-hass
+  #home_connect_alt: #https://github.com/ekutner/home-connect-hass
   #client_id: !secret home_connect_alt_client_id
   #client_secret: !secret home_connect_alt_client_secret
 
@@ -69,107 +75,107 @@ http:
     - !secret trusted_proxy_2
 
 lovelace:
-  mode: yaml #storage
+  mode: storage  # yaml
 
-  resources:
-    #- url: /hacsfiles/lovelace-horizon-card/lovelace-horizon-card.js
-    #  type: module
+  #resources:
+  #  #- url: /hacsfiles/lovelace-horizon-card/lovelace-horizon-card.js
+  #  #  type: module
 
-    - url: /local/community/tabbed-card/tabbed-card.js
-      type: module
+  #  - url: /local/community/tabbed-card/tabbed-card.js
+  #    type: module
 
-    - url: /local/community/home-assistant-sun-card/home-assistant-sun-card.js
-      type: module
+  #  - url: /local/community/home-assistant-sun-card/home-assistant-sun-card.js
+  #    type: module
 
-    - url: /local/community/lovelace-horizon-card/lovelace-horizon-card.js
-      type: module
+  #  - url: /local/community/lovelace-horizon-card/lovelace-horizon-card.js
+  #    type: module
 
-    - url: /hacsfiles/vacuum-card/vacuum-card.js?hacstag=261291295222
-      type: module
+  #  - url: /hacsfiles/vacuum-card/vacuum-card.js?hacstag=261291295222
+  #    type: module
 
-    - url: /hacsfiles/rgb-light-card/card.js?hacstag=2153271951100
-      type: module
+  #  - url: /hacsfiles/rgb-light-card/card.js?hacstag=2153271951100
+  #    type: module
 
-    - url: /hacsfiles/simple-clock-card/simple-clock-card.js?hacstag=34193126615
-      type: module
+  #  - url: /hacsfiles/simple-clock-card/simple-clock-card.js?hacstag=34193126615
+  #    type: module
 
-    - url: /hacsfiles/spotify-card/spotify-card.js?hacstag=173955605240
-      type: module
+  #  - url: /hacsfiles/spotify-card/spotify-card.js?hacstag=173955605240
+  #    type: module
 
-    - url: /hacsfiles/hacs-card-for-xiaomi-mi-flora-and-flower-care/hacs-card-for-xiaomi-mi-flora-and-flower-care.js
-      type: module
+  #  - url: /hacsfiles/hacs-card-for-xiaomi-mi-flora-and-flower-care/hacs-card-for-xiaomi-mi-flora-and-flower-care.js
+  #    type: module
 
-    - url: /hacsfiles/weather-card/weather-card.js?hacstag=192732636150
-      type: module
+  #  - url: /hacsfiles/weather-card/weather-card.js?hacstag=192732636150
+  #    type: module
 
-    - url: /webrtc/webrtc-camera.js?v3.1.0
-      type: module
+  #  - url: /webrtc/webrtc-camera.js?v3.1.0
+  #    type: module
 
-    - url: /hacsfiles/lovelace-mushroom/mushroom.js?hacstag=444350375213
-      type: module
+  #  - url: /hacsfiles/lovelace-mushroom/mushroom.js?hacstag=444350375213
+  #    type: module
 
-    - url: /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=190927524315
-      type: module
+  #  - url: /hacsfiles/lovelace-card-mod/card-mod.js?hacstag=190927524315
+  #    type: module
 
-    - url: /hacsfiles/room-card/room-card.js?hacstag=45444094910614
-      type: module
+  #  - url: /hacsfiles/room-card/room-card.js?hacstag=45444094910614
+  #    type: module
 
-    - url: /hacsfiles/apexcharts-card/apexcharts-card.js?hacstag=331701152201
-      type: module
+  #  - url: /hacsfiles/apexcharts-card/apexcharts-card.js?hacstag=331701152201
+  #    type: module
 
-    - url: /hacsfiles/button-card/button-card.js?hacstag=146194325342
-      type: module
+  #  - url: /hacsfiles/button-card/button-card.js?hacstag=146194325342
+  #    type: module
 
-    - url: /hacsfiles/lovelace-slider-entity-row/slider-entity-row.js?hacstag=1448997001721
-      type: module
+  #  - url: /hacsfiles/lovelace-slider-entity-row/slider-entity-row.js?hacstag=1448997001721
+  #    type: module
 
-    - url: /hacsfiles/my-cards/my-cards.js?hacstag=399108901102
-      type: module
+  #  - url: /hacsfiles/my-cards/my-cards.js?hacstag=399108901102
+  #    type: module
 
-    - url: /hacsfiles/stack-in-card/stack-in-card.js?hacstag=248954055020
-      type: module
+  #  - url: /hacsfiles/stack-in-card/stack-in-card.js?hacstag=248954055020
+  #    type: module
 
-    - url: /hacsfiles/slider-button-card/slider-button-card.js?hacstag=4987940331109
-      type: module
+  #  - url: /hacsfiles/slider-button-card/slider-button-card.js?hacstag=4987940331109
+  #    type: module
 
-    - url: /hacsfiles/decluttering-card/decluttering-card.js?hacstag=188686483063
-      type: module
+  #  - url: /hacsfiles/decluttering-card/decluttering-card.js?hacstag=188686483063
+  #    type: module
 
-    - url: /hacsfiles/text-divider-row/text-divider-row.js?hacstag=179788256141
-      type: module
+  #  - url: /hacsfiles/text-divider-row/text-divider-row.js?hacstag=179788256141
+  #    type: module
 
-    - url: /hacsfiles/lovelace-auto-entities/auto-entities.js?hacstag=1677445841110
-      type: module
+  #  - url: /hacsfiles/lovelace-auto-entities/auto-entities.js?hacstag=1677445841110
+  #    type: module
 
-    - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=1485208381164
-      type: module
+  #  - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=1485208381164
+  #    type: module
 
-    - url: /hacsfiles/bar-card/bar-card.js?hacstag=163363577320
-      type: module
+  #  - url: /hacsfiles/bar-card/bar-card.js?hacstag=163363577320
+  #    type: module
 
-    - url: /hacsfiles/lovelace-fold-entity-row/fold-entity-row.js?hacstag=150781994220
-      type: module
+  #  - url: /hacsfiles/lovelace-fold-entity-row/fold-entity-row.js?hacstag=150781994220
+  #    type: module
 
-    - url: /hacsfiles/ha-sankey-chart/ha-sankey-chart.js?hacstag=455846088110
-      type: module
+  #  - url: /hacsfiles/ha-sankey-chart/ha-sankey-chart.js?hacstag=455846088110
+  #    type: module
 
-    - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js?hacstag=142051833044
-      type: module
+  #  - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js?hacstag=142051833044
+  #    type: module
 
-    - url: /local/custom_cards/icloud3-event-log-card.js
-      type: module
+  #  - url: /local/custom_cards/icloud3-event-log-card.js
+  #    type: module
 
-    - url: /hacsfiles/battery-state-card/battery-state-card.js?hacstag=256292682211
-      type: module
+  #  - url: /hacsfiles/battery-state-card/battery-state-card.js?hacstag=256292682211
+  #    type: module
 
-    - url: /hacsfiles/lovelace-plotly-graph-card/plotly-graph-card.js?hacstag=413812496301
-      type: module
+  #  - url: /hacsfiles/lovelace-plotly-graph-card/plotly-graph-card.js?hacstag=413812496301
+  #    type: module
 
-    - url: /hacsfiles/flex-table-card/flex-table-card.js?hacstag=156292058072
-      type: module
+  #  - url: /hacsfiles/flex-table-card/flex-table-card.js?hacstag=156292058072
+  #    type: module
 
-    - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js?hacstag=1512800620110
-      type: module
+  #  - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js?hacstag=1512800620110
+  #    type: module
 
   # Add yaml dashboards
   dashboards:

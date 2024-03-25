@@ -98,11 +98,11 @@ chips:
       entity: sensor.wv_passat_stopped_and_unlocked
   - type: conditional
     conditions:
-      - entity: vacuum.hall_roomba
+      - entity: vacuum.roborock_q_revo
         state_not: docked
     chip:
       type: entity
-      entity: vacuum.hall_roomba
+      entity: vacuum.roborock_q_revo
   - type: conditional
     conditions:
       - entity: light.balcony_all_lights

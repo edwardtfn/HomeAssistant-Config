@@ -3,6 +3,16 @@
   "minor_version": 1,
   "key": "counter",
   "data": {
-    "items": []
+    "items": [
+      {
+        "id": "test",
+        "name": "Test",
+        "maximum": null,
+        "step": 1,
+        "initial": 0,
+        "restore": true,
+        "minimum": null
+      }
+    ]
   }
 }

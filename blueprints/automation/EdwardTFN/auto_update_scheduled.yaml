@@ -47,12 +47,20 @@ blueprint:
       selector:
         duration:
           enable_day: true
-    restart_bool:
-      name: Force Home Assistant host to restart if required by any update?
+    restart_type:
+      name: Force Home Assistant to restart if required by any update?
       description: This won't affect updates where a restart is automatic, but for updates requiring a manual restart (quite common on HACS) this blueprint can automatically force a restart by the end of the updates.
-      default: false
+      default: "no-restart"
       selector:
-        boolean:
+        select:
+          multiple: false
+          options:
+            - label: "Don't force a restart"
+              value: "no-restart"
+            - label: "Restart Home Assistant core"
+              value: "core"
+            - label: "Restart Home Assistant host"
+              value: "host"
 
     schedule_entity:
       name: Schedule entity
@@ -301,7 +309,7 @@ condition:
 variables:
   input_verbose_logging_bool: !input verbose_logging_bool
   input_backup_bool: !input backup_bool
-  input_restart_bool: !input restart_bool
+  input_restart_type: !input restart_type
 
   temp_max_backup_age: !input max_backup_age
   input_max_backup_age_seconds: >
@@ -465,7 +473,7 @@ action:
           message: >-
             Variables:
               input_backup_bool: {{ input_backup_bool }},
-              input_restart_bool: {{ input_restart_bool }},
+              input_restart_type: {{ input_restart_type }},
               input_verbose_logging_bool: {{ input_verbose_logging_bool }},
               input_max_backup_age_seconds: {{ input_max_backup_age_seconds }},
               input_schedule_monthday: {{ input_schedule_monthday }},
@@ -897,7 +905,7 @@ action:
     continue_on_error: true
     if:
       - >-
-        {{ input_restart_bool and (
+        {{ input_restart_type != "no-restart" and (
           (
             states.update
             | selectattr('attributes.release_summary', 'defined')
@@ -948,10 +956,10 @@ action:
             data:
               name: Auto-update
               entity_id: '{{ this.entity_id }}'
-              message: Restarting Home Assistant...
-          - alias: "Restart - Call host reboot service"
+              message: 'Restarting Home Assistant {{ input_restart_type }}...'
+          - alias: "Restart - Call reboot service"
             continue_on_error: true
-            service: hassio.host_reboot
+            service: '{{ "hassio.host_reboot" if input_restart_type == "host" else "homeassistant.restart" }}'
 
     ########## Post-update actions ##########
   - if: "{{ input_verbose_logging_bool }}"

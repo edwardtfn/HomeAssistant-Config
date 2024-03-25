@@ -4,15 +4,3 @@ group:
     entities:
       - person.dory
       - person.skal
-
-proximity:
-  dory:
-    devices:
-      - person.dory
-    tolerance: 50
-    unit_of_measurement: m
-  skal:
-    devices:
-      - person.skal
-    tolerance: 50
-    unit_of_measurement: m

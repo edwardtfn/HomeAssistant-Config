@@ -7,9 +7,13 @@ input_text: # You can create the input_text using the UI (Settings > Devices & S
     name: Vasttrafik - API Secret
     initial: !secret vasttrafik_api_secret
     mode: password
+  vasttrafik_stop_area_id_01:
+    name: Vasttrafik - Stop Area Id 01
+    initial: !secret vasttrafik_station_1_id
+    mode: password
 
 rest:
-  - resource: https://api.vasttrafik.se/token
+  - resource: https://ext-api.vasttrafik.se/token
     method: POST
     payload: 'grant_type=client_credentials'
     headers:
@@ -19,7 +23,7 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Access token
-        unique_id: 3755db8a-6c8f-4438-8549-722621347267
+        unique_id: f3ff1f24-91cb-4a66-9cc9-e86895f706b9
         device_class: timestamp
         value_template: "{{ now() + timedelta(seconds= value_json.expires_in | int(0) ) }}"
         json_attributes:
@@ -28,13 +32,23 @@ rest:
           - token_type
           - expires_in
 
-  - resource: https://api.vasttrafik.se/bin/rest.exe/v2/departureBoard
+  ##### Vasttrafik API v4 parameters:
+  # stopAreaGid                       (string)    The 16-digit Västtrafik gid of the stop area. (MANDATORY)
+  # startDateTime                     (string)    The start of the time interval for which to get upcoming departures. Must be specified in RFC 3339 format or be null which means that the current time on the server is used.
+  # platforms                         (string)    Filter results by platform. Multiple platforms are separated by comma. Case sensitive.
+  # timeSpanInMinutes                 (int32)     The number of minutes from the start time for which to get upcoming departures. Allowed values are between 0 and 1440.
+  # maxDeparturesPerLineAndDirection  (int32)     The maximum number of departures for a single line in a specific direction.
+  # limit                             (int32)     The number of results to return.
+  # offset                            (int32)     The zero-based start offset of the pagination.
+  # includeOccupancy                  (boolean)   Includes occupancy in departure.
+  # directionGid                      (string)    Filter result by last stop on journey. Must be a 16-digit Västtrafik stop area
+  - resource_template: '{{ "https://ext-api.vasttrafik.se/pr/v4/stop-areas/" ~ states("input_text.vasttrafik_stop_area_id_01") ~ "/departures" }}'
     method: GET
     params:
-      id: !secret vasttrafik_station_1_id
-      date: "{{ now().strftime('%Y-%m-%d') }}"
-      time: "{{ now().strftime('%H:%M') }}"
-      format: json
+      # startDateTime: '{{ now().isoformat() }}'
+      maxDeparturesPerLineAndDirection: 5
+      limit: 50
+      includeOccupancy: false
     headers:
       Content-Type: application/x-www-form-urlencoded
       Authorization: >-
@@ -42,40 +56,31 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Departure table
-        unique_id: b26d080f-5d90-417b-8141-3ff63b57836f
+        unique_id: ceb54fac-0e5f-4524-8da9-564f92de4cf5
         device_class: timestamp
-        value_template: >
-          {{
-            (value_json.DepartureBoard.serverdate + ' ' + value_json.DepartureBoard.servertime) | as_timestamp | timestamp_local
-            if value_json is defined
-              and value_json.DepartureBoard is defined
-              and value_json.DepartureBoard.serverdate is defined
-              and value_json.DepartureBoard.servertime is defined
-          }}
-        json_attributes_path: "$.DepartureBoard"
+        value_template: '{{ now() }}'
+        #json_attributes_path: "$.Results"
         json_attributes:
-          - servertime
-          - serverdate
-          - Departure
+          - Results
 
 template:
   sensor:
     - name: Vasttrafik - Departure table - City centre
-      unique_id: 60a7bb81-b0f8-4f04-abe1-e0708f60ecf2
+      unique_id: 39b3d993-e3fb-4600-af43-d244a8bc7703
       device_class: timestamp
       availability: '{{ has_value("sensor.vasttrafik_departure_table") }}'
       state: '{{ states("sensor.vasttrafik_departure_table") }}'
       attributes:
         Departure: >
           {{
-            state_attr("sensor.vasttrafik_departure_table", "Departure")
-            | selectattr("track", "defined")
-            | selectattr("track", "in", ["A","a", "C", "c"])
+            state_attr("sensor.vasttrafik_departure_table", "Results")
+            | selectattr("platform", "defined")
+            | selectattr("platform", "in", ["A","a", "C", "c"])
             | list
           }}
 
     - name: Vasttrafik - Departure table - Suburb
-      unique_id: 0f584435-a362-4427-8c5c-710ceb291885
+      unique_id: 74a5aac6-c480-409d-a77b-fb49ec0e65ff
       device_class: timestamp
       availability: '{{ has_value("sensor.vasttrafik_departure_table") }}'
       state: '{{ states("sensor.vasttrafik_departure_table") }}'
@@ -83,8 +88,8 @@ template:
         Departure: >
           {{
             state_attr("sensor.vasttrafik_departure_table", "Departure")
-            | selectattr("track", "defined")
-            | selectattr("track", "in", ["B","b"])
+            | selectattr("platform", "defined")
+            | selectattr("platform", "in", ["B","b"])
             | list
           }}
 
@@ -97,6 +102,6 @@ template:
   #    - from: !secret vasttrafik_station_1_id
   #      name: !secret vasttrafik_station_1_sensor_name
 
-#logger:
-#  logs:
-#    homeassistant.components.rest.sensor: debug
+logger:
+  logs:
+    homeassistant.components.rest.sensor: debug

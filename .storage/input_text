@@ -3,6 +3,15 @@
   "minor_version": 1,
   "key": "input_text",
   "data": {
-    "items": []
+    "items": [
+      {
+        "id": "long_text_value",
+        "name": "Long text value",
+        "icon": "mdi:card-text-outline",
+        "max": 100,
+        "mode": "text",
+        "min": 0
+      }
+    ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "minor_version": 3,
+  "minor_version": 6,
   "key": "core.area_registry",
   "data": {
     "areas": [
@@ -8,13 +8,19 @@
         "aliases": [],
         "name": "Living Room",
         "id": "living_room",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Kitchen",
         "id": "kitchen",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [
@@ -24,61 +30,91 @@
         ],
         "name": "Bedroom",
         "id": "bedroom",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Hall",
         "id": "hall",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Bathroom",
         "id": "bathroom",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Guest room",
         "id": "guest_room",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Office",
         "id": "office",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Balcony",
         "id": "balcony",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Guest bathroom",
         "id": "guest_bathroom",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Media centre",
         "id": "media_centre",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Laundry",
         "id": "laundry",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       },
       {
         "aliases": [],
         "name": "Corridor",
         "id": "corridor",
-        "picture": null
+        "picture": null,
+        "icon": null,
+        "floor_id": null,
+        "labels": []
       }
     ]
   }

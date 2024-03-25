@@ -1,19 +1,60 @@
 substitutions:
   device_name: "guest-room-panel"
-  friendly_name: "Hall - Panel"
+  friendly_name: "My panel's friendly name"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
-  nextion_update_url: "http://homeassistant.local:8123/local/nspanel/nspanel_us.tft"
+  nextion_update_url: "http://homeassistant.local:8123/local/nspanel/dev/nspanel_us_land.tft"
 
 packages:
+  #nspanel_package: !include packages/Blackymas/nspanel_esphome.yaml
   remote_package:
     url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-    ref: main
-    files: [nspanel_esphome.yaml]
-    refresh: 1s
+    ref: dev
+    files:
+      - nspanel_esphome.yaml # Base package including TFT transfer
+  #    # - advanced/esphome/nspanel_esphome_core.yaml # Core without TFT transfer
+  #    # - nspanel_esphome_addon_climate_cool.yaml
+  #    # - nspanel_esphome_addon_climate_heat.yaml
+  #    # - nspanel_esphome_addon_climate_dual.yaml
+  #    # - advanced/esphome/nspanel_esphome_advanced.yaml
+  #    # - nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
+    refresh: 3s
 
 esp32:
   framework:
-    type: esp-idf
+    type: arduino
+
+#esphome:
+#  libraries:
+#    - lorol/LittleFS_esp32
 
 #bluetooth_proxy:
+
+#web_server:
+
+debug:
+
+text_sensor:
+  - platform: debug
+    device:
+      name: "Device Info"
+    reset_reason:
+      name: "Reset Reason"
+
+sensor:
+  - platform: debug
+    free:
+      name: "Heap Free"
+    block:
+      name: "Heap Max Block"
+    loop_time:
+      name: "Loop Time"
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/edwardtfn/esphome
+      ref: nextion-23
+    components:
+      - nextion
+    refresh: 1s

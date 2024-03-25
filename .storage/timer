@@ -3,6 +3,13 @@
   "minor_version": 1,
   "key": "timer",
   "data": {
-    "items": []
+    "items": [
+      {
+        "id": "test_timer",
+        "name": "Test Timer",
+        "duration": "0:05:00",
+        "restore": true
+      }
+    ]
   }
 }

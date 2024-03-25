@@ -3,6 +3,11 @@
   "minor_version": 1,
   "key": "input_boolean",
   "data": {
-    "items": []
+    "items": [
+      {
+        "id": "test_toggle",
+        "name": "Test toggle"
+      }
+    ]
   }
 }

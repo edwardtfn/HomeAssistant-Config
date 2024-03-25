@@ -25,6 +25,7 @@ light:
     unique_id: 002f43c0-40a0-4222-a7ad-c536888abf56
     #icon: mdi:light-flood-down
     entities:
-      - light.corridor_lights_1_huelight
-      - light.corridor_lights_2_huelight
-      - light.corridor_lights_3_huelight
+      - light.corridor_ceiling_lights_switch_0
+      #- light.corridor_lights_1_huelight
+      #- light.corridor_lights_2_huelight
+      #- light.corridor_lights_3_huelight

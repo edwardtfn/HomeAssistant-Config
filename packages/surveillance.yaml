@@ -24,13 +24,13 @@ automation:
       - condition: not
         conditions:
         - condition: state
-          entity_id: alarm_control_panel.eufy_hub
+          entity_id: alarm_control_panel.artillerigatan
           state: disarmed
     action:
     - service: alarm_control_panel.alarm_disarm
       data: {}
       target:
-        entity_id: alarm_control_panel.eufy_hub
+        entity_id: alarm_control_panel.artillerigatan
       continue_on_error: true
     - service: script.home_surveillance_turn_off_all_cameras
       data: {}
@@ -195,7 +195,7 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - alarm_control_panel.eufy_hub
+      - alarm_control_panel.artillerigatan
       id: Alarm
       for:
         seconds: 2
@@ -212,10 +212,10 @@ automation:
     - condition: not
       conditions:
       - condition: state
-        entity_id: alarm_control_panel.eufy_hub
+        entity_id: alarm_control_panel.artillerigatan
         state: unknown
       - condition: state
-        entity_id: alarm_control_panel.eufy_hub
+        entity_id: alarm_control_panel.artillerigatan
         state: unavailable
     action:
     - if:
@@ -228,7 +228,7 @@ automation:
       then:
       - if:
         - condition: state
-          entity_id: alarm_control_panel.eufy_hub
+          entity_id: alarm_control_panel.artillerigatan
           state: disarmed
           for:
             seconds: 2
@@ -252,7 +252,7 @@ automation:
           - service: alarm_control_panel.alarm_arm_home
             data: {}
             target:
-              entity_id: alarm_control_panel.eufy_hub
+              entity_id: alarm_control_panel.artillerigatan
         - conditions:
           - condition: state
             entity_id: input_boolean.home_alarm
@@ -261,7 +261,7 @@ automation:
           - service: alarm_control_panel.alarm_disarm
             data: {}
             target:
-              entity_id: alarm_control_panel.eufy_hub
+              entity_id: alarm_control_panel.artillerigatan
     mode: single
 
 input_boolean:

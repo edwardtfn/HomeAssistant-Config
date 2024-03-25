@@ -12,13 +12,13 @@ automation:
         - climate.office_thermostat_1
         - climate.office_thermostat_2
 
-climate:
-  - platform: climate_group # https://github.com/daenny/climate_group
-    name: Office - Thermostat
-    temperature_unit: C
-    entities:
-      - climate.office_thermostat_1
-      - climate.office_thermostat_2
+#climate:
+#  - platform: climate_group # https://github.com/daenny/climate_group
+#    name: Office - Thermostat
+#    temperature_unit: C
+#    entities:
+#      - climate.office_thermostat_1
+#      - climate.office_thermostat_2
 
 #generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
 #- name: Office - Hygrostat

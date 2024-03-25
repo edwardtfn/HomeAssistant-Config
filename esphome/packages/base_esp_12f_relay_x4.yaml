@@ -41,10 +41,13 @@ status_led:
   pin:
     number: GPIO5
     inverted: True
+    allow_other_uses: true
 
 switch:
   - platform: gpio
-    pin: GPIO5
+    pin:
+      number: GPIO5
+      allow_other_uses: true
     name: "Wemos Status LED"
     inverted: true
     id: wemos_status_led

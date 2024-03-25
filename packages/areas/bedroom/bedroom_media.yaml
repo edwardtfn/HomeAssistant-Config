@@ -1,14 +1,14 @@
 automation:
-  - alias: Bedroom - Apple TV - Turn on/off together with TV
-    id: '1671816500266'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/set_entities_based_on_other_entities.yaml
-      input:
-        input_entities:
-        - switch.bedroom_power_strip_1_tv_samsung
-        target_entities:
-        - switch.bedroom_power_strip_1_apple_tv
+  #- alias: Bedroom - Apple TV - Turn on/off together with TV
+  #  id: '1671816500266'
+  #  description: ''
+  #  use_blueprint:
+  #    path: EdwardTFN/set_entities_based_on_other_entities.yaml
+  #    input:
+  #      input_entities:
+  #      - switch.bedroom_power_strip_1_tv_samsung
+  #      target_entities:
+  #      - switch.bedroom_power_strip_1_apple_tv
   - alias: Bedroom - TV - Turn on when in stand-by
     id: '1663789452400'
     description: ''
