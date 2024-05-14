@@ -14,11 +14,12 @@ sensor:
     method: POST
     scan_interval: 900
     payload: '{ "query": "{ viewer { homes { currentSubscription { priceInfo { current { total currency level energy tax } today { total startsAt level } tomorrow { total startsAt level }}}}}}" }'
-    json_attributes_path: "$.data.viewer.homes[0].currentSubscription.priceInfo"
+    json_attributes_path: "$.data.viewer.homes[1].currentSubscription.priceInfo"
     json_attributes:
       - current
       - today
       - tomorrow
+    availability: '{{ value_json is defined }}'
     value_template: "{{ value_json is defined }}"
     headers:
       Authorization: !secret tibber_api_token

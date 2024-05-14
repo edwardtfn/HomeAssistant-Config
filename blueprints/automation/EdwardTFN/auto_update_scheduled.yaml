@@ -263,9 +263,6 @@ mode: single
 max_exceeded: warning
 
 trigger_variables:
-  input_schedule_monthday: !input schedule_monthday
-  input_pause_entities: !input pause_entities
-  temp_input_update_exclusions: !input update_exclusions
   input_update_exclusions: !input update_exclusions
 
 trigger:
@@ -289,6 +286,29 @@ trigger:
     platform: state
     entity_id: !input pause_entities
 
+variables:
+  input_schedule_monthday: !input schedule_monthday
+  input_pause_entities: !input pause_entities
+  temp_input_update_exclusions: !input update_exclusions
+  input_verbose_logging_bool: !input verbose_logging_bool
+  input_backup_bool: !input backup_bool
+  input_restart_type: !input restart_type
+
+  temp_max_backup_age: !input max_backup_age
+  input_max_backup_age_seconds: >
+    {{
+      timedelta(
+        days=temp_max_backup_age.days,
+        hours=temp_max_backup_age.hours,
+        minutes=temp_max_backup_age.minutes,
+        seconds=temp_max_backup_age.seconds
+      ).total_seconds()
+    }}
+
+  input_core_os_update_mode: !input core_os_update_mode
+  input_firmware_update_mode: !input firmware_update_mode
+  input_general_update_mode: !input general_update_mode
+
 condition:
   - condition: template
     value_template: >
@@ -306,31 +326,9 @@ condition:
         entity_id: !input pause_entities
         state: 'off'
 
-variables:
-  input_verbose_logging_bool: !input verbose_logging_bool
-  input_backup_bool: !input backup_bool
-  input_restart_type: !input restart_type
-
-  temp_max_backup_age: !input max_backup_age
-  input_max_backup_age_seconds: >
-    {{
-      timedelta(
-        days=temp_max_backup_age.days,
-        hours=temp_max_backup_age.hours,
-        minutes=temp_max_backup_age.minutes,
-        seconds=temp_max_backup_age.seconds
-      ).total_seconds()
-    }}
-
-  input_schedule_monthday: !input schedule_monthday
-  input_core_os_update_mode: !input core_os_update_mode
-  input_firmware_update_mode: !input firmware_update_mode
-  input_general_update_mode: !input general_update_mode
-  input_pause_entities: !input pause_entities
-
 action:
   ########## Refresh update list ##########
-  - &recalc-update-list
+  - &recalc_update_list
     variables:
       core_update_entity: >
             {% for u in integration_entities('hassio') | select('search', '^update[.]')
@@ -485,7 +483,7 @@ action:
               os_update_entity: {{ os_update_entity }},
               supervisor_update_entity: {{ supervisor_update_entity }},
               firmware_update_entities: {{ firmware_update_entities }},
-              general_update_entities; {{ general_update_entities }},
+              general_update_entities: {{ general_update_entities }},
               updates_list: {{ updates_list }}
     continue_on_error: true
 
@@ -588,7 +586,7 @@ action:
     else: []
 
   ########## Update add-ons (Standard) ##########
-  - *recalc-update-list
+  - *recalc_update_list
   - *logbook-variables
   - alias: "Update - Standard"
     continue_on_error: true
@@ -654,7 +652,7 @@ action:
           timeout: '3600'
 
   ########## Update core items ##########
-  - *recalc-update-list
+  - *recalc_update_list
   - *logbook-variables
   - alias: "Update - Core"
     continue_on_error: true
@@ -720,7 +718,7 @@ action:
           timeout: '3600'
 
   ########## Update OS ##########
-  - *recalc-update-list
+  - *recalc_update_list
   - *logbook-variables
   - alias: "Update - OS"
     continue_on_error: true
@@ -786,7 +784,7 @@ action:
           timeout: '3600'
 
   ########## Devices firmware ##########
-  - *recalc-update-list
+  - *recalc_update_list
   - alias: "Update - Devices firmware"
     continue_on_error: true
     repeat:
@@ -850,7 +848,7 @@ action:
           timeout: '3600'
 
     ########## Finishing ##########
-  - *recalc-update-list
+  - *recalc_update_list
   - *logbook-variables
   - if: "{{ input_verbose_logging_bool }}"
     then:

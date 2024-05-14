@@ -10,23 +10,19 @@ packages:
   remote_package:
     url: https://github.com/Blackymas/NSPanel_HA_Blueprint
     ref: dev
+    refresh: 3s
     files:
       - nspanel_esphome.yaml # Base package including TFT transfer
-  #    # - advanced/esphome/nspanel_esphome_core.yaml # Core without TFT transfer
-  #    # - nspanel_esphome_addon_climate_cool.yaml
-  #    # - nspanel_esphome_addon_climate_heat.yaml
-  #    # - nspanel_esphome_addon_climate_dual.yaml
-  #    # - advanced/esphome/nspanel_esphome_advanced.yaml
-  #    # - nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
-    refresh: 3s
+      # - advanced/esphome/nspanel_esphome_core.yaml # Core without TFT transfer
+      # - nspanel_esphome_addon_climate_cool.yaml
+      # - nspanel_esphome_addon_climate_heat.yaml
+      # - nspanel_esphome_addon_climate_dual.yaml
+      # - advanced/esphome/nspanel_esphome_advanced.yaml
+      # - nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
 
 esp32:
   framework:
     type: arduino
-
-#esphome:
-#  libraries:
-#    - lorol/LittleFS_esp32
 
 #bluetooth_proxy:
 
@@ -49,12 +45,5 @@ sensor:
       name: "Heap Max Block"
     loop_time:
       name: "Loop Time"
-
-external_components:
-  - source:
-      type: git
-      url: https://github.com/edwardtfn/esphome
-      ref: nextion-23
-    components:
-      - nextion
-    refresh: 1s
+    psram:
+      name: "Free PSRAM"

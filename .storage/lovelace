@@ -1587,43 +1587,43 @@
                               "data": "Departure",
                               "align": "center",
                               "hidden": true,
-                              "modify": "Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000)"
+                              "modify": "Math.round((Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000)"
                             },
                             {
                               "name": "Line",
                               "data": "Departure",
-                              "modify": "x.sname",
+                              "modify": "x.serviceJourney.line.shortName",
                               "align": "center",
                               "hidden": true,
-                              "style": "'background-color: ' + x.bgColor + ';' + 'color: ' + x.fgColor + ';'"
+                              "style": "'background-color: ' + x.serviceJourney.line.backgroundColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
                             },
                             {
                               "name": "Line",
                               "data": "Departure",
-                              "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.fgColor + '; background-color: ' + x.bgColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
+                              "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.serviceJourney.line.backgroundColor + '\">&nbsp;' + x.serviceJourney.line.shortName + '&nbsp;</div>'",
                               "align": "center"
                             },
                             {
                               "name": "Direction",
                               "data": "Departure",
-                              "modify": "x.direction"
+                              "modify": "x.serviceJourney.directionDetails.shortDirection"
                             },
                             {
                               "name": "Departure",
                               "data": "Departure",
                               "align": "center",
-                              "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\")\n  {\n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.rtTime }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }\nelse\n  {\n    var minutes = Math.round(Math.max(0,(Date.parse(x.date + \" \" + x.time) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.time }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }"
+                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes))\n  {{ x.estimatedOtherwisePlannedTime }}\nelse if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
                             },
                             {
                               "name": "Platform",
                               "data": "Departure",
                               "align": "center",
-                              "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
+                              "modify": "x.stopPoint.platform + '&nbsp;<ha-icon icon=\"mdi:' + x.serviceJourney.line.transportMode.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
                             }
                           ],
                           "css": {
-                            "tbody tr:nth-child(odd)": "background-color: #535B64;",
-                            "tbody tr:nth-child(even)": "background-color: #3C4650;"
+                            "tbody tr:nth-child(odd)": "color: #f2f2f2; background-color: #535B64;",
+                            "tbody tr:nth-child(even)": "color: #f2f2f2; background-color: #3C4650;"
                           },
                           "style": "ha-card {\n  --mdc-icon-size: 16px;\n  background-color: #3C4650;\n  color: #f2f2f2;\n}\n"
                         }
@@ -1649,43 +1649,43 @@
                               "data": "Departure",
                               "align": "center",
                               "hidden": true,
-                              "modify": "Math.round((Date.parse((x.rtDate ? x.rtDate : x.Date) + \" \" + (x.rtTime ? x.rtTime : x.Time)) - Date.now())/60000)"
+                              "modify": "Math.round((Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000)"
                             },
                             {
                               "name": "Line",
                               "data": "Departure",
-                              "modify": "x.sname",
+                              "modify": "x.serviceJourney.line.shortName",
                               "align": "center",
                               "hidden": true,
-                              "style": "'background-color: ' + x.bgColor + ';' + 'color: ' + x.fgColor + ';'"
+                              "style": "'background-color: ' + x.serviceJourney.line.backgroundColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
                             },
                             {
                               "name": "Line",
                               "data": "Departure",
-                              "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.fgColor + '; background-color: ' + x.bgColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
+                              "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.serviceJourney.line.backgroundColor + '\">&nbsp;' + x.serviceJourney.line.shortName + '&nbsp;</div>'",
                               "align": "center"
                             },
                             {
                               "name": "Direction",
                               "data": "Departure",
-                              "modify": "x.direction"
+                              "modify": "x.serviceJourney.directionDetails.shortDirection"
                             },
                             {
                               "name": "Departure",
                               "data": "Departure",
                               "align": "center",
-                              "modify": "if (typeof(x.rtTime) == \"string\" & typeof(x.rtDate) == \"string\")\n  {\n    var minutes = Math.round(Math.max(0,(Date.parse(x.rtDate + \" \" + x.rtTime) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.rtTime }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }\nelse\n  {\n    var minutes = Math.round(Math.max(0,(Date.parse(x.date + \" \" + x.time) - Date.now())/60000));\n    if (minutes>=60 || isNaN(minutes))\n      {{ x.time }}\n    else if (minutes == 0)\n      \"Now\"\n    else\n      {{ minutes }}\n  }"
+                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes))\n  {{ x.estimatedOtherwisePlannedTime }}\nelse if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
                             },
                             {
                               "name": "Platform",
                               "data": "Departure",
                               "align": "center",
-                              "modify": "x.track + '&nbsp;<ha-icon icon=\"mdi:' + x.type.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
+                              "modify": "x.stopPoint.platform + '&nbsp;<ha-icon icon=\"mdi:' + x.serviceJourney.line.transportMode.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
                             }
                           ],
                           "css": {
-                            "tbody tr:nth-child(odd)": "background-color: #535B64;",
-                            "tbody tr:nth-child(even)": "background-color: #3C4650;"
+                            "tbody tr:nth-child(odd)": "color: #f2f2f2; background-color: #535B64;",
+                            "tbody tr:nth-child(even)": "color: #f2f2f2; background-color: #3C4650;"
                           },
                           "style": "ha-card {\n  --mdc-icon-size: 16px;\n  background-color: #3C4650;\n  color: #f2f2f2;\n}\n"
                         }
@@ -9581,12 +9581,12 @@
                           "modify": "x.sname",
                           "align": "center",
                           "hidden": true,
-                          "style": "'background-color: ' + x.bgColor + ';' + 'color: ' + x.fgColor + ';'"
+                          "style": "'background-color: ' + x.serviceJourney.line.backgroundColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
                         },
                         {
                           "name": "Line",
                           "data": "Departure",
-                          "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.fgColor + '; background-color: ' + x.bgColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
+                          "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.serviceJourney.line.backgroundColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
                           "align": "center"
                         },
                         {
@@ -9643,12 +9643,12 @@
                           "modify": "x.sname",
                           "align": "center",
                           "hidden": true,
-                          "style": "'background-color: ' + x.bgColor + ';' + 'color: ' + x.fgColor + ';'"
+                          "style": "'background-color: ' + x.bgColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
                         },
                         {
                           "name": "Line",
                           "data": "Departure",
-                          "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.fgColor + '; background-color: ' + x.bgColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
+                          "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.bgColor + '\">&nbsp;' + x.sname + '&nbsp;</div>'",
                           "align": "center"
                         },
                         {

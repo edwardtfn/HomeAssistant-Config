@@ -1,6 +1,0 @@
-substitutions:
-  device_name: hall-intercom
-  friendly_name: Hall - Intercom
-
-packages:
-  device_base: !include packages/base_shelly_uni.yaml

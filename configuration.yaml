@@ -30,7 +30,9 @@ automation: !include automations.yaml
 #input_text:
 #logbook:
 #logger:
-#  default: warning
+  #default: info
+#  logs:
+#    homeassistant.components.rest: debug
 #map:
 #media_source:
 #mobile_app:
@@ -63,6 +65,7 @@ homeassistant:
   #home_connect_alt: #https://github.com/ekutner/home-connect-hass
   #client_id: !secret home_connect_alt_client_id
   #client_secret: !secret home_connect_alt_client_secret
+  debug: true
 
 http:
   #ssl_certificate: /ssl/fullchain.pem

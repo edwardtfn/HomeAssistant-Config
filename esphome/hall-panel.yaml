@@ -4,12 +4,13 @@ substitutions:
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   nextion_update_url: "http://homeassistant.local:8123/local/nspanel/dev/nspanel_eu.tft"
+  bytes_per_char: "2"
 
 packages:
   #nspanel_package: !include packages/Blackymas/nspanel_esphome.yaml
   remote_package:
     url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-    ref: beta
+    ref: main
     files:
       - nspanel_esphome.yaml # Base package including TFT transfer
   #    # - advanced/esphome/nspanel_esphome_core.yaml # Core without TFT transfer
@@ -18,35 +19,21 @@ packages:
   #    # - nspanel_esphome_addon_climate_dual.yaml
   #    # - advanced/esphome/nspanel_esphome_advanced.yaml
   #    # - nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
-    refresh: 300s
+  #  refresh: 300s
 
-esp32:
-  framework:
-    type: esp-idf
-
-debug:
-
-text_sensor:
-  - platform: debug
-    device:
-      name: "Device Info"
-    reset_reason:
-      name: "Reset Reason"
-
-sensor:
-  - platform: debug
-    free:
-      name: "Heap Free"
-    block:
-      name: "Heap Max Block"
-    loop_time:
-      name: "Loop Time"
-
-external_components:
-  - source:
-      type: git
-      url: https://github.com/edwardtfn/esphome
-      ref: nextion-23
-    components:
-      - nextion
-    refresh: 1s
+binary_sensor:
+  - id: !extend right_button
+    on_click:
+      - switch.toggle: relay_1
+switch:
+  # Prevents the two relays to be on simultaneously
+  - id: !extend relay_1
+    interlock: [relay_1, relay_2]
+    interlock_wait_time: 500ms  # Please adjust this accordingly
+    on_turn_on:
+      - switch.turn_off: relay_2
+    on_turn_off:
+      - switch.turn_on: relay_2
+  - id: !extend relay_2
+    interlock: [relay_1, relay_2]
+    interlock_wait_time: 500ms  # Please adjust this accordingly

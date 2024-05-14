@@ -23,8 +23,9 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Access token
-        unique_id: f3ff1f24-91cb-4a66-9cc9-e86895f706b9
+        unique_id: f537b324-9b30-4a4e-9c03-d15920e33f11
         device_class: timestamp
+        availability: '{{ value_json is defined and value_json.expires_in is defined }}'
         value_template: "{{ now() + timedelta(seconds= value_json.expires_in | int(0) ) }}"
         json_attributes:
           - access_token
@@ -47,7 +48,7 @@ rest:
     params:
       # startDateTime: '{{ now().isoformat() }}'
       maxDeparturesPerLineAndDirection: 5
-      limit: 50
+      limit: 30
       includeOccupancy: false
     headers:
       Content-Type: application/x-www-form-urlencoded
@@ -56,40 +57,43 @@ rest:
     scan_interval: 60
     sensor:
       - name: Vasttrafik - Departure table
-        unique_id: ceb54fac-0e5f-4524-8da9-564f92de4cf5
+        unique_id: dd13c9ef-b007-42be-8fb8-bdbcf7f06ab7
         device_class: timestamp
+        availability: '{{ has_value("input_text.vasttrafik_stop_area_id_01") and value_json is defined }}'
         value_template: '{{ now() }}'
         #json_attributes_path: "$.Results"
         json_attributes:
-          - Results
+          - results
 
 template:
   sensor:
     - name: Vasttrafik - Departure table - City centre
-      unique_id: 39b3d993-e3fb-4600-af43-d244a8bc7703
+      unique_id: 8a3c040f-54ee-48be-82b2-2935dd14d44f
       device_class: timestamp
       availability: '{{ has_value("sensor.vasttrafik_departure_table") }}'
       state: '{{ states("sensor.vasttrafik_departure_table") }}'
       attributes:
         Departure: >
           {{
-            state_attr("sensor.vasttrafik_departure_table", "Results")
-            | selectattr("platform", "defined")
-            | selectattr("platform", "in", ["A","a", "C", "c"])
+            state_attr("sensor.vasttrafik_departure_table", "results")
+            | selectattr("stopPoint", "defined")
+            | selectattr("stopPoint.platform", "defined")
+            | selectattr("stopPoint.platform", "in", ["A","a", "C", "c"])
             | list
           }}
 
     - name: Vasttrafik - Departure table - Suburb
-      unique_id: 74a5aac6-c480-409d-a77b-fb49ec0e65ff
+      unique_id: 1c66df5e-05dc-4514-90a7-836093523c18
       device_class: timestamp
       availability: '{{ has_value("sensor.vasttrafik_departure_table") }}'
       state: '{{ states("sensor.vasttrafik_departure_table") }}'
       attributes:
         Departure: >
           {{
-            state_attr("sensor.vasttrafik_departure_table", "Departure")
-            | selectattr("platform", "defined")
-            | selectattr("platform", "in", ["B","b"])
+            state_attr("sensor.vasttrafik_departure_table", "results")
+            | selectattr("stopPoint", "defined")
+            | selectattr("stopPoint.platform", "defined")
+            | selectattr("stopPoint.platform", "in", ["B","b"])
             | list
           }}
 
@@ -101,7 +105,3 @@ template:
   #  departures:
   #    - from: !secret vasttrafik_station_1_id
   #      name: !secret vasttrafik_station_1_sensor_name
-
-logger:
-  logs:
-    homeassistant.components.rest.sensor: debug
