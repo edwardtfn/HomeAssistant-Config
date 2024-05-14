@@ -106,16 +106,16 @@ external_components:
 #  - id: release_ble
 #    name: DEBUG Release Bluetooth
 #    platform: template
-#    on_press: 
+#    on_press:
 #      then:
-#        lambda: bluetooth_release_memory(); 
+#        lambda: bluetooth_release_memory();
 #          #include "esp_bt.h"
 #          esp_bluedroid_disable();
 #          esp_bluedroid_deinit();
 #          esp_bt_controller_disable();
 #          esp_bt_controller_deinit();
 #          esp_bt_mem_release(ESP_BT_MODE_BTDM);
-    
+
 #  platformio_options:
 #    build_flags:
 #      - -Wno-expansion-to-defined
@@ -262,7 +262,7 @@ ota:
 #    - service: set_entity
 #      variables:
 #        entity_id: string
-#      then: 
+#      then:
 #        - lambda: |-
 #            ESP_LOGI("DEBUG", "Changing entity_id to %s...", entity_id.c_str());
 #            ha_subscription_01->dump_config();
@@ -325,7 +325,7 @@ output:
           const uint8_t current_brightness = int(round(display_light->current_values.is_on() ? (display_light->current_values.get_brightness() * 100.0f) : 0.0));
           ESP_LOGV("output.display_output", "current_brightness: %i%%", current_brightness);
           set_brightness->execute(current_brightness);
-    
+
 script:
   # Updates the existing `page_changed` script to update the `display_light` status when a page changes
   - id: !extend page_changed
