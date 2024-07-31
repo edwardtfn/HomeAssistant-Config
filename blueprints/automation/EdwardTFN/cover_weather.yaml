@@ -5,6 +5,7 @@ blueprint:
     min_version: '2023.3.0'
   description: This automation will open the covers when the heating is working and will close when the sun light is not desired in the room
   domain: automation
+  source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/cover_weather.yaml
   input:
     cover_list:
       name: Cover(s) to be automated
