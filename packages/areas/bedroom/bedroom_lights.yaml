@@ -31,7 +31,7 @@ automation:
         - service: light.toggle
           target:
             entity_id:
-            - light.bedroom_carol_light
+            - light.bedroom_bed_carol_light
           data:
             transition: 1
       - conditions:
@@ -43,7 +43,7 @@ automation:
             transition: 1
           target:
             entity_id:
-            - light.bedroom_edward_light
+            - light.bedroom_bed_edward_light
       - conditions:
         - condition: trigger
           id: Long press
@@ -84,7 +84,7 @@ automation:
         - service: light.toggle
           target:
             entity_id:
-            - light.bedroom_edward_light
+            - light.bedroom_bed_edward_light
           data:
             transition: 1
       - conditions:
@@ -96,7 +96,7 @@ automation:
             transition: 1
           target:
             entity_id:
-            - light.bedroom_carol_light
+            - light.bedroom_bed_carol_light
       - conditions:
         - condition: trigger
           id: Long press

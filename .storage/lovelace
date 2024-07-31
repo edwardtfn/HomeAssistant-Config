@@ -541,17 +541,6 @@
                   "dark_mode_image": "local/pics/floor_plant_2d_empty_black.png",
                   "elements": [
                     {
-                      "entity": "light.curtains_lights_segment_kitchen",
-                      "type": "state-icon",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "style": {
-                        "top": "78%",
-                        "left": "36%"
-                      }
-                    },
-                    {
                       "entity": "weather.home",
                       "type": "state-label",
                       "attribute": "temperature",
@@ -589,16 +578,6 @@
                       }
                     },
                     {
-                      "entity": "cover.balcony_curtain",
-                      "type": "state-icon",
-                      "state_color": false,
-                      "style": {
-                        "top": "81%",
-                        "left": "28%",
-                        "transform": "rotate(-90deg)"
-                      }
-                    },
-                    {
                       "entity": "light.balcony_lamp_light",
                       "type": "state-icon",
                       "tap_action": {
@@ -611,17 +590,6 @@
                       }
                     },
                     {
-                      "entity": "light.balcony_string_lights",
-                      "type": "state-icon",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "style": {
-                        "top": "84%",
-                        "left": "19%"
-                      }
-                    },
-                    {
                       "entity": "light.bathroom_all_lights",
                       "type": "state-icon",
                       "tap_action": {
@@ -630,17 +598,6 @@
                       "style": {
                         "top": "34%",
                         "left": "15%"
-                      }
-                    },
-                    {
-                      "entity": "climate.bathroom_thermostat",
-                      "type": "state-label",
-                      "attribute": "current_temperature",
-                      "suffix": "°C",
-                      "style": {
-                        "top": "28%",
-                        "left": "9%",
-                        "font-size": "10px"
                       }
                     },
                     {
@@ -812,26 +769,6 @@
                       }
                     },
                     {
-                      "entity": "sensor.corridor_air_quality_temperature",
-                      "type": "state-label",
-                      "style": {
-                        "top": "46%",
-                        "left": "27%",
-                        "font-size": "10px",
-                        "transform": "rotate(90deg)"
-                      }
-                    },
-                    {
-                      "entity": "sensor.corridor_air_quality_humidity",
-                      "type": "state-label",
-                      "style": {
-                        "top": "46%",
-                        "left": "25%",
-                        "font-size": "10px",
-                        "transform": "rotate(90deg)"
-                      }
-                    },
-                    {
                       "type": "conditional",
                       "conditions": [
                         {
@@ -959,17 +896,6 @@
                       ]
                     },
                     {
-                      "entity": "light.guest_room_closet_lights",
-                      "type": "state-icon",
-                      "tap_action": {
-                        "action": "toggle"
-                      },
-                      "style": {
-                        "top": "84%",
-                        "left": "91%"
-                      }
-                    },
-                    {
                       "entity": "cover.guest_room_shutter_cover",
                       "type": "state-icon",
                       "state_color": false,
@@ -987,28 +913,6 @@
                       "style": {
                         "top": "88%",
                         "left": "67%"
-                      }
-                    },
-                    {
-                      "entity": "climate.guest_room_thermostat",
-                      "type": "state-label",
-                      "attribute": "current_temperature",
-                      "suffix": "°C",
-                      "style": {
-                        "top": "73%",
-                        "left": "75%",
-                        "font-size": "10px"
-                      }
-                    },
-                    {
-                      "entity": "climate.guest_room_closet_thermostat",
-                      "type": "state-label",
-                      "attribute": "current_temperature",
-                      "suffix": "°C",
-                      "style": {
-                        "top": "90%",
-                        "left": "91%",
-                        "font-size": "10px"
                       }
                     },
                     {
@@ -1081,26 +985,6 @@
                       ]
                     },
                     {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "device_tracker.hall_intercom",
-                          "state_not": "home"
-                        }
-                      ],
-                      "elements": [
-                        {
-                          "entity": "device_tracker.hall_intercom",
-                          "type": "state-icon",
-                          "style": {
-                            "top": "57%",
-                            "left": "83%",
-                            "--state-device_tracker-inactive-color": "red"
-                          }
-                        }
-                      ]
-                    },
-                    {
                       "entity": "light.kitchen_bench_lights",
                       "type": "state-icon",
                       "tap_action": {
@@ -1120,17 +1004,6 @@
                       "style": {
                         "top": "67%",
                         "left": "25%"
-                      }
-                    },
-                    {
-                      "entity": "climate.kitchen_thermostat",
-                      "type": "state-label",
-                      "attribute": "current_temperature",
-                      "suffix": "°C",
-                      "style": {
-                        "top": "76%",
-                        "left": "19%",
-                        "font-size": "10px"
                       }
                     },
                     {
@@ -1362,17 +1235,6 @@
                       ]
                     },
                     {
-                      "entity": "climate.living_room_thermostat",
-                      "type": "state-label",
-                      "attribute": "current_temperature",
-                      "suffix": "°C",
-                      "style": {
-                        "top": "85%",
-                        "left": "49%",
-                        "font-size": "10px"
-                      }
-                    },
-                    {
                       "entity": "cover.living_room_blinds",
                       "type": "state-icon",
                       "state_color": false,
@@ -1572,7 +1434,7 @@
                         },
                         "card": {
                           "type": "custom:flex-table-card",
-                          "title": "Västtrafik - SKF",
+                          "title": "Västtrafik - Göransfors",
                           "strict": true,
                           "max_rows": 20,
                           "sort_by": [
@@ -1612,7 +1474,7 @@
                               "name": "Departure",
                               "data": "Departure",
                               "align": "center",
-                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes))\n  {{ x.estimatedOtherwisePlannedTime }}\nelse if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
+                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes)) {\n  var date = new Date(x.estimatedOtherwisePlannedTime);\n  date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});\n} else if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
                             },
                             {
                               "name": "Platform",
@@ -1630,11 +1492,11 @@
                       },
                       {
                         "attributes": {
-                          "label": "To Bergsjon"
+                          "label": "Towards Borås"
                         },
                         "card": {
                           "type": "custom:flex-table-card",
-                          "title": "Västtrafik - SKF",
+                          "title": "Västtrafik - Göransfors",
                           "strict": true,
                           "max_rows": 20,
                           "sort_by": [
@@ -1674,7 +1536,7 @@
                               "name": "Departure",
                               "data": "Departure",
                               "align": "center",
-                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes))\n  {{ x.estimatedOtherwisePlannedTime }}\nelse if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
+                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes)){\n  var date = new Date(x.estimatedOtherwisePlannedTime);\n  date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});\n} else if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
                             },
                             {
                               "name": "Platform",
@@ -2101,28 +1963,6 @@
                             "type": "conditional",
                             "conditions": [
                               {
-                                "entity": "light.balcony_string_lights",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.balcony_string_lights",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "layout": "vertical",
-                              "name": "Balcony - String lights",
-                              "use_light_color": true,
-                              "show_color_temp_control": true,
-                              "show_color_control": true,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
                                 "entity": "light.bathroom_all_lights",
                                 "state": "on"
                               }
@@ -2211,72 +2051,6 @@
                             "type": "conditional",
                             "conditions": [
                               {
-                                "entity": "light.corridor_lights_all",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.corridor_lights_all",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "name": "Corridor",
-                              "layout": "vertical",
-                              "use_light_color": true,
-                              "show_color_temp_control": true,
-                              "show_color_control": true,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
-                                "entity": "light.guest_room_closet_lights",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.guest_room_closet_lights",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "name": "Guest room - Closet",
-                              "layout": "vertical",
-                              "use_light_color": true,
-                              "show_color_temp_control": true,
-                              "show_color_control": true,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
-                                "entity": "light.guest_bathroom_all_lights",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.guest_bathroom_all_lights",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "name": "Guest bathroom",
-                              "layout": "vertical",
-                              "use_light_color": true,
-                              "show_color_temp_control": true,
-                              "show_color_control": true,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
                                 "entity": "light.guest_room_wall_lights",
                                 "state": "on"
                               }
@@ -2288,50 +2062,6 @@
                               "collapsible_controls": true,
                               "secondary_info": "none",
                               "name": "Guest room",
-                              "layout": "vertical",
-                              "use_light_color": true,
-                              "show_color_temp_control": true,
-                              "show_color_control": true,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
-                                "entity": "light.hall_all_lights",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.hall_all_lights",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "name": "Hall",
-                              "layout": "vertical",
-                              "use_light_color": true,
-                              "show_color_temp_control": false,
-                              "show_color_control": false,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
-                                "entity": "light.kitchen_bench_lights",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.kitchen_bench_lights",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "name": "Kitchen - Bench",
                               "layout": "vertical",
                               "use_light_color": true,
                               "show_color_temp_control": true,
@@ -2398,28 +2128,6 @@
                               "collapsible_controls": true,
                               "secondary_info": "none",
                               "name": "Office - Workstation",
-                              "layout": "vertical",
-                              "use_light_color": true,
-                              "show_color_temp_control": true,
-                              "show_color_control": true,
-                              "fill_container": true
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "conditions": [
-                              {
-                                "entity": "light.curtains_lights_segment_kitchen",
-                                "state": "on"
-                              }
-                            ],
-                            "card": {
-                              "type": "custom:mushroom-light-card",
-                              "entity": "light.curtains_lights_segment_kitchen",
-                              "show_brightness_control": true,
-                              "collapsible_controls": true,
-                              "secondary_info": "none",
-                              "name": "Curtain's lights",
                               "layout": "vertical",
                               "use_light_color": true,
                               "show_color_temp_control": true,
@@ -7606,17 +7314,6 @@
               "dark_mode_image": "local/pics/floor_plant_2d_empty_black.png",
               "elements": [
                 {
-                  "entity": "light.curtains_lights_segment_kitchen",
-                  "type": "state-icon",
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "style": {
-                    "top": "78%",
-                    "left": "36%"
-                  }
-                },
-                {
                   "entity": "weather.home",
                   "type": "state-label",
                   "attribute": "temperature",
@@ -7695,17 +7392,6 @@
                   "style": {
                     "top": "34%",
                     "left": "15%"
-                  }
-                },
-                {
-                  "entity": "climate.bathroom_thermostat",
-                  "type": "state-label",
-                  "attribute": "current_temperature",
-                  "suffix": "°C",
-                  "style": {
-                    "top": "28%",
-                    "left": "9%",
-                    "font-size": "10px"
                   }
                 },
                 {
@@ -8024,17 +7710,6 @@
                   ]
                 },
                 {
-                  "entity": "light.guest_room_closet_lights",
-                  "type": "state-icon",
-                  "tap_action": {
-                    "action": "toggle"
-                  },
-                  "style": {
-                    "top": "84%",
-                    "left": "91%"
-                  }
-                },
-                {
                   "entity": "cover.guest_room_shutter_cover",
                   "type": "state-icon",
                   "state_color": false,
@@ -8052,28 +7727,6 @@
                   "style": {
                     "top": "88%",
                     "left": "67%"
-                  }
-                },
-                {
-                  "entity": "climate.guest_room_thermostat",
-                  "type": "state-label",
-                  "attribute": "current_temperature",
-                  "suffix": "°C",
-                  "style": {
-                    "top": "73%",
-                    "left": "75%",
-                    "font-size": "10px"
-                  }
-                },
-                {
-                  "entity": "climate.guest_room_closet_thermostat",
-                  "type": "state-label",
-                  "attribute": "current_temperature",
-                  "suffix": "°C",
-                  "style": {
-                    "top": "90%",
-                    "left": "91%",
-                    "font-size": "10px"
                   }
                 },
                 {
@@ -8146,26 +7799,6 @@
                   ]
                 },
                 {
-                  "type": "conditional",
-                  "conditions": [
-                    {
-                      "entity": "device_tracker.hall_intercom",
-                      "state_not": "home"
-                    }
-                  ],
-                  "elements": [
-                    {
-                      "entity": "device_tracker.hall_intercom",
-                      "type": "state-icon",
-                      "style": {
-                        "top": "57%",
-                        "left": "83%",
-                        "--state-device_tracker-inactive-color": "red"
-                      }
-                    }
-                  ]
-                },
-                {
                   "entity": "light.kitchen_bench_lights",
                   "type": "state-icon",
                   "tap_action": {
@@ -8185,17 +7818,6 @@
                   "style": {
                     "top": "67%",
                     "left": "25%"
-                  }
-                },
-                {
-                  "entity": "climate.kitchen_thermostat",
-                  "type": "state-label",
-                  "attribute": "current_temperature",
-                  "suffix": "°C",
-                  "style": {
-                    "top": "76%",
-                    "left": "19%",
-                    "font-size": "10px"
                   }
                 },
                 {
@@ -8425,17 +8047,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "entity": "climate.living_room_thermostat",
-                  "type": "state-label",
-                  "attribute": "current_temperature",
-                  "suffix": "°C",
-                  "style": {
-                    "top": "85%",
-                    "left": "49%",
-                    "font-size": "10px"
-                  }
                 },
                 {
                   "entity": "cover.living_room_blinds",
@@ -9373,28 +8984,6 @@
                           "collapsible_controls": true,
                           "secondary_info": "none",
                           "name": "Office - Workstation",
-                          "layout": "vertical",
-                          "use_light_color": true,
-                          "show_color_temp_control": true,
-                          "show_color_control": true,
-                          "fill_container": true
-                        }
-                      },
-                      {
-                        "type": "conditional",
-                        "conditions": [
-                          {
-                            "entity": "light.curtains_lights_segment_kitchen",
-                            "state": "on"
-                          }
-                        ],
-                        "card": {
-                          "type": "custom:mushroom-light-card",
-                          "entity": "light.curtains_lights_segment_kitchen",
-                          "show_brightness_control": true,
-                          "collapsible_controls": true,
-                          "secondary_info": "none",
-                          "name": "Curtain's lights",
                           "layout": "vertical",
                           "use_light_color": true,
                           "show_color_temp_control": true,

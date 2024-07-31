@@ -15,7 +15,7 @@ packages:
   #temp: !include { file: packages/config_ld2410ble.yaml, vars: { mac_address: '12:9A:88:63:19:A7', ld2410_name: 'Temp ', ld2410_id: 'temp_' } }
   #ld2410_provision: !include packages/config_ld2410ble_mac_discovery.yaml
 
-#esp32_ble_tracker:
+esp32_ble_tracker:
 #  scan_parameters:
 #    interval: 160ms
 #    window: 100ms
@@ -68,3 +68,4 @@ sensor:
         id(sntp_time).utcnow().timestamp - id(uptime_sec).state
       );
       return timestamp;
+

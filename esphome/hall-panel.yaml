@@ -10,30 +10,13 @@ packages:
   #nspanel_package: !include packages/Blackymas/nspanel_esphome.yaml
   remote_package:
     url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-    ref: main
+    ref: dev
     files:
       - nspanel_esphome.yaml # Base package including TFT transfer
   #    # - advanced/esphome/nspanel_esphome_core.yaml # Core without TFT transfer
-  #    # - nspanel_esphome_addon_climate_cool.yaml
+      # - nspanel_esphome_addon_climate_cool.yaml
   #    # - nspanel_esphome_addon_climate_heat.yaml
   #    # - nspanel_esphome_addon_climate_dual.yaml
   #    # - advanced/esphome/nspanel_esphome_advanced.yaml
   #    # - nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
   #  refresh: 300s
-
-binary_sensor:
-  - id: !extend right_button
-    on_click:
-      - switch.toggle: relay_1
-switch:
-  # Prevents the two relays to be on simultaneously
-  - id: !extend relay_1
-    interlock: [relay_1, relay_2]
-    interlock_wait_time: 500ms  # Please adjust this accordingly
-    on_turn_on:
-      - switch.turn_off: relay_2
-    on_turn_off:
-      - switch.turn_on: relay_2
-  - id: !extend relay_2
-    interlock: [relay_1, relay_2]
-    interlock_wait_time: 500ms  # Please adjust this accordingly

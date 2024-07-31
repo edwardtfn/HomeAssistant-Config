@@ -60,35 +60,35 @@ schedule:
     icon: mdi:update
     monday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "08:00:00"
       - from: "12:00:00"
         to: "13:30:00"
     tuesday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "08:00:00"
       - from: "12:00:00"
         to: "13:30:00"
     wednesday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "08:00:00"
       - from: "12:00:00"
         to: "13:30:00"
     thursday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "08:00:00"
       - from: "12:00:00"
         to: "13:30:00"
     friday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "08:00:00"
       - from: "12:00:00"
         to: "13:30:00"
     saturday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "08:00:00"
     sunday:
       - from: "03:00:00"
-        to: "06:00:00"
+        to: "09:00:00"
 
 script:
   home_groups_update:

@@ -16,9 +16,9 @@ substitutions:
 
   ##### addon-configuration #####
   ## addon_climate ##
-  heater_relay: "1" #Use relay 1
-  cooler_relay: "2"
-  #temp_units: "°F" #Temperatures in Fahrenheit
+#  heater_relay: "1" #Use relay 1
+#  cooler_relay: "2"
+  temp_units: "°F" #Temperatures in Fahrenheit
   #temp_min: "20" #Min supported temperature is 40°F
   #temp_max: "80" #Max supported temperature is 80°F
   #temp_step: "1" #Temperature granularity is 1°F
@@ -33,11 +33,12 @@ substitutions:
 
 packages:
   nspanel_package:    !include packages/Blackymas/nspanel_esphome.yaml
-  #dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
-  heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
+  dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
+  #heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
   #cool_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
+  #cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
   #advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
-  #ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
+  ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
   #nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
   #nspanel_upload_tft: !include packages/Blackymas/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
   #debug: !include packages/config_debug_esp32.yaml
@@ -51,6 +52,13 @@ packages:
   #    - esphome/nspanel_esphome_advanced.yaml
   #    #- nspanel_esphome_core.yaml # Base package
   #    #- nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
+
+#bluetooth_proxy:
+#  active: true
+#esphome:
+#  platformio_options:
+#    build_flags:
+#      - "-D TESTING_FLAG"
 
 external_components:
   - source:
@@ -68,7 +76,7 @@ external_components:
 #  - source:
 #      type: git
 #      url: https://github.com/edwardtfn/esphome
-#      ref: nextion-26
+#      ref: nextion-42
 #    refresh: 1s
 #    components:
 #      - nextion
@@ -164,8 +172,8 @@ external_components:
 #      inverted: true
 #    restore_mode: ALWAYS_ON
 
-ota:
-  password: !remove
+#ota:
+#  password: !remove
 
 #interval:
 #  - interval: 1h
@@ -222,6 +230,7 @@ ota:
 
 #display:
 #  - id: !extend disp1
+#    skip_connection_handshake: true
 #    touch_sleep_timeout: 30
 #    exit_reparse_on_start: true
 #    #soft_reset_on_start: false
@@ -236,25 +245,25 @@ ota:
 #      sequence:
 #        - lambda: UARTDebug::log_string(direction, bytes);
 
-#debug:
+debug:
 
-#text_sensor:
-#  - platform: debug
-#    device:
-#      name: "Device Info"
-#    reset_reason:
-#      name: "Reset Reason"
+text_sensor:
+  - platform: debug
+    device:
+      name: "Device Info"
+    reset_reason:
+      name: "Reset Reason"
 
-#sensor:
-#  - platform: debug
-#    free:
-#      name: "Heap Free"
-#    block:
-#      name: "Heap Max Block"
-#    loop_time:
-#      name: "Loop Time"
-#    psram:
-#      name: "PSRAM Free"
+sensor:
+  - platform: debug
+    free:
+      name: "Heap Free"
+    block:
+      name: "Heap Max Block"
+    loop_time:
+      name: "Loop Time"
+    psram:
+      name: "PSRAM Free"
 
 
 #api:

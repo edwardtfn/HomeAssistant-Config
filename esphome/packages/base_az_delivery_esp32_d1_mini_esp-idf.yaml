@@ -24,6 +24,7 @@ api:
 ota:
   password: !secret ota_password
   id: my_ota
+  platform: esphome
 
 # Use the blue LED in the device as a status LED, which will blink if there are warnings (slow) or errors (fast)
 status_led:

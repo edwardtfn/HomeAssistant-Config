@@ -6,115 +6,196 @@
     "areas": [
       {
         "aliases": [],
-        "name": "Living Room",
-        "id": "living_room",
-        "picture": null,
-        "icon": null,
         "floor_id": null,
-        "labels": []
+        "icon": null,
+        "id": "living_room",
+        "labels": [],
+        "name": "Living Room",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Kitchen",
-        "id": "kitchen",
-        "picture": null,
+        "floor_id": "entry_floor",
         "icon": null,
-        "floor_id": null,
-        "labels": []
+        "id": "kitchen",
+        "labels": [],
+        "name": "Kitchen",
+        "picture": null
       },
       {
         "aliases": [
           "Master",
-          "Master bedroom",
-          "Quarto"
+          "Quarto",
+          "Master bedroom"
         ],
-        "name": "Bedroom",
+        "floor_id": null,
+        "icon": null,
         "id": "bedroom",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Bedroom",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Hall",
+        "floor_id": null,
+        "icon": null,
         "id": "hall",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Hall",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Bathroom",
+        "floor_id": null,
+        "icon": null,
         "id": "bathroom",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Bathroom",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Guest room",
+        "floor_id": null,
+        "icon": null,
         "id": "guest_room",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Guest room",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Office",
+        "floor_id": null,
+        "icon": null,
         "id": "office",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Office",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Balcony",
+        "floor_id": "entry_floor",
+        "icon": null,
         "id": "balcony",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Balcony",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Guest bathroom",
+        "floor_id": null,
+        "icon": null,
         "id": "guest_bathroom",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Guest bathroom",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Media centre",
+        "floor_id": null,
+        "icon": null,
         "id": "media_centre",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Media centre",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Laundry",
+        "floor_id": null,
+        "icon": null,
         "id": "laundry",
-        "picture": null,
-        "icon": null,
-        "floor_id": null,
-        "labels": []
+        "labels": [],
+        "name": "Laundry",
+        "picture": null
       },
       {
         "aliases": [],
-        "name": "Corridor",
-        "id": "corridor",
-        "picture": null,
-        "icon": null,
         "floor_id": null,
-        "labels": []
+        "icon": null,
+        "id": "corridor",
+        "labels": [],
+        "name": "Corridor",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "entry_floor",
+        "icon": null,
+        "id": "front_porch",
+        "labels": [],
+        "name": "Front porch",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "basement",
+        "icon": null,
+        "id": "storage_room",
+        "labels": [],
+        "name": "Storage room",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "entry_floor",
+        "icon": null,
+        "id": "data_centre",
+        "labels": [],
+        "name": "Data centre",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "guest_house",
+        "icon": null,
+        "id": "guest_house",
+        "labels": [],
+        "name": "Guest house",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "guest_house",
+        "icon": null,
+        "id": "garage",
+        "labels": [],
+        "name": "Garage",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "entry_floor",
+        "icon": null,
+        "id": "common_room",
+        "labels": [],
+        "name": "Common room",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "entry_floor",
+        "icon": null,
+        "id": "spa",
+        "labels": [],
+        "name": "Spa",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "basement",
+        "icon": null,
+        "id": "deep_sleep_room",
+        "labels": [],
+        "name": "Deep sleep room",
+        "picture": null
+      },
+      {
+        "aliases": [],
+        "floor_id": "upstairs",
+        "icon": null,
+        "id": "printer_s_desk",
+        "labels": [],
+        "name": "Printer's desk",
+        "picture": null
       }
     ]
   }

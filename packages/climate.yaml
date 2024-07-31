@@ -125,7 +125,6 @@ input_select:
       - Low humidity detected in room_name - please take action.
       - "Warning: Humidity levels are low in room_name - check the humidity level."
 
-
 sensor:
   - name: Home - Average room temperature
     platform: group
@@ -221,13 +220,12 @@ template:
 
     - name: Civil Solar day status
       unique_id: 3ce1befd-f340-4c84-ad9c-beaf400550ce
+      availability: '{{ has_state("sun.sun") and is_number(state_attr("sun.sun", "elevation")) }}'
       state: >-
-        {% set sun_angle = state_attr('sun.sun', 'elevation') %}
-        {% if sun_angle in ['unknown','undefined','none'] %}
-          unknown
-        {% elif sun_angle | float(0) < -6 %}
+        {% set sun_angle = state_attr('sun.sun', 'elevation') | float(0) %}
+        {% if sun_angle < -6 %}
           night
-        {% elif sun_angle | float(0) < 0 %}
+        {% elif sun_angle < 0 %}
           twilight
         {% else %}
           day

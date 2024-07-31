@@ -9,10 +9,11 @@ packages:
   #nspanel_package: !include packages/Blackymas/nspanel_esphome.yaml
   remote_package:
     url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-    ref: dev
+    ref: main
     refresh: 3s
     files:
       - nspanel_esphome.yaml # Base package including TFT transfer
+      - esphome/nspanel_esphome_addon_ble_tracker.yaml
       # - advanced/esphome/nspanel_esphome_core.yaml # Core without TFT transfer
       # - nspanel_esphome_addon_climate_cool.yaml
       # - nspanel_esphome_addon_climate_heat.yaml
@@ -20,30 +21,10 @@ packages:
       # - advanced/esphome/nspanel_esphome_advanced.yaml
       # - nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
 
-esp32:
-  framework:
-    type: arduino
+#esp32:
+#  framework:
+#    type: arduino
 
 #bluetooth_proxy:
 
 #web_server:
-
-debug:
-
-text_sensor:
-  - platform: debug
-    device:
-      name: "Device Info"
-    reset_reason:
-      name: "Reset Reason"
-
-sensor:
-  - platform: debug
-    free:
-      name: "Heap Free"
-    block:
-      name: "Heap Max Block"
-    loop_time:
-      name: "Loop Time"
-    psram:
-      name: "Free PSRAM"
