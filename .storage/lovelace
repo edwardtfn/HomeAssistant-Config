@@ -2333,6 +2333,29 @@
                   }
                 }
               ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.dory_s_tracker_area"
+                    },
+                    {
+                      "entity": "sensor.dory_s_tracker_distance"
+                    },
+                    {
+                      "entity": "sensor.skal_s_tracker_area"
+                    },
+                    {
+                      "entity": "sensor.skal_s_tracker_distance"
+                    }
+                  ],
+                  "title": "Dog's locations"
+                }
+              ]
             }
           ],
           "cards": []

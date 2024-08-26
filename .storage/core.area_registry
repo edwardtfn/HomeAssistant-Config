@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "minor_version": 6,
+  "minor_version": 7,
   "key": "core.area_registry",
   "data": {
     "areas": [
@@ -11,7 +11,9 @@
         "id": "living_room",
         "labels": [],
         "name": "Living Room",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -20,20 +22,24 @@
         "id": "kitchen",
         "labels": [],
         "name": "Kitchen",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [
-          "Master",
           "Quarto",
-          "Master bedroom"
+          "Master bedroom",
+          "Master"
         ],
         "floor_id": null,
         "icon": null,
         "id": "bedroom",
         "labels": [],
         "name": "Bedroom",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -42,7 +48,9 @@
         "id": "hall",
         "labels": [],
         "name": "Hall",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -51,7 +59,9 @@
         "id": "bathroom",
         "labels": [],
         "name": "Bathroom",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -60,7 +70,9 @@
         "id": "guest_room",
         "labels": [],
         "name": "Guest room",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -69,7 +81,9 @@
         "id": "office",
         "labels": [],
         "name": "Office",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -78,7 +92,9 @@
         "id": "balcony",
         "labels": [],
         "name": "Balcony",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -87,7 +103,9 @@
         "id": "guest_bathroom",
         "labels": [],
         "name": "Guest bathroom",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -96,7 +114,9 @@
         "id": "media_centre",
         "labels": [],
         "name": "Media centre",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -105,7 +125,9 @@
         "id": "laundry",
         "labels": [],
         "name": "Laundry",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -114,16 +136,20 @@
         "id": "corridor",
         "labels": [],
         "name": "Corridor",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
-        "floor_id": "entry_floor",
+        "floor_id": "outdoor",
         "icon": null,
         "id": "front_porch",
         "labels": [],
         "name": "Front porch",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "2024-08-22T19:57:30.233557+00:00"
       },
       {
         "aliases": [],
@@ -132,7 +158,9 @@
         "id": "storage_room",
         "labels": [],
         "name": "Storage room",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -141,7 +169,9 @@
         "id": "data_centre",
         "labels": [],
         "name": "Data centre",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -150,7 +180,9 @@
         "id": "guest_house",
         "labels": [],
         "name": "Guest house",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -159,7 +191,9 @@
         "id": "garage",
         "labels": [],
         "name": "Garage",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -168,16 +202,20 @@
         "id": "common_room",
         "labels": [],
         "name": "Common room",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
-        "floor_id": "entry_floor",
+        "floor_id": "outdoor",
         "icon": null,
         "id": "spa",
         "labels": [],
         "name": "Spa",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "2024-08-22T19:55:49.695123+00:00"
       },
       {
         "aliases": [],
@@ -186,7 +224,9 @@
         "id": "deep_sleep_room",
         "labels": [],
         "name": "Deep sleep room",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
       },
       {
         "aliases": [],
@@ -195,7 +235,53 @@
         "id": "printer_s_desk",
         "labels": [],
         "name": "Printer's desk",
-        "picture": null
+        "picture": null,
+        "created_at": "1970-01-01T00:00:00+00:00",
+        "modified_at": "1970-01-01T00:00:00+00:00"
+      },
+      {
+        "aliases": [],
+        "floor_id": "guest_house",
+        "icon": null,
+        "id": "sauna",
+        "labels": [],
+        "name": "Sauna",
+        "picture": null,
+        "created_at": "2024-08-22T19:54:59.516905+00:00",
+        "modified_at": "2024-08-22T19:54:59.516913+00:00"
+      },
+      {
+        "aliases": [],
+        "floor_id": "outdoor",
+        "icon": null,
+        "id": "green_house",
+        "labels": [],
+        "name": "Green house",
+        "picture": null,
+        "created_at": "2024-08-22T19:56:07.136539+00:00",
+        "modified_at": "2024-08-22T19:56:07.136547+00:00"
+      },
+      {
+        "aliases": [],
+        "floor_id": "outdoor",
+        "icon": null,
+        "id": "side_porch",
+        "labels": [],
+        "name": "Side porch",
+        "picture": null,
+        "created_at": "2024-08-22T19:57:48.011795+00:00",
+        "modified_at": "2024-08-22T19:58:02.815821+00:00"
+      },
+      {
+        "aliases": [],
+        "floor_id": "outdoor",
+        "icon": null,
+        "id": "well",
+        "labels": [],
+        "name": "Well",
+        "picture": null,
+        "created_at": "2024-08-22T19:58:29.217361+00:00",
+        "modified_at": "2024-08-22T19:58:29.217369+00:00"
       }
     ]
   }
