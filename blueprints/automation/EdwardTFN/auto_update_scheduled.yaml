@@ -2,15 +2,13 @@ blueprint:
   name: Home Assistant Auto-update on a schedule base
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
-    min_version: '2023.3.0'
+    min_version: '2024.8.0'
   description: >
     # Home Assistant Auto-update
 
     Update Home Assistant automatically when a new update is available.
 
     Attention:
-
-    * HACS updates NOT included. It may work if you enable "[Experimental features](https://hacs.xyz/docs/configuration/options/#options)" on your HACS integration or when HACS updates funcionality is released.
 
     * Home Assistant may restart automatically as part of the update process.
 
@@ -20,244 +18,251 @@ blueprint:
   domain: automation
   source_url: https://raw.githubusercontent.com/edwardtfn/HomeAssistant-Config/main/blueprints/automation/EdwardTFN/auto_update_scheduled.yaml
   input:
-    verbose_logging_bool:
-      name: Log addon progress with verbosity to the logbook?
-      default: false
-      selector:
-        boolean: {}
-    backup_bool:
-      name: Create a full backup before start the updates?
-      #description: Note => This automation will skip the backup if another backup was completed in the last two hours before starting the updates.
-      default: true
-      selector:
-        boolean:
-    max_backup_age:
-      name: Maximum backup age (or zero, to disable)
-      description:
-        This requires the [Google Drive Backup](https://github.com/sabeechen/hassio-google-drive-backup)
-        addon to be installed and configured to automatically backup, and provide
-        a sensor with the backup states. The setting only checks for the age of
-        the automatic backups from that addon, not the backups created internally
-        by this blueprint.
-      default:
-        days: 0
-        hours: 0
-        minutes: 0
-        seconds: 0
-      selector:
-        duration:
-          enable_day: true
-    restart_type:
-      name: Force Home Assistant to restart if required by any update?
-      description: This won't affect updates where a restart is automatic, but for updates requiring a manual restart (quite common on HACS) this blueprint can automatically force a restart by the end of the updates.
-      default: "no-restart"
-      selector:
-        select:
-          multiple: false
-          options:
-            - label: "Don't force a restart"
-              value: "no-restart"
-            - label: "Restart Home Assistant core"
-              value: "core"
-            - label: "Restart Home Assistant host"
-              value: "host"
+    when_section:
+      name: When (Schedule, etc.)
+      icon: mdi:calendar
+      description: Select when the updates should happen and when it should be skipped.
+      collapsed: false
+      input:
+        schedule_entity:
+          name: Schedule entity
+          description: 'You can create an [Schedule](https://www.home-assistant.io/integrations/schedule) under [Settings > Devices & Services > Helpers](https://my.home-assistant.io/redirect/config_flow_start/?domain=schedule).
 
-    schedule_entity:
-      name: Schedule entity
-      description: 'You can create an [Schedule](https://www.home-assistant.io/integrations/schedule) under [Settings > Devices & Services > Helpers](https://my.home-assistant.io/redirect/config_flow_start/?domain=schedule).
+            Note => The schedule windows will define when an update will start. It is possible that a backup, an update or a restart process finishes after the schedule window, but new updates won''t stars outside the schedule windows.'
+          default: []
+          selector:
+            entity:
+              multiple: false
+              domain: schedule
 
-        Note => The schedule windows will define when an update will start. It is possible that a backup, an update or a restart process finishes after the schedule window, but new updates won''t stars outside the schedule windows.'
-      default: []
-      selector:
-        entity:
-          multiple: false
-          domain: schedule
+        schedule_monthday:
+          name: Earliest day in the month to update Home Assistant (optional)
+          description: >
+            Usually a new major version of Home Assistant is available on the begining of every month.
+            Some people consider those releases as not stable enough and prefer to avoid those versions, not updating the system until the mid of the month (day 15).
 
-    schedule_monthday:
-      name: Earliest day in the month to update Home Assistant
-      description: >
-        Usually a new major version of Home Assistant is available on the begining of every month.
-        Some people consider those releases as not stable enough and prefer to avoid those versions, not updating the system until the mid of the month (day 15).
+            Note => If you select a day higher than 28 the updates won't run every month.
+          default: 1
+          selector:
+            number:
+              min: 1
+              max: 31
+              step: 1
+              mode: slider
 
-        Note => If you select a day higher than 28 the updates won't run every month.
-      default: 1
-      selector:
-        number:
-          min: 1
-          max: 31
-          step: 1
-          mode: slider
+        pause_entities:
+          name: Pause update entities (optional)
+          description: 'You can select one or more entities to pause the updates. If any of the selected entities is "On" or "True" the system won''t be updated on the schedule time.
 
-    core_os_update_mode:
-      name: Update mode for Home Assistant core and OS updates
-      description: >
-        Please select the update mode for Home Assistant core and Home Assistan OS updates.
+            You can use this to hold your updates when you have a party at home, or when you are on vacations and don''t want to be concerned about updates on Home Assistant.'
+          default: []
+          selector:
+            entity:
+              multiple: true
+              domain:
+                - input_boolean
+                - binary_sensor
+                - switch
 
-        * All: All updates will be installed.
+    what_section:
+      name: What (optional)
+      icon: mdi:update
+      description: Select what should be updated and what shouldn't be updated.
+      collapsed: true
+      input:
+        core_os_update_mode:
+          name: Update mode for Home Assistant core and OS updates
+          description: >
+            Please select the update mode for Home Assistant core and Home Assistan OS updates.
 
-        * Patches only:
-          ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
-          ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
-          ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
-        * Don't update: Ignore any update.
-#        * Major & minor only:
-#          ❌ From 2022.11.0 to 2022.11.3 will be ignored (patches).
-#          ✅ From 2022.11.x to 2022.12.x will be updated (minor update).
-#          ✅ From 2022.12.x to 2023.1.x will be updated (major update).
+            * All: All updates will be installed.
 
-      default: "all"
-      selector:
-        select:
-          multiple: false
-          options:
-            - label: All
-              value: "all"
-            - label: Patches only
-              value: "patches"
-            - label: Don't update
-              value: "ignore"
-#            - label: Major & minor updates only
-#              value: "major_and_minor"
+            * Patches only:
+              ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
+              ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
+              ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
+            * Don't update: Ignore any update.
 
-    firmware_update_mode:
-      name: Update mode for device's firmware
-      description: >
-        Please select the update mode for firmware in the devices connected to Home Assistant (when supported as an HA update).
+          default: "all"
+          selector: &update_mode-selector
+            select:
+              multiple: false
+              options:
+                - label: All
+                  value: "all"
+                - label: Patches only
+                  value: "patches"
+                - label: Don't update
+                  value: "ignore"
 
-        * All: All updates will be installed.
+        firmware_update_mode:
+          name: Update mode for device's firmware
+          description: >
+            Please select the update mode for firmware in the devices connected to Home Assistant (when supported as an HA update).
 
-        * Patches only:
-          ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
-          ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
-          ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
-        * Don't update: Ignore any update.
-#        * Major & minor only:
-#          ❌ From 2022.11.0 to 2022.11.3 will be ignored (patches).
-#          ✅ From 2022.11.x to 2022.12.x will be updated (minor update).
-#          ✅ From 2022.12.x to 2023.1.x will be updated (major update).
+            * All: All updates will be installed.
 
-      default: "all"
-      selector:
-        select:
-          multiple: false
-          options:
-            - label: All
-              value: "all"
-            - label: Patches only
-              value: "patches"
-            - label: Don't update
-              value: "ignore"
-#            - label: Major & minor updates only
-#              value: "major_and_minor"
+            * Patches only:
+              ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
+              ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
+              ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
+            * Don't update: Ignore any update.
 
-    general_update_mode:
-      name: Update mode for general updates
-      description: >
-        Please select the update mode for everything that is not a device's firmware or a core component of Home Assistant.
+          default: "all"
+          selector: *update_mode-selector
 
-        This includes add-ons, HACS componentes, custom cards, etc.
+        general_update_mode:
+          name: Update mode for general updates
+          description: >
+            Please select the update mode for everything that is not a device's firmware or a core component of Home Assistant.
 
-        * All: All updates will be installed.
+            This includes add-ons, HACS componentes, custom cards, etc.
 
-        * Patches only:
-          ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
-          ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
-          ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
-        * Don't update: Ignore any update.
-#        * Major & minor only:
-#          ❌ From 2022.11.0 to 2022.11.3 will be ignored (patches).
-#          ✅ From 2022.11.x to 2022.12.x will be updated (minor update).
-#          ✅ From 2022.12.x to 2023.1.x will be updated (major update).
+            * All: All updates will be installed.
 
-      default: "all"
-      selector:
-        select:
-          multiple: false
-          options:
-            - label: All
-              value: "all"
-            - label: Patches only
-              value: "patches"
-            - label: Don't update
-              value: "ignore"
-#            - label: Major & minor updates only
-#              value: "major_and_minor"
+            * Patches only:
+              ✅ From 2022.11.0 to 2022.11.3 will be updated (patches).
+              ❌ From 2022.11.x to 2022.12.x will be ignored (minor update).
+              ❌ From 2022.12.x to 2023.1.x will be ignored (major update).
+            * Don't update: Ignore any update.
 
-    update_exclusions:
-      name: (optional) Exclusions
-      description: 'Select the items that should NOT be included on the automated updates.
+          default: "all"
+          selector: *update_mode-selector
+
+        update_exclusions:
+          name: Exclusions (optional)
+          description: 'Select the items that should NOT be included on the automated updates.
 
 
-        => Use this if you want to keep some add-on on an specific version and avoid auto-updates to it.'
-      default: []
-      selector:
-        entity:
-          multiple: true
-          domain: update
+            => Use this if you want to keep some add-on on an specific version and avoid auto-updates to it.'
+          default: []
+          selector:
+            entity:
+              multiple: true
+              domain: update
 
-    actions_pre_update:
-      name: (optional) Pre-update actions
-      description: 'Actions to execute before the backup or any update starts.
+    backup_section:
+      name: Backup (optional)
+      icon: mdi:backup-restore
+      description: Select the back-up options
+      collapsed: true
+      input:
+        backup_bool:
+          name: Create a full backup before start the updates?
+          default: true
+          selector:
+            boolean:
+        backup_wait_time:
+          name: Backup wait time
+          description:
+            Select how long the system should wait for the backup to be completed after it is triggered.
 
-        You can use this to send notifications, turn on/off devices or activate scenes before starting the updates.
+            Please make sure the schedule covers the waiting time, otherwise the update will never be triggered after a backup.
+          default: 60
+          selector:
+            number:
+              min: 0
+              max: 3600
+              step: 10
+              mode: box
+              unit_of_measurement: minutes
+        max_backup_age:
+          name: Maximum backup age (or zero, to disable) (optional)
+          description:
+            This requires the [Google Drive Backup](https://github.com/sabeechen/hassio-google-drive-backup)
+            addon to be installed and configured to automatically backup, and provide
+            a sensor with the backup states. The setting only checks for the age of
+            the automatic backups from that addon, not the backups created internally
+            by this blueprint.
+          default:
+            days: 0
+            hours: 0
+            minutes: 0
+            seconds: 0
+          selector:
+            duration:
+              enable_day: true
+
+    actions_section:
+      name: Actions (optional)
+      icon: mdi:shoe-print
+      description: Select actions to run at diferent moments on the update process
+      collapsed: true
+      input:
+        actions_pre_update:
+          name: Pre-update actions (optional)
+          description: 'Actions to execute before the backup or any update starts.
+
+            You can use this to send notifications, turn on/off devices or activate scenes before starting the updates.
 
 
-        Note => Please be aware that all actions will run right before the update process, which can happens over-night. Take this in account when selecting your actions.
+            Note => Please be aware that all actions will run right before the update process, which can happens over-night. Take this in account when selecting your actions.
 
-        Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
-      default: []
-      selector:
-        action: {}
+            Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
+          default: []
+          selector:
+            action: {}
 
-    actions_pre_restart:
-      name: (optional) Pre-restart actions
-      description: 'Actions to execute before the automation requests a restart.
+        actions_pre_restart:
+          name: Pre-restart actions (optional)
+          description: 'Actions to execute before the automation requests a restart.
 
-        You can use this to send notifications, turn on/off devices or stopping automations before restarting Home Assistant.
-
-
-        Note => Please be aware that all actions will run right before the restart process, which can happens over-night. Take this in account when selecting your actions.
-
-        Note => Note all the restarts will be controlled by this automation, like when a Core update is installed. These actions might not be executed in those cases.
-
-        Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
-      default: []
-      selector:
-        action: {}
-
-    actions_pos_update:
-      name: (optional) Post-update actions
-      description: >
-        Actions to execute AFTER the update process finishes.
-
-        You can use this to send notifications, turn on/off devices or activate scenes after applying  the updates.
+            You can use this to send notifications, turn on/off devices or stopping automations before restarting Home Assistant.
 
 
-        Note => Please be aware that all actions will run right after the update process, which can happens over-night.
-        Take this in account when selecting your actions.
+            Note => Please be aware that all actions will run right before the restart process, which can happens over-night. Take this in account when selecting your actions.
 
-        Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.
+            Note => Note all the restarts will be controlled by this automation, like when a Core update is installed. These actions might not be executed in those cases.
 
-        **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed.
-        If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.
-      default: []
-      selector:
-        action: {}
+            Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
+          default: []
+          selector:
+            action: {}
 
-    pause_entities:
-      name: (Optional) Pause update entities
-      description: 'You can select one or more entities to pause the updates. If any of the selected entities is "On" or "True" the system won''t be updated on the schedule time.
+        actions_pos_update:
+          name: Post-update actions (optional)
+          description: >
+            Actions to execute AFTER the update process finishes.
 
-        You can use this to hold your updates when you have a party at home, or when you are on vacations and don''t want to be concerned about updates on Home Assistant.'
-      default: []
-      selector:
-        entity:
-          multiple: true
-          domain:
-            - input_boolean
-            - binary_sensor
-            - switch
+            You can use this to send notifications, turn on/off devices or activate scenes after applying  the updates.
 
+
+            Note => Please be aware that all actions will run right after the update process, which can happens over-night.
+            Take this in account when selecting your actions.
+
+            Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.
+
+            **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed.
+            If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.
+          default: []
+          selector:
+            action: {}
+
+    general_settings:
+      name: General settings (optional)
+      icon: mdi:cog
+      description: Select additional settings to the update process
+      collapsed: true
+      input:
+        restart_type:
+          name: Force Home Assistant to restart if required by any update?
+          description: This won't affect updates where a restart is automatic, but for updates requiring a manual restart (quite common on HACS) this blueprint can automatically force a restart by the end of the updates.
+          default: "no-restart"
+          selector:
+            select:
+              multiple: false
+              options:
+                - label: "Don't force a restart"
+                  value: "no-restart"
+                - label: "Restart Home Assistant core"
+                  value: "core"
+                - label: "Restart Home Assistant host"
+                  value: "host"
+        verbose_logging_bool:
+          name: Log addon progress with verbosity to the logbook? (optional)
+          default: false
+          selector:
+            boolean: {}
 
 mode: single
 max_exceeded: warning
@@ -312,7 +317,17 @@ variables:
 condition:
   - condition: template
     value_template: >
-      {{ (states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) > 0 }}
+      {{
+        (
+          states.update
+          | default([])
+          | selectattr('state','eq','on')
+          | rejectattr('entity_id', 'in', input_update_exclusions)
+          | list
+          | count
+          | int(0)
+        ) > 0
+      }}
   - condition: template
     value_template: >
       {{ now().day >= ((input_schedule_monthday) | int(0)) }}
@@ -444,7 +459,7 @@ action:
             }}
 
   - alias: "Refresh update list - update entities"
-    service: homeassistant.update_entity
+    action: homeassistant.update_entity
     data: {}
     target:
       entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
@@ -453,18 +468,27 @@ action:
   ########## Check for skipping core/OS ##########
   - alias: "Re-check conditions"
     continue_on_error: true
-    if:
-      - "{{ (states.update | selectattr('state','eq','on') | selectattr('entity_id', 'in', updates_list) | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0)) < 1 }}"
+    if: >
+      {{
+        (
+          states.update
+          | selectattr('state','eq','on')
+          | selectattr('entity_id', 'in', updates_list)
+          | rejectattr('entity_id', 'in', input_update_exclusions)
+          | list
+          | count
+          | int(0)
+        ) < 1
+      }}
     then:
       - stop: Nothing to update
-    else: []
   ########## Starting ##########
   - &logbook-variables
     if: "{{ input_verbose_logging_bool }}"
     then:
       - alias: Logbook - variables
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -490,7 +514,7 @@ action:
   - if: "{{ input_verbose_logging_bool }}"
     then:
       - alias: "Logbook - A new update is available"
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -498,7 +522,7 @@ action:
           message: A new update is available for Home Assistant.
       - alias: "Logbook - List of updates"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -514,7 +538,7 @@ action:
             - ') }}
       - alias: "Logbook: Running pre-update actions"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -535,48 +559,48 @@ action:
     if:
       - "{{ input_max_backup_age_seconds > 0 }}"
     then:
+      - variables:
+          last_backup_timestamp_list: >
+            {{
+              states.sensor
+              | selectattr("attributes.last_backup", "defined")
+              | map(attribute="attributes.last_backup")
+              | list
+            }}
+          last_backup_timestamp: '{{ last_backup_timestamp_list | max if last_backup_timestamp_list | count > 0 else None }}'
       - alias: Check if backup state is defined
-        if: >
-          {{
-            not states.sensor.backup_state.state is defined or
-            not states.sensor.backup_state.attributes.last_uploaded is defined
-          }}
+        if: '{{ last_backup_timestamp != None }}'
         then:
           - stop: "Backup State sensor not found"
       - alias: Check age of last uploaded backup
         if: >-
-          {{ as_timestamp(now()) - as_timestamp(state_attr('sensor.backup_state', 'last_uploaded')) > input_max_backup_age_seconds }}
+          {{ as_timestamp(now()) - as_timestamp(last_backup_timestamp) > input_max_backup_age_seconds }}
         then:
           - stop: "Last uploaded backup is too old"
   - alias: "Backup"
     continue_on_error: true
     if:
       - "{{ input_backup_bool }}"
-#          {{ ( input_backup_bool ) and ((as_timestamp(now()) - as_timestamp(state_attr('sensor.backup_state', 'last_backup'))) > 7200) }}
     then:
       - if: "{{ input_verbose_logging_bool }}"
         then:
           - alias: "Logbook - Backing up"
             continue_on_error: true
-            service: logbook.log
+            action: logbook.log
             data:
               name: Auto-update
               entity_id: '{{ this.entity_id }}'
               message: Backing up Home Assistant.
       - alias: "Call backup service"
         continue_on_error: true
-        service: hassio.backup_full
+        action: hassio.backup_full
         data:
           compressed: true
-#      - wait_template: >
-#          {{ ((as_timestamp(now()) - as_timestamp(state_attr('sensor.backup_state', 'last_backup'))) <= 7200) }}
-#        continue_on_timeout: true
-#        timeout: '3600' #3600
       - if: "{{ input_verbose_logging_bool }}"
         then:
           - alias: "Backup triggered"
             continue_on_error: true
-            service: logbook.log
+            action: logbook.log
             data:
               name: Auto-update
               entity_id: '{{ this.entity_id }}'
@@ -613,7 +637,7 @@ action:
           then:
             - alias: "Update - Standard - Logbook - Starting"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
@@ -634,22 +658,27 @@ action:
           then:
             - alias: "Update - Standard - Logbook - Updating"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
                 message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - Standard - Install"
           continue_on_error: true
-          service: update.install
+          action: update.install
           data: {}
           target:
             entity_id: '{{ pending_update_list[0] }}'
-        - alias: "Update - Standard - wait"
-          continue_on_error: true
-          wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
-          continue_on_timeout: true
-          timeout: '3600'
+        - variables:
+            backup_wait_time: !input backup_wait_time
+            backup_wait_time_seconds: '{{ (backup_wait_time | int(60)) * 60 }}'
+        - if: '{{ backup_wait_time_seconds > 0 }}'
+          then:
+            - alias: "Update - Standard - wait"
+              continue_on_error: true
+              wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
+              continue_on_timeout: true
+              timeout: '{{ backup_wait_time_seconds }}'
 
   ########## Update core items ##########
   - *recalc_update_list
@@ -679,7 +708,7 @@ action:
           then:
             - alias: "Update - Core - Logbook - Starting"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
@@ -700,14 +729,14 @@ action:
           then:
             - alias: "Update - Core - Logbook - Updating"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
                 message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - Core - Install"
           continue_on_error: true
-          service: update.install
+          action: update.install
           data: {}
           target:
             entity_id: '{{ pending_update_list[0] }}'
@@ -745,7 +774,7 @@ action:
           then:
             - alias: "Update - OS - Logbook - Starting"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
@@ -766,14 +795,14 @@ action:
           then:
             - alias: "Update - OS - Logbook - Updating"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
                 message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - OS - Install"
           continue_on_error: true
-          service: update.install
+          action: update.install
           data: {}
           target:
             entity_id: '{{ pending_update_list[0] }}'
@@ -810,7 +839,7 @@ action:
           then:
             - alias: "Update - Devices firmware - Logbook - Starting"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
@@ -830,14 +859,14 @@ action:
           then:
             - alias: "Update - Devices firmware - Logbook - Updating"
               continue_on_error: true
-              service: logbook.log
+              action: logbook.log
               data:
                 name: Auto-update
                 entity_id: '{{ this.entity_id }}'
                 message: "Updating {{pending_update_list[0]}} of {{pending_update_list}} ..."
         - alias: "Update - Devices firmware - Install"
           continue_on_error: true
-          service: update.install
+          action: update.install
           data: {}
           target:
             entity_id: '{{ pending_update_list[0] }}'
@@ -854,14 +883,14 @@ action:
     then:
       - alias: "Logbook - Updating"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
           message: Finishing update process.
       - alias: "Logbook - Remaining updates"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -880,7 +909,7 @@ action:
     then:
       - alias: "Restart - Logbook"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -915,7 +944,7 @@ action:
     then:
       - alias: "Restart - Check config"
         continue_on_error: true
-        service: homeassistant.check_config
+        action: homeassistant.check_config
       - if:
           - "{{ states.persistent_notification.invalid_config.state | default('unavailable') == 'notifying' or states.persistent_notification.homeassistant_check_config.state | default('unavailable') == 'notifying' }}"
         then:
@@ -923,7 +952,7 @@ action:
             then:
               - alias: "Logbook: Running pre-restart actions"
                 continue_on_error: true
-                service: logbook.log
+                action: logbook.log
                 data:
                   name: Auto-update
                   entity_id: '{{ this.entity_id }}'
@@ -939,7 +968,7 @@ action:
             then:
               - alias: "Restart - Logbook - Skipping restart"
                 continue_on_error: true
-                service: logbook.log
+                action: logbook.log
                 data:
                   name: Auto-update
                   entity_id: '{{ this.entity_id }}'
@@ -950,21 +979,21 @@ action:
         else:
           - alias: "Restart - Logbook - Restarting"
             continue_on_error: true
-            service: logbook.log
+            action: logbook.log
             data:
               name: Auto-update
               entity_id: '{{ this.entity_id }}'
               message: 'Restarting Home Assistant {{ input_restart_type }}...'
           - alias: "Restart - Call reboot service"
             continue_on_error: true
-            service: '{{ "hassio.host_reboot" if input_restart_type == "host" else "homeassistant.restart" }}'
+            action: '{{ "hassio.host_reboot" if input_restart_type == "host" else "homeassistant.restart" }}'
 
     ########## Post-update actions ##########
   - if: "{{ input_verbose_logging_bool }}"
     then:
       - alias: "Logbook - Post-actions"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
@@ -983,7 +1012,7 @@ action:
     then:
       - alias: "Logbook - Done"
         continue_on_error: true
-        service: logbook.log
+        action: logbook.log
         data:
           name: Auto-update
           entity_id: '{{ this.entity_id }}'
