@@ -64,7 +64,7 @@ automation:
         hours: 0
         minutes: 1
         seconds: 15
-      above: 12
+      above: 14
       id: Fridge - High
     - platform: numeric_state
       entity_id: sensor.kitchen_fridge_hygrometer_temperature
@@ -81,7 +81,7 @@ automation:
         minutes: 1
         seconds: 15
       above: 5
-      below: 11
+      below: 13
       id: Fridge - Normal
     condition:
       - '{{ trigger.from_state.state not in ["unavailable", "unknown", None] }}'

@@ -3,6 +3,16 @@
   "minor_version": 1,
   "key": "input_number",
   "data": {
-    "items": []
+    "items": [
+      {
+        "id": "temp_wifi_signal",
+        "min": 0.0,
+        "max": 100.0,
+        "name": "Temp - Wifi signal",
+        "step": 0.1,
+        "unit_of_measurement": "dBm",
+        "mode": "slider"
+      }
+    ]
   }
 }

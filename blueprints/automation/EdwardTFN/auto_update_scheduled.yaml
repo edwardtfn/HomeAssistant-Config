@@ -50,6 +50,17 @@ blueprint:
               step: 1
               mode: slider
 
+        update_out_of_schedule:
+          name: Out of schedule entities (optional)
+          description:
+            You can select update entities which will be updated as soon an update is detected, even if outside the schedule windows.
+          default: []
+          selector:
+            entity:
+              multiple: true
+              domain:
+                - update
+
         pause_entities:
           name: Pause update entities (optional)
           description: 'You can select one or more entities to pause the updates. If any of the selected entities is "On" or "True" the system won''t be updated on the schedule time.
@@ -269,6 +280,19 @@ max_exceeded: warning
 
 trigger_variables:
   input_update_exclusions: !input update_exclusions
+  input_update_out_of_schedule: !input update_out_of_schedule
+  updates_available: >
+    {% set updates_available_obj =
+        states.update
+        | default([])
+        | selectattr("state", "eq", "on")
+        | rejectattr("entity_id", "in", input_update_exclusions)
+    %}
+    {{
+      updates_available_obj | map(attributes="entity_id") | list
+      if (updates_available_obj | list | count | int(0) > 0)
+      else []
+    }}
 
 trigger:
   - id: HA Schedule based
@@ -279,8 +303,7 @@ trigger:
     event: start
   - id: New update
     platform: template
-    value_template: >
-      {{ states.update | default([]) | selectattr('state','eq','on') | rejectattr('entity_id', 'in', input_update_exclusions) | list | count | int(0) }}
+    value_template: '{{ updates_available | count | int(0) }}'
   - id: New day
     platform: time
     at: "00:00:01"
@@ -290,6 +313,38 @@ trigger:
   - id: Pause entities changed
     platform: state
     entity_id: !input pause_entities
+
+condition:
+  - condition: template
+    value_template: '{{ updates_available | count | int(0) > 0 }}'
+
+  - condition: or
+    conditions:
+      - condition: and
+        conditions:
+          - condition: template
+            value_template: >
+              {{ now().day >= ((input_schedule_monthday) | int(0)) }}
+          - condition: state
+            entity_id: !input schedule_entity
+            state: "on"
+      - condition: template
+        value_template: >
+          {% set ns = namespace(found=false) %}
+          {% for item in input_update_out_of_schedule %}
+            {% if item in updates_available %}
+              {% set ns.found = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.found }}
+
+  - condition: or
+    conditions:
+      - "{{ input_pause_entities | default([]) | list | count | int(0) < 1 }}"
+      - condition: state
+        entity_id: !input pause_entities
+        state: 'off'
 
 variables:
   input_schedule_monthday: !input schedule_monthday
@@ -313,33 +368,6 @@ variables:
   input_core_os_update_mode: !input core_os_update_mode
   input_firmware_update_mode: !input firmware_update_mode
   input_general_update_mode: !input general_update_mode
-
-condition:
-  - condition: template
-    value_template: >
-      {{
-        (
-          states.update
-          | default([])
-          | selectattr('state','eq','on')
-          | rejectattr('entity_id', 'in', input_update_exclusions)
-          | list
-          | count
-          | int(0)
-        ) > 0
-      }}
-  - condition: template
-    value_template: >
-      {{ now().day >= ((input_schedule_monthday) | int(0)) }}
-  - condition: state
-    entity_id: !input schedule_entity
-    state: "on"
-  - condition: or
-    conditions:
-      - "{{ input_pause_entities | default([]) | list | count | int(0) < 1 }}"
-      - condition: state
-        entity_id: !input pause_entities
-        state: 'off'
 
 action:
   ########## Refresh update list ##########

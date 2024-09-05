@@ -213,6 +213,24 @@ recorder:
 
 shell_command: !include shell.yaml
 
+template:
+  - sensor:
+      - name: "Random Wi-Fi Signal Sensor"
+        state: "{{ states('input_number.temp_wifi_signal') | float(0) }}"
+        unique_id: random_wifi_signal_sensor
+        unit_of_measurement: "dBm"
+        icon: >-
+          {% set signal = states('input_number.temp_wifi_signal') | float(0) %}
+          {% if signal > 75 %}
+            mdi:wifi-strength-4
+          {% elif signal > 50 %}
+            mdi:wifi-strength-3
+          {% elif signal > 25 %}
+            mdi:wifi-strength-2
+          {% else %}
+            mdi:wifi-strength-1
+          {% endif %}
+
 # Text to speech
 tts:
   - platform: google_translate

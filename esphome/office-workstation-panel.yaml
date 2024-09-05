@@ -1,7 +1,7 @@
 substitutions:
   ###### CHANGE ME START ######
   device_name: office-workstation-panel
-  friendly_name: My office's testing panel
+  friendly_name: Office - Workstation - Panel
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   #bytes_per_char: "2"
@@ -16,9 +16,9 @@ substitutions:
 
   ##### addon-configuration #####
   ## addon_climate ##
-#  heater_relay: "1" #Use relay 1
-#  cooler_relay: "2"
-  temp_units: "°F" #Temperatures in Fahrenheit
+  #heater_relay: "1" #Use relay 1
+  #cooler_relay: "2"
+  #temp_units: "°F" #Temperatures in Fahrenheit
   #temp_min: "20" #Min supported temperature is 40°F
   #temp_max: "80" #Max supported temperature is 80°F
   #temp_step: "1" #Temperature granularity is 1°F
@@ -33,11 +33,11 @@ substitutions:
 
 packages:
   nspanel_package:    !include packages/Blackymas/nspanel_esphome.yaml
-  dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
+  #dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
   #heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
   #cool_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
   #cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
-  #advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
+  advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
   ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
   #nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
   #nspanel_upload_tft: !include packages/Blackymas/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
@@ -60,13 +60,13 @@ packages:
 #    build_flags:
 #      - "-D TESTING_FLAG"
 
-external_components:
-  - source:
-      type: local
-      path: packages/Blackymas/components
-    refresh: 1s
-    components:
-      - nspanel_ha_blueprint
+#external_components:
+#  - source:
+#      type: local
+#      path: packages/Blackymas/components
+#    refresh: 1s
+#    components:
+#      - nspanel_ha_blueprint
 #  - source:
 #      type: local
 #      path: packages/sandbox/components
@@ -88,15 +88,12 @@ external_components:
 #    components:
 #      - psram
 
-#logger:
-#  level: VERBOSE
-
 #esp32:
 #  framework:
 #    type: arduino
 #    sdkconfig_options: !remove
 #    type: esp-idf
-#    version: 5.0.2
+#    version: 4.4.8
 #    platform_version: 6.3.2
 #      CONFIG_MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH: "y"  # This causes issues with TFT Update
       #BOARD_HAS_PSRAM: "y"
@@ -302,76 +299,15 @@ sensor:
 #    lambda: return ble_proxy->get_bluetooth_connections_free();
 #    accuracy_decimals: 0
 
-##Add the display as a light in Home Assistant start
-light:
-  # Add the display as a light in Home Assistant
-  - name: Display
-    id: display_light
-    icon: mdi:tablet-dashboard
-    platform: monochromatic
-    output: display_output
-    default_transition_length: 0s
-    on_turn_on:
-      then:
-        - lambda: |-
-            ESP_LOGD("light.display_light", "Turn-on");
-            if (current_page->state == "screensaver") disp1->goto_page(wakeup_page_name->state.c_str());
-            timer_reset_all->execute();
-    on_turn_off:
-      then:
-        - lambda: |-
-            ESP_LOGD("light.display_light", "Turn-off");
-            goto_page->execute("screensaver");
-
-output:
-  # Output required by `display_light` to send the commands to Nextion
-  - id: display_output
-    platform: template
-    type: float
-    write_action:
-      - lambda: |-
-          ESP_LOGV("output.display_output", "state:              %f", state);
-          const uint8_t current_brightness = int(round(display_light->current_values.is_on() ? (display_light->current_values.get_brightness() * 100.0f) : 0.0));
-          ESP_LOGV("output.display_output", "current_brightness: %i%%", current_brightness);
-          set_brightness->execute(current_brightness);
-
-script:
-  # Updates the existing `page_changed` script to update the `display_light` status when a page changes
-  - id: !extend page_changed
-    then:
-      - lambda: |-
-          ESP_LOGV("script.page_changed(custom)", "page:    %s", current_page->state.c_str());
-          ESP_LOGV("script.page_changed(custom)", "is_on(): %s", YESNO(display_light->current_values.is_on()));
-          if (current_page->state == "screensaver" and display_light->current_values.is_on()) {
-            ESP_LOGV("script.page_changed(custom)", "Turning off light.");
-            auto call = display_light->turn_off();
-            call.perform();
-          } else if (current_page->state != "screensaver" and (not display_light->current_values.is_on())) {
-            ESP_LOGV("script.page_changed(custom)", "Turning on light.");
-            auto call = display_light->turn_on();
-            call.perform();
-          }
-
-  # Updates the existing `set_brightness` script to update the `display_light` status when a new brightness level is set
-  - id: !extend set_brightness
-    then:
-      - lambda: |-
-          ESP_LOGV("script.set_brightness(custom)", "brightness:               %.0f%%", brightness);
-          uint8_t current_light_brightness = int(round(display_light->current_values.is_on() ? (display_light->current_values.get_brightness() * 100.0f) : 0.0));
-          ESP_LOGV("script.set_brightness(custom)", "current_light_brightness: %i%%", current_light_brightness);
-          if (brightness != current_light_brightness) {
-            if (current_page->state != "screensaver" and brightness > 0) {
-              ESP_LOGV("script.set_brightness(custom)", "Adjusting light brightness to %.3f%%", brightness / 100.0f);
-              auto call = display_light->turn_on();
-              call.set_brightness(brightness / 100.0f);
-              call.perform();
-            } else if (display_light->current_values.is_on()) {
-              ESP_LOGV("script.set_brightness(custom)", "Turning off light.");
-              auto call = display_light->turn_off();
-              call.set_brightness(0);
-              call.perform();
-            }
-          }
-##Add the display as a light in Home Assistant end
-
 ##### My customization - End #####
+
+
+# Customization area
+##### My customization - Start #####
+external_components:
+  - source:
+      type: local
+      path: packages/Blackymas/components
+    refresh: 1s
+    components:
+      - nspanel_ha_blueprint

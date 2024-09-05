@@ -220,7 +220,7 @@ template:
 
     - name: Civil Solar day status
       unique_id: 3ce1befd-f340-4c84-ad9c-beaf400550ce
-      availability: '{{ has_state("sun.sun") and is_number(state_attr("sun.sun", "elevation")) }}'
+      availability: '{{ has_value("sun.sun") and is_number(state_attr("sun.sun", "elevation")) }}'
       state: >-
         {% set sun_angle = state_attr('sun.sun', 'elevation') | float(0) %}
         {% if sun_angle < -6 %}
