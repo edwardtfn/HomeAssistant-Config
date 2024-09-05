@@ -8,6 +8,8 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
+    v2024.9.5.0
+
     Attention:
 
     * Home Assistant may restart automatically as part of the update process.
@@ -303,7 +305,14 @@ trigger:
     event: start
   - id: New update
     platform: template
-    value_template: '{{ updates_available | count | int(0) }}'
+    value_template: >-
+      {{
+        states.update
+        | default([])
+        | selectattr("state", "eq", "on")
+        | rejectattr("entity_id", "in", input_update_exclusions)
+        | list | count | int(0) > 0
+      }}
   - id: New day
     platform: time
     at: "00:00:01"
@@ -316,7 +325,14 @@ trigger:
 
 condition:
   - condition: template
-    value_template: '{{ updates_available | count | int(0) > 0 }}'
+    value_template: >-
+      {{
+        states.update
+        | default([])
+        | selectattr("state", "eq", "on")
+        | rejectattr("entity_id", "in", input_update_exclusions)
+        | list | count | int(0) > 0
+      }}
 
   - condition: or
     conditions:
