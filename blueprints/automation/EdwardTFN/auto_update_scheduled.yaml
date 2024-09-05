@@ -649,8 +649,16 @@ action:
               name: Auto-update
               entity_id: '{{ this.entity_id }}'
               message: Backup triggered.
-      - alias: "Give 1h for the backup" # There's no sensor for when the backup finishes
-        delay: 3600
+          - variables:
+              backup_wait_time: !input backup_wait_time
+              backup_wait_time_seconds: '{{ (backup_wait_time | int(60)) * 60 }}'
+          - if: '{{ backup_wait_time_seconds > 0 }}'
+            then:
+              - alias: "Wait for backup complete"
+                continue_on_error: true
+                wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
+                continue_on_timeout: true
+                timeout: '{{ backup_wait_time_seconds }}'
     else: []
 
   ########## Update add-ons (Standard) ##########
@@ -713,16 +721,11 @@ action:
           data: {}
           target:
             entity_id: '{{ pending_update_list[0] }}'
-        - variables:
-            backup_wait_time: !input backup_wait_time
-            backup_wait_time_seconds: '{{ (backup_wait_time | int(60)) * 60 }}'
-        - if: '{{ backup_wait_time_seconds > 0 }}'
-          then:
-            - alias: "Update - Standard - wait"
-              continue_on_error: true
-              wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
-              continue_on_timeout: true
-              timeout: '{{ backup_wait_time_seconds }}'
+        - alias: "Update - Standard - Wait"
+          continue_on_error: true
+          wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
+          continue_on_timeout: true
+          timeout: '3600'
 
   ########## Update core items ##########
   - *recalc_update_list
