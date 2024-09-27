@@ -1,6 +1,0 @@
-light:
-  - name: "Living room - All lights"
-    platform: group
-    unique_id: 9537f665-4ac9-4585-8f5a-a2ab5a8ddab2
-    entities:
-      - light.curtains_lights_segment_kitchen

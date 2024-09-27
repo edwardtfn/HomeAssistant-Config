@@ -37,7 +37,7 @@ packages:
   #heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
   #cool_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
   #cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
-  advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
+  #advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
   ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
   #nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
   #nspanel_upload_tft: !include packages/Blackymas/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
@@ -52,6 +52,21 @@ packages:
   #    - esphome/nspanel_esphome_advanced.yaml
   #    #- nspanel_esphome_core.yaml # Base package
   #    #- nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
+
+  manual_ip: !include
+    file: packages/config_manual_ip.yaml
+    vars:
+      ip: !secret ip_office_workstation_panel
+
+#uart:
+#  - id: !extend tf_uart
+#    debug:
+#      direction: BOTH
+#      dummy_receiver: false
+#      after:
+#        delimiter: 0xff, 0xff, 0xff
+#      sequence:
+#        - lambda: UARTDebug::log_string(direction, bytes);
 
 #bluetooth_proxy:
 #  active: true
@@ -102,11 +117,6 @@ packages:
       #CONFIG_SPIRAM_CACHE_WORKAROUND: "y"
       #CONFIG_SPIRAM_SUPPORT: "y"
 
-#psram:
-#  id: ext_ram
-  #mode: octal
-  #speed: 120MHz
-
 #button:
 #  - id: release_ble
 #    name: DEBUG Release Bluetooth
@@ -154,11 +164,6 @@ packages:
 #      - -Wl,--gc-sections
 #      - -DDCONFIG_D0WD_PSRAM_CLK_IO=5
 #      - -DDCONFIG_D0WD_PSRAM_CS_IO=18
-
-
-#GPIO05 - PSRAM SCLK
-#GPIO18 - PSRAM /CE
-#GPIO09 - PSRAM SIO[3]
 
 #switch:
 #  - id: nspanel_psram_sw
@@ -214,9 +219,6 @@ packages:
 
 #web_server: !remove
 
-#psram:
-#  id: nspanel_psram
-
 #  - source:
 #      type: git
 #      url: https://github.com/edwardtfn/esphome
@@ -231,16 +233,6 @@ packages:
 #    touch_sleep_timeout: 30
 #    exit_reparse_on_start: true
 #    #soft_reset_on_start: false
-
-#uart:
-#  - id: !extend tf_uart
-#    debug:
-#      direction: BOTH
-#      dummy_receiver: false
-#      after:
-#        delimiter: 0xff, 0xff, 0xff
-#      sequence:
-#        - lambda: UARTDebug::log_string(direction, bytes);
 
 debug:
 

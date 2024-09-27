@@ -20,175 +20,6 @@ automation:
                 - {{sensors}}
         threshold: 15
         time: '18:00:00'
-  - alias: Home - Covers - Reset when stuck in a state
-    id: '1662801171931'
-    description: ''
-    trigger:
-      - platform: state
-        entity_id:
-          - cover.balcony_curtain
-          #- cover.bedroom_curtains
-          #- cover.bedroom_curtains_dual
-          - cover.bedroom_curtain_left
-          - cover.bedroom_curtain_right
-          - cover.guest_room_shutter_cover
-          #- cover.living_room_blinds
-          - cover.living_room_blind_right_cover
-          - cover.living_room_blind_centre_cover
-          - cover.living_room_blind_left_cover_2
-          - cover.office_roller_blind_1_cover
-          - cover.office_roller_blind_2_cover
-          #- cover.office_roller_blinds_all
-          - cover.office_shutter_1_cover
-          - cover.office_shutter_2_cover
-          #- cover.office_shutters_all
-        for:
-          hours: 0
-          minutes: 15
-          seconds: 0
-        to:
-          - closing
-          - opening
-    condition: []
-    action:
-      - service: notify.signal_edward
-        data:
-          message: 'Cover {{ trigger.entity_id }} is stuck on state "{{ states(trigger.entity_id) }}. Sending a stop call.'
-      - service: cover.stop_cover
-        target:
-          entity_id: '{{ trigger.entity_id }}'
-    mode: parallel
-    max: 15
-  - alias: Home - Silence hours
-    id: '1654865795294'
-    description: ''
-    trigger:
-      - platform: time
-        at: '21:30:00'
-        id: Prepare for quite hours
-      - platform: time
-        at: 07:30:00
-        id: Quite hours starts
-      - platform: time
-        at: 08:00:00
-        id: Quite hours ends
-    condition:
-      - condition: state
-        entity_id: input_boolean.home_party_mode
-        state: 'off'
-      - condition: state
-        entity_id: input_boolean.home_travelling_mode
-        state: 'off'
-    action:
-      - choose:
-          - conditions:
-              - condition: trigger
-                id: Prepare for quite hours
-            sequence:
-              - parallel:
-                  - if:
-                      - condition: not
-                        conditions:
-                          - condition: state
-                            entity_id: vacuum.roborock_q_revo
-                            state: "is_docked"
-                    then:
-                      - service: vacuum.return_to_base
-                        data: {}
-                        target:
-                          entity_id: vacuum.roborock_q_revo
-                  - if:
-                      - condition: state
-                        entity_id: switch.laundry_washing_machine_outlet
-                        state: "on"
-                    then:
-                      - wait_for_trigger:
-                          - platform: numeric_state
-                            entity_id: sensor.laundry_washing_machine_power
-                            for:
-                              hours: 0
-                              minutes: 5
-                              seconds: 0
-                            below: '2'
-                        continue_on_timeout: false
-                      - service: switch.turn_off
-                        data: {}
-                        target:
-                          entity_id: switch.laundry_washing_machine_outlet
-                  - if:
-                      - condition: state
-                        entity_id: switch.laundry_dryer_outlet
-                        state: "on"
-                    then:
-                      - wait_for_trigger:
-                          - platform: numeric_state
-                            entity_id: sensor.laundry_dryer_outlet_power
-                            for:
-                              hours: 0
-                              minutes: 5
-                              seconds: 0
-                            below: '2'
-                        continue_on_timeout: false
-                      - service: switch.turn_off
-                        data: {}
-                        target:
-                          entity_id: switch.laundry_dryer_outlet
-          - conditions:
-              - condition: trigger
-                id: Quite hours starts
-            sequence:
-              - parallel:
-                  - if:
-                      - condition: not
-                        conditions:
-                          - condition: state
-                            entity_id: vacuum.roborock_q_revo
-                            state: "is_docked"
-                    then:
-                      - service: vacuum.stop
-                        data: {}
-                        target:
-                          entity_id: vacuum.roborock_q_revo
-                  - if:
-                      - condition: state
-                        entity_id: switch.laundry_washing_machine_outlet
-                        state: "on"
-                    then:
-                      - wait_for_trigger:
-                          - platform: numeric_state
-                            entity_id: sensor.laundry_washing_machine_power
-                            above: '10'
-                        continue_on_timeout: false
-                      - service: notify.signal_group_home
-                        data:
-                          message: Silence hours - Looks like the washer was left running at this
-                            time. Please take a look.
-                  - if:
-                      - condition: state
-                        entity_id: switch.laundry_dryer_outlet
-                        state: "on"
-                    then:
-                      - wait_for_trigger:
-                          - platform: numeric_state
-                            entity_id: sensor.laundry_dryer_outlet_power
-                            above: '10'
-                        continue_on_timeout: false
-                      - service: notify.signal_group_home
-                        data:
-                          message: Silence hours - Looks like the dryer was left running at this
-                            time. Please take a look.
-          - conditions:
-              - condition: trigger
-                id: Quite hours ends
-            sequence:
-              - service: switch.turn_on
-                data: {}
-                target:
-                  entity_id:
-                    - switch.laundry_washing_machine_outlet
-                    - switch.laundry_dryer_outlet
-        default: []
-    mode: restart
 
 emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
   host_ip: !secret ip_home_assistant
@@ -210,54 +41,27 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
       hidden: false
 
     #### Balcony ####
-    light.balcony_lamp_light:
-      name: Lamp
-      hidden: false
-    light.balcony_string_lights:
-      name: String lights
+    light.balcony_light:
+      name: Balcony light
       hidden: false
 
     #### Bathroom ####
-    light.bathroom_ceiling_lights:
-      name: Ceiling lights
-      hidden: false
-    light.bathroom_mirror_light:
-      name: Mirror lights
-      hidden: false
 
     #### Bedroom ####
     light.bedroom_carol_light:
       name: "Carol's lights"
       hidden: false
-    light.bedroom_closet_lights:
-      name: Closet lights
-      hidden: false
     light.bedroom_edward_light:
       name: "Edward's lights"
       hidden: false
-    switch.bedroom_power_strip_1_tv_samsung: # TV Samsung
-      name: Samsung
-      hidden: false
 
     #### Corridor ####
-    light.corridor_all_lights:
-      name: Corridor lights
-      hidden: false
 
     #### Guest bathroom ####
-    light.guest_bathroom_ceiling_light:
-      name: Ceiling lights
-      hidden: false
-    light.guest_bathroom_mirror_lights:
-      name: Mirror lights
-      hidden: false
 
     #### Guest room ####
-    light.guest_room_closet_lights:
-      name: Closet lights
-      hidden: false
-    light.guest_room_wall_lights:
-      name: Wall lights
+    switch.guest_room_panel_relay_1:
+      name: Guest room lights
       hidden: false
 
     #### Hall ####
@@ -276,14 +80,8 @@ emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
     #### Living room ####
 
     #### Office ####
-    light.office_ceiling_lines:
-      name: Ceiling lines lights
-      hidden: false
     light.office_workstation_lights:
       name: Workstation lights
-      hidden: false
-    light.kitchen_curtain_s_lights:
-      name: Curtains lights
       hidden: false
 
 input_boolean:
@@ -309,6 +107,7 @@ light:
       - light.kitchen_all_lights
       - light.living_room_all_lights
       - light.office_all_lights
+      - light.outdoor_lights
 
   - name: "Home - All lights (except bathrooms)"
     platform: group

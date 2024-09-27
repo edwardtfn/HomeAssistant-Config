@@ -121,7 +121,10 @@
                       "icon": "mdi:dog-side",
                       "content": "{% set entity_state = states(entity) %} {% if entity_state == \"home\" %}\n  {% set ble_location_entity = \"sensor.dory_s_tracker_area\" %}\n  {% set ble_location = states(ble_location_entity) %}\n  {% if has_value(ble_location_entity) %}\n    {{ ble_location }}\n  {% else %}\n    {{ state_translated(entity) | default(\"Home\") }}\n  {% endif %}\n{% else %}\n  {{ state_translated(entity) | default(\"Home\") }}\n{% endif %}",
                       "picture": "{{ state_attr(entity, \"entity_picture\") }}",
-                      "icon_color": "{% if states(entity) != \"home\" %}red{% endif %}\n"
+                      "icon_color": "{% if states(entity) != \"home\" %}red{% endif %}\n",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "template",
@@ -129,7 +132,10 @@
                       "icon": "mdi:dog-side",
                       "content": "{% set entity_state = states(entity) %} {% if entity_state == \"home\" %}\n  {% set ble_location_entity = \"sensor.skal_s_tracker_area\" %}\n  {% set ble_location = states(ble_location_entity) %}\n  {% if has_value(ble_location_entity) %}\n    {{ ble_location }}\n  {% else %}\n    {{ state_translated(entity) | default(\"Home\") }}\n  {% endif %}\n{% else %}\n  {{ state_translated(entity) | default(\"Home\") }}\n{% endif %}",
                       "picture": "{{ state_attr(entity, \"entity_picture\") }}",
-                      "icon_color": "{% if states(entity) != \"home\" %}red{% endif %}"
+                      "icon_color": "{% if states(entity) != \"home\" %}red{% endif %}",
+                      "tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "conditional",
@@ -176,8 +182,17 @@
                       "type": "template",
                       "entity": "sensor.electricity_price",
                       "icon": "mdi:lightning-bolt-circle",
-                      "icon_color": "{% set price_level = state_attr(entity, 'future_price_level') %} {% if price_level == 'Very expensive' %}\n  red\n{% elif price_level == 'Expensive' %}\n  orange\n{% elif price_level == 'Cheap' %}\n  darkgreen\n{% elif price_level == 'Very cheap' %}\n  green\n{%- endif %}",
-                      "content": "{{ state_attr(entity, 'future_price_level') | default('unknown') }}: {{ states(entity) | float(0) | round(2) }} kr/kWh"
+                      "icon_color": "{% set price_level = state_attr(entity, \"price_level_combined\") %} {% if price_level == \"Very expensive\" %}\n  red\n{% elif price_level == \"Expensive\" %}\n  orange\n{% elif price_level == \"Cheap\" %}\n  blue\n{% elif price_level == \"Very cheap\" %}\n  green\n{%- endif %}",
+                      "content": "{{ state_attr(entity, \"price_level_combined\") }}:\n{{ states(entity, rounded=true, with_unit=true) }}",
+                      "tap_action": {
+                        "action": "more-info"
+                      },
+                      "hold_action": {
+                        "action": "more-info"
+                      },
+                      "double_tap_action": {
+                        "action": "more-info"
+                      }
                     },
                     {
                       "type": "alarm-control-panel",
@@ -231,17 +246,18 @@
                       "type": "conditional",
                       "conditions": [
                         {
-                          "entity": "light.balcony_all_lights",
+                          "condition": "state",
+                          "entity": "light.outdoor_lights",
                           "state": "on"
                         }
                       ],
                       "chip": {
                         "type": "light",
-                        "entity": "light.balcony_all_lights",
+                        "entity": "light.outdoor_lights",
                         "content_info": "name",
-                        "name": "Balcony",
+                        "name": "Outdoor",
                         "use_light_color": true,
-                        "icon": "mdi:string-lights"
+                        "icon": "mdi:bee-flower"
                       }
                     },
                     {
@@ -280,6 +296,23 @@
                       "type": "conditional",
                       "conditions": [
                         {
+                          "condition": "state",
+                          "entity": "light.common_room_all_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "chip": {
+                        "type": "light",
+                        "entity": "light.common_room_all_lights",
+                        "content_info": "name",
+                        "name": "Common room",
+                        "use_light_color": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
                           "entity": "light.corridor_lights_all",
                           "state": "on"
                         }
@@ -290,6 +323,24 @@
                         "content_info": "name",
                         "use_light_color": true,
                         "name": "Corridor"
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "light.greenhouse_all_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "chip": {
+                        "type": "light",
+                        "entity": "light.greenhouse_all_lights",
+                        "name": "Greenhouse",
+                        "content_info": "name",
+                        "use_light_color": true,
+                        "icon": "mdi:string-lights"
                       }
                     },
                     {
@@ -393,18 +444,65 @@
                       "type": "conditional",
                       "conditions": [
                         {
-                          "entity": "sensor.kitchen_dishwasher_operation_state",
+                          "condition": "state",
+                          "entity": "light.spa_all_lights",
+                          "state": "on"
+                        }
+                      ],
+                      "chip": {
+                        "type": "light",
+                        "entity": "light.spa_all_lights",
+                        "name": "Spa",
+                        "icon": "mdi:string-lights",
+                        "content_info": "name",
+                        "use_light_color": true
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "sensor.borasvagen_dishwasher_operation_state",
                           "state_not": "Ready"
                         },
                         {
-                          "entity": "sensor.kitchen_dishwasher_operation_state",
+                          "condition": "state",
+                          "entity": "sensor.borasvagen_dishwasher_operation_state",
                           "state_not": "Inactive"
                         }
                       ],
                       "chip": {
                         "type": "entity",
-                        "entity": "sensor.kitchen_dishwasher_operation_state",
-                        "use_entity_picture": false
+                        "entity": "sensor.borasvagen_dishwasher_operation_state",
+                        "use_entity_picture": false,
+                        "icon": "mdi:dishwasher"
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "conditions": [
+                        {
+                          "condition": "state",
+                          "entity": "binary_sensor.aurora_visibility_visibility_alert",
+                          "state": "on"
+                        }
+                      ],
+                      "chip": {
+                        "type": "template",
+                        "tap_action": {
+                          "action": "more-info"
+                        },
+                        "hold_action": {
+                          "action": "more-info"
+                        },
+                        "double_tap_action": {
+                          "action": "more-info"
+                        },
+                        "icon": "mdi:aurora",
+                        "icon_color": "green",
+                        "content": "Aurora visibility: {{ states(entity) }}%",
+                        "entity": "sensor.aurora_visibility_visibility"
                       }
                     }
                   ]
@@ -778,133 +876,61 @@
                     }
                   ],
                   "card": {
-                    "type": "custom:tabbed-card",
-                    "tabs": [
+                    "type": "custom:flex-table-card",
+                    "title": "Västtrafik - Göransfors",
+                    "strict": true,
+                    "max_rows": 20,
+                    "sort_by": [
+                      "Departure+"
+                    ],
+                    "entities": {
+                      "include": "sensor.vasttrafik_departure_table"
+                    },
+                    "columns": [
                       {
-                        "attributes": {
-                          "label": "To city centre"
-                        },
-                        "card": {
-                          "type": "custom:flex-table-card",
-                          "title": "Västtrafik - Göransfors",
-                          "strict": true,
-                          "max_rows": 20,
-                          "sort_by": [
-                            "Departure+"
-                          ],
-                          "entities": {
-                            "include": "sensor.vasttrafik_departure_table_city_centre"
-                          },
-                          "columns": [
-                            {
-                              "name": "Sort column",
-                              "data": "Departure",
-                              "align": "center",
-                              "hidden": true,
-                              "modify": "Math.round((Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000)"
-                            },
-                            {
-                              "name": "Line",
-                              "data": "Departure",
-                              "modify": "x.serviceJourney.line.shortName",
-                              "align": "center",
-                              "hidden": true,
-                              "style": "'background-color: ' + x.serviceJourney.line.backgroundColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
-                            },
-                            {
-                              "name": "Line",
-                              "data": "Departure",
-                              "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.serviceJourney.line.backgroundColor + '\">&nbsp;' + x.serviceJourney.line.shortName + '&nbsp;</div>'",
-                              "align": "center"
-                            },
-                            {
-                              "name": "Direction",
-                              "data": "Departure",
-                              "modify": "x.serviceJourney.directionDetails.shortDirection"
-                            },
-                            {
-                              "name": "Departure",
-                              "data": "Departure",
-                              "align": "center",
-                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes)) {\n  var date = new Date(x.estimatedOtherwisePlannedTime);\n  date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});\n} else if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
-                            },
-                            {
-                              "name": "Platform",
-                              "data": "Departure",
-                              "align": "center",
-                              "modify": "x.stopPoint.platform + '&nbsp;<ha-icon icon=\"mdi:' + x.serviceJourney.line.transportMode.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
-                            }
-                          ],
-                          "css": {
-                            "tbody tr:nth-child(odd)": "color: #f2f2f2; background-color: #535B64;",
-                            "tbody tr:nth-child(even)": "color: #f2f2f2; background-color: #3C4650;"
-                          },
-                          "style": "ha-card {\n  --mdc-icon-size: 16px;\n  background-color: #3C4650;\n  color: #f2f2f2;\n}\n"
-                        }
+                        "name": "Sort column",
+                        "data": "results",
+                        "align": "center",
+                        "hidden": true,
+                        "modify": "Math.round((Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000)"
                       },
                       {
-                        "attributes": {
-                          "label": "Towards Borås"
-                        },
-                        "card": {
-                          "type": "custom:flex-table-card",
-                          "title": "Västtrafik - Göransfors",
-                          "strict": true,
-                          "max_rows": 20,
-                          "sort_by": [
-                            "Departure+"
-                          ],
-                          "entities": {
-                            "include": "sensor.vasttrafik_departure_table_suburb"
-                          },
-                          "columns": [
-                            {
-                              "name": "Sort column",
-                              "data": "Departure",
-                              "align": "center",
-                              "hidden": true,
-                              "modify": "Math.round((Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000)"
-                            },
-                            {
-                              "name": "Line",
-                              "data": "Departure",
-                              "modify": "x.serviceJourney.line.shortName",
-                              "align": "center",
-                              "hidden": true,
-                              "style": "'background-color: ' + x.serviceJourney.line.backgroundColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
-                            },
-                            {
-                              "name": "Line",
-                              "data": "Departure",
-                              "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.serviceJourney.line.backgroundColor + '\">&nbsp;' + x.serviceJourney.line.shortName + '&nbsp;</div>'",
-                              "align": "center"
-                            },
-                            {
-                              "name": "Direction",
-                              "data": "Departure",
-                              "modify": "x.serviceJourney.directionDetails.shortDirection"
-                            },
-                            {
-                              "name": "Departure",
-                              "data": "Departure",
-                              "align": "center",
-                              "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes)){\n  var date = new Date(x.estimatedOtherwisePlannedTime);\n  date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});\n} else if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
-                            },
-                            {
-                              "name": "Platform",
-                              "data": "Departure",
-                              "align": "center",
-                              "modify": "x.stopPoint.platform + '&nbsp;<ha-icon icon=\"mdi:' + x.serviceJourney.line.transportMode.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
-                            }
-                          ],
-                          "css": {
-                            "tbody tr:nth-child(odd)": "color: #f2f2f2; background-color: #535B64;",
-                            "tbody tr:nth-child(even)": "color: #f2f2f2; background-color: #3C4650;"
-                          },
-                          "style": "ha-card {\n  --mdc-icon-size: 16px;\n  background-color: #3C4650;\n  color: #f2f2f2;\n}\n"
-                        }
+                        "name": "Line",
+                        "data": "results",
+                        "modify": "x.serviceJourney.line.shortName",
+                        "align": "center",
+                        "hidden": true,
+                        "style": "'background-color: ' + x.serviceJourney.line.backgroundColor + ';' + 'color: ' + x.serviceJourney.line.foregroundColor + ';'"
+                      },
+                      {
+                        "name": "Line",
+                        "data": "results",
+                        "modify": "'<div style=\"padding: 1px 1px 4px 1px; height: 16px; color: ' + x.serviceJourney.line.foregroundColor + '; background-color: ' + x.serviceJourney.line.backgroundColor + '\">&nbsp;' + x.serviceJourney.line.shortName + '&nbsp;</div>'",
+                        "align": "center"
+                      },
+                      {
+                        "name": "Direction",
+                        "data": "results",
+                        "modify": "x.serviceJourney.directionDetails.shortDirection"
+                      },
+                      {
+                        "name": "Departure",
+                        "data": "results",
+                        "align": "center",
+                        "modify": "var minutes = Math.round(Math.max(0,(Date.parse(x.estimatedOtherwisePlannedTime) - Date.now())/60000));\nif (minutes>=60 || isNaN(minutes)) {\n  var date = new Date(x.estimatedOtherwisePlannedTime);\n  date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});\n} else if (minutes == 0)\n  \"Now\"\nelse\n  {{ minutes }}"
+                      },
+                      {
+                        "name": "Platform",
+                        "data": "results",
+                        "align": "center",
+                        "modify": "x.stopPoint.platform + '&nbsp;<ha-icon icon=\"mdi:' + x.serviceJourney.line.transportMode.toLowerCase().replace(\"tram\", \"tram-side\") +  '\"></ha-icon>'"
                       }
-                    ]
+                    ],
+                    "css": {
+                      "tbody tr:nth-child(odd)": "color: #f2f2f2; background-color: #535B64;",
+                      "tbody tr:nth-child(even)": "color: #f2f2f2; background-color: #3C4650;"
+                    },
+                    "style": "ha-card {\n  --mdc-icon-size: 16px;\n  background-color: #3C4650;\n  color: #f2f2f2;\n}\n"
                   }
                 }
               ]
@@ -1391,7 +1417,8 @@
                         "top": "10%",
                         "left": "87%",
                         "font-size": "15px"
-                      }
+                      },
+                      "suffix": "°C"
                     },
                     {
                       "entity": "light.balcony_lamp_light",

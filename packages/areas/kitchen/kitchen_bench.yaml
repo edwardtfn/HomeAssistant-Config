@@ -15,20 +15,3 @@ automation:
         no_motion_wait_to_off: 15
         pause_entities_on:
         - input_boolean.home_party_mode
-
-sensor:
-  - name: Kitchen - Bench - Total power
-    platform: group
-    unique_id: 1b0da3e6-ade5-484e-bd3a-0c6ef60739ec
-    unit_of_measurement: "W"
-    device_class: power
-    type: sum
-    ignore_non_numeric: true
-    entities:
-      - sensor.kitchen_bench_outlets_1_outlets_power
-      - sensor.kitchen_bench_outlets_1_usb_power
-      - sensor.kitchen_bench_outlets_2_power
-      - sensor.kitchen_bench_outlets_3_power
-      - sensor.kitchen_bench_left_light_power
-      - sensor.kitchen_bench_right_light_power
-      - sensor.kitchen_cooker_hood_power

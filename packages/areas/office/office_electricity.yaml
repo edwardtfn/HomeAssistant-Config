@@ -1,25 +1,3 @@
-sensor:
-  - name: Office - Total power
-    platform: group
-    unique_id: bc1b1004-a388-4465-9a1f-8d392901a99f
-    unit_of_measurement: "W"
-    device_class: power
-    type: sum
-    ignore_non_numeric: true
-    entities:
-      - sensor.office_door_outlets_power
-      - sensor.office_windows_outlets_ceiling_lights_power
-      - sensor.office_windows_outlets_outlets_power
-
-  - name: Office - Total energy
-    platform: integration
-    unique_id: d3687764-e2ad-4b5e-9cbd-aa33ff7d22e1
-    source: sensor.office_total_power
-    round: 2
-    unit_prefix: k
-    unit_time: h
-    method: trapezoidal
-
 zha:
   device_config:
     70:b3:d5:2b:60:01:20:b2_1:
@@ -32,3 +10,13 @@ zha:
       type: "switch"
     70:b3:d5:2b:60:01:20:b2_5:
       type: "switch"
+    a4:c1:38:5c:a7:f2:c6:d1_1:
+      type: switch
+    a4:c1:38:5c:a7:f2:c6:d1_2:
+      type: switch
+    a4:c1:38:5c:a7:f2:c6:d1_3:
+      type: switch
+    a4:c1:38:5c:a7:f2:c6:d1_4:
+      type: switch
+    a4:c1:38:5c:a7:f2:c6:d1_5:
+      type: switch

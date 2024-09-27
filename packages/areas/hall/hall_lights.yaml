@@ -8,7 +8,7 @@ automation:
         light_level_high: 75
         light_level_dimmer: 25
         motion_entity: binary_sensor.hall_presence
-        light_target: light.hall_ceiling_light
+        light_target: light.hall_all_lights
         no_motion_wait_to_dimming: 90
         no_motion_wait_to_off: 5
         lumens_entity: sensor.hall_motion_illuminance
@@ -19,4 +19,4 @@ light:
     platform: group
     unique_id: 7782c1bb-f612-4f4a-9fd2-010a028ea34c
     entities:
-      - light.hall_ceiling_light
+      - light.hall_lights

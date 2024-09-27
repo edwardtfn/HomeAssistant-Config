@@ -5,10 +5,15 @@ wifi:
   domain: !secret lan_domain
   fast_connect: true
   ap:
-    ssid: "ESPHome fallback"
+    # ssid: "ESPHome fallback"
     password: !secret fallback_password
     ap_timeout:
       minutes: 5
+
+binary_sensor:
+  - platform: status
+    name: "Status"
+    device_class: connectivity
 
 #button:
 #  - platform: template

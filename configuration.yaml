@@ -31,8 +31,10 @@ automation: !include automations.yaml
 #logbook:
 #logger:
   #default: info
-#  logs:
+  #logs:
 #    homeassistant.components.rest: debug
+    #custom_components.bosch: debug
+    #bosch_thermostat_client: debug
 #map:
 #media_source:
 #mobile_app:
@@ -237,7 +239,7 @@ tts:
 
 zha:
   enable_quirks: true
-  custom_quirks_path: /config/zha/quirks
+  custom_quirks_path: "/config/zha/quirks"
 
   # https://github.com/zigpy/zigpy/wiki/OTA-Device-Firmware-Updates
   zigpy_config:

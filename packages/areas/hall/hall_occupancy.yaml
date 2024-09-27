@@ -3,8 +3,5 @@ binary_sensor:
     name: Hall - Presence
     device_class: presence
     entities:
-      - binary_sensor.hall_presence_motion
-      - binary_sensor.hall_presence_occupancy
-      - binary_sensor.hall_motion_motion
-      - binary_sensor.hall_motion_occupancy
       - binary_sensor.hall_front_door
+      - binary_sensor.hall_motion_occupancy

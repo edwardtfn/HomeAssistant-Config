@@ -168,7 +168,7 @@ template:
       unique_id: 98145c69-93c1-4239-842c-4c7c3b7ad530
       unit_of_measurement: "°C"
       device_class: temperature
-      state: "{{ state_attr('weather.home', 'temperature') | default('unknown') }}"
+      state: "{{ state_attr('weather.borasvagen', 'temperature') | default('unknown') }}"
 
 #    - name: Home - Average room temperature (rounded)
 #      unique_id: 42816c14-97c2-4c6f-804b-723fb1a0ba97

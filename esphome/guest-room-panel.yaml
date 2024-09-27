@@ -12,3 +12,8 @@ packages:
     files:
       - nspanel_esphome.yaml # Base package including TFT transfer
       - esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
+
+  manual_ip: !include
+    file: packages/config_manual_ip.yaml
+    vars:
+      ip: !secret ip_guest_room_panel
