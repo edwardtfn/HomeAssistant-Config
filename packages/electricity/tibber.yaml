@@ -24,7 +24,7 @@ sensor:
     headers:
       Authorization: !secret tibber_api_token
       Content-Type: application/json
-      User-Agent: github.com/edwardtfn/HomeAssistant-Config
+      User-Agent: HomeAssistant/v{%- for u in integration_entities('hassio') | select('search', '^update[.]') if (device_attr(u, 'identifiers') | first)[1] == 'core' -%}{{ state_attr(u, "installed_version") }}{%- endfor -%}/github.com/edwardtfn/HomeAssistant-Config
 
 template:
   - sensor:
