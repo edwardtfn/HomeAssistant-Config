@@ -24,7 +24,7 @@ sensor:
     headers:
       Authorization: !secret tibber_api_token
       Content-Type: application/json
-      User-Agent: REST
+      User-Agent: github.com/edwardtfn/HomeAssistant-Config
 
 template:
   - sensor:
