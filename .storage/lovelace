@@ -668,8 +668,8 @@
                       "entity": "sensor.car_door_front_left_lock_status",
                       "image": "/local/pics/blank.png",
                       "style": {
-                        "top": "42.3%",
-                        "left": "57%",
+                        "top": "28.5%",
+                        "left": "51.6%",
                         "width": "2%"
                       },
                       "state_image": {
@@ -693,7 +693,8 @@
                             "left": "35%"
                           }
                         }
-                      ]
+                      ],
+                      "title": "Front left door status"
                     },
                     {
                       "type": "conditional",

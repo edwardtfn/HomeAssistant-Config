@@ -384,6 +384,7 @@ variables:
   input_core_os_update_mode: !input core_os_update_mode
   input_firmware_update_mode: !input firmware_update_mode
   input_general_update_mode: !input general_update_mode
+  updates_list: []
 
 action:
   ########## Refresh update list ##########
