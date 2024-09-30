@@ -655,11 +655,8 @@ action:
               backup_wait_time_seconds: '{{ (backup_wait_time | int(60)) * 60 }}'
           - if: '{{ backup_wait_time_seconds > 0 }}'
             then:
-              - alias: "Wait for backup complete"
-                continue_on_error: true
-                wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
-                continue_on_timeout: true
-                timeout: '{{ backup_wait_time_seconds }}'
+              - alias: "Give selected wait time for the backup" # There's no sensor for when the backup finishes
+                delay: '{{ backup_wait_time_seconds }}'
     else: []
 
   ########## Update add-ons (Standard) ##########
