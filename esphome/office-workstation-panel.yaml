@@ -38,7 +38,7 @@ packages:
   #cool_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
   #cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
   #advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
-#  ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
+  ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
   #nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
   #nspanel_upload_tft: !include packages/Blackymas/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
   #debug: !include packages/config_debug_esp32.yaml
@@ -58,6 +58,10 @@ packages:
     vars:
       ip: !secret ip_office_workstation_panel
 
+esphome:
+  platformio_options:
+    build_flags:
+      - -fexceptions
 
 logger:
   logs:

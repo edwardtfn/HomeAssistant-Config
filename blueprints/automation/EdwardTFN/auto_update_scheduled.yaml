@@ -385,6 +385,7 @@ variables:
   input_firmware_update_mode: !input firmware_update_mode
   input_general_update_mode: !input general_update_mode
   updates_list: []
+  pending_updates_list: []
 
 action:
   ########## Refresh update list ##########
@@ -494,7 +495,7 @@ action:
 
             {{ exclusions }}
 
-      updates_list: >
+      pending_updates_list: >
             {{ states.update
               | default([])
               | selectattr('state','eq','on')
@@ -509,6 +510,8 @@ action:
     target:
       entity_id: "{{ states.update | map(attribute='entity_id') | list }}"
     continue_on_error: true
+  - variables:
+      updates_list: '{{ pending_updates_list }}'
 
   ########## Check for skipping core/OS ##########
   - alias: "Re-check conditions"
@@ -518,7 +521,7 @@ action:
         (
           states.update
           | selectattr('state','eq','on')
-          | selectattr('entity_id', 'in', updates_list)
+          | selectattr('entity_id', 'in', pending_updates_list)
           | rejectattr('entity_id', 'in', input_update_exclusions)
           | list
           | count
@@ -576,7 +579,7 @@ action:
             List of updates:
             - {{ states.update
               | selectattr('state','eq','on')
-              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', pending_updates_list)
               | rejectattr('entity_id', 'in', input_update_exclusions)
               | map(attribute='name') | list | join('
 
@@ -674,7 +677,7 @@ action:
           value_template: >
             {{ ( states.update
               | selectattr('state','eq','on')
-              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', pending_updates_list)
               | rejectattr('entity_id', 'in', core_update_entity)
               | rejectattr('entity_id', 'in', os_update_entity)
               | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -696,7 +699,7 @@ action:
             pending_update_list: >
               {{ states.update
                 | selectattr('state','eq','on')
-                | selectattr('entity_id', 'in', updates_list)
+                | selectattr('entity_id', 'in', pending_updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
                 | rejectattr('entity_id', 'in', os_update_entity)
                 | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -740,7 +743,7 @@ action:
           value_template: >
             {{ ( states.update
               | selectattr('state','eq','on')
-              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', pending_updates_list)
               | selectattr('entity_id', 'in', core_update_entity)
               | rejectattr('entity_id', 'in', os_update_entity)
               | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -762,7 +765,7 @@ action:
             pending_update_list: >
               {{ states.update
                 | selectattr('state','eq','on')
-                | selectattr('entity_id', 'in', updates_list)
+                | selectattr('entity_id', 'in', pending_updates_list)
                 | selectattr('entity_id', 'in', core_update_entity)
                 | rejectattr('entity_id', 'in', os_update_entity)
                 | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -806,7 +809,7 @@ action:
           value_template: >
             {{ ( states.update
               | selectattr('state','eq','on')
-              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', pending_updates_list)
               | rejectattr('entity_id', 'in', core_update_entity)
               | selectattr('entity_id', 'in', os_update_entity)
               | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -828,7 +831,7 @@ action:
             pending_update_list: >
               {{ states.update
                 | selectattr('state','eq','on')
-                | selectattr('entity_id', 'in', updates_list)
+                | selectattr('entity_id', 'in', pending_updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
                 | selectattr('entity_id', 'in', os_update_entity)
                 | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -871,7 +874,7 @@ action:
           value_template: >
             {{ ( states.update
               | selectattr('state','eq','on')
-              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', pending_updates_list)
               | rejectattr('entity_id', 'in', core_update_entity)
               | rejectattr('entity_id', 'in', os_update_entity)
               | selectattr('entity_id', 'in', firmware_update_entities)
@@ -893,7 +896,7 @@ action:
             pending_update_list: >
               {{ states.update
                 | selectattr('state','eq','on')
-                | selectattr('entity_id', 'in', updates_list)
+                | selectattr('entity_id', 'in', pending_updates_list)
                 | rejectattr('entity_id', 'in', core_update_entity)
                 | rejectattr('entity_id', 'in', os_update_entity)
                 | selectattr('entity_id', 'in', firmware_update_entities)
@@ -943,7 +946,7 @@ action:
             Remaining updates:
             - {{ states.update
               | selectattr('state','eq','on')
-              | selectattr('entity_id', 'in', updates_list)
+              | selectattr('entity_id', 'in', pending_updates_list)
               | rejectattr('entity_id', 'in', input_update_exclusions)
               | map(attribute='name') | list | join('
 
