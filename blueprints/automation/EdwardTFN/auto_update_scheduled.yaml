@@ -779,44 +779,32 @@ action:
             | first
           }}
         {% endif %}
-      combined_list: |
-        {{
-          (
-            firmware_update_entities | default([]) | list
-            if firmware_update_entities is sequence
-            else [firmware_update_entities | string] if firmware_update_entities is not none else []
-          ) +
-          (
-            general_update_entities | default([]) | list
-            if general_update_entities is sequence
-            else [general_update_entities | string] if general_update_entities is not none else []
-          ) +
-          (
-            core_update_entity | default([]) | list
-            if core_update_entity is sequence
-            else [core_update_entity | string] if core_update_entity is not none else []
-          ) +
-          (
-            os_update_entity | default([]) | list
-            if os_update_entity is sequence
-            else [os_update_entity | string] if os_update_entity is not none else []
-          ) +
-          (
-            supervisor_update_entity | default([]) | list
-            if supervisor_update_entity is sequence
-            else [supervisor_update_entity | string] if supervisor_update_entity is not none else []
-          )
-        }}
-      pending_update_list: |
-        {{
-          states.update
-          | default([])
-          | selectattr("state", "eq", "on")
-          | selectattr('entity_id', 'in', combined_list)
-          | rejectattr('entity_id', 'in', input_update_exclusions)
-          | map(attribute='entity_id')
-          | list
-        }}
+      combined_list: >-
+        {% set entities = namespace(list=[]) %}
+        {%- for entity in [firmware_update_entities, general_update_entities, 
+                          core_update_entity, os_update_entity, supervisor_update_entity] %}
+          {%- if entity is sequence and entity is not string %}
+            {%- for item in entity %}
+              {%- if item is string %}
+                {%- set entities.list = entities.list + [item] %}
+              {%- endif %}
+            {%- endfor %}
+          {%- elif entity is string %}
+            {%- set entities.list = entities.list + [entity] %}
+          {%- endif %}
+        {%- endfor %}
+        {{ entities.list }}
+      
+      pending_update_list: >-
+        {% set updates = namespace(list=[]) %}
+        {%- for entity in states.update %}
+          {%- if (entity.state == "on" and 
+                  entity.entity_id in combined_list and 
+                  entity.entity_id not in input_update_exclusions) %}
+            {%- set updates.list = updates.list + [entity.entity_id] %}
+          {%- endif %}
+        {%- endfor %}
+        {{ updates.list }}
       pending_update_count: '{{ pending_update_list | list | count | int(0) }}'
 
   - variables:
@@ -865,8 +853,8 @@ action:
     then:
       - variables:
           log_message: >
-            List of updates:
-              - `{{ states.update
+            List of updates:\n- `{{
+                states.update
                 | selectattr('state', 'eq', 'on')
                 | rejectattr('entity_id', 'in', input_update_exclusions)
                 | map(attribute='name') | list | join("`\n- `") }}`
@@ -1080,13 +1068,16 @@ action:
                     | rejectattr('entity_id', 'in', input_update_exclusions)
                     | map(attribute='entity_id')
                     | list
-                    }}
+                  }}
+                update_entity_id: '{{ pending_update_list[0] }}'
+                update_entity_friendly_name: |
+                  {{ select_attr(update_entity_id, "friendly_name") | default(update_entity_id) }}
 
             - &log_updating
               alias: Log updating
               sequence:
                 - variables:
-                    log_message: "Updating `{{pending_update_list[0]}}`..."
+                    log_message: "Updating `{{ update_entity_friendly_name }}`..."
                 - *logbook_update
                 - if: '{{ "update_progress" in input_notification_telegram_select_notifications }}'
                   then:
@@ -1098,27 +1089,27 @@ action:
               action: update.install
               data: {}
               target:
-                entity_id: '{{ pending_update_list[0] }}'
+                entity_id: '{{ update_entity_id }}'
 
             - &update_wait
               alias: "Update - Wait"
               sequence:
                 - alias: Wait
                   continue_on_error: true
-                  wait_template: "{{ is_state(pending_update_list[0], 'off') }}"
+                  wait_template: "{{ is_state(update_entity_id, 'off') }}"
                   continue_on_timeout: true
                   timeout: !input update_timeout
                 - if: '{{ wait.completed }}'
                   then:
                     - variables:
-                        log_message: '`{{ pending_update_list[0] }}` updated successfuly'
+                        log_message: '`{{ update_entity_friendly_name }}` updated successfuly'
                     - *logbook_update
                     - if: '{{ "update_progress" in input_notification_telegram_select_notifications }}'
                       then:
                         - *send_telegram_message
                   else:
                     - variables:
-                        log_message: 'ERROR: `{{ pending_update_list[0] }}` update timed out'
+                        log_message: 'ERROR: `{{ update_entity_friendly_name }}` update timed out'
                     - *logbook_update
                     - if: '{{ "update_progress" in input_notification_telegram_select_notifications }}'
                       then:
