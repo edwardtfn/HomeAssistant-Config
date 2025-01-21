@@ -291,7 +291,7 @@ blueprint:
             number:
               mode: box
               min: 1
-              max: 600
+              max: 180
               unit_of_measurement: minutes
 
         max_backup_age:
@@ -397,6 +397,8 @@ blueprint:
           default: ""
           selector:
             text:
+              multiline: true
+              type: number
 
         notification_telegram_disable_notification:
           name: Disable the Telegram notification from the Telegram client.
@@ -521,14 +523,14 @@ blueprint:
             Usually updates don't take that very long,
             so feel free to ajust this time to something that fits better your environment.
 
-            The default is 600 seconds (10 minutes).
+            The default is 1200 seconds (20 minutes).
             You can select any value between 10 seconds and 7200 seconds (2 hours).
 
             If an update times out:
             - The automation will log an error message
             - The automation will continue with the next update
             - The timed-out update may still complete in the background
-          default: 600
+          default: 1200
           selector:
             number:
               min: 10
@@ -850,7 +852,7 @@ action:
                 action: telegram_bot.send_message
                 data:
                   title: '{{ telegram_title }}'
-                  target: "{{ input_notification_telegram_target_id }}"
+                  target: '{{ input_notification_telegram_target_id }}'
                   disable_notification: '{{ input_notification_telegram_disable_notification }}'
                   message: '{{ log_message }}'
 
@@ -867,9 +869,7 @@ action:
               - `{{ states.update
                 | selectattr('state', 'eq', 'on')
                 | rejectattr('entity_id', 'in', input_update_exclusions)
-                | map(attribute='name') | list | join('`
-
-              - `') }}`
+                | map(attribute='name') | list | join("`\n- `") }}`
       - *logbook_update
       - if: '{{ "list_of_updates" in input_notification_telegram_select_notifications }}'
         then:
@@ -1148,9 +1148,6 @@ action:
               value_template: >
                 {{ ( states.update
                   | selectattr('state', 'eq', 'on')
-                  | selectattr('entity_id', 'in', pending_update_list)
-                  | rejectattr('entity_id', 'in', core_update_entity)
-                  | rejectattr('entity_id', 'in', os_update_entity)
                   | selectattr('entity_id', 'in', firmware_update_entities)
                   | rejectattr('entity_id', 'in', input_update_exclusions)
                   | map(attribute='entity_id')
@@ -1168,9 +1165,6 @@ action:
                 pending_update_list: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
-                    | selectattr('entity_id', 'in', pending_update_list)
-                    | rejectattr('entity_id', 'in', core_update_entity)
-                    | rejectattr('entity_id', 'in', os_update_entity)
                     | selectattr('entity_id', 'in', firmware_update_entities)
                     | map(attribute='entity_id')
                     | list
@@ -1203,10 +1197,7 @@ action:
               value_template: >
                 {{ ( states.update
                   | selectattr('state', 'eq', 'on')
-                  | selectattr('entity_id', 'in', pending_update_list)
                   | selectattr('entity_id', 'in', core_update_entity)
-                  | rejectattr('entity_id', 'in', os_update_entity)
-                  | rejectattr('entity_id', 'in', firmware_update_entities)
                   | rejectattr('entity_id', 'in', input_update_exclusions)
                   | map(attribute='entity_id')
                   | list | count | int(0) ) > 0
@@ -1223,10 +1214,7 @@ action:
                 pending_update_list: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
-                    | selectattr('entity_id', 'in', pending_update_list)
                     | selectattr('entity_id', 'in', core_update_entity)
-                    | rejectattr('entity_id', 'in', os_update_entity)
-                    | rejectattr('entity_id', 'in', firmware_update_entities)
                     | rejectattr('entity_id', 'in', input_update_exclusions)
                     | map(attribute='entity_id')
                     | list
@@ -1259,10 +1247,7 @@ action:
               value_template: >
                 {{ ( states.update
                   | selectattr('state', 'eq', 'on')
-                  | selectattr('entity_id', 'in', pending_update_list)
-                  | rejectattr('entity_id', 'in', core_update_entity)
                   | selectattr('entity_id', 'in', os_update_entity)
-                  | rejectattr('entity_id', 'in', firmware_update_entities)
                   | rejectattr('entity_id', 'in', input_update_exclusions)
                   | map(attribute='entity_id')
                   | list | count | int(0) ) > 0
@@ -1279,10 +1264,7 @@ action:
                 pending_update_list: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
-                    | selectattr('entity_id', 'in', pending_update_list)
-                    | rejectattr('entity_id', 'in', core_update_entity)
                     | selectattr('entity_id', 'in', os_update_entity)
-                    | rejectattr('entity_id', 'in', firmware_update_entities)
                     | rejectattr('entity_id', 'in', input_update_exclusions)
                     | map(attribute='entity_id')
                     | list
@@ -1364,10 +1346,7 @@ action:
           - variables:
               log_message: |
                 Remaining updates:
-                  - `{{ remaining_updates | join("`
-
-                  - `")
-                    }}`
+                  - `{{ remaining_updates | join("`\n- `") }}`
           - *logbook_update
           - if: '{{ "remaining_updates" in input_notification_telegram_select_notifications }}'
             then:
@@ -1421,10 +1400,9 @@ action:
       - condition: '{{ pending_restart_items_count > 0 }}'
       - variables:
           log_message: >
-            {{ pending_restart_items_count }} item(s) pending a restart:
-            - `{{ pending_restart_items | join('`
-                - `')
-              }}`
+            {{ pending_restart_items_count }} item {{ "s" if pending_restart_items_count > 1 }} pending a restart:
+
+            - `{{ pending_restart_items | join("`\n- `") }}`
       - *logbook_update
       - if: '{{ "restart" in input_notification_telegram_select_notifications }}'
         then:
