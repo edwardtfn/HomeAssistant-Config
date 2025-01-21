@@ -329,49 +329,64 @@ blueprint:
       input:
         actions_pre_update:
           name: Pre-update actions (optional)
-          description: 'Actions to execute before the backup or any update starts.
+          description: |
+            Actions to execute before the backup or any update starts.
 
             You can use this to send notifications, turn on/off devices or activate scenes before starting the updates.
 
 
-            Note => Please be aware that all actions will run right before the update process, which can happens over-night. Take this in account when selecting your actions.
+            Note => Please be aware that all actions will run right before the update process,
+            which can happens over-night. Take this in account when selecting your actions.
 
-            Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
+            Note => Some usefull variables available for your actions:
+              - "`\{\{ updates_list \}\}`" - contains the list of updates when the automation started.
+              - "`\{\{ updates_pending \}\}`" - contains the list of updates remaining to be updated.
           default: []
           selector:
             action: {}
 
         actions_pre_restart:
           name: Pre-restart actions (optional)
-          description: 'Actions to execute before the automation requests a restart.
+          description: |
+            Actions to execute before the automation requests a restart.
 
-            You can use this to send notifications, turn on/off devices or stopping automations before restarting Home Assistant.
+            You can use this to send notifications,
+            turn on/off devices or stopping automations before restarting Home Assistant.
 
 
-            Note => Please be aware that all actions will run right before the restart process, which can happens over-night. Take this in account when selecting your actions.
+            Note => Please be aware that all actions will run right before the restart process,
+            which can happens over-night. Take this in account when selecting your actions.
 
-            Note => Note all the restarts will be controlled by this automation, like when a Core update is installed. These actions might not be executed in those cases.
+            Note => Note all the restarts will be controlled by this automation,
+            like when a Core update is installed. These actions might not be executed in those cases.
 
-            Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.'
+            Note => Some usefull variables available for your actions:
+              - "`\{\{ updates_list \}\}`" - contains the list of updates when the automation started.
+              - "`\{\{ updates_pending \}\}`" - contains the list of updates remaining to be updated.
           default: []
           selector:
             action: {}
 
         actions_pos_update:
           name: Post-update actions (optional)
-          description: >
+          description: |
             Actions to execute AFTER the update process finishes.
 
             You can use this to send notifications, turn on/off devices or activate scenes after applying  the updates.
 
 
-            Note => Please be aware that all actions will run right after the update process, which can happens over-night.
+            Note => Please be aware that all actions will run right after the update process,
+            which can happens over-night.
             Take this in account when selecting your actions.
 
-            Note => The variable "\{\{ updates_list \}\}" is available for your actions and contains the list of pending updates.
+            Note => Some usefull variables available for your actions:
+              - "`\{\{ updates_list \}\}`" - contains the list of updates when the automation started.
+              - "`\{\{ updates_pending \}\}`" - contains the list of updates remaining to be updated.
 
-            **IMPORTANT** => Some updates will automatically restart Home Assistant, causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed.
-            If you have critical actions to run after an update, consider including also in another automation based on Home Assistant start.
+            **IMPORTANT** => Some updates will automatically restart Home Assistant,
+            causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed.
+            If you have critical actions to run after an update,
+            consider including also in another automation based on Home Assistant start.
           default: []
           selector:
             action: {}
@@ -655,7 +670,7 @@ variables:
       if (device_attr(u, 'identifiers') | first)[1] == 'supervisor' %}
         {{ u }}
     {% endfor %}
-  is_continuing_from_a_restart: >
+  is_resume_after_restart: >
     {{
       input_update_process_started_entity | default([]) | count == 1 and
       is_state(input_update_process_started_entity | first, "on")
@@ -781,7 +796,7 @@ action:
         {% endif %}
       combined_list: >-
         {% set entities = namespace(list=[]) %}
-        {%- for entity in [firmware_update_entities, general_update_entities, 
+        {%- for entity in [firmware_update_entities, general_update_entities,
                           core_update_entity, os_update_entity, supervisor_update_entity] %}
           {%- if entity is sequence and entity is not string %}
             {%- for item in entity %}
@@ -794,28 +809,28 @@ action:
           {%- endif %}
         {%- endfor %}
         {{ entities.list }}
-      
-      pending_update_list: >-
+      updates_pending: >-
         {% set updates = namespace(list=[]) %}
         {%- for entity in states.update %}
-          {%- if (entity.state == "on" and 
-                  entity.entity_id in combined_list and 
+          {%- if (entity.state == "on" and
+                  entity.entity_id in combined_list and
                   entity.entity_id not in input_update_exclusions) %}
             {%- set updates.list = updates.list + [entity.entity_id] %}
           {%- endif %}
         {%- endfor %}
         {{ updates.list }}
-      pending_update_count: '{{ pending_update_list | list | count | int(0) }}'
+      pending_update_list: '{{ updates_pending }}'
+      updates_pending_count: '{{ updates_pending | list | count | int(0) }}'
 
   - variables:
-      update_list: '{{ pending_update_list }}'
-      updates_list: '{{ pending_update_list }}'
-      is_there_anything_to_update: '{{ pending_update_count > 0 }}'
+      update_list: '{{ updates_pending }}'
+      updates_list: '{{ updates_pending }}'
+      is_there_anything_to_update: '{{ updates_pending_count > 0 }}'
 
   - alias: Preparation  # Inform logbook and telegram which update automation is running
     sequence:
       - variables:
-          log_message: '{{ friendly_name }} is {{ "re" if is_continuing_from_a_restart else ""}}starting'
+          log_message: '{{ friendly_name }} is {{ "re" if is_resume_after_restart else ""}}starting'
       - &logbook_update
         if: "{{ input_verbose_logging_bool }}"
         then:
@@ -885,7 +900,7 @@ action:
   - alias: Pre-update actions
     if:
       - '{{ is_there_anything_to_update }}'
-      - '{{ not is_continuing_from_a_restart }}'
+      - '{{ not is_resume_after_restart }}'
       - condition: state
         entity_id: !input schedule_entity
         state: 'on'
@@ -915,7 +930,7 @@ action:
   - alias: Backup
     if:
       - '{{ is_there_anything_to_update }}'
-      - '{{ not is_continuing_from_a_restart }}'
+      - '{{ not is_resume_after_restart }}'
       - condition: state
         entity_id: !input schedule_entity
         state: 'on'
@@ -1045,7 +1060,7 @@ action:
               value_template: >
                 {{ ( states.update
                   | selectattr('state', 'eq', 'on')
-                  | selectattr('entity_id', 'in', pending_update_list)
+                  | selectattr('entity_id', 'in', updates_pending)
                   | rejectattr('entity_id', 'in', core_update_entity)
                   | rejectattr('entity_id', 'in', os_update_entity)
                   | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -1058,10 +1073,10 @@ action:
                 log_message: "Starting sequence of standard updates..."
             - *logbook_update
             - variables:
-                pending_update_list: >
+                updates_pending: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
-                    | selectattr('entity_id', 'in', pending_update_list)
+                    | selectattr('entity_id', 'in', updates_pending)
                     | rejectattr('entity_id', 'in', core_update_entity)
                     | rejectattr('entity_id', 'in', os_update_entity)
                     | rejectattr('entity_id', 'in', firmware_update_entities)
@@ -1069,15 +1084,15 @@ action:
                     | map(attribute='entity_id')
                     | list
                   }}
-                update_entity_id: '{{ pending_update_list[0] }}'
-                update_entity_friendly_name: |
-                  {{ select_attr(update_entity_id, "friendly_name") | default(update_entity_id) }}
+                current_update_entity: '{{ updates_pending[0] }}'
+                current_update_entity_friendly_name: |
+                  {{ select_attr(current_update_entity, "friendly_name") | default(current_update_entity) }}
 
             - &log_updating
               alias: Log updating
               sequence:
                 - variables:
-                    log_message: "Updating `{{ update_entity_friendly_name }}`..."
+                    log_message: "Updating `{{ current_update_entity_friendly_name }}`..."
                 - *logbook_update
                 - if: '{{ "update_progress" in input_notification_telegram_select_notifications }}'
                   then:
@@ -1089,27 +1104,27 @@ action:
               action: update.install
               data: {}
               target:
-                entity_id: '{{ update_entity_id }}'
+                entity_id: '{{ current_update_entity }}'
 
             - &update_wait
               alias: "Update - Wait"
               sequence:
                 - alias: Wait
                   continue_on_error: true
-                  wait_template: "{{ is_state(update_entity_id, 'off') }}"
+                  wait_template: "{{ is_state(current_update_entity, 'off') }}"
                   continue_on_timeout: true
                   timeout: !input update_timeout
                 - if: '{{ wait.completed }}'
                   then:
                     - variables:
-                        log_message: '`{{ update_entity_friendly_name }}` updated successfuly'
+                        log_message: '`{{ current_update_entity_friendly_name }}` updated successfuly'
                     - *logbook_update
                     - if: '{{ "update_progress" in input_notification_telegram_select_notifications }}'
                       then:
                         - *send_telegram_message
                   else:
                     - variables:
-                        log_message: 'ERROR: `{{ update_entity_friendly_name }}` update timed out'
+                        log_message: 'ERROR: `{{ current_update_entity_friendly_name }}` update timed out'
                     - *logbook_update
                     - if: '{{ "update_progress" in input_notification_telegram_select_notifications }}'
                       then:
@@ -1153,7 +1168,7 @@ action:
                 - *send_telegram_message
 
             - variables:
-                pending_update_list: >
+                updates_pending: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
                     | selectattr('entity_id', 'in', firmware_update_entities)
@@ -1202,7 +1217,7 @@ action:
                 - *send_telegram_message
 
             - variables:
-                pending_update_list: >
+                updates_pending: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
                     | selectattr('entity_id', 'in', core_update_entity)
@@ -1252,7 +1267,7 @@ action:
                 - *send_telegram_message
 
             - variables:
-                pending_update_list: >
+                updates_pending: >
                   {{ states.update
                     | selectattr('state', 'eq', 'on')
                     | selectattr('entity_id', 'in', os_update_entity)
@@ -1289,7 +1304,7 @@ action:
           entity_id: >-
             {{ states.update
             | selectattr('state', 'eq', 'on')
-            | selectattr('entity_id', 'in', pending_update_list)
+            | selectattr('entity_id', 'in', updates_pending)
             | rejectattr('entity_id', 'in', input_update_exclusions)
             | map(attribute='entity_id')
             | list
@@ -1301,7 +1316,7 @@ action:
             (
               states.update
               | selectattr('state', 'eq', 'on')
-              | selectattr('entity_id', 'in', pending_update_list)
+              | selectattr('entity_id', 'in', updates_pending)
               | rejectattr('entity_id', 'in', input_update_exclusions)
               | list
               | count
@@ -1326,7 +1341,7 @@ action:
             {{
               states.update
               | selectattr('state', 'eq', 'on')
-              | selectattr('entity_id', 'in', pending_update_list)
+              | selectattr('entity_id', 'in', updates_pending)
               | rejectattr('entity_id', 'in', input_update_exclusions)
               | map(attribute='name')
               | list
