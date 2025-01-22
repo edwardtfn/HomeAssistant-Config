@@ -869,6 +869,7 @@ action:
       - variables:
           log_message: >
             List of updates:
+
             - `{{ states.update
                 | selectattr('state', 'eq', 'on')
                 | rejectattr('entity_id', 'in', input_update_exclusions)
@@ -1406,7 +1407,7 @@ action:
       - condition: '{{ pending_restart_items_count > 0 }}'
       - variables:
           log_message: >
-            {{ pending_restart_items_count }} item {{ "s" if pending_restart_items_count > 1 }} pending a restart:
+            {{ pending_restart_items_count }} item{{ "s" if pending_restart_items_count > 1 }} pending a restart:
 
             - `{{ pending_restart_items | join("`\n- `") }}`
       - *logbook_update
@@ -1458,7 +1459,7 @@ action:
             else:
               - variables:
                   log_message: >
-                    Restart was asked by admin.
+                    The system is set to restart automatically when an update requires it.
 
                     Restarting Home Assistant ({{ input_restart_type }})
               - *logbook_update
