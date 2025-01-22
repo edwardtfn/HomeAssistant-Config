@@ -868,8 +868,8 @@ action:
     then:
       - variables:
           log_message: >
-            List of updates:\n- `{{
-                states.update
+            List of updates:
+            - `{{ states.update
                 | selectattr('state', 'eq', 'on')
                 | rejectattr('entity_id', 'in', input_update_exclusions)
                 | map(attribute='name') | list | join("`\n- `") }}`
@@ -1086,7 +1086,7 @@ action:
                   }}
                 current_update_entity: '{{ updates_pending[0] }}'
                 current_update_entity_friendly_name: |
-                  {{ select_attr(current_update_entity, "friendly_name") | default(current_update_entity) }}
+                  {{ state_attr(current_update_entity, "friendly_name") | default(current_update_entity) }}
 
             - &log_updating
               alias: Log updating
