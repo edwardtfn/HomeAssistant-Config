@@ -79,8 +79,8 @@ http:
     - !secret trusted_proxy_1
     - !secret trusted_proxy_2
 
-lovelace:
-  mode: storage  # yaml
+#lovelace:
+#  mode: storage  # yaml
 
   #resources:
   #  #- url: /hacsfiles/lovelace-horizon-card/lovelace-horizon-card.js
@@ -183,55 +183,37 @@ lovelace:
   #    type: module
 
   # Add yaml dashboards
-  dashboards:
-    lovelace-home:
-      mode: yaml
-      title: Home
-      icon: mdi:home
-      show_in_sidebar: true
-      require_admin: false
-      filename: ./lovelace/home/ui-lovelace.yaml
+#  dashboards:
+#    lovelace-home:
+#      mode: yaml
+#      title: Home
+#      icon: mdi:home
+#      show_in_sidebar: true
+#      require_admin: false
+#      filename: ./lovelace/home/ui-lovelace.yaml
 
-    lovelace-system-monitoring:
-      mode: yaml
-      title: System monitoring
-      icon: mdi:help-network
-      show_in_sidebar: true
-      require_admin: true
-      filename: ./lovelace/system_monitoring/ui-lovelace.yaml
+#    lovelace-system-monitoring:
+#      mode: yaml
+#      title: System monitoring
+#      icon: mdi:help-network
+#      show_in_sidebar: true
+#      require_admin: true
+#      filename: ./lovelace/system_monitoring/ui-lovelace.yaml
 
-    lovelace-surveillance:
-      mode: yaml
-      title: Surveillance
-      icon: mdi:cctv
-      show_in_sidebar: true
-      require_admin: false
-      filename: ./lovelace/surveillance/ui-lovelace.yaml
+#    lovelace-surveillance:
+#      mode: yaml
+#      title: Surveillance
+#      icon: mdi:cctv
+#      show_in_sidebar: true
+#      require_admin: false
+#      filename: ./lovelace/surveillance/ui-lovelace.yaml
 
 notify: !include notifications.yaml
 
-recorder:
-  purge_keep_days: 15
+#recorder:
+#  purge_keep_days: 14
 
-shell_command: !include shell.yaml
-
-template:
-  - sensor:
-      - name: "Random Wi-Fi Signal Sensor"
-        state: "{{ states('input_number.temp_wifi_signal') | float(0) }}"
-        unique_id: random_wifi_signal_sensor
-        unit_of_measurement: "dBm"
-        icon: >-
-          {% set signal = states('input_number.temp_wifi_signal') | float(0) %}
-          {% if signal > 75 %}
-            mdi:wifi-strength-4
-          {% elif signal > 50 %}
-            mdi:wifi-strength-3
-          {% elif signal > 25 %}
-            mdi:wifi-strength-2
-          {% else %}
-            mdi:wifi-strength-1
-          {% endif %}
+#shell_command: !include shell.yaml
 
 # Text to speech
 tts:
@@ -246,10 +228,10 @@ zha:
     ota:
       otau_directory: /config/zha/zigpy_ota
       ikea_provider: true
-      inovelli_provider: true
+      #inovelli_provider: true
       ledvance_provider: true
-      salus_provider: true
+      #salus_provider: true
       sonoff_provider: true
-      thirdreality_provider: true
+      #thirdreality_provider: true
 
 #zha_toolkit:

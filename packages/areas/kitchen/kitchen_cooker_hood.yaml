@@ -1,9 +1,0 @@
-sensor:
-  - name: Kitchen - Cooker hood Energy
-    platform: integration
-    unique_id: 91275da2-8363-4068-96ee-a433fa6b6bdc
-    source: sensor.kitchen_cooker_hood_power
-    round: 2
-    unit_prefix: k
-    unit_time: h
-    method: trapezoidal

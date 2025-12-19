@@ -48,7 +48,7 @@ automation:
         {% endif %}
     action:
     - parallel:
-      - service: notify.signal_group_home
+      - service: notify.group_home
         data:
           message: "{{ announcement }}"
         continue_on_error: true
@@ -76,7 +76,7 @@ automation:
       from: home
     condition: []
     action:
-    - service: notify.signal_edward
+    - service: notify.edward
       data:
         message: The Shelly device monitoring the Intercom is out since more than 30min
           ago.

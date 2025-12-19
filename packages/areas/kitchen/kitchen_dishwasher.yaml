@@ -3,19 +3,18 @@ automation:
     id: '1640731367839'
     trigger:
     - platform: state
-      entity_id:
-      - sensor.electricity_price
-      attribute: next_16h_is_at_min
-      to: True
+      entity_id: sensor.borasvagen_electricity_price
+      attribute: intraday_price_ranking
+      to: 1
     condition:
     - condition: or
       conditions:
       - condition: state
         entity_id: sensor.kitchen_dishwasher_operation_state
-        state: Inactive
+        state: inactive
       - condition: state
         entity_id: sensor.kitchen_dishwasher_operation_state
-        state: Ready
+        state: ready
       - condition: state
         entity_id: sensor.kitchen_dishwasher_operation_state
         state: unavailable
@@ -25,12 +24,12 @@ automation:
       entity_id: input_boolean.home_travelling_mode
       state: 'off'
     action:
-    - service: switch.turn_on
+    - action: switch.turn_on
       data: {}
       target:
         entity_id:
         - switch.kitchen_dishwasher_power
-    - service: notify.signal_edward
+    - action: notify.edward
       data:
         message: Dishwasher is starting...
       continue_on_error: true
@@ -41,20 +40,24 @@ automation:
         seconds: 10
         milliseconds: 0
       continue_on_error: true
-    - service: switch.turn_on
+    - action: switch.turn_on
       data: {}
       target:
         entity_id:
         - switch.kitchen_dishwasher_power
-    - service: switch.turn_on
-      data: {}
+    - action: select.select_option
       target:
-        entity_id: switch.kitchen_dishwasher_program_eco50
+        entity_id:
+          - select.kitchen_dishwasher_active_program
+          # - select.kitchen_dishwasher_selected_program
+      data:
+        option: dishcare_dishwasher_program_quick_65
+      continue_on_error: true
     - wait_for_trigger:
       - platform: state
         entity_id:
         - sensor.kitchen_dishwasher_operation_state
-        to: Run
+        to: run
       timeout:
         hours: 0
         minutes: 10
@@ -63,20 +66,20 @@ automation:
     - if:
       - condition: state
         entity_id: sensor.kitchen_dishwasher_operation_state
-        state: Run
+        state: run
       then:
-      - service: input_datetime.set_datetime
+      - action: input_datetime.set_datetime
         target:
           entity_id: input_datetime.kitchen_dishwasher_last_run
         data:
           timestamp: '{{ now().timestamp() }}'
         continue_on_error: true
-      - service: notify.signal_edward
+      - action: notify.edward
         data:
           message: Dishwasher successfully started.
         continue_on_error: true
       else:
-      - service: notify.signal_group_home
+      - action: notify.group_home
         data:
           message: Failed to start the dishwasher.
         continue_on_error: true
@@ -124,3 +127,20 @@ template:
           trigger: "{{ trigger }}"
           door: "{{ states('binary_sensor.kitchen_dishwasher_door') }}"
           operation_state: "{{ states('sensor.kitchen_dishwasher_operation_state') }}"
+  - sensor:
+      - name: Kitchen - Dishwasher - Remaining program time
+        unique_id: 504050ac-2309-491b-a944-783b5c116184
+        unit_of_measurement: minutes
+        state: >
+          {% set remaining_seconds = states("sensor.borasvagen_dishwasher_remaining_program_time") | as_timestamp - now() | as_timestamp %}
+          {% if remaining_seconds | int(0) > 0 %}
+            {{ ((remaining_seconds | int(0)/60) | round(0), 0) | max }}
+          {% else %}
+            0
+          {% endif %}
+        #state_class: measurement
+        availability: >
+          {{
+            is_state("sensor.borasvagen_dishwasher_operation_state", "Run") and
+            has_value("sensor.borasvagen_dishwasher_remaining_program_time")
+          }}

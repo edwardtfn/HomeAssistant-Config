@@ -1,128 +1,65 @@
 automation:
   - alias: Home - Battery - Low battery devices
-    id: '1653260609920'
+    id: '1730542377743'
     description: ''
     use_blueprint:
-      path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+      path: EdwardTFN/simple_battery_scanner.yaml
       input:
-        exclude:
-          entity_id:
-            - sensor.carols_laptop_internal_battery_level
-            - sensor.carols_phone_battery_level
-            - sensor.edwards_phone_battery_level
-            - sensor.edwards_tablet_battery_level
-        actions:
-          - service: notify.signal_group_home
-            data:
-              message: >
-                Low battery warning for:
+        scan_time: '18:00:00'
+        exclusions_entities:
+        - sensor.carols_laptop_internal_battery_level
+        - sensor.carols_phone_battery_level
+        - sensor.edwards_phone_battery_level
+        - sensor.edwards_tablet_battery_level
+        - sensor.outdoor_front_gate_battery
+        - sensor.outdoor_front_raspberries_watering_valve_battery
+        - sensor.outdoor_front_southeast_battery
+        - sensor.outdoor_garden_blueberries_water_valve_battery
+        - sensor.outdoor_garden_sprinkler_water_valve_battery
+        - sensor.outdoor_waste_bin_valve_battery
+        - sensor.outdoor_water_valve_battery
 
-                - {{sensors}}
-        threshold: 15
-        time: '18:00:00'
-
-emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
-  host_ip: !secret ip_home_assistant
-  listen_port: 80
-  #advertise_ip: 10.0.0.10
-  #advertise_port: 8080
-  #off_maps_to_on_domains:
-    #- script
-    #- scene
-  expose_by_default: false
-  exposed_domains:
-    - light
-    - switch
-
-  entities:
-    #### Home ####
-    input_boolean.home_party_mode:
-      name: Party mode
-      hidden: false
-
-    #### Balcony ####
-    light.balcony_light:
-      name: Balcony light
-      hidden: false
-
-    #### Bathroom ####
-
-    #### Bedroom ####
-    light.bedroom_carol_light:
-      name: "Carol's lights"
-      hidden: false
-    light.bedroom_edward_light:
-      name: "Edward's lights"
-      hidden: false
-
-    #### Corridor ####
-
-    #### Guest bathroom ####
-
-    #### Guest room ####
-    switch.guest_room_panel_relay_1:
-      name: Guest room lights
-      hidden: false
-
-    #### Hall ####
-    light.hall_ceiling_light:
-      name: Hall lights
-      hidden: false
-
-    #### Kitchen ####
-    light.kitchen_bench_lights:
-      name: Bench lights
-      hidden: false
-    light.kitchen_table_lights:
-      name: Table lights
-      hidden: false
-
-    #### Living room ####
-
-    #### Office ####
-    light.office_workstation_lights:
-      name: Workstation lights
-      hidden: false
-
-input_boolean:
-  home_display_motion_sensors:
-    name: Home - Display motion sensors
-    icon: mdi:motion-sensor
-  home_party_mode:
-    name: Home - Party mode
-    icon: mdi:balloon
-
-light:
-  - name: "Home - All lights"
-    platform: group
-    unique_id: 231dd2fc-265c-45f9-be39-f5d9c675f854
-    entities:
-      - light.balcony_all_lights
-      - light.bathroom_all_lights
-      - light.bedroom_all_lights
-      - light.corridor_all_lights
-      - light.guest_bathroom_all_lights
-      - light.guest_room_all_lights
-      - light.hall_all_lights
-      - light.kitchen_all_lights
-      - light.living_room_all_lights
-      - light.office_all_lights
-      - light.outdoor_lights
-
-  - name: "Home - All lights (except bathrooms)"
-    platform: group
-    unique_id: 99afacd2-f852-4658-ad7f-98eb3b021870
-    entities:
-      - light.balcony_all_lights
-      #- light.bathroom_all_lights
-      - light.bedroom_all_lights
-      - light.corridor_all_lights
-      #- light.guest_bathroom_all_lights
-      - light.guest_room_all_lights
-      - light.hall_all_lights
-      - light.kitchen_all_lights
-      - light.living_room_all_lights
-      - light.office_all_lights
+#emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
+#  host_ip: !secret ip_home_assistant
+#  listen_port: 80
+#  #advertise_ip: 10.0.0.10
+#  #advertise_port: 8080
+#  #off_maps_to_on_domains:
+#    #- script
+#    #- scene
+#  expose_by_default: false
+#  exposed_domains:
+#    - light
+#    - switch
+#
+#  entities:
+#    #### Home ####
+#    input_boolean.home_party_mode:
+#      name: Party mode
+#      hidden: false
+#
+#    #### Deck ####
+#    light.outdoor_deck_light:
+#      name: Deck light
+#      hidden: false
+#
+#    #### Bathroom ####
+#    light.bathroom_lights_lights:
+#      name: Bathroom light
+#      hidden: false
+#
+#    #### Guest room ####
+#    switch.guest_room_panel_relay_1:
+#      name: Guest room lights
+#      hidden: false
+#
+#input_boolean:
+#  home_display_motion_sensors:
+#    name: Home - Display motion sensors
+#    icon: mdi:motion-sensor
+#  home_party_mode:
+#    name: Home - Party mode
+#    icon: mdi:balloon
 
 schedule:
   home_quite_hours:

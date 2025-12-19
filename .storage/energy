@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "minor_version": 1,
+  "minor_version": 2,
   "key": "energy",
   "data": {
     "energy_sources": [
@@ -8,49 +8,7 @@
         "type": "grid",
         "flow_from": [
           {
-            "stat_energy_from": "sensor.kitchen_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.living_room_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.office_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.bathroom_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.bedroom_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.hall_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.guest_bathroom_total_energy",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          },
-          {
-            "stat_energy_from": "sensor.balcony_utility_meter",
+            "stat_energy_from": "sensor.tibber_pulse_borasvagen_last_meter_consumption",
             "stat_cost": null,
             "entity_energy_price": "sensor.total_electricity_price",
             "number_energy_price": null
@@ -62,161 +20,104 @@
     ],
     "device_consumption": [
       {
-        "stat_consumption": "sensor.balcony_lamp_light_energy"
+        "stat_consumption": "sensor.3d_printer_power_plug_energy",
+        "name": "3D Printer",
+        "stat_rate": "sensor.3d_printer_power_plug_power"
       },
       {
-        "stat_consumption": "sensor.balcony_lamp_sockets_energy"
+        "stat_consumption": "sensor.basement_heater_energy_2",
+        "name": "Heater (basement)",
+        "stat_rate": "sensor.basement_heater_power_2"
       },
       {
-        "stat_consumption": "sensor.balcony_string_lights_energy"
+        "stat_consumption": "sensor.outdoor_water_pump_switch_3_energy",
+        "name": "Car charging",
+        "included_in_stat": "sensor.outdoor_water_pump_energy"
       },
       {
-        "stat_consumption": "sensor.bathroom_ceiling_lights_energy"
+        "stat_consumption": "sensor.cellar_energy",
+        "name": "Cellar"
       },
       {
-        "stat_consumption": "sensor.bathroom_mirror_light_energy"
+        "stat_consumption": "sensor.charging_station_energy",
+        "name": "Charging deck"
       },
       {
-        "stat_consumption": "sensor.bathroom_mirror_outlets_energy"
+        "stat_consumption": "sensor.laundry_dehumidifier_consumption",
+        "name": "Dehumidifier (laundry)"
       },
       {
-        "stat_consumption": "sensor.bathroom_towel_warmer_energy"
+        "stat_consumption": "sensor.kitchen_dishwasher_outlet_energy",
+        "name": "Dishwasher"
       },
       {
-        "stat_consumption": "sensor.bedroom_ceiling_lights_energy"
+        "stat_consumption": "sensor.dryer_energy"
       },
       {
-        "stat_consumption": "sensor.bedroom_outlets_carol_energy"
+        "stat_consumption": "sensor.laundry_exhausting_fan_switch_0_energy",
+        "name": "Exhausting fan (laundry)"
       },
       {
-        "stat_consumption": "sensor.bedroom_outlets_edward_energy"
+        "stat_consumption": "sensor.storage_room_outlets_back_refrigerators_outlets_energy",
+        "name": "Fridge & freezer (basement)"
       },
       {
-        "stat_consumption": "sensor.bedroom_tv_rack_energy"
+        "stat_consumption": "sensor.fridge_freezer_outlet_energy",
+        "name": "Fridge & freezer (kitchen)"
       },
       {
-        "stat_consumption": "sensor.closet_lights_energy"
+        "stat_consumption": "sensor.guest_bathroom_floor_heater_energy",
+        "name": "Guest bathroom hater (floor)"
       },
       {
-        "stat_consumption": "sensor.closet_outlets_energy"
+        "stat_consumption": "sensor.guest_room_heater_fast_switch_0_energy",
+        "name": "Guest room - Heater (fast)"
       },
       {
-        "stat_consumption": "sensor.corridor_outlet_1_energy"
+        "stat_consumption": "sensor.guest_room_heater_slow_energy",
+        "name": "Guest room - Heater (slow)"
       },
       {
-        "stat_consumption": "sensor.data_centre_lights_energy"
+        "stat_consumption": "sensor.hall_heater_energy",
+        "name": "Floor heater (hall)"
       },
       {
-        "stat_consumption": "sensor.data_centre_outlets_energy"
+        "stat_consumption": "sensor.basement_heat_pump_total_energy",
+        "name": "Heat pump"
       },
       {
-        "stat_consumption": "sensor.guest_bathroom_ceiling_light_energy"
+        "stat_consumption": "sensor.home_assistant_host_plug_energy",
+        "name": "Home Assistant host server"
       },
       {
-        "stat_consumption": "sensor.guest_bathroom_mirror_lights_energy"
+        "stat_consumption": "sensor.kitchen_oven_socket_energy",
+        "name": "Oven"
       },
       {
-        "stat_consumption": "sensor.guest_bathroom_mirror_outlets_energy"
+        "stat_consumption": "sensor.upstairs_corridor_printer_desk_energy",
+        "name": "Charging desk (corridor)"
       },
       {
-        "stat_consumption": "sensor.guest_bathroom_towel_warmer_energy"
+        "stat_consumption": "sensor.kitchen_bench_power_tower_energy",
+        "name": "Power tower (kitchen)"
       },
       {
-        "stat_consumption": "sensor.guest_room_door_outlets_ceiling_lights_energy"
+        "stat_consumption": "sensor.outlets_energy_2",
+        "name": "Vacuum cleaner (Roborock)"
       },
       {
-        "stat_consumption": "sensor.guest_room_door_outlets_outlet_energy"
+        "stat_consumption": "sensor.laundry_washing_machine_energy",
+        "name": "Washing machine"
       },
       {
-        "stat_consumption": "sensor.guest_room_windows_outlets_energy"
+        "stat_consumption": "sensor.outdoor_water_pump_energy",
+        "name": "Outdoor - Well"
       },
       {
-        "stat_consumption": "sensor.hall_light_switch_light_energy"
-      },
-      {
-        "stat_consumption": "sensor.hall_light_switch_panel_energy"
-      },
-      {
-        "stat_consumption": "sensor.hall_outlets_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_bench_left_light_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_bench_outlets_1_outlets_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_bench_outlets_1_usb_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_bench_outlets_2_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_bench_outlets_3_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_bench_right_light_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_ceiling_lights_table_lights_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_ceiling_lights_windows_lights_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_cooker_hood_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_cooktop_l1_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_cooktop_l2_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_cooktop_l3_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_dishwasher_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_microwave_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_oven_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_refrigeration_freezer_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_refrigeration_fridge_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.kitchen_windows_wall_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.laundry_bench_outlets_energy"
-      },
-      {
-        "stat_consumption": "sensor.laundry_dryer_outlet_energy"
-      },
-      {
-        "stat_consumption": "sensor.laundry_washing_machine_energy"
-      },
-      {
-        "stat_consumption": "sensor.living_room_lights_map_wall_energy"
-      },
-      {
-        "stat_consumption": "sensor.living_room_lights_tv_wall_energy"
-      },
-      {
-        "stat_consumption": "sensor.living_room_map_wall_outlets_energy"
-      },
-      {
-        "stat_consumption": "sensor.living_room_tv_rack_outlets_energy"
-      },
-      {
-        "stat_consumption": "sensor.living_room_windows_wall_outlets_energy"
+        "stat_consumption": "sensor.bathroom_exausting_fan_fan_energy",
+        "name": "Exhausting fan (bathroom)"
       }
-    ]
+    ],
+    "device_consumption_water": []
   }
 }

@@ -5,8 +5,8 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - sensor.electricity_price
-      attribute: future_prices_curr_price_level
+      - sensor.borasvagen_electricity_price
+      attribute: price_level
     - platform: homeassistant
       event: start
     - platform: state
@@ -20,9 +20,9 @@ automation:
     - choose:
       - conditions:
         - condition: state
-          entity_id: sensor.electricity_price
-          attribute: future_prices_curr_price_level
-          state: Very cheap
+          entity_id: sensor.borasvagen_electricity_price
+          attribute: price_level
+          state: LOW
         sequence:
         - service: switch.turn_on
           target:
@@ -55,9 +55,9 @@ automation:
               - switch.living_room_charging_strip_1_socket_4
       - conditions:
         - condition: state
-          entity_id: sensor.electricity_price
-          attribute: future_prices_curr_price_level
-          state: Cheap
+          entity_id: sensor.borasvagen_electricity_price
+          attribute: price_level
+          state: LOW
         sequence:
         - service: switch.turn_on
           target:
@@ -74,9 +74,9 @@ automation:
             - switch.living_room_charging_strip_1_socket_4
       - conditions:
         - condition: state
-          entity_id: sensor.electricity_price
-          attribute: future_prices_curr_price_level
-          state: Normal
+          entity_id: sensor.borasvagen_electricity_price
+          attribute: price_level
+          state: NORMAL
         sequence:
         - service: switch.turn_on
           target:
@@ -93,9 +93,9 @@ automation:
             - switch.laundry_bench_outlets
       - conditions:
         - condition: state
-          entity_id: sensor.electricity_price
-          attribute: future_prices_curr_price_level
-          state: Expensive
+          entity_id: sensor.borasvagen_electricity_price
+          attribute: price_level
+          state: HIGH
         sequence:
         - service: switch.turn_off
           target:
@@ -108,9 +108,9 @@ automation:
           data: {}
       - conditions:
         - condition: state
-          entity_id: sensor.electricity_price
-          attribute: future_prices_curr_price_level
-          state: Very expensive
+          entity_id: sensor.borasvagen_electricity_price
+          attribute: price_level
+          state: HIGH
         sequence:
         - service: switch.turn_off
           data: {}

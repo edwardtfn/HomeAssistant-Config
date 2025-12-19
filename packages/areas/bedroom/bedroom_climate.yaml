@@ -1,35 +1,13 @@
-#generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
-#  - name: Bedroom - Hygrostat
-#    #unique_id: b7b4aec9-212e-43b2-9ec4-982491695fda
-#    humidifier: switch.bedroom_humidifier
-#    target_sensor: sensor.bedroom_hygrometer_humidity
-#    #min_humidity: 0
-#    #max_humidity: 100
-#    target_humidity: 45
-#    away_humidity: 30
-#    dry_tolerance: 2
-#    device_class: humidifier
-#    initial_state: true
-#    min_cycle_duration:
-#      minutes: 5
-
-  #- platform: mold_indicator #https://www.home-assistant.io/integrations/mold_indicator/
-    #name: Bedroom - Mold indicator
-    #indoor_temp_sensor: sensor.bedroom_thermostat_current_temperature
-    #indoor_humidity_sensor: sensor.bedroom_thermostat_humidity
-    #outdoor_temp_sensor: sensor.home_weather_outdoor_temperature
-    #calibration_factor: 1.0
-
 template:
   - sensor:
     - name: Bedroom - Thermostat Humidity
       unique_id: 6e460995-b4c5-4f51-9a97-d39382731d68
       unit_of_measurement: "%"
       device_class: humidity
-      availability: "{{ is_number(states('sensor.bedroom_thermostat_cloud_humidity')) or state_attr('climate.bedroom_thermostat', 'current_humidity') | float(-1) >= 0}}"
+      availability: "{{ is_number(states('sensor.bedroom_humidity')) or is_number(states('sensor.bedroom_thermostat_1_current_humidity')) }}"
       state: >-
-        {% if is_number(states('sensor.bedroom_thermostat_cloud_humidity')) %}
-          {{ states('sensor.bedroom_thermostat_cloud_humidity') | float(0) | round(0) }}
+        {% if is_number(states('sensor.bedroom_humidity')) %}
+          {{ states('sensor.bedroom_humidity') | float(0) | round(0) }}
         {% else %}
-          {{ state_attr('climate.bedroom_thermostat', 'current_humidity') | float(0) | round(0) }}
+          {{ states('sensor.bedroom_thermostat_1_current_humidity') | float(0) | round(0) }}
         {% endif %}

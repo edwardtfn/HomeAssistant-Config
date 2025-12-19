@@ -1,10 +1,14 @@
 substitutions:
+  #BAUD_RATE: '115200'
   ###### CHANGE ME START ######
   device_name: office-workstation-panel
   friendly_name: Office - Workstation - Panel
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   #bytes_per_char: "2"
+  boot_sound: true
+  #upload_tft_baud_rate: 921600
+  #wakeup_with_button_press: true
 
   #nextion_update_url: "http://homeassistant.local:8123/local/nspanel/sonoff/nspanel.tft"
   #nextion_update_url: "http://homeassistant.local:8123/local/nspanel/dev/nspanel_us_land.tft"
@@ -12,12 +16,10 @@ substitutions:
   #nextion_update_url: "http://homeassistant.local:8123/local/nspanel/dev/nspanel_us.tft"
   #nextion_update_url: http://nspanel.costafirmo.com/tft/v4.1.4/nspanel_us_land.tft
 
-  #upload_tft_baud_rate: "115200"
-
   ##### addon-configuration #####
   ## addon_climate ##
-  #heater_relay: "1" #Use relay 1
-  #cooler_relay: "2"
+  heater_relay: "1" #Use relay 1
+  #cooler_relay: "1"
   #temp_units: "°F" #Temperatures in Fahrenheit
   #temp_min: "20" #Min supported temperature is 40°F
   #temp_max: "80" #Max supported temperature is 80°F
@@ -27,28 +29,76 @@ substitutions:
   #min_idle_time: "0"
   #target_low: "65"
   #target_high: "75"
+  #nextion_queue_delay_factor: '1'
+  #qrcode_size: 250
 
 ##### My customization - Start #####
+#bluetooth_proxy:
+
+#esp32_ble_tracker:
+#  scan_parameters:
+#    continuous: false
+
+#api:
+#  on_client_connected:
+#    then:
+#      - delay: 300s
+#      - if:
+#          condition:
+#            - api.connected:
+#          then:
+#            - esp32_ble_tracker.start_scan:
+#                continuous: true
+#  on_client_disconnected:
+#    then:
+#      - esp32_ble_tracker.stop_scan:
+
+#wifi:
+#  power_save_mode: LIGHT
 ##### My customization - End #####
 
 packages:
-  nspanel_package:    !include packages/Blackymas/nspanel_esphome.yaml
-  #dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
-  #heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
+  base:               !include packages/Blackymas/nspanel_esphome.yaml
+#  core:               !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
+#  standard:           !include packages/Blackymas/esphome/nspanel_esphome_standard.yaml
+#  hw_buzzer:          !include packages/Blackymas/esphome/nspanel_esphome_standard_hw_buzzer.yaml
+#  hw_relays:          !include packages/Blackymas/esphome/nspanel_esphome_standard_hw_relays.yaml
+#  hw_temperature:     !include packages/Blackymas/esphome/nspanel_esphome_standard_hw_temperature.yaml
+#  page_alarm:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_alarm.yaml
+#  page_blank:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_blank.yaml
+#  page_buttons:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_buttons.yaml
+#  page_climate:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_climate.yaml
+#  page_confirm:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_confirm.yaml
+#  page_cover:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_cover.yaml
+#  page_entities:      !include packages/Blackymas/esphome/nspanel_esphome_standard_page_entities.yaml
+#  page_fan:           !include packages/Blackymas/esphome/nspanel_esphome_standard_page_fan.yaml
+#  page_keyb_num:      !include packages/Blackymas/esphome/nspanel_esphome_standard_page_keyb_num.yaml
+#  page_light:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_light.yaml
+#  page_media_player:  !include packages/Blackymas/esphome/nspanel_esphome_standard_page_media_player.yaml
+#  page_notification:  !include packages/Blackymas/esphome/nspanel_esphome_standard_page_notification.yaml
+#  page_qrcode:        !include packages/Blackymas/esphome/nspanel_esphome_standard_page_qrcode.yaml
+#  page_settings:      !include packages/Blackymas/esphome/nspanel_esphome_standard_page_settings.yaml
+#  page_utilities:     !include packages/Blackymas/esphome/nspanel_esphome_standard_page_utilities.yaml
+#  page_weather:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_weather.yaml
+#  upload_tft:         !include packages/Blackymas/esphome/nspanel_esphome_standard_upload_tft.yaml
+
+#  nspanel_package:    !include packages/Blackymas/nspanel_esphome.yaml
+#  ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
+#  dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
+#  advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
+  heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
   #cool_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
-  #cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
-  #advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
-  ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
-  #nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
+#  cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
+#  nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
   #nspanel_upload_tft: !include packages/Blackymas/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
   #debug: !include packages/config_debug_esp32.yaml
   #remote_package:
   #  url: https://github.com/Blackymas/NSPanel_HA_Blueprint
   #  ref: main
-  #  refresh: 1s
+  #  refresh: 30min
   #  files:
   #    - nspanel_esphome.yaml # Base package
-  #    - nspanel_esphome_addon_climate_heat.yaml
+  #    - nspanel_esphome_addon_climate_dual.yaml
   #    - esphome/nspanel_esphome_advanced.yaml
   #    #- nspanel_esphome_core.yaml # Base package
   #    #- nspanel_esphome_upload_tft.yaml # Use only if you have issues with TFT transfer
@@ -58,33 +108,304 @@ packages:
     vars:
       ip: !secret ip_office_workstation_panel
 
-esphome:
-  platformio_options:
-    build_flags:
-      - -fexceptions
+#nspanel_ha_blueprint:
+#  main_task_stack_size: 16384
 
-logger:
-  logs:
-    script: DEBUG
-
-#uart:
-#  - id: !extend tf_uart
-#    debug:
-#      direction: BOTH
-#      dummy_receiver: false
-#      after:
-#        delimiter: 0xff, 0xff, 0xff
-#      sequence:
-#        - lambda: UARTDebug::log_string(direction, bytes);
+#api:
+#  homeassistant_services: !remove
+#  on_client_connected:
+#    then:
+#      - lambda: |-
+#          if (client_info.find("Home Assistant ") == 0)
+#            nspanel_ha_blueprint::HaToNextionManager::getInstance().setupSubscriptions();
+#          id(api_is_updated) = true;
+#
+#  actions:
+#    - action: subscribe_to_entity
+#      variables:
+#        entity_id: string
+#        page: string
+#        component: string
+#        global: bool
+#      then:
+#        - lambda: |-
+#            // Add new subscriptions with the updated settings
+#            nspanel_ha_blueprint::HaToNextionManager::getInstance().addSubscription(entity_id.c_str(), page.c_str(), component.c_str(), global);
+#            // api_server->setup();
+#            // esphome::api::SubscribeHomeAssistantStatesRequest request;
+#            // api_server->parent_.subscribe_home_assistant_states(request);
+#            api_reset->execute();
+#    - action: set_entity
+#      variables:
+#        entity_id: string
+#      then:
+#        - lambda: |-
+#            ESP_LOGI("DEBUG", "Changing entity_id to %s...", entity_id.c_str());
+#            ha_subscription_01->dump_config();
+#            id(ha_subscription_01).set_entity_id(entity_id.c_str());
+#            ha_subscription_01->setup();
+#            ha_subscription_01->dump_config();
 
 #bluetooth_proxy:
 #  active: true
+
+#button:
+#  - id: bt_factory_reset
+#    platform: factory_reset
+#    name: Restart with Factory Default Settings
+#  - platform: safe_mode
+#    name: "Restart (Safe Mode)"
+#  - id: release_ble
+#    name: DEBUG Release Bluetooth
+#    platform: template
+#    on_press:
+#      then:
+#        lambda: bluetooth_release_memory();
+#          #include "esp_bt.h"
+#          esp_bluedroid_disable();
+#          esp_bluedroid_deinit();
+#          esp_bt_controller_disable();
+#          esp_bt_controller_deinit();
+#          esp_bt_mem_release(ESP_BT_MODE_BTDM);
+
+#captive_portal: !remove
+
+#debug:
+#  update_interval: 5s
+
+#display:
+#  - id: !extend disp1
+#    command_spacing: !remove
+#    skip_connection_handshake: true
+#    touch_sleep_timeout: 30
+#    exit_reparse_on_start: true
+#    #soft_reset_on_start: false
+#display:
+#  - id: !extend disp1
+#    command_spacing: 15ms
+
+#esp32:
+#  framework:
+#    type: arduino
+#    advanced:
+#      main_loop_stack_size: 16384
+#    version: 5.3.2
+#    platform_version: 53.3.13
+#    sdkconfig_options:
+#      CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL_THRESHOLD: "0"
+#      CONFIG_BOOTLOADER_LOG_LEVEL_NONE: "y"
+#      CONFIG_BOOTLOADER_LOG_LEVEL: "0"
+      # Enable stack monitoring
+      # CONFIG_FREERTOS_USE_TRACE_FACILITY: "y"
+      # CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS: "y"
+#      CONFIG_ESP_MAIN_TASK_STACK_SIZE: "16384"
+      # ESPHOME_APP_MAIN_TASK_STACK_SIZE: "16384"
+#    version: 5.4.1
+#    type: arduino
+#    type: esp-idf
+#    version: 5.3.1
+#    platform_version: 6.9.0
+#    type: arduino
+#    sdkconfig_options: !remove
+#    type: esp-idf
+#    version: 4.4.8
+#    platform_version: 6.3.2
+#      CONFIG_MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH: "y"  # This causes issues with TFT Update
+      #BOARD_HAS_PSRAM: "y"
+      #CONFIG_D0WD_PSRAM_MISO_PIN: "19"
+      #CONFIG_D0WD_PSRAM_MOSI_PIN: "23"
+      #CONFIG_SPIRAM_CACHE_WORKAROUND: "y"
+      #CONFIG_SPIRAM_SUPPORT: "y"
+#    sdkconfig_options:
+#      CONFIG_ESP_MAIN_TASK_STACK_SIZE: "8192"
+#      CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY: "true"
+#      CONFIG_SPIRAM_RODATA: "true"
+
+#esp32_ble_tracker:
+
 #esphome:
+#  on_boot:
+#    - priority: -1000
+#      then:
+#        - logger.log: Wait 5s to start wifi
+#        - delay: 5s
+#        - logger.log: Start wifi
+#        - wifi.enable:
+#        - logger.log: Wifi is starting
+#        - delay: 5s
+#        - logger.log: Wait 5s to start display
+#        - delay: 5s
+#        - logger.log: Turn-on display
+#        - switch.turn_on: screen_power
+#        - logger.log: Display is turning on
+#        - delay: 5s
+#        - logger.log: Display is on for more than 5s
+#            
+#    then:
+#      - delay: 1s
+#      - switch.turn_on: screen_power
+
 #  platformio_options:
 #    build_flags:
-#      - "-D TESTING_FLAG"
+#      - -D NEXTION_PROTOCOL_LOG
+#      - "-D NSPANEL_HA_BLUEPRINT_TESTING_FLAG"
+#      - "-D NEXTION_PROTOCOL_LOG"
+#      - -D CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384   # Double the stack size
+#      - -D CONFIG_ARDUINO_LOOP_STACK_SIZE=16384    # For Arduino compatibility  
+#      - -Os                                        # Optimize for size
+#  platformio_options:
+#    build_flags:
+#      - -DCONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST="y"
+#      - -DCONFIG_BT_BLE_DYNAMIC_ENV_MEMORY="y"
+#      - -DCONFIG_ESP32_REV_MIN_3="y"
+#      - -DCONFIG_LWIP_MAX_SOCKETS=5  # This breakes web_server
+#      - -DCONFIG_MBEDTLS_DYNAMIC_BUFFER="y"
+#      - -DCONFIG_MBEDTLS_DYNAMIC_FREE_CA_CERT="y"
+#      - -DCONFIG_MBEDTLS_DYNAMIC_FREE_CONFIG_DATA="y"
+#      - -DCONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC="y"
+#      - -DCONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY="y"
+#      - -DCONFIG_SPIRAM_IGNORE_NOTFOUND="y"
+#      - -DCONFIG_SPIRAM_RODATA="y"
+#      - -DCONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP="y"
+#      - -ffunction-sections
+#      - -fdata-sections
+#      - -Wl,--gc-sections
+#      - -DDCONFIG_D0WD_PSRAM_CLK_IO=5
+#      - -DDCONFIG_D0WD_PSRAM_CS_IO=18
+#  platformio_options:
+#    build_flags:
+#      - -Wno-expansion-to-defined
+#      - -w
+#      - -mfix-esp32-psram-cache-issue
+#      - -DBOARD_HAS_PSRAM
+#      - -DCONFIG_ESP32_SPIRAM_SUPPORT=1
+#      # If you had to define custom PSRAM pins, which is unusual, flags might look something like this:
+#      - -DCUSTOM_PSRAM_CS_PIN=18
+#      - -DCUSTOM_PSRAM_CLK_PIN=5
+#      - -DCUSTOM_PSRAM_MOSI_PIN=23
+#      - -DCUSTOM_PSRAM_MISO_PIN=19
 
-#external_components:
+external_components:
+  - source:
+      type: local
+      path: packages/Blackymas/components
+    components:
+      - nspanel_ha_blueprint
+  - source: github://pr#12557
+    components: [nextion]
+    refresh: 10s
+#  - source: github://pr#11902
+#    components: [wifi]
+#    refresh: 1h
+#  - source: github://SzczepanLeon/esphome@pull/1/head
+#    components: [nextion]
+#    refresh: 1h
+#  - source: github://pr#11805  # https://github.com/esphome/esphome/pull/11805 - [wifi] Fix mesh network failover and improve retry logic reliability
+#    components: [wifi]
+#    refresh: 1h
+#  - source: github://pr#11629
+#    components: [display, lcd_gpio, lcd_pcf8574, max7219, max7219digit, nextion, pvvx_mithermometer, st7920, tm1621, tm1637, tm1638]
+#    refresh: 1h
+#  - source: github://pr#11670
+#    components: [nextion]
+#    refresh: 300s
+#  - source: github://pr#11008
+#    components: [json]
+#    refresh: 1h
+  - source: github://pr#9429
+    components: [nextion]
+    refresh: 1h
+#  - source: github://pr#10657
+#    components: [adc]
+#    refresh: 1h
+#  - source: github://pr#10549
+#    components: [adc]
+#    refresh: 1h
+#  - source: github://pr#10564
+#    components: [esp32]
+#    refresh: 1h
+#  - source: github://pr#10401
+#    components: [ota]
+#    refresh: 1h
+#  - source: github://pr#10236
+#    components: [uart]
+#    refresh: 20s
+#  - source: github://pr#10205
+#    components: [uart]
+#    refresh: 30s
+#  - source:
+#      type: local
+#      path: packages/sandbox/components
+#    components:
+#      - uart
+#  - source: github://pr#9021
+#    refresh: 10s
+#    components:
+#      - adc
+#  - source:
+#      type: git
+#      url: https://github.com/edwardtfn/esphome
+#      ref: nextion-revert-pr9010
+#    refresh: 15s
+#    components:
+#      - nextion
+#  - source:
+#      type: git
+#      url: https://github.com/esphome/esphome
+#      ref: 2025.4.2
+#    components:
+#      - adc              # changed last month
+#      - api              # changed 5 days ago
+#      - binary_sensor    # changed 2 weeks ago
+#      - ble_client       # changed 3 weeks ago
+#      - ble_scanner      # changed 10 momths ago - it shouldn't be related
+#      - bluetooth_proxy  # changed 2 weeks ago
+#      - button           # changed 3 weeks ago
+#      - climate          # changed 3 weeks ago
+#      - debug            # changed 2 months ago
+#      - display          # changed 3 weeks ago
+#      - esp32            # changed 5 days ago
+#      - ethernet         # changed 2 weeks ago
+#      - factory_reset    # changed 3 weeks ago
+#      - gpio             # changed 3 weeks ago
+#      - homeassistant    # changed 2 months ago
+#      - http_request     # changed 3 weeks ago
+#      - json             # changed 4 months ago - it shouldn't be related
+#      - ledc             # changed 2 months ago
+#      - logger           # changed 5 days ago
+#      - md5              # changed 7 months ago - it shouldn't be related
+#      - mdns             # changed last month
+#      - network          # changed last month
+#      # - nextion          # changed last month
+#      - ntc              # changed 2 months ago
+#      - number           # changed 3 weeks ago
+#      - ota              # changed 6 months ago - it shouldn't be related
+#      - output           # changed 3 weeks ago
+#      - packages         # changed 27 days ago
+#      - psram            # changed last month
+#      - resistance       # changed 2 months ago
+#      - restart          # changed 2 months ago
+#      - rtttl            # changed 2 months ago
+#      - safe_mode        # changed 2 momths ago
+#      - script           # changed 2 months ago
+#      - select           # changed 3 weeks ago
+#      - sensor           # changed 3 weeks ago
+#      - shutdown         # changed 2 months ago
+#      - socket           # changed 2 momths ago
+#      - substitutions    # changed 2 months ago
+#      - switch           # changed 3 weeks ago
+#      - template         # changed 2 weeks ago
+#      - text_sensor      # changed 3 weeks ago
+#      - thermostat       # changed 2 weeks ago
+#      - time             # changed last month
+#      - uart             # changed 2 weeks ago
+#      - uptime           # changed last month
+#      - wifi             # changed 3 months ago
+#  - source:
+#      type: local
+#      path: packages/sandbox/components
+#    components:
+#      - nextion
 #  - source:
 #      type: local
 #      path: packages/Blackymas/components
@@ -111,82 +432,68 @@ logger:
 #    refresh: 1s
 #    components:
 #      - psram
+#  - source:
+#      type: git
+#      url: https://github.com/edwardtfn/esphome
+#      ref: nextion-23
+#    components:
+#      - nextion
+#    refresh: 1s
 
-#esp32:
-#  framework:
-#    type: arduino
-#    sdkconfig_options: !remove
-#    type: esp-idf
-#    version: 4.4.8
-#    platform_version: 6.3.2
-#      CONFIG_MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH: "y"  # This causes issues with TFT Update
-      #BOARD_HAS_PSRAM: "y"
-      #CONFIG_D0WD_PSRAM_MISO_PIN: "19"
-      #CONFIG_D0WD_PSRAM_MOSI_PIN: "23"
-      #CONFIG_SPIRAM_CACHE_WORKAROUND: "y"
-      #CONFIG_SPIRAM_SUPPORT: "y"
+#globals:
+#  - id: max_loop_time
+#    type: uint64_t
+#    initial_value: '0'
+#    restore_value: true
 
-#button:
-#  - id: release_ble
-#    name: DEBUG Release Bluetooth
-#    platform: template
-#    on_press:
-#      then:
-#        lambda: bluetooth_release_memory();
-#          #include "esp_bt.h"
-#          esp_bluedroid_disable();
-#          esp_bluedroid_deinit();
-#          esp_bt_controller_disable();
-#          esp_bt_controller_deinit();
-#          esp_bt_mem_release(ESP_BT_MODE_BTDM);
-
-#  platformio_options:
-#    build_flags:
-#      - -Wno-expansion-to-defined
-#      - -w
-#      - -mfix-esp32-psram-cache-issue
-#      - -DBOARD_HAS_PSRAM
-#      - -DCONFIG_ESP32_SPIRAM_SUPPORT=1
-#      # If you had to define custom PSRAM pins, which is unusual, flags might look something like this:
-#      - -DCUSTOM_PSRAM_CS_PIN=18
-#      - -DCUSTOM_PSRAM_CLK_PIN=5
-#      - -DCUSTOM_PSRAM_MOSI_PIN=23
-#      - -DCUSTOM_PSRAM_MISO_PIN=19
-
-#esphome:
-#  platformio_options:
-#    build_flags:
-#      - -DCONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST="y"
-#      - -DCONFIG_BT_BLE_DYNAMIC_ENV_MEMORY="y"
-#      - -DCONFIG_ESP32_REV_MIN_3="y"
-#      - -DCONFIG_LWIP_MAX_SOCKETS=5  # This breakes web_server
-#      - -DCONFIG_MBEDTLS_DYNAMIC_BUFFER="y"
-#      - -DCONFIG_MBEDTLS_DYNAMIC_FREE_CA_CERT="y"
-#      - -DCONFIG_MBEDTLS_DYNAMIC_FREE_CONFIG_DATA="y"
-#      - -DCONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC="y"
-#      - -DCONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY="y"
-#      - -DCONFIG_SPIRAM_IGNORE_NOTFOUND="y"
-#      - -DCONFIG_SPIRAM_RODATA="y"
-#      - -DCONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP="y"
-#      - -ffunction-sections
-#      - -fdata-sections
-#      - -Wl,--gc-sections
-#      - -DDCONFIG_D0WD_PSRAM_CLK_IO=5
-#      - -DDCONFIG_D0WD_PSRAM_CS_IO=18
-
-#switch:
-#  - id: nspanel_psram_sw
-#    name: "PSRAM"
-#    platform: gpio
-#    pin:
-#      number: 18
-#      inverted: true
-#    restore_mode: ALWAYS_ON
-
-#ota:
-#  password: !remove
+#  - id: safe_mode_count_down
+#    type: int8_t
+#    initial_value: '3'
+#    restore_value: true
 
 #interval:
+#  - interval: 30s
+#    then:
+#      - lambda: |-
+#          version_esphome_new->publish_state(${version});
+#          #include <esp_heap_caps.h>
+#          ESP_LOGCONFIG("DEBUG", "Boot progress: %" PRIu8, get_boot_progress_percentage());
+#          // Report memory
+#          const size_t internal_heap_size = heap_caps_get_total_size(MALLOC_CAP_INTERNAL);
+#          const size_t internal_heap_size_free = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
+#          ESP_LOGW("DEBUG", "Free heap:");
+#
+#          if (internal_heap_size != 0) {
+#            ESP_LOGW("DEBUG", "  Internal:    %7d bytes (%0.1f%%)", internal_heap_size_free,
+#                    ((float)internal_heap_size_free / internal_heap_size) * 100.0f);
+#          } else {
+#            ESP_LOGW("DEBUG", "  Internal:    %7d bytes", internal_heap_size_free);
+#          }
+#
+#          #ifdef USE_PSRAM
+#          const size_t psram_heap_size = heap_caps_get_total_size(MALLOC_CAP_SPIRAM);
+#          const size_t psram_heap_size_free = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
+#          if (psram_heap_size != 0) {
+#            ESP_LOGW("DEBUG", "  PSRAM:       %7d bytes (%0.1f%%)", psram_heap_size_free,
+#                    ((float)psram_heap_size_free / psram_heap_size) * 100.0f);
+#          } else {
+#            ESP_LOGW("DEBUG", "  PSRAM:       %7d bytes", psram_heap_size_free);
+#          }
+#          #endif
+#      - lambda: |-
+#          ESP_LOGW("DEBUG", "disp1->is_connected(): %s", YESNO(disp1->is_connected()));
+#          ESP_LOGW("DEBUG", "disp1->is_detected(): %s", YESNO(disp1->is_detected()));
+#          ESP_LOGW("DEBUG", "disp1->is_setup(): %s", YESNO(disp1->is_setup()));
+#          ESP_LOGW("DEBUG", "scan_baud_rate %s", scan_baud_rate->is_running() ? "is running" : "IS NOT STOPPED");
+#          ESP_LOGW("DEBUG", "Baud rate:");
+#          ESP_LOGW("DEBUG", "  Current: %" PRIu32 "bps", tf_uart->get_baud_rate());
+#          ESP_LOGW("DEBUG", "  Target:  ${BAUD_RATE}bps");
+#          ESP_LOGW("DEBUG", "Globals:");
+#          ESP_LOGW("DEBUG", "  DEBUG_step:        %" PRIu8, id(DEBUG_step));
+#          ESP_LOGW("DEBUG", "  baud_scan_started: %s", YESNO(id(baud_scan_started)));
+#          ESP_LOGW("DEBUG", "  baud_error_count:  %" PRIu8, id(baud_error_count));
+#          ESP_LOGW("DEBUG", "  baud_scan_index:   %" PRIu8, id(baud_scan_index));
+#          ESP_LOGW("DEBUG", "  baud_scan_retries: %" PRIu8, id(baud_scan_retries));
 #  - interval: 1h
 #    then:
 #      - lambda: |-
@@ -224,70 +531,201 @@ logger:
 #          ESP_LOGD("DEBUG", "tft_branch: %i", id(tft_branch));
 #          ESP_LOGD("DEBUG", "tft_model: %i", id(tft_model));
 
-#captive_portal: !remove
+#logger:
+#  logs:
+#    adc: INFO          # silence 1s ADC spam
+#    resistance: INFO   # silence resistance conversions
+#    ntc: INFO          # silence NTC conversions
+#  level: VERBOSE
+#  tx_buffer_size: 2048
+#  task_log_buffer_size: 2048
+#  initial_level: DEBUG
+#  baud_rate: 115200
+#  logs:
+#    esp-idf: INFO
+#    adc: INFO
+#    adc.esp32: INFO
+#    api: VERBOSE
+#    bluetooth_proxy: DEBUG
+#    climate: INFO
+#    nextion: VERY_VERBOSE
+#    nextion: DEBUG
+#    ntc: INFO
+#    resistance: INFO
+#    scheduler: DEBUG
+#    script: INFO
+#    sensor: INFO
+#    text_sensor: INFO
+#    uart: VERBOSE
 
-#web_server: !remove
-
-#  - source:
-#      type: git
-#      url: https://github.com/edwardtfn/esphome
-#      ref: nextion-23
-#    components:
-#      - nextion
-#    refresh: 1s
-
-#display:
-#  - id: !extend disp1
-#    skip_connection_handshake: true
-#    touch_sleep_timeout: 30
-#    exit_reparse_on_start: true
-#    #soft_reset_on_start: false
-
-#api:
-#  services:
-#    - service: set_entity
-#      variables:
-#        entity_id: string
+#number:
+#  - id: temp_baud_rate
+#    platform: template
+#    max_value: 1000000
+#    min_value: 100
+#    step: 1
+#    initial_value: 115200
+#    unit_of_measurement: bps
+#    optimistic: true
+#    on_value: 
 #      then:
-#        - lambda: |-
-#            ESP_LOGI("DEBUG", "Changing entity_id to %s...", entity_id.c_str());
-#            ha_subscription_01->dump_config();
-#            id(ha_subscription_01).set_entity_id(entity_id.c_str());
-#            ha_subscription_01->setup();
-#            ha_subscription_01->dump_config();
+#        - lambda: tf_uart->set_baud_rate(x);
+            
+#ota:
+#  password: !remove
+
+#psram: !remove
+
+#runtime_stats:
+#  log_interval: 60s
+  
+#safe_mode:
+#  on_safe_mode:
+#    then:
+#      - lambda: |-
+#          id(safe_mode_count_down)--;
+#          if (id(safe_mode_count_down) < 1) {
+#            bt_factory_reset->press();
+#          }
+
+#script:
 
 #sensor:
-#  - id: ha_subscription_01
-#    platform: homeassistant
-#    entity_id: sensor.total_power
+#  - id: version_esphome_new
+#    name: Version ESPHome (new)
+#    platform: template
+#    entity_category: diagnostic
+#    icon: mdi:tag-text-outline
+#    internal: false
+#    update_interval: never
+#    accuracy_decimals: 0
 
-#bluetooth_proxy:
-#  active: true
-
-#sensor:
+#  - id: !extend ntc_source
+#    attenuation: auto
+#  - platform: homeassistant
+#    entity_id: input_text.test_text
+#    id: test_text
+#  - platform: debug
+#    free:
+#      name: "Heap Free"
+#    block:
+#      name: "Heap Max Block"
+#    psram:
+#      name: "Free PSRAM"
+#    loop_time:
+#  - id: debug_loop_time
+#    name: Loop time
+#      on_value:
+#        then:
+#          - lambda: |-
+#              if (x > id(max_loop_time))
+#                id(max_loop_time) = x;
+#  - id: max_loop_time_sensor
+#    name: Loop time max
+#    platform: template
+#    entity_category: diagnostic
+#    lambda: |-
+#      return id(max_loop_time);
+#  - platform: uptime
+#    type: timestamp
+#    name: Uptime
 #  - id: ble_connections_limit
 #    name: BLE Connections Limit
 #    platform: template
 #    internal: false
 #    lambda: return ble_proxy->get_bluetooth_connections_limit();
 #    accuracy_decimals: 0
-
+#
 #  - id: ble_connections_free
 #    name: BLE Connections Free
 #    platform: template
 #    internal: false
 #    lambda: return ble_proxy->get_bluetooth_connections_free();
 #    accuracy_decimals: 0
+#
+#  - id: ha_subscription_01
+#    platform: homeassistant
+#    entity_id: sensor.total_power
 
-##### My customization - End #####
+#switch:
+#  - id: !extend screen_power
+#    internal: false
+#    restore_mode: ALWAYS_OFF
+#  - id: !extend tft_update_automatically
+#    restore_mode: ALWAYS_OFF
+#  - id: nspanel_psram_sw
+#    name: "PSRAM"
+#    platform: gpio
+#    pin:
+#      number: 18
+#      inverted: true
+#    restore_mode: ALWAYS_ON
+#  - platform: gpio
+#    pin: GPIO01
+#    name: Pin 01
+#  - platform: gpio
+#    pin: GPIO03
+#    name: Pin 03
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin: GPIO13
+#    name: Pin 13
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin: GPIO18
+#    name: Pin 18
+#    restore_mode: ALWAYS_OFF  FAILED
+#  - platform: gpio
+#    pin:  GPIO20
+#    name: Pin 20
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin:  GPIO23
+#    name: Pin 23
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin:  GPIO25
+#    name: Pin 25
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin:  GPIO26
+#    name: Pin 26
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin:  GPIO32
+#    name: Pin 32
+#    restore_mode: ALWAYS_OFF
+#  - platform: gpio
+#    pin:  GPIO33
+#    name: Pin 33
+#    restore_mode: ALWAYS_OFF
 
+#text_sensor:
+#  - platform: debug
+#    device:
+#      name: "Device Info"
+#    reset_reason:
+#      name: "Reset Reason"
 
-# Customization area
-##### My customization - Start #####
-external_components:
-  - source:
-      type: local
-      path: packages/Blackymas/components
-    refresh: 1s
-    components:
-      - nspanel_ha_blueprint
+#uart:
+#  - id: !extend tf_uart
+#    debug:
+#      direction: BOTH
+#      dummy_receiver: false
+#      after:
+#        delimiter: 0xff, 0xff, 0xff
+#      sequence:
+#        - lambda: UARTDebug::log_string(direction, bytes);
+
+#web_server: !remove
+
+wifi:
+#  fast_connect: true
+  #enable_on_boot: false
+  #use_psram: true
+  #use_psram: !remove
+#  power_save_mode: HIGH
+  networks:
+    - id: wifi_backup
+      ssid: !secret wifi_bkp_ssid
+      password: !secret wifi_bkp_password

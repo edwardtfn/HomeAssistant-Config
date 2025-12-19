@@ -4,10 +4,8 @@
   "key": "emulated_hue.ids",
   "data": {
     "1": "input_boolean.home_party_mode",
-    "2": "light.balcony_light",
-    "3": "switch.guest_room_panel_relay_1",
-    "4": "light.kitchen_bench_lights",
-    "5": "light.kitchen_table_lights",
-    "6": "light.office_workstation_lights"
+    "2": "light.outdoor_deck_light",
+    "3": "light.bathroom_lights_lights",
+    "4": "switch.guest_room_panel_relay_1"
   }
 }

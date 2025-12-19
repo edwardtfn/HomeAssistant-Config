@@ -1,8 +1,0 @@
-light:
-  - name: Home - Curtain's lights reference
-    platform: group
-    unique_id: 54962cd5-97a5-490a-997e-6c7b2581f93a
-    entities:
-      - light.corridor_all_lights
-      - light.kitchen_bench_lights
-      - light.kitchen_table_lights

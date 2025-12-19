@@ -17,7 +17,7 @@ automation:
       value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
       enabled: true
     action:
-    - service: notify.signal_edward
+    - service: notify.edward
       data:
         message: >
           {{trigger.to_state.name}} changed from {{trigger.from_state.state}} to {{trigger.to_state.state}} by {{ trigger.to_state.attributes.source }}

@@ -1,58 +1,107 @@
 substitutions:
   device_name: office-testing
   device_verbose_name: "Office - Testing board"
-  baud_rate: "9600"
+  baud_rate: "115200"
   friendly_name: ${device_name}
 
-esphome:
-  name: ${device_name}
-  friendly_name: ${device_verbose_name}
-
-esp8266:
-  board: esp12e
-
 packages:
-  wifi: !include packages/config_wifi.yaml
   time: !include packages/config_sntp.yaml
+  wifi: !include packages/config_wifi.yaml
 
-# Enable logging
-logger:
+api:
+  encryption:
+    key: !secret api_encryption_key
+  actions:
+    - action: uart_write_string
+      variables:
+        command: string
+      then:
+        - lambda: |-
+            static const char *const TAG = "service.uart_write_string";
+            ESP_LOGD(TAG, "Sending: %s", command.c_str());
+            id(tf_uart).write_str(command.c_str());
+            const uint8_t to_send[3] = {0xFF, 0xFF, 0xFF};
+            id(tf_uart).write_array(to_send, sizeof(to_send));
 
-# Enable over-the-air updates
-ota:
-  password: !secret ota_password
-  id: my_ota
+    - action: uart_write_hex
+      variables:
+        command: int[]
+      then:
+        - lambda: |-
+            static const char *const TAG = "service.uart_write_hex";
+            std::vector<uint8_t> uint8_vector(command.begin(), command.end());
+            id(tf_uart).write_array(uint8_vector.data(), uint8_vector.size());
 
-captive_portal:
+    - action: upload_tft
+      variables:
+        url: string
+      then:
+        - lambda: |-
+            ESP_LOGD("action.command", "Action: upload_tft");
+            ESP_LOGD("action.command", "  url: '%s'", url.c_str());
+            if (!url.empty())
+              disp1->set_tft_url(url.c_str());
+            disp1->upload_tft(${baud_rate}, true);
 
-web_server:
-  port: 80
-  auth:
-    username: admin
-    password: !secret web_server_admin_password
-
-# Use the blue LED in the device as a status LED, which will blink if there are warnings (slow) or errors (fast)
-status_led:
-  pin:
-    number: GPIO5
-    inverted: True
-    allow_other_uses: true
-
+    # Sends custom commands directly to the display for dynamic interactions and updates.
+    - action: command
+      variables:
+        cmd: string  # Command string to be sent. Refer to the Nextion Instruction Set for supported commands: https://nextion.tech/instruction-set/
+      then:
+        - lambda: |-
+            ESP_LOGD("action.command", "Action: command");
+            ESP_LOGD("action.command", "  cmd: '%s'", cmd.c_str());
+            disp1->send_command(cmd.c_str());
 
 button:
   - <<: !include packages/button_restart.yaml
   - <<: !include packages/button_restart_safe_mode.yaml
   #- <<: !include button_wifi_restart.yaml
 
+debug:
+
+display:
+  - id: disp1
+    platform: nextion
+    tft_url: http://homeassistant.local:8123/local/test.tft
+
+esp8266:
+  board: esp12e
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${device_verbose_name}
+#  on_boot:
+#    priority: 250  # At this priority, WiFi is initialized.
+#    then:
+#      - lambda: set_baud_rate->execute(stoi(baud_rate->state));
+
+external_components:
+  - source: github://pr#9429
+    components: [nextion]
+    refresh: 1h
+
+logger:
+  baud_rate: 0
+  level: VERBOSE
+
+ota:
+  - id: my_ota
+    platform: esphome
+    password: !secret ota_password
+
 sensor:
   - <<: !include packages/sensor_uptime.yaml
   #- <<: !include packages/sensor_wifi.yaml
   #- <<: !include packages/sensor_wifi_signal_percentage.yaml
   - <<: !include packages/sensor_esp_vcc_voltage.yaml
-text_sensor:
-  - <<: !include packages/text_sensor_version.yaml
 
-# Four relay outputs, exposed as switches in Home Assistant
+status_led:
+  pin:
+    number: GPIO5
+    inverted: True
+    allow_other_uses: true
+
 switch:
   - platform: gpio
     pin:
@@ -80,120 +129,21 @@ switch:
 #    name: Relay 4
 #    id: relay4
 
+text_sensor:
+  - <<: !include packages/text_sensor_version.yaml
+
 uart:
   - id: tf_uart
     tx_pin: GPIO13
     rx_pin: GPIO12
     baud_rate: ${baud_rate}
-    debug:
-      direction: BOTH
-      dummy_receiver: false
-      after:
-        delimiter: [0xFF, 0xFF, 0xFF]
-      sequence:
-        - lambda: UARTDebug::log_string(direction, bytes);
+    #debug:
+    #  direction: BOTH
+    #  dummy_receiver: false
+    #  after:
+    #    delimiter: [0xFF, 0xFF, 0xFF]
+    #  sequence:
+    #    - lambda: UARTDebug::log_string(direction, bytes);
 
-display:
-  - id: disp1
-    platform: nextion
-
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret api_encryption_key
-  services:
-    - service: uart_write_string
-      variables:
-        command: string
-      then:
-        - lambda: |-
-            static const char *const TAG = "service.uart_write_string";
-            ESP_LOGD(TAG, "Sending: %s", command.c_str());
-            id(tf_uart).write_str(command.c_str());
-            const uint8_t to_send[3] = {0xFF, 0xFF, 0xFF};
-            id(tf_uart).write_array(to_send, sizeof(to_send));
-
-    - service: uart_write_hex
-      variables:
-        command: int[]
-      then:
-        - lambda: |-
-            static const char *const TAG = "service.uart_write_hex";
-            std::vector<uint8_t> uint8_vector(command.begin(), command.end());
-            id(tf_uart).write_array(uint8_vector.data(), uint8_vector.size());
-
-select:
-  - id: baud_rate
-    name: ${device_name} Baud rate
-    platform: template
-    options:
-      - "2400"
-      - "4800"
-      - "9600"
-      - "19200"
-      - "31250"
-      - "38400"
-      - "57600"
-      - "115200"
-      - "230400"
-      - "250000"
-      - "256000"
-      - "512000"
-      - "921600"
-    initial_option: ${baud_rate}
-    optimistic: true
-    restore_value: true
-    internal: false
-    entity_category: config
-    icon: mdi:swap-horizontal
-    set_action:
-      - lambda: set_baud_rate->execute(stoi(x));
-
-#esphome:
-#  on_boot:
-#    priority: 250  # At this priority, WiFi is initialized.
-#    then:
-#      - lambda: set_baud_rate->execute(stoi(baud_rate->state));
-
-script:
-  - id: set_baud_rate
-    mode: restart
-    parameters:
-      baud_rate: int
-    then:
-      - if:
-          condition:
-            - lambda: !lambda return (tf_uart->get_baud_rate() != baud_rate);
-          then:
-            - lambda: |-
-                static const char *const TAG = "select.baud_rate (custom)";
-                ESP_LOGD(TAG, "Baud rate changing from %i to %i bps", tf_uart->get_baud_rate(), baud_rate);
-                ESP_LOGD(TAG, "Flush UART");
-            - wait_until:
-                condition:
-                  - lambda: !lambda return (tf_uart->available() < 1);
-                timeout: 3s
-            - lambda: |-
-                tf_uart->flush();
-                static const char *const TAG = "select.baud_rate (custom)";
-                //ESP_LOGD(TAG, "Sending instruction to Nextion");
-                //disp1->send_command_printf("bauds=%i", baud_rate);
-                ESP_LOGD(TAG, "Flush UART");
-            - wait_until:
-                condition:
-                  - lambda: !lambda return (tf_uart->available() < 1);
-                timeout: 3s
-            - lambda: |-
-                tf_uart->flush();
-                static const char *const TAG = "select.baud_rate (custom)";
-                ESP_LOGD(TAG, "Set ESPHome new baud rate to %i bps", baud_rate);
-
-                char buffer[64];
-                snprintf(buffer, sizeof(buffer), "bauds=%i", baud_rate);
-                id(tf_uart).write_str(buffer);
-                const uint8_t to_send[3] = {0xFF, 0xFF, 0xFF};
-                id(tf_uart).write_array(to_send, sizeof(to_send));
-                tf_uart->set_baud_rate(baud_rate);
-                //tf_uart->load_settings();
-                tf_uart->setup();
-                ESP_LOGD(TAG, "Baud rate is changed to %i bps", baud_rate);
+wifi:
+  power_save_mode: HIGH

@@ -4,19 +4,5 @@ binary_sensor:
     unique_id: f4bc1d3b-a99f-47c4-95f6-99833b3d5451
     device_class: presence
     entities:
-      - binary_sensor.office_motion_motion
-      - binary_sensor.office_motion_occupancy
-      - binary_sensor.office_workstation_motion_occupancy
-      - binary_sensor.office_workstation_1_presence_motion
-      - binary_sensor.office_workstation_1_presence_occupancy
-      - binary_sensor.office_workstation_2_presence_motion
-      - binary_sensor.office_workstation_2_presence_occupancy
-
-  - name: Office - Motion
-    platform: group
-    unique_id: f5fa18c6-ac72-488a-8bd0-82e5fff7135c
-    device_class: motion
-    entities:
-      - binary_sensor.office_motion_motion
-      - binary_sensor.office_motion_occupancy
-      - binary_sensor.office_workstation_motion_occupancy
+      - binary_sensor.office_presence_occupancy
+      - binary_sensor.esp32_s3_box_3_5a7750_presence_detect

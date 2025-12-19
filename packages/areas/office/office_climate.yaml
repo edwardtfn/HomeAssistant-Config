@@ -6,19 +6,16 @@ automation:
       path: EdwardTFN/tado_windows.yaml
       input:
         window_entity:
-        - binary_sensor.office_windows_1
-        - binary_sensor.office_windows_2_opening
+        - binary_sensor.office_window_opening
         climate_target:
-        - climate.office_thermostat_1
-        - climate.office_thermostat_2
+        - climate.office_thermostat
 
 #climate:
 #  - platform: climate_group # https://github.com/daenny/climate_group
 #    name: Office - Thermostat
 #    temperature_unit: C
 #    entities:
-#      - climate.office_thermostat_1
-#      - climate.office_thermostat_2
+#      - climate.office_thermostat
 
 #generic_hygrostat: # https://www.home-assistant.io/integrations/generic_hygrostat/
 #- name: Office - Hygrostat
@@ -39,8 +36,7 @@ group:
   office_thermostats:
     name: Office - Thermostats
     entities:
-      - climate.office_thermostat_1
-      - climate.office_thermostat_2
+      - climate.office_thermostat
 
 sensor:
   - name: Office - Current temperature (mean)
@@ -52,9 +48,7 @@ sensor:
     device_class: temperature
     state_class: measurement
     entities:
-      - sensor.office_thermostat_1_current_temperature
-      - sensor.office_thermostat_2_current_temperature
-      - sensor.office_hygrometer_temperature
+      - sensor.office_thermostat_current_temperature
 
 template:
   - sensor:
@@ -62,10 +56,10 @@ template:
         unique_id: 5f8f23b4-d33d-4f43-8b0b-bf4bc1ba0f55
         unit_of_measurement: "%"
         device_class: humidity
-        availability: "{{ is_number(states('sensor.office_thermostat_cloud_humidity')) or state_attr('climate.office_thermostat_1', 'current_humidity') | float(-1) >= 0}}"
+        availability: "{{ is_number(states('sensor.office_thermostat_cloud_humidity')) or state_attr('climate.office_thermostat', 'current_humidity') | float(-1) >= 0}}"
         state: >-
           {% if is_number(states('sensor.office_thermostat_cloud_humidity')) %}
             {{ states('sensor.office_thermostat_cloud_humidity') | float(0) | round(0) }}
           {% else %}
-            {{ state_attr('climate.office_thermostat_1', 'current_humidity') | float(0) | round(0) }}
+            {{ state_attr('climate.office_thermostat', 'current_humidity') | float(0) | round(0) }}
           {% endif %}

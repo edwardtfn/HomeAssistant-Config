@@ -13,21 +13,10 @@ automation:
         no_motion_wait_to_off: 30
         max_lumens: 15
         motion_entity: binary_sensor.guest_bathroom_presence_combined
-  - alias: Guest bathroom - Mirror lights - Door based
-    id: '1687856397167'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/set_entities_based_on_other_entities.yaml
-      input:
-        input_entities:
-        - binary_sensor.guest_bathroom_door
-        target_entities:
-        - light.guest_bathroom_mirror_lights
 
 light:
   - platform: group
     name: "Guest bathroom - All lights"
     unique_id: ad3f8239-b80f-416b-b83a-78a36bde6e36
     entities:
-      - light.guest_bathroom_ceiling_light
-      - light.guest_bathroom_mirror_lights
+      - light.guest_bathroom_light

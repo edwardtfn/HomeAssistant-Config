@@ -7,6 +7,21 @@
       {
         "id": "test_toggle",
         "name": "Test toggle"
+      },
+      {
+        "id": "watering_season",
+        "name": "Watering season",
+        "icon": "mdi:watering-can-outline"
+      },
+      {
+        "id": "home_party_mode",
+        "name": "Home - Party mode",
+        "icon": "mdi:balloon"
+      },
+      {
+        "id": "home_display_motion_sensor",
+        "name": "Home - Display motion sensors",
+        "icon": "mdi:motion-sensor"
       }
     ]
   }

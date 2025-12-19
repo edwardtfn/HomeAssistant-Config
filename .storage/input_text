@@ -11,6 +11,13 @@
         "max": 100,
         "mode": "text",
         "min": 0
+      },
+      {
+        "id": "test_text",
+        "name": "Test Text",
+        "min": 0,
+        "max": 100,
+        "mode": "text"
       }
     ]
   }

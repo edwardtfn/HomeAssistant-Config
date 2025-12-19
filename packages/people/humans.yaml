@@ -41,7 +41,7 @@ automation:
       id: Edward's phone
     condition: []
     action:
-    - service: notify.signal_group_home
+    - service: notify.group_home
       data:
         message: 'Phone out of battery:
 

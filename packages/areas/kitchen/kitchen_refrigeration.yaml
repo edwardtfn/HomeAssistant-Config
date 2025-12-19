@@ -72,7 +72,7 @@ automation:
         hours: 0
         minutes: 1
         seconds: 15
-      below: 4
+      below: 1
       id: Frige - Low
     - platform: numeric_state
       entity_id: sensor.kitchen_fridge_hygrometer_temperature
@@ -80,16 +80,16 @@ automation:
         hours: 0
         minutes: 1
         seconds: 15
-      above: 5
+      above: 3
       below: 13
       id: Fridge - Normal
     condition:
       - '{{ trigger.from_state.state not in ["unavailable", "unknown", None] }}'
     action:
-    - service: notify.signal_edward
+    - service: notify.edward
       data:
         message: Refrigeration temperature alarm triggered
-    - service: notify.signal_edward
+    - service: notify.edward
       data:
         message: Triggered by {{ trigger.entity_id }} when changing from {{ trigger.from_state
           }} to {{ trigger.to_state }}. Trigger id is {{ trigger.id }}.
@@ -111,7 +111,7 @@ automation:
           - condition: trigger
             id: Fridge - Low
         sequence:
-        - service: notify.signal_group_home
+        - service: notify.group_home
           data:
             message: "Abnormal temperature! \n{{ state_attr(trigger.entity_id, 'friendly_name')
               }} is {{states(trigger.entity_id) | float(-99) | round(1) }}ºC.\nPlease
@@ -128,7 +128,7 @@ automation:
           - condition: trigger
             id: Fridge - Normal
         sequence:
-        - service: notify.signal_group_home
+        - service: notify.group_home
           data:
             message: '{{ state_attr(trigger.entity_id, ''friendly_name'') }} temperature
               is back to normal ({{states(trigger.entity_id) | float(-99) | round(1)

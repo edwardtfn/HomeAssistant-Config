@@ -47,9 +47,8 @@ binary_sensor:
     unique_id: 0b69d9d8-00f7-4599-ab48-1b156cbfb0eb
     device_class: occupancy
     entities:
-      - binary_sensor.guest_bathroom_motion_iaszone
-      - binary_sensor.guest_bathroom_shower_motion_occupancy
-      - binary_sensor.guest_bathroom_presence
+      - binary_sensor.guest_bathroom_motion_occupancy
+      - binary_sensor.guest_bathroom_door_opening
 
 input_boolean:
   guest_bathroom_occupied:

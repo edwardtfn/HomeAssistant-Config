@@ -1,15 +1,5 @@
 zha:
   device_config:
-    70:b3:d5:2b:60:01:20:b2_1:
-      type: "switch"
-    70:b3:d5:2b:60:01:20:b2_2:
-      type: "switch"
-    70:b3:d5:2b:60:01:20:b2_3:
-      type: "switch"
-    70:b3:d5:2b:60:01:20:b2_4:
-      type: "switch"
-    70:b3:d5:2b:60:01:20:b2_5:
-      type: "switch"
     a4:c1:38:5c:a7:f2:c6:d1_1:
       type: switch
     a4:c1:38:5c:a7:f2:c6:d1_2:

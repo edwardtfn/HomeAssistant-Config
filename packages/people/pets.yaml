@@ -4,3 +4,52 @@ group:
     entities:
       - person.dory
       - person.skal
+
+template:
+  - sensor:
+      - name: Dory - Combined area
+        unique_id: 2b9bbb58-e59e-4c89-82fb-ff3999b78a43
+        icon: mdi:dog-side
+        availability: '{{ has_value("person.dory") or has_value("sensor.dory_s_tracker_area") }}'
+        state: >
+          {% set entity = "person.dory" %}
+          {% set entity_state = states(entity) %} {% if entity_state == "home" %}
+            {% set ble_location_entity = "sensor.dory_s_tracker_area" %}
+            {% set ble_location = states(ble_location_entity) %}
+            {% if has_value(ble_location_entity) %}
+              {{ ble_location }}
+            {% else %}
+              {{ state_translated(entity) | default("Home") }}
+            {% endif %}
+          {% else %}
+            {{ state_translated(entity) | default("Home") }}
+          {% endif %}
+        picture: '{{ state_attr("person.dory", "entity_picture") }}'
+
+      - name: Skal - Combined area
+        unique_id: cf1bd268-bfe9-4161-b030-9e574623d85d
+        icon: mdi:dog-side
+        availability: '{{ has_value("person.skal") or has_value("sensor.skal_s_tracker_area") }}'
+        state: >
+          {% set entity = "person.skal" %}
+          {% set entity_state = states(entity) %} {% if entity_state == "home" %}
+            {% set ble_location_entity = "sensor.skal_s_tracker_area" %}
+            {% set ble_location = states(ble_location_entity) %}
+            {% if has_value(ble_location_entity) %}
+              {{ ble_location }}
+            {% else %}
+              {{ state_translated(entity) | default("Home") }}
+            {% endif %}
+          {% else %}
+            {{ state_translated(entity) | default("Home") }}
+          {% endif %}
+        picture: '{{ state_attr("person.skal", "entity_picture") }}'
+
+      - name: Dogs - Combined area
+        unique_id: a660cf6f-6751-41ef-8eb5-77d6e66312d0
+        icon: mdi:dog
+        availability: '{{ has_value("sensor.dory_combined_area") or has_value("sensor.skal_combined_area") }}'
+        state: >
+          {{ states("sensor.dory_combined_area") }}
+
+          {{ states("sensor.skal_combined_area") }}

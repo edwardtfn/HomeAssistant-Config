@@ -19,7 +19,7 @@ binary_sensor:
     platform: threshold
     entity_id: sensor.processor_temperature
     device_class: heat
-    upper: 65
+    upper: 70
     hysteresis: 5
 
 command_line:
@@ -53,42 +53,6 @@ input_datetime:
     icon: mdi:restart
     has_date: true
     has_time: true
-
-schedule:
-  home_assistant_update_schedule:
-    name: Home Assistant - Update schedule
-    icon: mdi:update
-    monday:
-      - from: "03:00:00"
-        to: "08:00:00"
-      - from: "12:00:00"
-        to: "13:30:00"
-    tuesday:
-      - from: "03:00:00"
-        to: "08:00:00"
-      - from: "12:00:00"
-        to: "13:30:00"
-    wednesday:
-      - from: "03:00:00"
-        to: "08:00:00"
-      - from: "12:00:00"
-        to: "13:30:00"
-    thursday:
-      - from: "03:00:00"
-        to: "08:00:00"
-      - from: "12:00:00"
-        to: "15:30:00"
-    friday:
-      - from: "03:00:00"
-        to: "08:00:00"
-      - from: "12:00:00"
-        to: "13:30:00"
-    saturday:
-      - from: "03:00:00"
-        to: "08:00:00"
-    sunday:
-      - from: "03:00:00"
-        to: "09:00:00"
 
 script:
   home_groups_update:
