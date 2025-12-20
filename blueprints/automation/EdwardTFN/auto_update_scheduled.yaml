@@ -33,13 +33,6 @@ blueprint:
 
     ## v2025.12.1
 
-    ### Changes:
-    - Migrated from Telegram-specific notifications to generic `notify.send_message` action
-    - Now supports any notify entity (Telegram, mobile app, etc.)
-    - Automatic escaping of special characters for Telegram MarkdownV2 compatibility
-    - Simplified configuration: just select a notify entity (no separate enable toggle needed)
-    - Removed Telegram-specific settings (target ID, disable notification)
-
     ## Attention:
 
     - Home Assistant may restart automatically as part of the update process.
