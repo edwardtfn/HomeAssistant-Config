@@ -25,13 +25,13 @@ blueprint:
   name: Home Assistant Auto-update on a schedule base
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
-    min_version: '2024.8.0'
+    min_version: 2025.8.0
   description: >
     # Home Assistant Auto-update
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2025.1.1
+    ## v2025.12.1
 
     ### Changes:
     - Migrated from Telegram-specific notifications to generic `notify.send_message` action
