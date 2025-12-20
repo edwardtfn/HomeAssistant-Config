@@ -671,6 +671,24 @@ condition:
         id: "Out of schedule"
       - condition: and
         conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id: "HA Start"
+              - condition: trigger
+                id: "Automations reloaded"
+          - condition: template
+            value_template: >-
+              {{
+                states.update
+                | default([])
+                | selectattr("state", "eq", "on")
+                | selectattr("entity_id", "in", update_out_of_schedule)
+                | rejectattr("entity_id", "in", input_update_exclusions)
+                | list | count | int(0) > 0
+              }}
+      - condition: and
+        conditions:
           - condition: state
             entity_id: !input schedule_entity
             state: 'on'
@@ -740,6 +758,21 @@ variables:
       input_update_process_started_entity | default([]) | count == 1 and
       is_state(input_update_process_started_entity | first, "on")
     }}
+  is_out_of_schedule_mode: >
+    {{
+      trigger.id == "Out of schedule" or
+      (
+        (trigger.id == "HA Start" or trigger.id == "Automations reloaded") and
+        (
+          states.update
+          | default([])
+          | selectattr("state", "eq", "on")
+          | selectattr("entity_id", "in", update_out_of_schedule)
+          | rejectattr("entity_id", "in", input_update_exclusions)
+          | list | count | int(0) > 0
+        )
+      )
+    }}
   friendly_name: |
     {% set friendly_name_tmp = state_attr(this.entity_id, "friendly_name") | default("") %}
     {{
@@ -782,68 +815,43 @@ action:
   - &recalc_update_list
     variables:
       firmware_update_entities: >
-        {{
-          (
-            (
-              states.update
-              | default([])
-              | selectattr("entity_id", "in", update_out_of_schedule)
-            )
-            if trigger.id == "Out of schedule"
-            else
-              (
-                states.update
-                | default([])
-              )
-          )
-          | default([])
-          | selectattr("state", "eq", "on")
-          | selectattr('attributes.device_class', 'defined')
-          | selectattr('attributes.device_class', 'eq', 'firmware')
-          | selectattr("entity_id", "in", update_out_of_schedule) 
-          | map(attribute='entity_id')
-          | list
-        }}
-      general_update_entities: >
-        {% if input_update_inclusion_mode == "all" %}
+        {% if is_out_of_schedule_mode %}
+          {# For out-of-schedule triggers, return empty list #}
+          {# The update_out_of_schedule list will be added to combined_list directly #}
+          []
+        {% else %}
           {{
-            (
-              (
-                states.update
-                | default([])
-                | selectattr("entity_id", "in", update_out_of_schedule)
-              )
-              if trigger.id == "Out of schedule"
-              else
-                (
-                  states.update
-                  | default([])
-                )
-            )
+            states.update
+            | default([])
+            | selectattr("state", "eq", "on")
+            | selectattr('attributes.device_class', 'defined')
+            | selectattr('attributes.device_class', 'eq', 'firmware')
+            | rejectattr('entity_id', 'in', input_update_exclusions)
+            | map(attribute='entity_id')
+            | list
+          }}
+        {% endif %}
+      general_update_entities: >
+        {% if is_out_of_schedule_mode %}
+          {# For out-of-schedule triggers, return empty list #}
+          {# The update_out_of_schedule list will be added to combined_list directly #}
+          []
+        {% elif input_update_inclusion_mode == "all" %}
+          {{
+            states.update
             | default([])
             | selectattr('state', 'eq', 'on')
             | rejectattr('entity_id', 'in', core_update_entity)
             | rejectattr('entity_id', 'in', os_update_entity)
             | rejectattr('entity_id', 'in', supervisor_update_entity)
             | rejectattr('entity_id', 'in', firmware_update_entities)
+            | rejectattr('entity_id', 'in', input_update_exclusions)
             | map(attribute='entity_id')
             | list
           }}
         {% elif input_update_inclusion_mode == "specified" %}
           {{
-            (
-              (
-                states.update
-                | default([])
-                | selectattr("entity_id", "in", update_out_of_schedule)
-              )
-              if trigger.id == "Out of schedule"
-              else
-                (
-                  states.update
-                  | default([])
-                )
-            )
+            states.update
             | default([])
             | selectattr('state', 'eq', 'on')
             | selectattr('entity_id', 'in', input_update_inclusion_entity_list)
@@ -851,24 +859,13 @@ action:
             | rejectattr('entity_id', 'in', os_update_entity)
             | rejectattr('entity_id', 'in', supervisor_update_entity)
             | rejectattr('entity_id', 'in', firmware_update_entities)
+            | rejectattr('entity_id', 'in', input_update_exclusions)
             | map(attribute='entity_id')
             | list
           }}
         {% elif input_update_inclusion_mode == "specified-single" %}
           {{
-            (
-              (
-                states.update
-                | default([])
-                | selectattr("entity_id", "in", update_out_of_schedule)
-              )
-              if trigger.id == "Out of schedule"
-              else
-                (
-                  states.update
-                  | default([])
-                )
-            )
+            states.update
             | default([])
             | selectattr('state', 'eq', 'on')
             | selectattr('entity_id', 'in', input_update_inclusion_entity_list)
@@ -876,25 +873,14 @@ action:
             | rejectattr('entity_id', 'in', os_update_entity)
             | rejectattr('entity_id', 'in', supervisor_update_entity)
             | rejectattr('entity_id', 'in', firmware_update_entities)
+            | rejectattr('entity_id', 'in', input_update_exclusions)
             | map(attribute='entity_id')
             | list
             | first
           }}
         {% elif input_update_inclusion_mode == "searchstring" %}
           {{
-            (
-              (
-                states.update
-                | default([])
-                | selectattr("entity_id", "in", update_out_of_schedule)
-              )
-              if trigger.id == "Out of schedule"
-              else
-                (
-                  states.update
-                  | default([])
-                )
-            )
+            states.update
             | default([])
             | selectattr('state', 'eq', 'on')
             | selectattr('entity_id', 'match', input_update_inclusion_entity_searchfilter)
@@ -902,24 +888,13 @@ action:
             | rejectattr('entity_id', 'in', os_update_entity)
             | rejectattr('entity_id', 'in', supervisor_update_entity)
             | rejectattr('entity_id', 'in', firmware_update_entities)
+            | rejectattr('entity_id', 'in', input_update_exclusions)
             | map(attribute='entity_id')
             | list
           }}
         {% elif input_update_inclusion_mode == "searchfilter-single" %}
           {{
-            (
-              (
-                states.update
-                | default([])
-                | selectattr("entity_id", "in", update_out_of_schedule)
-              )
-              if trigger.id == "Out of schedule"
-              else
-                (
-                  states.update
-                  | default([])
-                )
-            )
+            states.update
             | default([])
             | selectattr('state', 'eq', 'on')
             | selectattr('entity_id', 'match', input_update_inclusion_entity_searchfilter)
@@ -927,6 +902,7 @@ action:
             | rejectattr('entity_id', 'in', os_update_entity)
             | rejectattr('entity_id', 'in', supervisor_update_entity)
             | rejectattr('entity_id', 'in', firmware_update_entities)
+            | rejectattr('entity_id', 'in', input_update_exclusions)
             | map(attribute='entity_id')
             | list
             | first
@@ -1041,18 +1017,34 @@ action:
             {{ exclusions }}
       combined_list: >-
         {% set entities = namespace(list=[]) %}
-        {%- for entity in [firmware_update_entities, general_update_entities,
-                          core_update_entity, os_update_entity, supervisor_update_entity, update_out_of_schedule] %}
-          {%- if entity is sequence and entity is not string %}
-            {%- for item in entity %}
-              {%- if item is string %}
-                {%- set entities.list = entities.list + [item] %}
-              {%- endif %}
-            {%- endfor %}
-          {%- elif entity is string %}
-            {%- set entities.list = entities.list + [entity] %}
-          {%- endif %}
-        {%- endfor %}
+        {%- if is_out_of_schedule_mode %}
+          {# In out-of-schedule mode: ONLY include entities from update_out_of_schedule list #}
+          {%- for entity in [update_out_of_schedule] %}
+            {%- if entity is sequence and entity is not string %}
+              {%- for item in entity %}
+                {%- if item is string %}
+                  {%- set entities.list = entities.list + [item] %}
+                {%- endif %}
+              {%- endfor %}
+            {%- elif entity is string %}
+              {%- set entities.list = entities.list + [entity] %}
+            {%- endif %}
+          {%- endfor %}
+        {%- else %}
+          {# Normal mode: Include all entity types #}
+          {%- for entity in [firmware_update_entities, general_update_entities,
+                            core_update_entity, os_update_entity, supervisor_update_entity] %}
+            {%- if entity is sequence and entity is not string %}
+              {%- for item in entity %}
+                {%- if item is string %}
+                  {%- set entities.list = entities.list + [item] %}
+                {%- endif %}
+              {%- endfor %}
+            {%- elif entity is string %}
+              {%- set entities.list = entities.list + [entity] %}
+            {%- endif %}
+          {%- endfor %}
+        {%- endif %}
         {{ entities.list }}
       updates_pending: >-
         {% set updates = namespace(list=[]) %}
@@ -1090,34 +1082,48 @@ action:
       - if: '{{ "starting" in input_notification_select_notifications }}'
         then:
           - &send_notification
-            alias: Send notification
-            if:
-              - condition: template
-                value_template: '{{ input_notification_entity | length > 0 }}'
-                alias: Check if notification entity is configured
-            then:
+            sequence:
               - variables:
-                  notification_message: |
+
+                  notification_message: >-
                     {%- if is_telegram_notify -%}
-                      {# Escape special characters for Telegram MarkdownV2 #}
-                      {# Note: Backslash must be escaped first! #}
-                      {%- set special_chars = ['\\', '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'] -%}
-                      {%- set result = log_message -%}
-                      {%- for char in special_chars -%}
-                        {%- set result = result.replace(char, '\\' + char) -%}
-                      {%- endfor -%}
-                      {{ result }}
+                      {{ log_message
+                        | replace('\\', '\\\\')
+                        | replace('_', '\\_')
+                        | replace('*', '\\*')
+                        | replace('[', '\\[')
+                        | replace(']', '\\]')
+                        | replace('(', '\\(')
+                        | replace(')', '\\)')
+                        | replace('~', '\\~')
+                        | replace('`', '\\`')
+                        | replace('>', '\\>')
+                        | replace('#', '\\#')
+                        | replace('+', '\\+')
+                        | replace('-', '\\-')
+                        | replace('=', '\\=')
+                        | replace('|', '\\|')
+                        | replace('{', '\\{')
+                        | replace('}', '\\}')
+                        | replace('.', '\\.')
+                        | replace('!', '\\!')
+                      }}
                     {%- else -%}
                       {{ log_message }}
                     {%- endif -%}
-              - alias: Notify - Send message
-                action: notify.send_message
-                target:
-                  entity_id: '{{ input_notification_entity }}'
-                data:
-                  title: '{{ notification_title }}'
-                  message: '{{ notification_message }}'
-                continue_on_error: true
+              - if:
+                  - condition: template
+                    value_template: '{{ input_notification_entity | length > 0 }}'
+                    alias: Check if notification entity is configured
+                then:
+                  - alias: Notify - Send message
+                    action: notify.send_message
+                    target:
+                      entity_id: '{{ input_notification_entity }}'
+                    data:
+                      title: '{{ notification_title }}'
+                      message: '{{ notification_message }}'
+                    continue_on_error: true
 
   - alias: Report list of updates
     if:
@@ -1130,10 +1136,10 @@ action:
           log_message: >
             List of updates:
 
-            - `{{ states.update
+            - {{ states.update
                 | selectattr('state', 'eq', 'on')
                 | rejectattr('entity_id', 'in', input_update_exclusions)
-                | map(attribute='name') | list | join("`\n- `") }}`
+                | map(attribute='name') | list | join("\n- ") }}
       - *logbook_update
       - if: '{{ "list_of_updates" in input_notification_select_notifications }}'
         then:
@@ -1172,7 +1178,7 @@ action:
       - condition: '{{ input_actions_pre_update is sequence }}'
       - *recalc_update_list
       - variables:
-          log_message: "Running pre-update actions..."
+          log_message: 'Running pre-update actions...'
       - *logbook_update
       - if: '{{ "pre_update_actions" in input_notification_select_notifications }}'
         then:
@@ -1310,14 +1316,25 @@ action:
       - variables:
           log_message: "Update generic items"
       - *logbook_update
+      - variables:
+          log_message: 'Starting sequence of standard updates...'
+      - *logbook_update
+      - if: '{{ "update_progress" in input_notification_select_notifications }}'
+        then:
+          - *send_notification
+
       - alias: "Update - Generic"
         continue_on_error: true
         repeat:
           while:
             - "{{ input_general_update_mode in ['patches', 'major_and_minor', 'all'] }}"
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
+            - condition: or
+              conditions:
+                - condition: template
+                  value_template: '{{ is_out_of_schedule_mode }}'
+                - condition: state
+                  entity_id: !input schedule_entity
+                  state: "on"
             - condition: template
               value_template: >
                 {{ ( states.update
@@ -1331,9 +1348,6 @@ action:
                   | list | count | int(0) ) > 0
                 }}
           sequence:
-            - variables:
-                log_message: "Starting sequence of standard updates..."
-            - *logbook_update
             - variables:
                 updates_pending: >
                   {{ states.update
@@ -1356,7 +1370,7 @@ action:
               alias: Log updating
               sequence:
                 - variables:
-                    log_message: "Updating `{{ current_update_entity_friendly_name }}`..."
+                    log_message: 'Updating "{{ current_update_entity_friendly_name }}"...'
                 - *logbook_update
                 - if: '{{ "update_progress" in input_notification_select_notifications }}'
                   then:
@@ -1375,20 +1389,20 @@ action:
               sequence:
                 - alias: Wait
                   continue_on_error: true
-                  wait_template: "{{ is_state(current_update_entity, 'off') }}"
+                  wait_template: '{{ is_state(current_update_entity, "off") }}'
                   continue_on_timeout: true
                   timeout: !input update_timeout
                 - if: '{{ wait.completed }}'
                   then:
                     - variables:
-                        log_message: '`{{ current_update_entity_friendly_name }}` updated successfuly'
+                        log_message: '"{{ current_update_entity_friendly_name }}" updated successfuly'
                     - *logbook_update
                     - if: '{{ "update_progress" in input_notification_select_notifications }}'
                       then:
                         - *send_notification
                   else:
                     - variables:
-                        log_message: 'ERROR: `{{ current_update_entity_friendly_name }}` update timed out'
+                        log_message: 'ERROR: "{{ current_update_entity_friendly_name }}" update timed out'
                     - *logbook_update
                     - if: '{{ "update_progress" in input_notification_select_notifications }}'
                       then:
@@ -1406,14 +1420,25 @@ action:
           log_message: "Device's firmware"
       - *logbook_update
 
+      - variables:
+          log_message: 'Starting sequence of Devices firmware update'
+      - *logbook_update
+      - if: '{{ "update_progress" in input_notification_select_notifications }}'
+        then:
+          - *send_notification
+
       - alias: "Update - Devices firmware"
         continue_on_error: true
         repeat:
           while:
             - "{{ input_firmware_update_mode in ['patches', 'major_and_minor', 'all'] }}"
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
+            - condition: or
+              conditions:
+                - condition: template
+                  value_template: '{{ is_out_of_schedule_mode }}'
+                - condition: state
+                  entity_id: !input schedule_entity
+                  state: "on"
             - condition: template
               value_template: >
                 {{ ( states.update
@@ -1424,13 +1449,6 @@ action:
                   | list | count | int(0) ) > 0
                 }}
           sequence:
-            - variables:
-                log_message: "Starting sequence of Devices firmware update"
-            - *logbook_update
-            - if: '{{ "update_progress" in input_notification_select_notifications }}'
-              then:
-                - *send_notification
-
             - variables:
                 updates_pending: >
                   {{ states.update
@@ -1456,14 +1474,25 @@ action:
       - variables:
           log_message: "Update Core"
       - *logbook_update
+      - variables:
+          log_message: 'Starting sequence of core items updates...'
+      - *logbook_update
+      - if: '{{ "update_progress" in input_notification_select_notifications }}'
+        then:
+          - *send_notification
+
       - alias: "Update - Core"
         continue_on_error: true
         repeat:
           while:
             - "{{ input_core_os_update_mode in ['patches', 'major_and_minor', 'all'] }}"
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
+            - condition: or
+              conditions:
+                - condition: template
+                  value_template: '{{ is_out_of_schedule_mode }}'
+                - condition: state
+                  entity_id: !input schedule_entity
+                  state: "on"
             - condition: template
               value_template: >
                 {{ ( states.update
@@ -1474,12 +1503,6 @@ action:
                   | list | count | int(0) ) > 0
                 }}
           sequence:
-            - variables:
-                log_message: "Starting sequence of core items updates..."
-            - *logbook_update
-            - if: '{{ "update_progress" in input_notification_select_notifications }}'
-              then:
-                - *send_notification
 
             - variables:
                 updates_pending: >
@@ -1507,14 +1530,25 @@ action:
       - variables:
           log_message: "Update OS"
       - *logbook_update
+      - variables:
+          log_message: "Starting sequence of OS update"
+      - *logbook_update
+      - if: '{{ "update_progress" in input_notification_select_notifications }}'
+        then:
+          - *send_notification
+
       - alias: "Update - OS"
         continue_on_error: true
         repeat:
           while:
             - "{{ input_core_os_update_mode in ['patches', 'major_and_minor', 'all'] }}"
-            - condition: state
-              entity_id: !input schedule_entity
-              state: "on"
+            - condition: or
+              conditions:
+                - condition: template
+                  value_template: '{{ is_out_of_schedule_mode }}'
+                - condition: state
+                  entity_id: !input schedule_entity
+                  state: "on"
             - condition: template
               value_template: >
                 {{ ( states.update
@@ -1525,12 +1559,6 @@ action:
                   | list | count | int(0) ) > 0
                 }}
           sequence:
-            - variables:
-                log_message: "Starting sequence of OS update"
-            - *logbook_update
-            - if: '{{ "update_progress" in input_notification_select_notifications }}'
-              then:
-                - *send_notification
 
             - variables:
                 updates_pending: >
@@ -1575,7 +1603,7 @@ action:
       - variables:
           log_message: |
             Remaining updates:
-              - `{{ remaining_items | join("`\n- `") }}`
+            - {{ remaining_items | join("\n- ") }}
 
       - *logbook_update
       - if: '{{ "update_progress" in input_notification_select_notifications }}'
@@ -1638,7 +1666,7 @@ action:
           - variables:
               log_message: |
                 Remaining updates:
-                  - `{{ remaining_updates | join("`\n- `") }}`
+                - {{ remaining_updates | join("\n- ") }}
           - *logbook_update
           - if: '{{ "remaining_updates" in input_notification_select_notifications }}'
             then:
@@ -1688,7 +1716,7 @@ action:
           log_message: >
             {{ pending_restart_items_count }} item{{ "s" if pending_restart_items_count > 1 }} pending a restart:
 
-            - `{{ pending_restart_items | join("`\n- `") }}`
+            - {{ pending_restart_items | join("\n- ") }}
       - *logbook_update
       - if: '{{ "restart" in input_notification_select_notifications }}'
         then:
@@ -1715,7 +1743,7 @@ action:
           - if: '{{ has_invalid_config or has_check_config_notification }}'
             then:
               - variables:
-                  log_message: "Running pre-restart actions..."
+                  log_message: 'Running pre-restart actions...'
               - *logbook_update
               - if: '{{ "restart" in input_notification_select_notifications }}'
                 then:
