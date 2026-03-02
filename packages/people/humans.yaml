@@ -23,7 +23,7 @@ automation:
       id: Carol's phone
     - platform: state
       entity_id:
-      - sensor.device_tracker_edwards_phone_icloud3_battery
+      - sensor.edwards_phone_battery_level_2
       to: '0'
       for:
         hours: 0
@@ -32,7 +32,7 @@ automation:
       id: Edward's phone
     - platform: state
       entity_id:
-      - sensor.device_tracker_edwards_phone_icloud3_battery
+      - sensor.edwards_phone_battery_level_2
       to:
       - unavailable
       - unknown

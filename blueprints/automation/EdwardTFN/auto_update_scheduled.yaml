@@ -31,7 +31,7 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2025.12.1
+    ## v2026.3.0
 
     ## Attention:
 
@@ -285,13 +285,72 @@ blueprint:
       description: Select the back-up options
       collapsed: true
       input:
+        backup_mode:
+          name: Create a backup before starting the updates?
+          description: >
+            Select when to create a backup before updates are installed.
+
+            Backups are created using the
+            [backup.create_automatic](https://www.home-assistant.io/integrations/backup/#action-backupcreate_automatic)
+            action, which uses the backup settings you have configured under
+            [Settings > System > Backups](https://my.home-assistant.io/redirect/backup/).
+
+            * **Never**: No backup will be created by this automation.
+
+            * **When no recent backup is detected**: A backup will only be created if the last successful
+              backup is older than the "Maximum backup age" threshold.
+              This requires the "Backup state sensor", "Last successful automatic backup sensor"
+              and "Maximum backup age" settings below to be configured.
+
+            * **Always**: A backup will always be created before updates are installed.
+          default: "never"
+          selector:
+            select:
+              multiple: false
+              options:
+                - label: Never
+                  value: "never"
+                - label: When no recent backup is detected
+                  value: "auto"
+                - label: Always
+                  value: "always"
+
+        backup_timeout:
+          name: Backup timeout
+          description: >
+            Maximum time to wait for the backup process to complete.
+
+            This is only used when "Create a backup before starting the updates" is set to
+            "When no recent backup is detected" or "Always".
+
+            If a Backup state sensor is configured below, the automation will actively monitor the
+            backup status and continue as soon as it completes.
+            Otherwise, it will wait for the full duration before proceeding.
+          default: 60
+          selector:
+            number:
+              mode: box
+              min: 1
+              max: 180
+              unit_of_measurement: minutes
+
         run_during_backup:
           name: Backup state sensor
           description: |
             `Optional`
 
-            Is a sensor is selected, this automation will run only when that sensor reports backup state as `idle`.
-            No update will be executed while the backup state sensor is in any other state or "unavailable".
+            Select the Backup Manager State sensor from the native Home Assistant Backup integration.
+            When selected, this automation will wait for the backup system to be `idle` before starting updates.
+            No update will be executed while the backup system is in any other state
+            (`create_backup`, `receive_backup`, `restore_backup`, `blocked`) or "unavailable".
+
+            This sensor is also used to detect when the backup created by this automation has completed,
+            instead of relying on a fixed timeout.
+
+            **Required** when backup mode is set to "When no recent backup is detected".
+
+            This sensor is provided by the [Backup integration](https://www.home-assistant.io/integrations/backup/)
+            and is typically named `sensor.backup_backup_manager_state`.
 
             If no sensor is selected, this automation won't pause due to a backup in progress.
           default: []
@@ -303,16 +362,18 @@ blueprint:
                 device_class: enum
                 integration: backup
 
-        backup_bool:
-          name: Create a full backup before start the updates?
-          default: true
-          selector:
-            boolean:
-
         last_backup_timestamp_entity:
           name: Last successful automatic backup sensor
           description: |
             `Optional`
+
+            Select the "Last successful automatic backup" timestamp sensor from the native
+            Home Assistant Backup integration.
+
+            **Required** when backup mode is set to "When no recent backup is detected".
+
+            This sensor is provided by the [Backup integration](https://www.home-assistant.io/integrations/backup/)
+            and is typically named `sensor.backup_last_successful_automatic_backup`.
           default: []
           selector:
             entity:
@@ -321,32 +382,21 @@ blueprint:
                 domain: sensor
                 device_class: timestamp
                 integration: backup
-        backup_timeout:
-          name: Backup Timeout
-          description: >-
-            Specify how much time the automation waits for the backup process.
-            We can't check whether the backup was successful.
-            Per default we wait 1 hour to finish the backup.
-          default: 60
-          selector:
-            number:
-              mode: box
-              min: 1
-              max: 180
-              unit_of_measurement: minutes
 
         max_backup_age:
-          name: Maximum backup age (or zero, to disable)
+          name: Maximum backup age
           description: |
             `Optional`
 
-            This requires the [Google Drive Backup](https://github.com/sabeechen/hassio-google-drive-backup)
-            addon to be installed and configured to automatically backup, and provide
-            a sensor with the backup states. The setting only checks for the age of
-            the automatic backups from that addon, not the backups created internally
-            by this blueprint.
+            The maximum acceptable age of the last successful automatic backup.
+
+            **Required** when backup mode is set to "When no recent backup is detected".
+            In that mode, a new backup will be created only if the last successful backup
+            is older than this threshold.
+
+            When backup mode is "Always" or "Never", this setting is ignored.
           default:
-            days: 0
+            days: 1
             hours: 0
             minutes: 0
             seconds: 0
@@ -354,20 +404,18 @@ blueprint:
             duration:
               enable_day: true
 
-        backup_location:
-          name: Backup Location
-          description: |
-            You can create a new backup location under [Settings > System > Storage](https://my.home-assistant.io/redirect/storage/).
-
-            Specify where to store the backup for this autoupdate process.
-          default: "/backup"
-          selector:
-            backup_location:
-
     actions_section:
       name: Actions (optional)
       icon: mdi:shoe-print
-      description: Select actions to run at diferent moments on the update process
+      description: >
+        Select actions to run at different moments during the update process.
+
+        The "Pre-update", "Pre-restart" and "Post-update" actions run once at their respective stages.
+
+        The step-specific actions (Starting, Backup, Update progress, Errors, Restart, Done)
+        run at each occurrence of that step and have access to useful variables like the list of
+        pending updates, the current entity being updated, and a log message describing the current step.
+        These are independent of the built-in notification system.
       collapsed: true
       input:
         actions_pre_update:
@@ -384,8 +432,8 @@ blueprint:
             which can happens over-night. Take this in account when selecting your actions.
 
             Note => Some usefull variables available for your actions:
-              - "`\{\{ updates_list \}\}`" - contains the list of updates when the automation started.
-              - "`\{\{ updates_pending \}\}`" - contains the list of updates remaining to be updated.
+              - `{{ updates_list }}` - contains the list of updates when the automation started.
+              - `{{ updates_pending }}` - contains the list of updates remaining to be updated.
           default: []
           selector:
             action: {}
@@ -408,8 +456,8 @@ blueprint:
             like when a Core update is installed. These actions might not be executed in those cases.
 
             Note => Some usefull variables available for your actions:
-              - "`\{\{ updates_list \}\}`" - contains the list of updates when the automation started.
-              - "`\{\{ updates_pending \}\}`" - contains the list of updates remaining to be updated.
+              - `{{ updates_list }}` - contains the list of updates when the automation started.
+              - `{{ updates_pending }}` - contains the list of updates remaining to be updated.
           default: []
           selector:
             action: {}
@@ -429,13 +477,113 @@ blueprint:
             Take this in account when selecting your actions.
 
             Note => Some usefull variables available for your actions:
-              - "`\{\{ updates_list \}\}`" - contains the list of updates when the automation started.
-              - "`\{\{ updates_pending \}\}`" - contains the list of updates remaining to be updated.
+              - `{{ updates_list }}` - contains the list of updates when the automation started.
+              - `{{ updates_pending }}` - contains the list of updates remaining to be updated.
 
             **IMPORTANT** => Some updates will automatically restart Home Assistant,
             causing the automation to interrupt before finishing, preventing the pos-updates actions to be executed.
             If you have critical actions to run after an update,
             consider including also in another automation based on Home Assistant start.
+          default: []
+          selector:
+            action: {}
+
+        notification_action_starting:
+          name: Step action - Starting
+          description: |
+            `Optional`
+
+            Actions to run when the update process starts.
+
+            Useful variables available:
+              - `{{ updates_list }}` - List of all update entity ids detected when the automation started.
+              - `{{ updates_pending }}` - List of update entity ids remaining to be processed.
+              - `{{ updates_pending_count }}` - Number of pending updates.
+              - `{{ log_message }}` - A plain text message describing the current step.
+          default: []
+          selector:
+            action: {}
+
+        notification_action_backup:
+          name: Step action - Backup
+          description: |
+            `Optional`
+
+            Actions to run at each backup-related step (starting, completed, or fallback wait finished).
+
+            Useful variables available:
+              - `{{ log_message }}` - A plain text message describing what happened.
+              - `{{ updates_list }}` - List of all update entity ids detected when the automation started.
+              - `{{ updates_pending }}` - List of update entity ids remaining to be processed.
+          default: []
+          selector:
+            action: {}
+
+        notification_action_update_progress:
+          name: Step action - Update progress
+          description: |
+            `Optional`
+
+            Actions to run for each individual update (when it starts and when it completes or times out).
+
+            Useful variables available:
+              - `{{ current_update_entity }}` - The entity id of the update being processed (e.g. `update.home_assistant_core_update`).
+              - `{{ current_update_entity_friendly_name }}` - The friendly name of the update being processed.
+              - `{{ log_message }}` - A plain text message describing the current step.
+              - `{{ updates_list }}` - List of all update entity ids detected when the automation started.
+              - `{{ updates_pending }}` - List of update entity ids remaining to be processed.
+          default: []
+          selector:
+            action: {}
+
+        notification_action_errors:
+          name: Step action - Errors and warnings
+          description: |
+            `Optional`
+
+            Actions to run when an error or warning occurs (update timeouts, backup failures,
+            remaining incomplete updates, or backup misconfiguration).
+
+            Useful variables available:
+              - `{{ log_message }}` - A plain text message describing the error.
+              - `{{ current_update_entity }}` - The entity id of the update being processed (when applicable).
+              - `{{ current_update_entity_friendly_name }}` - The friendly name of the update (when applicable).
+              - `{{ updates_list }}` - List of all update entity ids detected when the automation started.
+              - `{{ updates_pending }}` - List of update entity ids remaining to be processed.
+          default: []
+          selector:
+            action: {}
+
+        notification_action_restart:
+          name: Step action - Restart
+          description: |
+            `Optional`
+
+            Actions to run when a restart is pending.
+            These run before the actual restart, giving time for the actions to complete.
+
+            Useful variables available:
+              - `{{ pending_restart_items }}` - List of names of items requiring a restart.
+              - `{{ pending_restart_items_count }}` - Number of items requiring a restart.
+              - `{{ log_message }}` - A plain text message describing the current step.
+              - `{{ updates_list }}` - List of all update entity ids detected when the automation started.
+          default: []
+          selector:
+            action: {}
+
+        notification_action_done:
+          name: Step action - Done
+          description: |
+            `Optional`
+
+            Actions to run when the update process is complete.
+
+            Useful variables available:
+              - `{{ remaining_updates }}` - List of names of updates that were not completed (if any).
+              - `{{ remaining_updates_count }}` - Number of remaining updates.
+              - `{{ updates_list }}` - List of all update entity ids detected when the automation started.
+              - `{{ updates_pending }}` - List of update entity ids remaining (should match remaining_updates).
+              - `{{ log_message }}` - A plain text message describing the current step.
           default: []
           selector:
             action: {}
@@ -451,9 +599,16 @@ blueprint:
           description: >
             Select a notify entity to send messages to.
 
-            This can be a Telegram notify entity, mobile app, or any other notify entity.
+            Notify entities are provided by notification integrations (e.g. Telegram, email, etc.)
+            and are listed under the `notify` domain.
 
-            Note: For Telegram entities, special characters will be automatically escaped.
+            If your notification target is not listed, you can create a
+            [Notification Group](https://www.home-assistant.io/integrations/group/#notify-groups)
+            (even with a single device) to make it available as a selectable entity.
+
+            Note: Notifications are sent in plain text.
+            If your notification service supports rich formatting (e.g. Telegram MarkdownV2),
+            you can use the step actions to send custom formatted notifications instead.
 
             Leave empty to disable notifications.
           default: []
@@ -467,11 +622,14 @@ blueprint:
           description: |
             `Optional`
 
-            Please select a title to be used on each notification message.
+            Select a title to be used on each notification message.
 
-            You can type a custom text.
-          default:
-            - friendly_name
+            You can type a custom text or select one of the predefined options.
+
+            The default option "Automation's friendly name" uses the name you gave to this automation
+            when you created it (e.g. "Nightly Auto-update"). If the automation has no friendly name,
+            it falls back to "Home Assistant Auto-update".
+          default: friendly_name
           selector:
             select:
               custom_value: true
@@ -488,37 +646,28 @@ blueprint:
           name: Select what to notify
           description: |
             Select which steps should trigger notifications.
+
+            Note => The "Starting" notification includes the list of pending updates.
+            The "Done" notification includes any remaining updates that were not completed.
           default:
             - starting
-            - list_of_updates
-            - pre_update_actions
-            - backup
-            - update_progress
-            - remaining_updates
-            - restart
-            - post_update_actions
+            - errors
             - done
           selector:
             select:
               multiple: true
               options:
-                - label: (Re-)Starting message
+                - label: Starting (includes list of updates)
                   value: starting
-                - label: List of updates
-                  value: list_of_updates
-                - label: Pre-update actions
-                  value: pre_update_actions
-                - label: Backup
+                - label: Backup progress
                   value: backup
-                - label: Update progress
+                - label: Update progress (per entity)
                   value: update_progress
-                - label: Remaining updates
-                  value: remaining_updates
+                - label: Errors and warnings only
+                  value: errors
                 - label: Restart
                   value: restart
-                - label: Post-update actions
-                  value: post_update_actions
-                - label: Done message
+                - label: Done (includes remaining updates)
                   value: done
 
     general_settings:
@@ -771,13 +920,7 @@ variables:
     {{
       friendly_name_tmp
       if friendly_name_tmp is string and friendly_name_tmp | length > 0
-      else "Auto-update"
-    }}
-  is_telegram_notify: >
-    {{
-      input_notification_entity is string and
-      input_notification_entity | length > 0 and
-      'telegram' in input_notification_entity.lower()
+      else "Home Assistant Auto-update"
     }}
   notification_title: |
     {% if (input_notification_message_title == "friendly_name") %}
@@ -1059,12 +1202,12 @@ action:
       updates_list: '{{ updates_pending }}'
       is_there_anything_to_update: '{{ updates_pending_count > 0 }}'
 
-  - alias: Preparation  # Inform logbook and telegram which update automation is running
+  - alias: Preparation  # Inform logbook and notify which update automation is running
     sequence:
       - variables:
           log_message: '{{ friendly_name }} is {{ "re" if is_resume_after_restart else ""}}starting'
       - &logbook_update
-        if: "{{ input_verbose_logging_bool }}"
+        if: '{{ input_verbose_logging_bool }}'
         then:
           - alias: Logbook - Update
             action: logbook.log
@@ -1074,38 +1217,32 @@ action:
               message: '{{ log_message }}'
             continue_on_error: true
         continue_on_error: true
+
+  - alias: Report list of updates  # Combined starting + list of updates notification
+    if:
+      - '{{ is_there_anything_to_update }}'
+      - condition: state
+        entity_id: !input schedule_entity
+        state: 'on'
+    then:
+      - variables:
+          log_message: >
+            {{ friendly_name }} is {{ "re" if is_resume_after_restart else "" }}starting
+
+            List of updates:
+
+            - {{ states.update
+                | selectattr('state', 'eq', 'on')
+                | selectattr('entity_id', 'in', updates_pending)
+                | rejectattr('entity_id', 'in', input_update_exclusions)
+                | map(attribute='name') | list | join("\n- ") }}
+      - *logbook_update
       - if: '{{ "starting" in input_notification_select_notifications }}'
         then:
           - &send_notification
             sequence:
               - variables:
-
-                  notification_message: >-
-                    {%- if is_telegram_notify -%}
-                      {{ log_message
-                        | replace('\\', '\\\\')
-                        | replace('_', '\\_')
-                        | replace('*', '\\*')
-                        | replace('[', '\\[')
-                        | replace(']', '\\]')
-                        | replace('(', '\\(')
-                        | replace(')', '\\)')
-                        | replace('~', '\\~')
-                        | replace('`', '\\`')
-                        | replace('>', '\\>')
-                        | replace('#', '\\#')
-                        | replace('+', '\\+')
-                        | replace('-', '\\-')
-                        | replace('=', '\\=')
-                        | replace('|', '\\|')
-                        | replace('{', '\\{')
-                        | replace('}', '\\}')
-                        | replace('.', '\\.')
-                        | replace('!', '\\!')
-                      }}
-                    {%- else -%}
-                      {{ log_message }}
-                    {%- endif -%}
+                  notification_message: '{{ log_message }}'
               - if:
                   - condition: template
                     value_template: '{{ input_notification_entity | length > 0 }}'
@@ -1119,33 +1256,13 @@ action:
                       title: '{{ notification_title }}'
                       message: '{{ notification_message }}'
                     continue_on_error: true
-
-  - alias: Report list of updates
-    if:
-      - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
-    then:
-      - variables:
-          log_message: >
-            List of updates:
-
-            - {{ states.update
-                | selectattr('state', 'eq', 'on')
-                | rejectattr('entity_id', 'in', input_update_exclusions)
-                | map(attribute='name') | list | join("\n- ") }}
-      - *logbook_update
-      - if: '{{ "list_of_updates" in input_notification_select_notifications }}'
-        then:
-          - *send_notification
+      - alias: "Run custom starting actions"
+        continue_on_error: true
+        sequence: !input notification_action_starting
     else:
       - variables:
-          log_message: "There's nothing to update"
+          log_message: "{{ friendly_name }} started but there's nothing to update"
       - *logbook_update
-      - if: '{{ "list_of_updates" in input_notification_select_notifications }}'
-        then:
-          - *send_notification
 
   - alias: Set ON helper flag
     if:
@@ -1175,9 +1292,6 @@ action:
       - variables:
           log_message: 'Running pre-update actions...'
       - *logbook_update
-      - if: '{{ "pre_update_actions" in input_notification_select_notifications }}'
-        then:
-          - *send_notification
 
       - alias: "Run pre-update actions"
         continue_on_error: true
@@ -1186,9 +1300,82 @@ action:
       - variables:
           log_message: "Pre-update actions completed"
       - *logbook_update
-      - if: '{{ "pre_update_actions" in input_notification_select_notifications }}'
+
+  - alias: Wait for backup system to be idle  # Wait if a backup is already in progress
+    if:
+      - '{{ is_there_anything_to_update }}'
+      - '{{ not is_resume_after_restart }}'
+      - condition: state
+        entity_id: !input schedule_entity
+        state: 'on'
+    then:
+      - variables:
+          input_run_during_backup: !input run_during_backup
+          input_backup_timeout_minutes: !input backup_timeout
+          input_backup_timeout: '{{ input_backup_timeout_minutes | int(60) }}'
+      - if:
+          - '{{ input_run_during_backup is string and input_run_during_backup | length > 0 }}'
+          - '{{ not is_state(input_run_during_backup, "idle") }}'
         then:
-          - *send_notification
+          - if: >-
+              {{
+                is_state(input_run_during_backup, "unknown") or
+                is_state(input_run_during_backup, "unavailable")
+              }}
+            then:
+              - variables:
+                  log_message: >
+                    Backup state sensor is {{ states(input_run_during_backup) }}.
+                    Cannot determine if a backup is in progress. Stopping.
+              - *logbook_update
+              - if: >-
+                  {{
+                    "backup" in input_notification_select_notifications or
+                    "errors" in input_notification_select_notifications
+                  }}
+                then:
+                  - *send_notification
+              - &reset_helper_flag
+                alias: "Reset helper flag before stopping"
+                if:
+                  - '{{ input_update_process_started_entity | default([]) | count > 0 }}'
+                  - '{{ input_update_process_started_entity[0] | string | length > 0 }}'
+                then:
+                  - action: input_boolean.turn_off
+                    target:
+                      entity_id: !input update_process_started_entity
+                    continue_on_error: true
+              - stop: "Backup state sensor is unavailable"
+          - variables:
+              log_message: >
+                Backup system is busy ({{ states(input_run_during_backup) }}).
+                Waiting up to {{ input_backup_timeout }} minutes for it to become idle...
+          - *logbook_update
+          - if: '{{ "backup" in input_notification_select_notifications }}'
+            then:
+              - *send_notification
+          - alias: "Wait for backup system to become idle"
+            wait_for_trigger:
+              - trigger: state
+                entity_id: !input run_during_backup
+                to: "idle"
+            continue_on_timeout: true
+            timeout:
+              minutes: "{{ input_backup_timeout | int(60) }}"
+          - if: '{{ not is_state(input_run_during_backup, "idle") }}'
+            then:
+              - variables:
+                  log_message: "Backup system did not become idle in time. Stopping."
+              - *logbook_update
+              - if: >-
+                  {{
+                    "backup" in input_notification_select_notifications or
+                    "errors" in input_notification_select_notifications
+                  }}
+                then:
+                  - *send_notification
+              - *reset_helper_flag
+              - stop: "Backup system did not become idle in time"
 
   - alias: Backup
     if:
@@ -1200,9 +1387,11 @@ action:
     then:
       - *recalc_update_list
       - variables:
-          input_backup_bool: !input backup_bool
+          input_backup_mode: !input backup_mode
           input_backup_timeout_minutes: !input backup_timeout
           input_backup_timeout: '{{ input_backup_timeout_minutes | int(60) }}'
+          input_run_during_backup: !input run_during_backup
+          input_last_backup_timestamp_entity: !input last_backup_timestamp_entity
           temp_max_backup_age: !input max_backup_age
           input_max_backup_age_seconds: >
             {{
@@ -1213,92 +1402,224 @@ action:
                 seconds=temp_max_backup_age.seconds
               ).total_seconds()
             }}
-      - alias: Check existing backups uploaded
-        continue_on_error: true
+
+      - alias: Backup section
         if:
-          - '{{ not is_state("sensor.backup_state", "unknown") }}'
-          - '{{ not is_state("sensor.backup_state", "unavailable") }}'
-          - '{{ input_max_backup_age_seconds > 0 }}'
+          - '{{ input_backup_mode != "never" }}'
         then:
-          - variables:
-              last_backup_timestamp_list: >
+          - alias: Validate auto mode prerequisites
+            if:
+              - '{{ input_backup_mode == "auto" }}'
+              - >-
                 {{
-                  states.sensor
-                  | selectattr("attributes.last_backup", "defined")
-                  | map(attribute="attributes.last_backup")
-                  | list
+                  (input_run_during_backup is not string or input_run_during_backup | length == 0) or
+                  (input_last_backup_timestamp_entity is not string or input_last_backup_timestamp_entity | length == 0)
                 }}
-              last_backup_timestamp: '{{ last_backup_timestamp_list | max if last_backup_timestamp_list | count > 0 else None }}'
-          - alias: Check if backup state is defined
-            if: '{{ last_backup_timestamp != None }}'
             then:
-              - alias: Check age of last uploaded backup
-                if: >-
-                  {{ as_timestamp(now()) - as_timestamp(last_backup_timestamp) > input_max_backup_age_seconds }}
+              - variables:
+                  log_message: >
+                    ERROR: Auto backup mode requires both the Backup state sensor and
+                    Last successful automatic backup sensor to be configured. Stopping.
+              - *logbook_update
+              - if: '{{ "errors" in input_notification_select_notifications }}'
+                then:
+                  - *send_notification
+              - alias: "Run custom error actions (backup misconfigured)"
+                continue_on_error: true
+                sequence: !input notification_action_errors
+              - *reset_helper_flag
+              - stop: "Auto backup mode misconfigured"
+
+          - alias: Determine if a backup is needed
+            variables:
+              needs_backup: >
+                {% if input_backup_mode == "always" %}
+                  {{ true }}
+                {% elif input_backup_mode == "auto" %}
+                  {% set last_backup_state = states(input_last_backup_timestamp_entity) %}
+                  {% if last_backup_state in ["unknown", "unavailable", ""] or
+                        last_backup_state is none %}
+                    {{ true }}
+                  {% elif input_max_backup_age_seconds > 0 and
+                          (as_timestamp(now()) - as_timestamp(last_backup_state)) > input_max_backup_age_seconds %}
+                    {{ true }}
+                  {% else %}
+                    {{ false }}
+                  {% endif %}
+                {% else %}
+                  {{ false }}
+                {% endif %}
+
+          - alias: Log backup age check result (auto mode)
+            if:
+              - '{{ input_backup_mode == "auto" }}'
+            then:
+              - if: '{{ needs_backup }}'
                 then:
                   - variables:
-                      log_message: "Last uploaded backup is too old"
+                      log_message: >
+                        {% set last_backup_state = states(input_last_backup_timestamp_entity) %}
+                        {% if last_backup_state in ["unknown", "unavailable", ""] or
+                              last_backup_state is none %}
+                          Backup timestamp sensor is {{ last_backup_state }}. Creating a backup to be safe.
+                        {% else %}
+                          Last backup is too old
+                          ({{ relative_time(as_datetime(last_backup_state)) }} ago).
+                          Creating a new backup...
+                        {% endif %}
                   - *logbook_update
-                  - if: '{{ "backup" in input_notification_select_notifications }}'
-                    then:
-                      - *send_notification
-                  - stop: "Last uploaded backup is too old"
-            else:
+                else:
+                  - variables:
+                      log_message: "Recent backup detected. Skipping backup creation."
+                  - *logbook_update
+
+          - alias: "Create backup"
+            continue_on_error: true
+            if:
+              - '{{ needs_backup }}'
+              - >-
+                {{
+                  input_update_process_started_entity | default([]) | count < 1 or
+                  is_state(input_update_process_started_entity | first | default(""), "off")
+                }}
+            then:
+              - if: '{{ input_update_process_started_entity | default([]) | count > 0 }}'
+                then:
+                  - action: input_boolean.turn_on
+                    target:
+                      entity_id: "{{ input_update_process_started_entity }}"
+                    continue_on_error: true
               - variables:
-                  log_message: "Backup State sensor not found"
+                  log_message: "Backing up Home Assistant"
               - *logbook_update
               - if: '{{ "backup" in input_notification_select_notifications }}'
                 then:
                   - *send_notification
-              - stop: "Backup State sensor not found"
-      - alias: "Backup"
-        continue_on_error: true
-        if:
-          - '{{ input_backup_bool }}'
-          - condition: state
-            entity_id: !input update_process_started_entity
-            state: 'off'
-        then:
-          - action: input_boolean.turn_on
-            target:
-              entity_id: "{{ input_update_process_started_entity }}"
-            continue_on_error: true
-          - variables:
-              log_message: "Backing up Home Assistant"
-          - *logbook_update
-          - if: '{{ "backup" in input_notification_select_notifications }}'
-            then:
-              - *send_notification
+              - alias: "Run custom backup actions (starting)"
+                continue_on_error: true
+                sequence: !input notification_action_backup
 
-          - alias: "Call backup service"
-            action: hassio.backup_full
-            data:
-              compressed: true
-            continue_on_error: true
+              - alias: "Call backup service"
+                action: backup.create_automatic
+                continue_on_error: true
 
-          - variables:
-              log_message: >
-                Backup triggered
-
-                Waiting {{ input_backup_timeout | int(60) }} minutes
-          - *logbook_update
-          - if: '{{ "backup" in input_notification_select_notifications }}'
-            then:
-              - *send_notification
-
-          - alias: "Wait for the backup"  # There's no sensor for when the backup finishes
-            delay:
-              minutes: "{{ input_backup_timeout | int(60) }}"
-
-          - variables:
-              log_message: >
-                Backup Wait time finished.
-
-                Continuing...
-          - *logbook_update
-          - if: '{{ "backup" in input_notification_select_notifications }}'
-            then:
-              - *send_notification
+              - alias: "Wait for backup to complete"
+                if:
+                  - '{{ input_run_during_backup is string and input_run_during_backup | length > 0 }}'
+                then:
+                  - variables:
+                      log_message: "Backup triggered. Waiting for backup to start..."
+                  - *logbook_update
+                  - alias: "Wait for backup state to leave idle (confirms backup started)"
+                    wait_for_trigger:
+                      - trigger: state
+                        entity_id: !input run_during_backup
+                        from: "idle"
+                    continue_on_timeout: true
+                    timeout:
+                      seconds: 30
+                  - if: '{{ is_state(input_run_during_backup, "idle") }}'
+                    then:
+                      - variables:
+                          log_message: >
+                            ERROR: Backup state sensor did not change within 30 seconds.
+                            The backup may not have started. Stopping to avoid running updates
+                            without a backup.
+                      - *logbook_update
+                      - if: >-
+                          {{
+                            "backup" in input_notification_select_notifications or
+                            "errors" in input_notification_select_notifications
+                          }}
+                        then:
+                          - *send_notification
+                      - alias: "Run custom error actions (backup may not have started)"
+                        continue_on_error: true
+                        sequence: !input notification_action_errors
+                      - *reset_helper_flag
+                      - stop: "Backup did not start"
+                    else:
+                      - if: >-
+                          {{
+                            is_state(input_run_during_backup, "unknown") or
+                            is_state(input_run_during_backup, "unavailable")
+                          }}
+                        then:
+                          - variables:
+                              log_message: >
+                                ERROR: Backup state sensor changed to {{ states(input_run_during_backup) }}
+                                instead of a backup state. Stopping.
+                          - *logbook_update
+                          - if: >-
+                              {{
+                                "backup" in input_notification_select_notifications or
+                                "errors" in input_notification_select_notifications
+                              }}
+                            then:
+                              - *send_notification
+                          - alias: "Run custom error actions (backup sensor fault)"
+                            continue_on_error: true
+                            sequence: !input notification_action_errors
+                          - *reset_helper_flag
+                          - stop: "Backup state sensor became unavailable"
+                      - variables:
+                          log_message: >
+                            Backup started ({{ states(input_run_during_backup) }}).
+                            Waiting for backup system to return to idle...
+                      - *logbook_update
+                      - alias: "Wait for backup system to become idle after backup"
+                        wait_for_trigger:
+                          - trigger: state
+                            entity_id: !input run_during_backup
+                            to: "idle"
+                        continue_on_timeout: true
+                        timeout:
+                          minutes: "{{ input_backup_timeout | int(60) }}"
+                      - if: '{{ not is_state(input_run_during_backup, "idle") }}'
+                        then:
+                          - variables:
+                              log_message: >
+                                WARNING: Backup did not complete within {{ input_backup_timeout }} minutes.
+                                Continuing with updates...
+                          - *logbook_update
+                          - if: >-
+                              {{
+                                "backup" in input_notification_select_notifications or
+                                "errors" in input_notification_select_notifications
+                              }}
+                            then:
+                              - *send_notification
+                          - alias: "Run custom error actions (backup timeout)"
+                            continue_on_error: true
+                            sequence: !input notification_action_errors
+                        else:
+                          - variables:
+                              log_message: "Backup completed successfully"
+                          - *logbook_update
+                          - if: '{{ "backup" in input_notification_select_notifications }}'
+                            then:
+                              - *send_notification
+                          - alias: "Run custom backup actions (completed)"
+                            continue_on_error: true
+                            sequence: !input notification_action_backup
+                else:
+                  - variables:
+                      log_message: >
+                        Backup triggered.
+                        No backup state sensor configured, waiting {{ input_backup_timeout | int(60) }} minutes...
+                  - *logbook_update
+                  - alias: "Wait for the backup (fallback delay)"
+                    delay:
+                      minutes: "{{ input_backup_timeout | int(60) }}"
+                  - variables:
+                      log_message: "Backup wait time finished. Continuing..."
+                  - *logbook_update
+                  - if: '{{ "backup" in input_notification_select_notifications }}'
+                    then:
+                      - *send_notification
+                  - alias: "Run custom backup actions (fallback wait done)"
+                    continue_on_error: true
+                    sequence: !input notification_action_backup
 
   - alias: Update generic
     if:
@@ -1370,6 +1691,9 @@ action:
                 - if: '{{ "update_progress" in input_notification_select_notifications }}'
                   then:
                     - *send_notification
+                - alias: "Run custom update progress actions"
+                  continue_on_error: true
+                  sequence: !input notification_action_update_progress
 
             - &update_install
               alias: "Update - Install"
@@ -1395,13 +1719,23 @@ action:
                     - if: '{{ "update_progress" in input_notification_select_notifications }}'
                       then:
                         - *send_notification
+                    - alias: "Run custom update progress actions (success)"
+                      continue_on_error: true
+                      sequence: !input notification_action_update_progress
                   else:
                     - variables:
                         log_message: 'ERROR: "{{ current_update_entity_friendly_name }}" update timed out'
                     - *logbook_update
-                    - if: '{{ "update_progress" in input_notification_select_notifications }}'
+                    - if: >-
+                        {{
+                          "update_progress" in input_notification_select_notifications or
+                          "errors" in input_notification_select_notifications
+                        }}
                       then:
                         - *send_notification
+                    - alias: "Run custom error actions (update timeout)"
+                      continue_on_error: true
+                      sequence: !input notification_action_errors
 
   - alias: Devices firmware
     if:
@@ -1641,9 +1975,6 @@ action:
       - variables:
           log_message: "Finishing update process"
       - *logbook_update
-      - if: '{{ "remaining_updates" in input_notification_select_notifications }}'
-        then:
-          - *send_notification
 
       - variables:
           remaining_updates: |
@@ -1663,9 +1994,16 @@ action:
                 Remaining updates:
                 - {{ remaining_updates | join("\n- ") }}
           - *logbook_update
-          - if: '{{ "remaining_updates" in input_notification_select_notifications }}'
+          - if: >-
+              {{
+                "done" in input_notification_select_notifications or
+                "errors" in input_notification_select_notifications
+              }}
             then:
               - *send_notification
+          - alias: "Run custom error actions (remaining updates)"
+            continue_on_error: true
+            sequence: !input notification_action_errors
         else:
           - variables:
               log_message: "No remaining items to be updated"
@@ -1716,6 +2054,9 @@ action:
       - if: '{{ "restart" in input_notification_select_notifications }}'
         then:
           - *send_notification
+      - alias: "Run custom restart actions"
+        continue_on_error: true
+        sequence: !input notification_action_restart
 
       - alias: "Restart"
         continue_on_error: true
@@ -1769,7 +2110,7 @@ action:
                 then:
                   - *send_notification
 
-              - alias: "Wait 15 seconds to deliver the telegram message."
+              - alias: "Wait 15 seconds to deliver the notification message."
                 delay:
                   seconds: 15
 
@@ -1785,9 +2126,6 @@ action:
       - variables:
           log_message: "Running post-update actions"
       - *logbook_update
-      - if: '{{ "post_update_actions" in input_notification_select_notifications }}'
-        then:
-          - *send_notification
 
       - alias: "Run post-update actions"
         continue_on_error: true
@@ -1811,4 +2149,7 @@ action:
       - if: '{{ "done" in input_notification_select_notifications }}'
         then:
           - *send_notification
+      - alias: "Run custom done actions"
+        continue_on_error: true
+        sequence: !input notification_action_done
 ...

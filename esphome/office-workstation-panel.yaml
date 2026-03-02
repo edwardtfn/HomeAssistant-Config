@@ -1,10 +1,12 @@
 substitutions:
+  #ref_name: update-pics
   #BAUD_RATE: '115200'
   ###### CHANGE ME START ######
   device_name: office-workstation-panel
   friendly_name: Office - Workstation - Panel
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
+  ota_password: ${wifi_password}
   #bytes_per_char: "2"
   boot_sound: true
   #upload_tft_baud_rate: 921600
@@ -20,7 +22,7 @@ substitutions:
   ## addon_climate ##
   heater_relay: "1" #Use relay 1
   #cooler_relay: "1"
-  #temp_units: "°F" #Temperatures in Fahrenheit
+  temp_units: "°F" #Temperatures in Fahrenheit
   #temp_min: "20" #Min supported temperature is 40°F
   #temp_max: "80" #Max supported temperature is 80°F
   #temp_step: "1" #Temperature granularity is 1°F
@@ -32,8 +34,11 @@ substitutions:
   #nextion_queue_delay_factor: '1'
   #qrcode_size: 250
 
+  #tone_touch_down: "touch_down:d=64,o=6,b=200:e6"
+  #tone_touch_up: "touch_up:d=64,o=5,b=200:e5"
+
 ##### My customization - Start #####
-#bluetooth_proxy:
+bluetooth_proxy:
 
 #esp32_ble_tracker:
 #  scan_parameters:
@@ -58,42 +63,42 @@ substitutions:
 ##### My customization - End #####
 
 packages:
-  base:               !include packages/Blackymas/nspanel_esphome.yaml
-#  core:               !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
-#  standard:           !include packages/Blackymas/esphome/nspanel_esphome_standard.yaml
-#  hw_buzzer:          !include packages/Blackymas/esphome/nspanel_esphome_standard_hw_buzzer.yaml
-#  hw_relays:          !include packages/Blackymas/esphome/nspanel_esphome_standard_hw_relays.yaml
-#  hw_temperature:     !include packages/Blackymas/esphome/nspanel_esphome_standard_hw_temperature.yaml
-#  page_alarm:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_alarm.yaml
-#  page_blank:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_blank.yaml
-#  page_buttons:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_buttons.yaml
-#  page_climate:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_climate.yaml
-#  page_confirm:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_confirm.yaml
-#  page_cover:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_cover.yaml
-#  page_entities:      !include packages/Blackymas/esphome/nspanel_esphome_standard_page_entities.yaml
-#  page_fan:           !include packages/Blackymas/esphome/nspanel_esphome_standard_page_fan.yaml
-#  page_keyb_num:      !include packages/Blackymas/esphome/nspanel_esphome_standard_page_keyb_num.yaml
-#  page_light:         !include packages/Blackymas/esphome/nspanel_esphome_standard_page_light.yaml
-#  page_media_player:  !include packages/Blackymas/esphome/nspanel_esphome_standard_page_media_player.yaml
-#  page_notification:  !include packages/Blackymas/esphome/nspanel_esphome_standard_page_notification.yaml
-#  page_qrcode:        !include packages/Blackymas/esphome/nspanel_esphome_standard_page_qrcode.yaml
-#  page_settings:      !include packages/Blackymas/esphome/nspanel_esphome_standard_page_settings.yaml
-#  page_utilities:     !include packages/Blackymas/esphome/nspanel_esphome_standard_page_utilities.yaml
-#  page_weather:       !include packages/Blackymas/esphome/nspanel_esphome_standard_page_weather.yaml
-#  upload_tft:         !include packages/Blackymas/esphome/nspanel_esphome_standard_upload_tft.yaml
+  base:               !include packages/edwardtfn/NSPanel-Easy/nspanel_esphome.yaml
+#  core:               !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_core.yaml
+#  standard:           !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard.yaml
+#  hw_buzzer:          !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_hw_buzzer.yaml
+#  hw_relays:          !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_hw_relays.yaml
+#  hw_temperature:     !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_hw_temperature.yaml
+#  page_alarm:         !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_alarm.yaml
+#  page_blank:         !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_blank.yaml
+#  page_buttons:       !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_buttons.yaml
+#  page_climate:       !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_climate.yaml
+#  page_confirm:       !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_confirm.yaml
+#  page_cover:         !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_cover.yaml
+#  page_entities:      !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_entities.yaml
+#  page_fan:           !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_fan.yaml
+#  page_keyb_num:      !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_keyb_num.yaml
+#  page_light:         !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_light.yaml
+#  page_media_player:  !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_media_player.yaml
+#  page_notification:  !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_notification.yaml
+#  page_qrcode:        !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_qrcode.yaml
+#  page_settings:      !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_settings.yaml
+#  page_utilities:     !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_utilities.yaml
+#  page_weather:       !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_page_weather.yaml
+#  upload_tft:         !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_standard_upload_tft.yaml
 
-#  nspanel_package:    !include packages/Blackymas/nspanel_esphome.yaml
-#  ble_proxy_package:  !include packages/Blackymas/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
-#  dual_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_dual.yaml
-#  advanced_package:   !include packages/Blackymas/esphome/nspanel_esphome_advanced.yaml
-  heat_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_heat.yaml
-  #cool_package:       !include packages/Blackymas/nspanel_esphome_addon_climate_cool.yaml
-#  cover_package:      !include packages/Blackymas/esphome/nspanel_esphome_addon_cover.yaml
-#  nspanel_core:       !include packages/Blackymas/esphome/nspanel_esphome_core.yaml
-  #nspanel_upload_tft: !include packages/Blackymas/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
+#  nspanel_package:    !include packages/edwardtfn/NSPanel-Easy/nspanel_esphome.yaml
+#  ble_proxy_package:  !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
+  dual_package:       !include packages/edwardtfn/NSPanel-Easy/nspanel_esphome_addon_climate_dual.yaml
+#  advanced_package:   !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_advanced.yaml
+#  heat_package:       !include packages/edwardtfn/NSPanel-Easy/nspanel_esphome_addon_climate_heat.yaml
+  #cool_package:       !include packages/edwardtfn/NSPanel-Easy/nspanel_esphome_addon_climate_cool.yaml
+#  cover_package:      !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_addon_cover.yaml
+#  nspanel_core:       !include packages/edwardtfn/NSPanel-Easy/esphome/nspanel_esphome_core.yaml
+  #nspanel_upload_tft: !include packages/edwardtfn/NSPanel-Easy/advanced/esphome/nspanel_esphome_addon_upload_tft.yaml
   #debug: !include packages/config_debug_esp32.yaml
   #remote_package:
-  #  url: https://github.com/Blackymas/NSPanel_HA_Blueprint
+  #  url: https://github.com/edwardtfn/NSPanel-Easy
   #  ref: main
   #  refresh: 30min
   #  files:
@@ -108,7 +113,7 @@ packages:
     vars:
       ip: !secret ip_office_workstation_panel
 
-#nspanel_ha_blueprint:
+#nspanel_easy:
 #  main_task_stack_size: 16384
 
 #api:
@@ -117,7 +122,7 @@ packages:
 #    then:
 #      - lambda: |-
 #          if (client_info.find("Home Assistant ") == 0)
-#            nspanel_ha_blueprint::HaToNextionManager::getInstance().setupSubscriptions();
+#            nspanel_easy::HaToNextionManager::getInstance().setupSubscriptions();
 #          id(api_is_updated) = true;
 #
 #  actions:
@@ -130,7 +135,7 @@ packages:
 #      then:
 #        - lambda: |-
 #            // Add new subscriptions with the updated settings
-#            nspanel_ha_blueprint::HaToNextionManager::getInstance().addSubscription(entity_id.c_str(), page.c_str(), component.c_str(), global);
+#            nspanel_easy::HaToNextionManager::getInstance().addSubscription(entity_id.c_str(), page.c_str(), component.c_str(), global);
 #            // api_server->setup();
 #            // esphome::api::SubscribeHomeAssistantStatesRequest request;
 #            // api_server->parent_.subscribe_home_assistant_states(request);
@@ -248,7 +253,7 @@ packages:
 #  platformio_options:
 #    build_flags:
 #      - -D NEXTION_PROTOCOL_LOG
-#      - "-D NSPANEL_HA_BLUEPRINT_TESTING_FLAG"
+#      - "-D NSPANEL_EASY_TESTING_FLAG"
 #      - "-D NEXTION_PROTOCOL_LOG"
 #      - -D CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384   # Double the stack size
 #      - -D CONFIG_ARDUINO_LOOP_STACK_SIZE=16384    # For Arduino compatibility  
@@ -288,12 +293,20 @@ packages:
 external_components:
   - source:
       type: local
-      path: packages/Blackymas/components
+      path: packages/edwardtfn/NSPanel-Easy/components
     components:
-      - nspanel_ha_blueprint
-  - source: github://pr#12557
+      - nspanel_easy
+  - source: github://pr#14234
     components: [nextion]
-    refresh: 10s
+    refresh: 30s
+#  - source: github://pr#13393
+#    components:
+#      - api
+#      - time
+#    refresh: 1h
+#  - source: github://pr#13566 #13248
+#    components: [nextion]
+#    refresh: 10s
 #  - source: github://pr#11902
 #    components: [wifi]
 #    refresh: 1h
@@ -312,9 +325,9 @@ external_components:
 #  - source: github://pr#11008
 #    components: [json]
 #    refresh: 1h
-  - source: github://pr#9429
-    components: [nextion]
-    refresh: 1h
+#  - source: github://pr#9429
+#    components: [nextion]
+#    refresh: 1h
 #  - source: github://pr#10657
 #    components: [adc]
 #    refresh: 1h
@@ -408,10 +421,10 @@ external_components:
 #      - nextion
 #  - source:
 #      type: local
-#      path: packages/Blackymas/components
+#      path: packages/edwardtfn/NSPanel-Easy/components
 #    refresh: 1s
 #    components:
-#      - nspanel_ha_blueprint
+#      - nspanel_easy
 #  - source:
 #      type: local
 #      path: packages/sandbox/components
@@ -440,6 +453,10 @@ external_components:
 #      - nextion
 #    refresh: 1s
 
+#factory_reset:
+#  resets_required: 5
+#  max_delay: 10s
+
 #globals:
 #  - id: max_loop_time
 #    type: uint64_t
@@ -452,24 +469,22 @@ external_components:
 #    restore_value: true
 
 #interval:
-#  - interval: 30s
+#  - interval: 5s
 #    then:
 #      - lambda: |-
-#          version_esphome_new->publish_state(${version});
-#          #include <esp_heap_caps.h>
-#          ESP_LOGCONFIG("DEBUG", "Boot progress: %" PRIu8, get_boot_progress_percentage());
+#          disp1->set_protocol_reparse_mode(false);
 #          // Report memory
 #          const size_t internal_heap_size = heap_caps_get_total_size(MALLOC_CAP_INTERNAL);
 #          const size_t internal_heap_size_free = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
 #          ESP_LOGW("DEBUG", "Free heap:");
-#
+
 #          if (internal_heap_size != 0) {
 #            ESP_LOGW("DEBUG", "  Internal:    %7d bytes (%0.1f%%)", internal_heap_size_free,
 #                    ((float)internal_heap_size_free / internal_heap_size) * 100.0f);
 #          } else {
 #            ESP_LOGW("DEBUG", "  Internal:    %7d bytes", internal_heap_size_free);
 #          }
-#
+
 #          #ifdef USE_PSRAM
 #          const size_t psram_heap_size = heap_caps_get_total_size(MALLOC_CAP_SPIRAM);
 #          const size_t psram_heap_size_free = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
@@ -480,6 +495,25 @@ external_components:
 #            ESP_LOGW("DEBUG", "  PSRAM:       %7d bytes", psram_heap_size_free);
 #          }
 #          #endif
+#           ESP_LOGI("DEBUG", "get_safe_mode_pending(): %s", TRUEFALSE(safe_mode_component->get_safe_mode_pending()));
+#          if (system_flags.api_ready) {
+#            ESP_LOGI("DEBUG", "API is ready");
+#          } else {
+#            ESP_LOGE("DEBUG", "API is DISCONNECTED");
+#          }
+#          if (system_flags.wifi_ready) {
+#            ESP_LOGI("DEBUG", "Wi-Fi is ready");
+#          } else {
+#            ESP_LOGE("DEBUG", "Wi-Fi is DISCONNECTED");
+#          }
+#          if (system_flags.blueprint_ready) {
+#            ESP_LOGI("DEBUG", "Blueprint is ready");
+#          } else {
+#            ESP_LOGE("DEBUG", "Blueprint is NOT READY");
+#          }
+#          version_esphome_new->publish_state(${version});
+#          #include <esp_heap_caps.h>
+#          ESP_LOGCONFIG("DEBUG", "Boot progress: %" PRIu8, get_boot_progress_percentage());
 #      - lambda: |-
 #          ESP_LOGW("DEBUG", "disp1->is_connected(): %s", YESNO(disp1->is_connected()));
 #          ESP_LOGW("DEBUG", "disp1->is_detected(): %s", YESNO(disp1->is_detected()));
@@ -707,6 +741,10 @@ external_components:
 #    reset_reason:
 #      name: "Reset Reason"
 
+#time:
+#  - id: !extend time_provider
+#    platform: sntp
+
 #uart:
 #  - id: !extend tf_uart
 #    debug:
@@ -719,13 +757,77 @@ external_components:
 
 #web_server: !remove
 
-wifi:
+#wifi:
 #  fast_connect: true
   #enable_on_boot: false
   #use_psram: true
   #use_psram: !remove
 #  power_save_mode: HIGH
-  networks:
-    - id: wifi_backup
-      ssid: !secret wifi_bkp_ssid
-      password: !secret wifi_bkp_password
+#  networks:
+#    - id: wifi_backup
+#      ssid: !secret wifi_bkp_ssid
+#      password: !secret wifi_bkp_password
+
+#text_sensor:
+#  - id: !remove disp1_local_event
+
+display:
+  - id: !extend disp1
+    dump_device_info: true
+    on_touch:
+      then:
+        - lambda: |-
+            const std::string tone_touch_down = "touch_down:d=64,o=6,b=200:e6";
+            const std::string tone_touch_up = "touch_up:d=64,o=5,b=200:e5";
+            if (touch_event && !tone_touch_down.empty()) {  // screen was touched
+              buzzer->play(tone_touch_down.c_str());
+              return;
+            }
+            if (!touch_event && !tone_touch_up.empty()) {  // screen was released
+              buzzer->play(tone_touch_up.c_str());
+              return;
+            }
+#    on_custom_text_sensor:
+#      then:
+#        - lambda: |-
+#            if (key != "localevent") return;  // Ignore other custom text components from Nextion
+#            // Check format by first character
+#            if (value.empty()) {
+#              ESP_LOGE("${TAG_HW_DISPLAY}", "Empty message");
+#              return;
+#            }
+
+#            if (value[0] == '{') {
+#              ESP_LOGE("${TAG_HW_DISPLAY}", "Legacy json format used");
+#              if (system_flags.version_check_ok) {
+#                ESP_LOGE("${TAG_HW_DISPLAY}", "Please report a bug on the project's GitHub repo");
+#              } else {
+#                ESP_LOGE("${TAG_HW_DISPLAY}", "Please upload a compatible TFT");
+#              }
+#              return;
+#            }
+
+#            // ============================================================
+#            // CSV Format (New - preferred)
+#            // ============================================================
+
+#            static std::vector<std::string> params;
+
+#            params.clear();
+#            size_t start = 0;
+#            size_t pos = 0;
+
+#            // Split by ',' delimiter
+#            while ((pos = value.find(',', start)) != std::string::npos) {
+#              params.push_back(value.substr(start, pos - start));
+#              start = pos + 1;
+#            }
+#            params.push_back(value.substr(start));  // Last part
+
+#            if (params.size() < 2) {
+#              ESP_LOGE("${TAG_HW_DISPLAY}", "Invalid CSV format: %s", value.c_str());
+#              return;
+#            }
+
+#            // Call new CSV handler
+#            event_from_display->execute(params, static_cast<uint8_t>(params.size()));

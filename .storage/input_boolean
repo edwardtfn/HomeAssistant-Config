@@ -22,6 +22,11 @@
         "id": "home_display_motion_sensor",
         "name": "Home - Display motion sensors",
         "icon": "mdi:motion-sensor"
+      },
+      {
+        "id": "living_room_sleeping_in_the_sofa",
+        "name": "Living room - Sleeping in the sofa",
+        "icon": "mdi:sleep"
       }
     ]
   }

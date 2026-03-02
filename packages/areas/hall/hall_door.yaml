@@ -10,8 +10,9 @@ automation:
       to: 'on'
     condition: []
     action:
-    - service: notify.alexa_media
+    - action: notify.send_message
+      target:
+        entity_id: notify.kitchen_announce
       data:
-        target: Kitchen
-        message: The front door is open.
+        message: The front door is open
     mode: single

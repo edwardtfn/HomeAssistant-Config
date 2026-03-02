@@ -1,17 +1,1 @@
 automation:
-  - alias: Kitchen - Bench - Lights - Motion
-    id: '1642333235058'
-    description: ''
-    use_blueprint:
-      path: EdwardTFN/light_motion_illuminance_2_levels.yaml
-      input:
-        max_lumens: 15
-        no_motion_wait_to_dimming: 120
-        light_level_high: 100
-        light_level_dimmer: 35
-        motion_entity: binary_sensor.kitchen_bench_motion_occupancy
-        lumens_entity: sensor.kitchen_bench_motion_illuminance
-        light_target: light.kitchen_bench_lights
-        no_motion_wait_to_off: 15
-        pause_entities_on:
-        - input_boolean.home_party_mode

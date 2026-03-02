@@ -13,6 +13,49 @@ automation: !include automations.yaml
 #conversation:
 #counter:
 #dhcp:
+
+#emulated_hue:  # https://www.home-assistant.io/integrations/emulated_hue
+#  host_ip: !secret ip_home_assistant
+#  listen_port: 80
+#  #advertise_ip: 10.0.0.10
+#  #advertise_port: 8080
+#  #off_maps_to_on_domains:
+#    #- script
+#    #- scene
+#  expose_by_default: false
+#  exposed_domains:
+#    - light
+#    - switch
+#
+#  entities:
+#    #### Home ####
+#    input_boolean.home_party_mode:
+#      name: Party mode
+#      hidden: false
+#
+#    #### Deck ####
+#    light.outdoor_deck_light:
+#      name: Deck light
+#      hidden: false
+#
+#    #### Bathroom ####
+#    light.bathroom_lights_lights:
+#      name: Bathroom light
+#      hidden: false
+#
+#    #### Guest room ####
+#    switch.guest_room_panel_relay_1:
+#      name: Guest room lights
+#      hidden: false
+#
+#input_boolean:
+#  home_display_motion_sensors:
+#    name: Home - Display motion sensors
+#    icon: mdi:motion-sensor
+#  home_party_mode:
+#    name: Home - Party mode
+#    icon: mdi:balloon
+
 #energy:
 #frontend:
 #  themes: !include_dir_merge_named themes
@@ -210,8 +253,8 @@ http:
 
 notify: !include notifications.yaml
 
-#recorder:
-#  purge_keep_days: 14
+recorder:
+  purge_keep_days: 42
 
 #shell_command: !include shell.yaml
 
@@ -224,14 +267,15 @@ zha:
   custom_quirks_path: "/config/zha/quirks"
 
   # https://github.com/zigpy/zigpy/wiki/OTA-Device-Firmware-Updates
-  zigpy_config:
-    ota:
-      otau_directory: /config/zha/zigpy_ota
-      ikea_provider: true
-      #inovelli_provider: true
-      ledvance_provider: true
-      #salus_provider: true
-      sonoff_provider: true
-      #thirdreality_provider: true
+#  zigpy_config:
+#    ota:
+#      otau_directory: /config/zha/zigpy_ota
+#      extra_providers:
+#        - type: aqara
+#        - type: ikea
+#        - type: ledvance
+#        - type: sonoff
+#        - type: tuya
+#        - type: z2m
 
 #zha_toolkit:

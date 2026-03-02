@@ -9,8 +9,7 @@ automation:
       - person.edward_firmo
       - person.dory
       - person.skal
-      - person.lara
-      - lock.car_door_locked
+      - binary_sensor.car_doors_locked
       - binary_sensor.car_vehicle_moving
     condition:
     - condition: template

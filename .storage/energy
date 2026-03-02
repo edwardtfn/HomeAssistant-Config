@@ -1,21 +1,20 @@
 {
   "version": 1,
-  "minor_version": 2,
+  "minor_version": 3,
   "key": "energy",
   "data": {
     "energy_sources": [
       {
         "type": "grid",
-        "flow_from": [
-          {
-            "stat_energy_from": "sensor.tibber_pulse_borasvagen_last_meter_consumption",
-            "stat_cost": null,
-            "entity_energy_price": "sensor.total_electricity_price",
-            "number_energy_price": null
-          }
-        ],
-        "flow_to": [],
-        "cost_adjustment_day": 0.0
+        "cost_adjustment_day": 0.0,
+        "stat_energy_from": "sensor.tibber_pulse_borasvagen_last_meter_consumption",
+        "stat_cost": null,
+        "entity_energy_price": "sensor.total_electricity_price",
+        "number_energy_price": null,
+        "stat_energy_to": null,
+        "stat_compensation": null,
+        "entity_energy_price_export": null,
+        "number_energy_price_export": null
       }
     ],
     "device_consumption": [
@@ -54,7 +53,8 @@
         "stat_consumption": "sensor.dryer_energy"
       },
       {
-        "stat_consumption": "sensor.laundry_exhausting_fan_switch_0_energy",
+        "stat_consumption": "sensor.laundry_exhausting_fan_energy",
+        "stat_rate": "sensor.laundry_exhausting_fan_power",
         "name": "Exhausting fan (laundry)"
       },
       {
@@ -80,10 +80,6 @@
       {
         "stat_consumption": "sensor.hall_heater_energy",
         "name": "Floor heater (hall)"
-      },
-      {
-        "stat_consumption": "sensor.basement_heat_pump_total_energy",
-        "name": "Heat pump"
       },
       {
         "stat_consumption": "sensor.home_assistant_host_plug_energy",
@@ -114,8 +110,24 @@
         "name": "Outdoor - Well"
       },
       {
-        "stat_consumption": "sensor.bathroom_exausting_fan_fan_energy",
+        "stat_consumption": "sensor.bathroom_exhausting_fan_fan_energy",
+        "stat_rate": "sensor.bathroom_exhausting_fan_fan_power",
         "name": "Exhausting fan (bathroom)"
+      },
+      {
+        "stat_consumption": "sensor.basement_heat_pump_l1_heat_pump_phase_1_energy",
+        "stat_rate": "sensor.basement_heat_pump_l1_heat_pump_phase_1_power",
+        "name": "Heat pump - Phase 1"
+      },
+      {
+        "stat_consumption": "sensor.basement_heat_pump_l2_heat_pump_phase_2_energy",
+        "stat_rate": "sensor.basement_heat_pump_l2_heat_pump_phase_2_power",
+        "name": "Heat pump - Phase 2"
+      },
+      {
+        "stat_consumption": "sensor.basement_heat_pump_l3_heat_pump_phase_3_energy",
+        "stat_rate": "sensor.basement_heat_pump_l3_heat_pump_phase_3_power",
+        "name": "Heat pump - Phase 3"
       }
     ],
     "device_consumption_water": []

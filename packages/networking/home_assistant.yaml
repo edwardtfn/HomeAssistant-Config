@@ -60,8 +60,8 @@ script:
     icon: mdi:group
     mode: single
     variables:
-      core_power_entities: "{{ ['sensor.kitchen_cooker_hood_power'] + expand(integration_entities('shelly')) | selectattr('domain', 'eq', 'sensor') | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'power') | map(attribute='entity_id') | list }}"
-      core_switch_entities: "{{ ['switch.kitchen_cooker_hood'] + expand(integration_entities('shelly')) | selectattr('domain', 'eq', 'switch') | map(attribute='entity_id') | list }}"
+      core_power_entities: "{{ expand(integration_entities('shelly')) | selectattr('domain', 'eq', 'sensor') | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'power') | map(attribute='entity_id') | list }}"
+      core_switch_entities: "{{ expand(integration_entities('shelly')) | selectattr('domain', 'eq', 'switch') | map(attribute='entity_id') | list }}"
       all_areas: >-
         {% set areas = namespace(area=[]) %}
         {% for state in expand(core_power_entities) %}
@@ -77,16 +77,7 @@ script:
         name: Home - Core power switches
         icon: mdi:flash
         entities: "{{ core_switch_entities | join(',') }}"
-    ## Deprecated - Now using sensor groups ##
-    - alias: 'Group: Core power sensor'
-      enabled: false
-      continue_on_error: true
-      service: group.set
-      data:
-        object_id: home_core_power_sensors
-        name: Home - Core power sensors
-        icon: mdi:flash
-        entities: "{{ core_power_entities | join(',') }}"
+
     - alias: 'Group: Power sensors by areas'
       enabled: false
       continue_on_error: true

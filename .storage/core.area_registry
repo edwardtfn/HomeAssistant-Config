@@ -71,8 +71,8 @@
       },
       {
         "aliases": [
-          "Master bedroom",
           "Master",
+          "Master bedroom",
           "Quarto"
         ],
         "floor_id": "upstairs",
@@ -462,6 +462,19 @@
         "temperature_entity_id": null,
         "created_at": "2024-08-22T19:58:29.217361+00:00",
         "modified_at": "2025-06-08T16:58:25.686241+00:00"
+      },
+      {
+        "aliases": [],
+        "floor_id": "basement",
+        "humidity_entity_id": null,
+        "icon": "mdi:paper-roll-outline",
+        "id": "toilet",
+        "labels": [],
+        "name": "Toilet",
+        "picture": null,
+        "temperature_entity_id": null,
+        "created_at": "2026-02-25T18:20:35.158104+00:00",
+        "modified_at": "2026-02-25T18:20:35.158110+00:00"
       }
     ]
   }
