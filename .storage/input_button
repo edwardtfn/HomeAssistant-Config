@@ -3,6 +3,12 @@
   "minor_version": 1,
   "key": "input_button",
   "data": {
-    "items": []
+    "items": [
+      {
+        "id": "button_test",
+        "name": "Button test",
+        "icon": "mdi:ab-testing"
+      }
+    ]
   }
 }

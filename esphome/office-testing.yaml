@@ -77,9 +77,9 @@ esphome:
 #      - lambda: set_baud_rate->execute(stoi(baud_rate->state));
 
 external_components:
-  - source: github://pr#9429
+  - source: github://pr#14234
     components: [nextion]
-    refresh: 1h
+    refresh: 15s
 
 logger:
   baud_rate: 0

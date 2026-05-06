@@ -9,31 +9,14 @@ packages:
   #standard:           !include packages/Blackymas/esphome/nspanel_esphome_standard.yaml
   #nspanel_package:    !include packages/Blackymas/nspanel_esphome.yaml
   remote_package:
-    url: https://github.com/Blackymas/NSPanel_HA_Blueprint
-    ref: main
-    refresh: 300s
+    url: https://github.com/edwardtfn/NSPanel-Easy
+    ref: latest #v9999.99.9
+    refresh: 10s
     files:
       - nspanel_esphome.yaml # Base package including TFT transfer
-      # - esphome/nspanel_esphome_addon_bluetooth_proxy.yaml
   wifi: !include packages/config_wifi.yaml
 
-#  manual_ip: !include
-#    file: packages/config_manual_ip.yaml
-#    vars:
-#      ip: !secret ip_guest_room_panel
-
-#bluetooth_proxy:
-
-#esp32:
-#  framework:
-#    type: arduino
-
-#logger:
-#  level: VERBOSE
-#  logs:
-#    bluetooth_proxy: debug
-#    esp-idf: info
-
-#factory_reset:
-#  resets_required: 5
-#  max_delay: 10s
+  manual_ip: !include
+    file: packages/config_manual_ip.yaml
+    vars:
+      ip: !secret ip_guest_room_panel
