@@ -814,6 +814,8 @@ condition:
   - condition: or
     conditions:
       - condition: trigger
+        id: "Backup sensor recovered"
+      - condition: trigger
         id: "Out of schedule"
       - condition: and
         conditions:
