@@ -22,7 +22,7 @@
 ####################################################################################################
 ---
 blueprint:
-  name: Home Assistant Auto-update on a schedule base
+  name: Home Assistant Auto-update on a schedule base v2026.5.0
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
     min_version: 2025.8.0
@@ -31,7 +31,7 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2026.3.0
+    ## v2026.5.0
 
     ## Attention:
 
@@ -805,6 +805,10 @@ trigger:
     entity_id: !input update_out_of_schedule
     from: "off"
     to: "on"
+  - id: Backup sensor recovered
+    platform: state
+    entity_id: !input run_during_backup
+    to: "idle"
 
 condition:
   - condition: or
@@ -1221,9 +1225,13 @@ action:
   - alias: Report list of updates  # Combined starting + list of updates notification
     if:
       - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - variables:
           log_message: >
@@ -1280,10 +1288,14 @@ action:
   - alias: Pre-update actions
     if:
       - '{{ is_there_anything_to_update }}'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
       - '{{ not is_resume_after_restart }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
     then:
       - variables:
           input_actions_pre_update: !input actions_pre_update
@@ -1304,10 +1316,13 @@ action:
   - alias: Wait for backup system to be idle  # Wait if a backup is already in progress
     if:
       - '{{ is_there_anything_to_update }}'
-      - '{{ not is_resume_after_restart }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - variables:
           input_run_during_backup: !input run_during_backup
@@ -1380,10 +1395,14 @@ action:
   - alias: Backup
     if:
       - '{{ is_there_anything_to_update }}'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
       - '{{ not is_resume_after_restart }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
     then:
       - *recalc_update_list
       - variables:
@@ -1624,9 +1643,13 @@ action:
   - alias: Update generic
     if:
       - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - *recalc_update_list
       - variables:
@@ -1740,9 +1763,13 @@ action:
   - alias: Devices firmware
     if:
       - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - *recalc_update_list
       - variables:
@@ -1795,9 +1822,13 @@ action:
   - alias: Update core
     if:
       - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - *recalc_update_list
       - variables:
@@ -1851,9 +1882,13 @@ action:
   - alias: Update OS
     if:
       - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - *recalc_update_list
       - variables:
@@ -1908,9 +1943,13 @@ action:
     continue_on_error: true
     if:
       - '{{ is_there_anything_to_update }}'
-      - condition: state
-        entity_id: !input schedule_entity
-        state: 'on'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
     then:
       - *recalc_update_list
       - variables:

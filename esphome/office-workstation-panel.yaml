@@ -1,6 +1,6 @@
 substitutions:
   device_name: office-workstation-panel
-  friendly_name: Office - Workstation - Panel
+  friendly_name: My testing panel
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   ota_password: !secret old_ota_password
@@ -8,10 +8,10 @@ substitutions:
   #language: pt
   #BAUD_RATE: '115200'
   #upload_tft_baud_rate: 921600
-  include_action_upload_tft: true
+  #include_action_upload_tft: true
   #memory_dump_details: true
   #upload_tft_automatically: false
-  include_button_scan_baud_rate: true
+  #include_button_scan_baud_rate: true
   nextion_update_base_url: http://homeassistant.local:8123/local/nspanel/dev
 
 packages:
@@ -52,7 +52,7 @@ display:
   - id: !extend disp1
     #command_spacing: 2ms
     # max_queue_age: !remove
-    dump_device_info: true
+    # dump_device_info: true
     on_buffer_overflow:
       then:
         - event.trigger:
@@ -170,9 +170,9 @@ external_components:
 #      ref: fix-tft-upload-partial-08-response
 #    components: [nextion]
 #    refresh: 15s
-#  - source: github://pr#16059
-#    components: [nextion]
-#    refresh: 1h
+  - source: github://pr#16059
+    components: [nextion]
+    refresh: 15s
 #  - source: github://pr#15960
 #    components: [nextion]
 #    refresh: 1h
