@@ -170,9 +170,9 @@ external_components:
 #      ref: fix-tft-upload-partial-08-response
 #    components: [nextion]
 #    refresh: 15s
-  - source: github://pr#16059
-    components: [nextion]
-    refresh: 15s
+#  - source: github://pr#16059
+#    components: [nextion]
+#    refresh: 15s
 #  - source: github://pr#15960
 #    components: [nextion]
 #    refresh: 1h

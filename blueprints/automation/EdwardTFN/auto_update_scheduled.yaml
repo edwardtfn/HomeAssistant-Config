@@ -22,7 +22,7 @@
 ####################################################################################################
 ---
 blueprint:
-  name: Home Assistant Auto-update on a schedule base v2026.5.0
+  name: Home Assistant Auto-update on a schedule base v2026.5.1
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
     min_version: 2025.8.0
@@ -31,7 +31,7 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2026.5.0
+    ## v2026.5.1
 
     ## Attention:
 
@@ -779,6 +779,7 @@ trigger:
         states.update
         | default([])
         | selectattr("state", "eq", "on")
+        | rejectattr("attributes.supported_features", "eq", 0)
         | rejectattr("entity_id", "in", input_update_exclusions)
         | rejectattr("entity_id", "in", update_out_of_schedule)
         | list | count | int(0) > 0
@@ -831,6 +832,7 @@ condition:
                 states.update
                 | default([])
                 | selectattr("state", "eq", "on")
+                | rejectattr("attributes.supported_features", "eq", 0)
                 | selectattr("entity_id", "in", update_out_of_schedule)
                 | rejectattr("entity_id", "in", input_update_exclusions)
                 | list | count | int(0) > 0
@@ -846,6 +848,7 @@ condition:
                 states.update
                 | default([])
                 | selectattr("state", "eq", "on")
+                | rejectattr("attributes.supported_features", "eq", 0)
                 | rejectattr("entity_id", "in", input_update_exclusions)
                 | list | count | int(0) > 0
               }}
@@ -915,6 +918,7 @@ variables:
           states.update
           | default([])
           | selectattr("state", "eq", "on")
+          | rejectattr("attributes.supported_features", "eq", 0)
           | selectattr("entity_id", "in", update_out_of_schedule)
           | rejectattr("entity_id", "in", input_update_exclusions)
           | list | count | int(0) > 0
@@ -940,6 +944,14 @@ variables:
     {% else %}
       {{ "" }}
     {% endif %}
+  non_installable_entities: >
+    {% set ns = namespace(list=[]) %}
+    {% for entity in states.update | default([]) %}
+      {% if not (entity.attributes.supported_features | int(0)) | bitwise_and(1) %}
+        {% set ns.list = ns.list + [entity.entity_id] %}
+      {% endif %}
+    {% endfor %}
+    {{ ns.list }}
 action:
   - alias: Refresh update entities
     action: homeassistant.update_entity
@@ -1053,7 +1065,7 @@ action:
           }}
         {% endif %}
       input_update_exclusions: >
-            {% set exclusions = temp_input_update_exclusions | default([]) %}
+            {% set exclusions = (temp_input_update_exclusions | default([])) + non_installable_entities %}
 
             {% if input_core_os_update_mode == 'ignore' %}
               {% set exclusions = exclusions + [core_update_entity | default(""), os_update_entity | default("")] %}
@@ -1195,7 +1207,8 @@ action:
         {%- for entity in states.update %}
           {%- if (entity.state == "on" and
                   entity.entity_id in combined_list and
-                  entity.entity_id not in input_update_exclusions) %}
+                  entity.entity_id not in input_update_exclusions and
+                  (entity.attributes.supported_features | int(0)) | bitwise_and(1)) %}
             {%- set updates.list = updates.list + [entity.entity_id] %}
           {%- endif %}
         {%- endfor %}
