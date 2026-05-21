@@ -22,7 +22,7 @@
 ####################################################################################################
 ---
 blueprint:
-  name: Home Assistant Auto-update on a schedule base v2026.5.1
+  name: Home Assistant Auto-update on a schedule base v2026.5.2
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
     min_version: 2025.8.0
@@ -31,7 +31,7 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2026.5.1
+    ## v2026.5.2
 
     ## Attention:
 
@@ -764,6 +764,14 @@ trigger_variables:
   input_update_inclusion_entity_searchfilter: !input update_inclusion_entity_searchfilter
   input_update_process_started_entity: !input update_process_started_entity
   update_out_of_schedule: !input update_out_of_schedule
+  installable_entities: >
+    {% set ns = namespace(list=[]) %}
+    {% for e in states.update | default([]) %}
+      {% if (e.attributes.supported_features | int(0)) | bitwise_and(1) %}
+        {% set ns.list = ns.list + [e.entity_id] %}
+      {% endif %}
+    {% endfor %}
+    {{ ns.list }}
 
 trigger:
   - id: HA Schedule based
@@ -779,7 +787,7 @@ trigger:
         states.update
         | default([])
         | selectattr("state", "eq", "on")
-        | rejectattr("attributes.supported_features", "eq", 0)
+        | selectattr("entity_id", "in", installable_entities)
         | rejectattr("entity_id", "in", input_update_exclusions)
         | rejectattr("entity_id", "in", update_out_of_schedule)
         | list | count | int(0) > 0
@@ -832,7 +840,7 @@ condition:
                 states.update
                 | default([])
                 | selectattr("state", "eq", "on")
-                | rejectattr("attributes.supported_features", "eq", 0)
+                | selectattr("entity_id", "in", installable_entities)
                 | selectattr("entity_id", "in", update_out_of_schedule)
                 | rejectattr("entity_id", "in", input_update_exclusions)
                 | list | count | int(0) > 0
@@ -848,7 +856,7 @@ condition:
                 states.update
                 | default([])
                 | selectattr("state", "eq", "on")
-                | rejectattr("attributes.supported_features", "eq", 0)
+                | selectattr("entity_id", "in", installable_entities)
                 | rejectattr("entity_id", "in", input_update_exclusions)
                 | list | count | int(0) > 0
               }}
@@ -918,7 +926,7 @@ variables:
           states.update
           | default([])
           | selectattr("state", "eq", "on")
-          | rejectattr("attributes.supported_features", "eq", 0)
+          | selectattr("entity_id", "in", installable_entities)
           | selectattr("entity_id", "in", update_out_of_schedule)
           | rejectattr("entity_id", "in", input_update_exclusions)
           | list | count | int(0) > 0
