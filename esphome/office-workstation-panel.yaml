@@ -7,6 +7,7 @@ substitutions:
   boot_sound: true
   #language: pt
   #BAUD_RATE: '115200'
+  uart_debug: true
   #upload_tft_baud_rate: 921600
   #include_action_upload_tft: true
   #memory_dump_details: true
@@ -395,15 +396,5 @@ switch:
 
 #text_sensor:
 #  - id: !remove disp1_local_event
-
-#uart:
-#  - id: !extend tf_uart
-#    debug:
-#      direction: BOTH
-#      dummy_receiver: false
-#      after:
-#        delimiter: 0xff, 0xff, 0xff
-#      sequence:
-#        - lambda: UARTDebug::log_string(direction, bytes);
 
 #web_server:

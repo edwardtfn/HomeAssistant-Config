@@ -22,7 +22,7 @@
 ####################################################################################################
 ---
 blueprint:
-  name: Home Assistant Auto-update on a schedule base v2026.5.2
+  name: Home Assistant Auto-update on a schedule base v2026.5.4
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
     min_version: 2025.8.0
@@ -31,7 +31,7 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2026.5.2
+    ## v2026.5.4
 
     ## Attention:
 
@@ -278,6 +278,30 @@ blueprint:
             entity:
               multiple: true
               domain: update
+
+        minimum_patch_version:
+          name: Minimum patch version
+          description: >
+            Minimum patch number required before an update is automatically installed.
+
+            When set to `0` (default), this filter is disabled and all updates are considered regardless of patch version.
+
+            When set to a value greater than `0`, any update entity where the latest version has a patch component
+            lower than this threshold will be skipped. This applies globally across core/OS, firmware, and general updates.
+
+            Examples:
+              - `1`: skip `x.y.0`, allow `x.y.1` and above.
+              - `2`: skip `x.y.0` and `x.y.1`, allow `x.y.2` and above.
+
+            Note: for update entities where the version is not parseable as a dotted version,
+            this check is silently skipped and the update is allowed.
+          default: 0
+          selector:
+            number:
+              min: 0
+              max: 9
+              step: 1
+              mode: slider
 
     backup_section:
       name: Backup (optional)
@@ -894,6 +918,7 @@ variables:
   input_firmware_update_mode: !input firmware_update_mode
   input_general_update_mode: !input general_update_mode
   input_update_inclusion_mode: !input update_inclusion_mode
+  input_minimum_patch_version: !input minimum_patch_version
   input_notification_entity: !input notification_entity
   input_notification_select_notifications: !input notification_select_notifications
   input_notification_message_title: !input notification_message_title
@@ -1128,6 +1153,19 @@ action:
                   {% set exclusions = exclusions + [os_update_entity | default("")] %}
                 {% endif %}
               {% endif %}
+
+              {% if input_minimum_patch_version | int(0) > 0 %}
+                {% if core_latest_version and
+                      version(core_latest_version).patch | int(-1) >= 0 and
+                      version(core_latest_version).patch | int(-1) < input_minimum_patch_version | int(0) %}
+                  {% set exclusions = exclusions + [core_update_entity | default("")] %}
+                {% endif %}
+                {% if os_latest_version and
+                      version(os_latest_version).patch | int(-1) >= 0 and
+                      version(os_latest_version).patch | int(-1) < input_minimum_patch_version | int(0) %}
+                  {% set exclusions = exclusions + [os_update_entity | default("")] %}
+                {% endif %}
+              {% endif %}
             {% endif %}
 
             {% if input_firmware_update_mode == 'ignore' %}
@@ -1147,6 +1185,13 @@ action:
                   {% endif %}
                 {% elif input_firmware_update_mode == 'major_and_minor' %}
                   {% if (not entity_version_change.major) and (not entity_version_change.minor) %}
+                    {% set ns.entities = ns.entities + [ entity.entity_id ] %}
+                  {% endif %}
+                {% endif %}
+                {% if input_minimum_patch_version | int(0) > 0 and
+                      entity.entity_id not in ns.entities %}
+                  {% set patch = version(entity.attributes.latest_version | default('')).patch | int(-1) %}
+                  {% if patch >= 0 and patch < input_minimum_patch_version | int(0) %}
                     {% set ns.entities = ns.entities + [ entity.entity_id ] %}
                   {% endif %}
                 {% endif %}
@@ -1171,6 +1216,13 @@ action:
                   {% endif %}
                 {% elif input_general_update_mode == 'major_and_minor' %}
                   {% if (not entity_version_change.major) and (not entity_version_change.minor) %}
+                    {% set ns.entities = ns.entities + [ entity.entity_id ] %}
+                  {% endif %}
+                {% endif %}
+                {% if input_minimum_patch_version | int(0) > 0 and
+                      entity.entity_id not in ns.entities %}
+                  {% set patch = version(entity.attributes.latest_version | default('')).patch | int(-1) %}
+                  {% if patch >= 0 and patch < input_minimum_patch_version | int(0) %}
                     {% set ns.entities = ns.entities + [ entity.entity_id ] %}
                   {% endif %}
                 {% endif %}
