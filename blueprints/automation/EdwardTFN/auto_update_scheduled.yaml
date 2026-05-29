@@ -22,7 +22,7 @@
 ####################################################################################################
 ---
 blueprint:
-  name: Home Assistant Auto-update on a schedule base v2026.5.4
+  name: Home Assistant Auto-update on a schedule base v2026.5.5
   author: Edward Firmo (https://github.com/edwardtfn)
   homeassistant:
     min_version: 2025.8.0
@@ -31,7 +31,7 @@ blueprint:
 
     Update Home Assistant automatically when a new update is available.
 
-    ## v2026.5.4
+    ## v2026.5.5
 
     ## Attention:
 
@@ -1155,14 +1155,12 @@ action:
               {% endif %}
 
               {% if input_minimum_patch_version | int(0) > 0 %}
-                {% if core_latest_version and
-                      version(core_latest_version).patch | int(-1) >= 0 and
-                      version(core_latest_version).patch | int(-1) < input_minimum_patch_version | int(0) %}
+                {% set core_patch = version(core_latest_version).patch | int(-1) if core_latest_version else -1 %}
+                {% if core_patch >= 0 and core_patch < input_minimum_patch_version | int(0) %}
                   {% set exclusions = exclusions + [core_update_entity | default("")] %}
                 {% endif %}
-                {% if os_latest_version and
-                      version(os_latest_version).patch | int(-1) >= 0 and
-                      version(os_latest_version).patch | int(-1) < input_minimum_patch_version | int(0) %}
+                {% set os_patch = version(os_latest_version).patch | int(-1) if os_latest_version else -1 %}
+                {% if os_patch >= 0 and os_patch < input_minimum_patch_version | int(0) %}
                   {% set exclusions = exclusions + [os_update_entity | default("")] %}
                 {% endif %}
               {% endif %}
@@ -2084,7 +2082,16 @@ action:
         timeout: !input update_timeout
 
   - alias: Finishing
-    sequence:
+    if:
+      - '{{ is_there_anything_to_update }}'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
+    then:
       - *recalc_update_list
       - variables:
           log_message: "Finishing update process"
@@ -2256,7 +2263,16 @@ action:
         continue_on_error: true
 
   - alias: Done  # All done!
-    sequence:
+    if:
+      - '{{ is_there_anything_to_update }}'
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: '{{ is_out_of_schedule_mode }}'
+          - condition: state
+            entity_id: !input schedule_entity
+            state: 'on'
+    then:
       - variables:
           log_message: "Done!"
       - *logbook_update

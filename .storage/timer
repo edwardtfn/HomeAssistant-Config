@@ -9,6 +9,12 @@
         "name": "Test Timer",
         "duration": "0:05:00",
         "restore": true
+      },
+      {
+        "id": "my_testing_timer",
+        "name": "My testing timer",
+        "duration": "1:00:00",
+        "restore": true
       }
     ]
   }
