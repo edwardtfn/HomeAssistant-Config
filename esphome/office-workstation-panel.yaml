@@ -14,6 +14,7 @@ substitutions:
   #upload_tft_automatically: false
   #include_button_scan_baud_rate: true
   nextion_update_base_url: http://homeassistant.local:8123/local/nspanel/dev
+  chips_page_screensaver: false
 
 packages:
   base:                   !include packages/edwardtfn/NSPanel-Easy/nspanel_esphome.yaml
