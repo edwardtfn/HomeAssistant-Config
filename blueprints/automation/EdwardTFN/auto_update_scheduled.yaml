@@ -1591,7 +1591,8 @@ action:
       sequence:
       - variables:
           updates_pending: "{{ states.update\n  | selectattr('state', 'eq', 'on')\n
-            \ | selectattr('entity_id', 'in', firmware_update_entities)\n  | map(attribute='entity_id')\n
+            \ | selectattr('entity_id', 'in', firmware_update_entities)\n  | rejectattr('entity_id',
+            'in', input_update_exclusions)\n  | map(attribute='entity_id')\n
             \ | list\n}}\n"
       - *id005
       - *id006
