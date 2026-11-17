@@ -1,0 +1,64 @@
+---
+# Keeps the legacy copy of the auto_update_scheduled blueprint in sync with
+# edwardtfn/ha_auto_update_scheduled, so users who imported it from this
+# repository keep receiving updates when they re-import the blueprint.
+name: Sync auto_update_scheduled blueprint
+
+# yamllint disable-line rule:truthy
+on:
+  # Sent by edwardtfn/ha_auto_update_scheduled on every change to main
+  repository_dispatch:
+    types: [sync-auto-update-scheduled]
+  # Fallback in case a dispatch is missed
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-auto-update-scheduled
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Sync from edwardtfn/ha_auto_update_scheduled
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_FILE: upstream/auto_update_scheduled.yaml
+      TARGET_FILE: blueprints/automation/EdwardTFN/auto_update_scheduled.yaml
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v4
+
+      # A git checkout avoids the raw.githubusercontent.com cache serving a stale file
+      - name: Check out upstream blueprint
+        uses: actions/checkout@v4
+        with:
+          repository: edwardtfn/ha_auto_update_scheduled
+          ref: main
+          path: upstream
+          persist-credentials: false
+
+      - name: Copy blueprint
+        run: |
+          # Sanity check: must be an automation blueprint
+          grep -q '^blueprint:' "${SOURCE_FILE}"
+          grep -q '^  domain: automation' "${SOURCE_FILE}"
+          cp "${SOURCE_FILE}" "${TARGET_FILE}"
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- "${TARGET_FILE}"; then
+            echo "Blueprint already up to date."
+            exit 0
+          fi
+          upstream_sha="$(git -C upstream rev-parse --short HEAD)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${TARGET_FILE}"
+          git commit -m "Sync auto_update_scheduled blueprint" \
+            -m "From edwardtfn/ha_auto_update_scheduled@${upstream_sha}"
+          git push
+...
