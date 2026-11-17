@@ -132,8 +132,8 @@ blueprint:
                 value: patches
               - label: Don't update
                 value: ignore
-              sort: false
               custom_value: false
+              sort: false
         firmware_update_mode:
           name: Update mode for device's firmware
           description: "Please select the update mode for firmware in the devices
@@ -153,8 +153,8 @@ blueprint:
                 value: patches
               - label: Don't update
                 value: ignore
-              sort: false
               custom_value: false
+              sort: false
         general_update_mode:
           name: Update mode for general updates
           description: "Please select the update mode for everything that is not a
@@ -175,8 +175,8 @@ blueprint:
                 value: patches
               - label: Don't update
                 value: ignore
-              sort: false
               custom_value: false
+              sort: false
         update_inclusion_mode:
           name: Entity Inclusion Mode
           description: "Please select the entity inclusion mode. * All:\n  Just build
@@ -204,8 +204,8 @@ blueprint:
                 value: searchfilter
               - label: Searchfilter-Single
                 value: searchfilter-single
-              sort: false
               custom_value: false
+              sort: false
         update_inclusion_entity_list:
           name: Entity Inclusion List
           description: '=> Important: This entity list will only be used when the
@@ -297,8 +297,8 @@ blueprint:
                 value: auto
               - label: Always
                 value: always
-              sort: false
               custom_value: false
+              sort: false
         backup_timeout:
           name: Backup timeout
           description: 'Maximum time to wait for the backup process to complete.
@@ -344,6 +344,19 @@ blueprint:
             **Required** when backup mode is set to "When no recent backup is detected".
 
 
+            **Strongly recommended** together with the "Last successful automatic
+            backup sensor" below:
+
+            that sensor is what allows the automation to confirm that a new backup
+            was really created.
+
+            Without it, a backup that finishes while the backup action is still running
+            cannot be
+
+            confirmed, and the automation continues with the updates after logging
+            a warning.
+
+
             This sensor is provided by the [Backup integration](https://www.home-assistant.io/integrations/backup/)
 
             and is typically named `sensor.backup_backup_manager_state`.
@@ -376,6 +389,23 @@ blueprint:
 
 
             **Required** when backup mode is set to "When no recent backup is detected".
+
+
+            This sensor is also how the automation confirms that a new backup was
+            created:
+
+            its value is read before and after the backup action, and a newer timestamp
+
+            confirms the backup, no matter how long the backup took.
+
+
+            If this sensor is not selected, the backup cannot be confirmed. In that
+            case the
+
+            automation logs a warning and continues with the updates, so the updates
+            may run
+
+            without a verified backup.
 
 
             This sensor is provided by the [Backup integration](https://www.home-assistant.io/integrations/backup/)
@@ -655,8 +685,8 @@ blueprint:
                 value: restart
               - label: Done (includes remaining updates)
                 value: done
-              sort: false
               custom_value: false
+              sort: false
     general_settings:
       name: General settings (optional)
       icon: mdi:cog
@@ -681,8 +711,8 @@ blueprint:
                 value: core
               - label: Restart Home Assistant host
                 value: host
-              sort: false
               custom_value: false
+              sort: false
         verbose_logging_bool:
           name: Log addon progress with verbosity to the logbook?
           description: '`Optional`
@@ -959,53 +989,35 @@ action:
       'in', input_update_exclusions)\n    | map(attribute='entity_id')\n    | list\n
       \   | first\n    | default(\"\")\n  }}\n{% endif %}\n"
     input_update_exclusions: "{% set exclusions = (temp_input_update_exclusions |
-      default([])) + non_installable_entities %}\n{% if input_core_os_update_mode
-      == 'ignore' %}\n  {% set exclusions = exclusions + [core_update_entity | default(\"\"),
-      os_update_entity | default(\"\")] %}\n{% else %}\n  {% set core_installed_version
-      = states.update\n                                  | default([])\n                                  |
-      selectattr('entity_id', 'in', core_update_entity | default(\"\"))\n                                  |
-      map(attribute='attributes.installed_version')\n                                  |
-      list\n                                  | first\n                                  |
-      default('') %}\n  {% set core_latest_version = states.update\n                                |
-      default([])\n                                | selectattr('entity_id', 'in',
-      core_update_entity | default(\"\"))\n                                | map(attribute='attributes.latest_version')\n
-      \                               | list\n                                | first\n
-      \                               | default('') %}\n  {% set core_version_change
-      = version(core_latest_version) - version(core_installed_version) %}\n  {% set
-      os_installed_version = states.update\n                                | default([])\n
-      \                               | selectattr('entity_id', 'in', os_update_entity
-      | default(\"\"))\n                                | map(attribute='attributes.installed_version')\n
-      \                               | list\n                                | first\n
-      \                               | default('') %}\n  {% set os_latest_version
-      = states.update\n                              | default([])\n                              |
-      selectattr('entity_id', 'in', os_update_entity | default(\"\"))\n                              |
-      map(attribute='attributes.latest_version')\n                              |
-      list\n                              | first\n                              |
-      default('') %}\n  {% set os_version_change = version(os_latest_version) - version(os_installed_version)
-      %}\n\n  {% if input_core_os_update_mode == 'patches' %}\n    {% if core_version_change.major
-      or\n          core_version_change.minor or\n          (not core_version_change.patch)
-      %}\n      {% set exclusions = exclusions + [core_update_entity | default(\"\")]
-      %}\n    {% endif %}\n    {% if os_version_change.major or\n          os_version_change.minor
-      or\n          (not os_version_change.patch) %}\n      {% set exclusions = exclusions
-      + [os_update_entity | default(\"\")] %}\n    {% endif %}\n  {% elif input_core_os_update_mode
-      == 'major_and_minor' %}\n    {% if (not core_version_change.major) and (not
-      core_version_change.minor) %}\n      {% set exclusions = exclusions + [core_update_entity
-      | default(\"\")] %}\n    {% endif %}\n    {% if (not os_version_change.major)
-      and (not os_version_change.minor) %}\n      {% set exclusions = exclusions +
-      [os_update_entity | default(\"\")] %}\n    {% endif %}\n  {% endif %}\n\n  {%
-      if input_minimum_patch_version | int(0) > 0 %}\n    {% set core_patch = version(core_latest_version).patch
-      | int(-1) if core_latest_version else -1 %}\n    {% if core_patch >= 0 and core_patch
-      < input_minimum_patch_version | int(0) %}\n      {% set exclusions = exclusions
-      + [core_update_entity | default(\"\")] %}\n    {% endif %}\n    {% set os_patch
-      = version(os_latest_version).patch | int(-1) if os_latest_version else -1 %}\n
-      \   {% if os_patch >= 0 and os_patch < input_minimum_patch_version | int(0)
-      %}\n      {% set exclusions = exclusions + [os_update_entity | default(\"\")]
-      %}\n    {% endif %}\n  {% endif %}\n{% endif %}\n{% if input_firmware_update_mode
-      == 'ignore' %}\n  {% set exclusions = exclusions + [ firmware_update_entities
-      ] %}\n{% else %}\n  {% set ns = namespace(entities = []) %}\n  {% for entity
-      in expand(firmware_update_entities)\n                    | rejectattr('entity_id',
-      'in', exclusions)\n                    | selectattr('state', 'eq', 'on') %}\n
-      \   {% set entity_version_change = version(entity.attributes.latest_version
+      default([])) + non_installable_entities %}\n{% set core_os_entities = [core_update_entity
+      | default(\"\"),\n                           os_update_entity | default(\"\"),\n
+      \                          supervisor_update_entity | default(\"\")]\n                          |
+      reject('eq', '') | list %}\n{% if input_core_os_update_mode == 'ignore' %}\n
+      \ {% set exclusions = exclusions + core_os_entities %}\n{% else %}\n  {% set
+      ns = namespace(entities = []) %}\n  {% for entity in expand(core_os_entities)\n
+      \                   | rejectattr('entity_id', 'in', exclusions)\n                    |
+      selectattr('state', 'eq', 'on') %}\n    {% set entity_version_change = version(entity.attributes.latest_version
+      | default(''))\n                                    - version(entity.attributes.installed_version
+      | default('')) %}\n    {% if input_core_os_update_mode == 'patches' %}\n      {%
+      if entity_version_change.major or\n            entity_version_change.minor or\n
+      \           (not entity_version_change.patch) %}\n        {% set ns.entities
+      = ns.entities + [ entity.entity_id ] %}\n      {% endif %}\n    {% elif input_core_os_update_mode
+      == 'major_and_minor' %}\n      {% if (not entity_version_change.major) and (not
+      entity_version_change.minor) %}\n        {% set ns.entities = ns.entities +
+      [ entity.entity_id ] %}\n      {% endif %}\n    {% endif %}\n    {% if input_minimum_patch_version
+      | int(0) > 0 and\n          entity.entity_id not in ns.entities %}\n      {%
+      set patch = version(entity.attributes.latest_version | default('')).patch |
+      int(-1) %}\n      {% if patch >= 0 and patch < input_minimum_patch_version |
+      int(0) %}\n        {% set ns.entities = ns.entities + [ entity.entity_id ] %}\n
+      \     {% endif %}\n    {% endif %}\n  {% endfor %}\n  {% set exclusions = exclusions
+      + ns.entities %}\n{% endif %}\n{% if input_firmware_update_mode == 'ignore'
+      %}\n  {% set exclusions = exclusions + (firmware_update_entities\n                                    if
+      firmware_update_entities is sequence\n                                      and
+      firmware_update_entities is not string\n                                    else
+      ([firmware_update_entities] if firmware_update_entities else [])) %}\n{% else
+      %}\n  {% set ns = namespace(entities = []) %}\n  {% for entity in expand(firmware_update_entities)\n
+      \                   | rejectattr('entity_id', 'in', exclusions)\n                    |
+      selectattr('state', 'eq', 'on') %}\n    {% set entity_version_change = version(entity.attributes.latest_version
       | default(''))\n                                    - version(entity.attributes.installed_version
       | default('')) %}\n    {% if input_firmware_update_mode == 'patches' %}\n      {%
       if entity_version_change.major or\n            entity_version_change.minor or\n
@@ -1019,8 +1031,11 @@ action:
       int(-1) %}\n      {% if patch >= 0 and patch < input_minimum_patch_version |
       int(0) %}\n        {% set ns.entities = ns.entities + [ entity.entity_id ] %}\n
       \     {% endif %}\n    {% endif %}\n  {% endfor %}\n  {% set exclusions = exclusions
-      + [ ns.entities ] %}\n{% endif %}\n{% if input_general_update_mode == 'ignore'
-      %}\n  {% set exclusions = exclusions + [ general_update_entities ] %}\n{% else
+      + ns.entities %}\n{% endif %}\n{% if input_general_update_mode == 'ignore' %}\n
+      \ {% set exclusions = exclusions + (general_update_entities\n                                    if
+      general_update_entities is sequence\n                                      and
+      general_update_entities is not string\n                                    else
+      ([general_update_entities] if general_update_entities else [])) %}\n{% else
       %}\n  {% set ns = namespace(entities = []) %}\n  {% for entity in expand(general_update_entities)\n
       \                   | rejectattr('entity_id', 'in', exclusions)\n                    |
       selectattr('state', 'eq', 'on') %}\n    {% set entity_version_change = version(entity.attributes.latest_version
@@ -1037,7 +1052,7 @@ action:
       int(-1) %}\n      {% if patch >= 0 and patch < input_minimum_patch_version |
       int(0) %}\n        {% set ns.entities = ns.entities + [ entity.entity_id ] %}\n
       \     {% endif %}\n    {% endif %}\n  {% endfor %}\n  {% set exclusions = exclusions
-      + [ ns.entities ] %}\n{% endif %}\n{{ exclusions }}\n"
+      + ns.entities %}\n{% endif %}\n{{ exclusions }}\n"
     combined_list: "{% set entities = namespace(list=[]) %} {%- if is_out_of_schedule_mode
       %}\n  {# In out-of-schedule mode: ONLY include entities from update_out_of_schedule
       list #}\n  {%- for entity in [update_out_of_schedule] %}\n    {%- if entity
@@ -1330,120 +1345,176 @@ action:
       - alias: Run custom backup actions (starting)
         continue_on_error: true
         sequence: !input notification_action_backup
+      - alias: Capture the last backup timestamp before the backup call
+        variables:
+          has_backup_timestamp_entity: "{{\n  input_last_backup_timestamp_entity is
+            string and\n  input_last_backup_timestamp_entity | length > 0\n}}\n"
+          backup_timestamp_before: '{{ states(input_last_backup_timestamp_entity)
+            if has_backup_timestamp_entity else "" }}
+
+            '
       - alias: Call backup service
         action: backup.create_automatic
         continue_on_error: true
+      - alias: Check if the backup completed during the service call
+        variables:
+          backup_timestamp_after: '{{ states(input_last_backup_timestamp_entity) if
+            has_backup_timestamp_entity else "" }}
+
+            '
+          is_backup_confirmed: "{{\n  has_backup_timestamp_entity and\n  backup_timestamp_after
+            not in [\"unknown\", \"unavailable\", \"\"] and\n  backup_timestamp_after
+            != backup_timestamp_before\n}}\n"
       - alias: Wait for backup to complete
         if:
-        - '{{ input_run_during_backup is string and input_run_during_backup | length
-          > 0 }}'
+        - '{{ is_backup_confirmed }}'
         then:
-        - variables:
-            log_message: Backup triggered. Waiting for backup to start...
-        - *id001
-        - alias: Wait for backup state to leave idle (confirms backup started)
-          wait_for_trigger:
-          - trigger: state
-            entity_id: !input run_during_backup
-            from: idle
-          continue_on_timeout: true
-          timeout:
-            seconds: 30
-        - if: '{{ is_state(input_run_during_backup, "idle") }}'
-          then:
+        - &id005
+          alias: Backup completed
+          sequence:
           - variables:
-              log_message: 'ERROR: Backup state sensor did not change within 30 seconds.
-                The backup may not have started. Stopping to avoid running updates
-                without a backup.
-
-                '
+              log_message: Backup completed successfully
           - *id001
-          - if: "{{\n  \"backup\" in input_notification_select_notifications or\n
-              \ \"errors\" in input_notification_select_notifications\n}}"
+          - if: '{{ "backup" in input_notification_select_notifications }}'
             then:
             - *id003
-          - alias: Run custom error actions (backup may not have started)
+          - alias: Run custom backup actions (completed)
             continue_on_error: true
-            sequence: !input notification_action_errors
-          - *id004
-          - stop: Backup did not start
-          else:
-          - if: "{{\n  is_state(input_run_during_backup, \"unknown\") or\n  is_state(input_run_during_backup,
-              \"unavailable\")\n}}"
-            then:
-            - variables:
-                log_message: 'ERROR: Backup state sensor changed to {{ states(input_run_during_backup)
-                  }} instead of a backup state. Stopping.
-
-                  '
-            - *id001
-            - if: "{{\n  \"backup\" in input_notification_select_notifications or\n
-                \ \"errors\" in input_notification_select_notifications\n}}"
-              then:
-              - *id003
-            - alias: Run custom error actions (backup sensor fault)
-              continue_on_error: true
-              sequence: !input notification_action_errors
-            - *id004
-            - stop: Backup state sensor became unavailable
+            sequence: !input notification_action_backup
+        else:
+        - if:
+          - '{{ input_run_during_backup is string and input_run_during_backup | length
+            > 0 }}'
+          then:
           - variables:
-              log_message: 'Backup started ({{ states(input_run_during_backup) }}).
-                Waiting for backup system to return to idle...
-
-                '
+              log_message: Backup triggered. Waiting for backup to start...
           - *id001
-          - alias: Wait for backup system to become idle after backup
+          - alias: Wait for backup state to leave idle (confirms backup started)
             wait_for_trigger:
             - trigger: state
               entity_id: !input run_during_backup
-              to: idle
+              from: idle
             continue_on_timeout: true
             timeout:
-              minutes: '{{ input_backup_timeout | int(60) }}'
-          - if: '{{ not is_state(input_run_during_backup, "idle") }}'
+              seconds: 30
+          - alias: Check the backup timestamp again after the wait
+            variables:
+              backup_timestamp_after_wait: '{{ states(input_last_backup_timestamp_entity)
+                if has_backup_timestamp_entity else "" }}
+
+                '
+              is_backup_confirmed_after_wait: "{{\n  has_backup_timestamp_entity and\n
+                \ backup_timestamp_after_wait not in [\"unknown\", \"unavailable\",
+                \"\"] and\n  backup_timestamp_after_wait != backup_timestamp_before\n}}\n"
+          - if: '{{ is_backup_confirmed_after_wait }}'
             then:
-            - variables:
-                log_message: 'WARNING: Backup did not complete within {{ input_backup_timeout
-                  }} minutes. Continuing with updates...
-
-                  '
-            - *id001
-            - if: "{{\n  \"backup\" in input_notification_select_notifications or\n
-                \ \"errors\" in input_notification_select_notifications\n}}"
-              then:
-              - *id003
-            - alias: Run custom error actions (backup timeout)
-              continue_on_error: true
-              sequence: !input notification_action_errors
+            - *id005
             else:
-            - variables:
-                log_message: Backup completed successfully
-            - *id001
-            - if: '{{ "backup" in input_notification_select_notifications }}'
+            - if: '{{ is_state(input_run_during_backup, "idle") }}'
               then:
-              - *id003
-            - alias: Run custom backup actions (completed)
-              continue_on_error: true
-              sequence: !input notification_action_backup
-        else:
-        - variables:
-            log_message: 'Backup triggered. No backup state sensor configured, waiting
-              {{ input_backup_timeout | int(60) }} minutes...
+              - if: '{{ has_backup_timestamp_entity }}'
+                then:
+                - variables:
+                    log_message: 'ERROR: No backup was detected within 30 seconds
+                      and the "Last successful automatic backup" sensor did not change.
+                      Stopping to avoid running updates without a backup.
 
-              '
-        - *id001
-        - alias: Wait for the backup (fallback delay)
-          delay:
-            minutes: '{{ input_backup_timeout | int(60) }}'
-        - variables:
-            log_message: Backup wait time finished. Continuing...
-        - *id001
-        - if: '{{ "backup" in input_notification_select_notifications }}'
-          then:
-          - *id003
-        - alias: Run custom backup actions (fallback wait done)
-          continue_on_error: true
-          sequence: !input notification_action_backup
+                      '
+                - *id001
+                - if: "{{\n  \"backup\" in input_notification_select_notifications
+                    or\n  \"errors\" in input_notification_select_notifications\n}}"
+                  then:
+                  - *id003
+                - alias: Run custom error actions (backup may not have started)
+                  continue_on_error: true
+                  sequence: !input notification_action_errors
+                - *id004
+                - stop: Backup did not start
+                else:
+                - variables:
+                    log_message: 'WARNING: The backup state sensor is still idle.
+                      The backup has probably completed during the service call, but
+                      this cannot be confirmed without the "Last successful automatic
+                      backup" sensor. Continuing with updates...
+
+                      '
+                - *id001
+                - if: "{{\n  \"backup\" in input_notification_select_notifications
+                    or\n  \"errors\" in input_notification_select_notifications\n}}"
+                  then:
+                  - *id003
+                - alias: Run custom error actions (backup could not be confirmed)
+                  continue_on_error: true
+                  sequence: !input notification_action_errors
+              else:
+              - if: "{{\n  is_state(input_run_during_backup, \"unknown\") or\n  is_state(input_run_during_backup,
+                  \"unavailable\")\n}}"
+                then:
+                - variables:
+                    log_message: 'ERROR: Backup state sensor changed to {{ states(input_run_during_backup)
+                      }} instead of a backup state. Stopping.
+
+                      '
+                - *id001
+                - if: "{{\n  \"backup\" in input_notification_select_notifications
+                    or\n  \"errors\" in input_notification_select_notifications\n}}"
+                  then:
+                  - *id003
+                - alias: Run custom error actions (backup sensor fault)
+                  continue_on_error: true
+                  sequence: !input notification_action_errors
+                - *id004
+                - stop: Backup state sensor became unavailable
+              - variables:
+                  log_message: 'Backup started ({{ states(input_run_during_backup)
+                    }}). Waiting for backup system to return to idle...
+
+                    '
+              - *id001
+              - alias: Wait for backup system to become idle after backup
+                wait_for_trigger:
+                - trigger: state
+                  entity_id: !input run_during_backup
+                  to: idle
+                continue_on_timeout: true
+                timeout:
+                  minutes: '{{ input_backup_timeout | int(60) }}'
+              - if: '{{ not is_state(input_run_during_backup, "idle") }}'
+                then:
+                - variables:
+                    log_message: 'WARNING: Backup did not complete within {{ input_backup_timeout
+                      }} minutes. Continuing with updates...
+
+                      '
+                - *id001
+                - if: "{{\n  \"backup\" in input_notification_select_notifications
+                    or\n  \"errors\" in input_notification_select_notifications\n}}"
+                  then:
+                  - *id003
+                - alias: Run custom error actions (backup timeout)
+                  continue_on_error: true
+                  sequence: !input notification_action_errors
+                else:
+                - *id005
+          else:
+          - variables:
+              log_message: 'Backup triggered. No backup state sensor configured, waiting
+                {{ input_backup_timeout | int(60) }} minutes...
+
+                '
+          - *id001
+          - alias: Wait for the backup (fallback delay)
+            delay:
+              minutes: '{{ input_backup_timeout | int(60) }}'
+          - variables:
+              log_message: Backup wait time finished. Continuing...
+          - *id001
+          - if: '{{ "backup" in input_notification_select_notifications }}'
+            then:
+            - *id003
+          - alias: Run custom backup actions (fallback wait done)
+            continue_on_error: true
+            sequence: !input notification_action_backup
 - alias: Update generic
   if:
   - '{{ is_there_anything_to_update }}'
@@ -1492,14 +1563,14 @@ action:
             'in', core_update_entity)\n  | rejectattr('entity_id', 'in', os_update_entity)\n
             \ | rejectattr('entity_id', 'in', firmware_update_entities)\n  | rejectattr('entity_id',
             'in', input_update_exclusions)\n  | map(attribute='entity_id')\n  | list\n}}\n"
-      - &id005
+      - &id006
         variables:
           current_update_entity: '{{ updates_pending[0] }}'
           current_update_entity_friendly_name: '{{ state_attr(current_update_entity,
             "friendly_name") | default(current_update_entity) }}
 
             '
-      - &id006
+      - &id007
         alias: Log updating
         sequence:
         - variables:
@@ -1511,14 +1582,14 @@ action:
         - alias: Run custom update progress actions
           continue_on_error: true
           sequence: !input notification_action_update_progress
-      - &id007
+      - &id008
         alias: Update - Install
         continue_on_error: true
         action: update.install
         data: {}
         target:
           entity_id: '{{ current_update_entity }}'
-      - &id008
+      - &id009
         alias: Update - Wait
         sequence:
         - alias: Wait
@@ -1593,10 +1664,10 @@ action:
           updates_pending: "{{ states.update\n  | selectattr('state', 'eq', 'on')\n
             \ | selectattr('entity_id', 'in', firmware_update_entities)\n  | map(attribute='entity_id')\n
             \ | list\n}}\n"
-      - *id005
       - *id006
       - *id007
       - *id008
+      - *id009
 - alias: Update core
   if:
   - '{{ is_there_anything_to_update }}'
@@ -1641,10 +1712,10 @@ action:
           updates_pending: "{{ states.update\n  | selectattr('state', 'eq', 'on')\n
             \ | selectattr('entity_id', 'in', core_update_entity)\n  | rejectattr('entity_id',
             'in', input_update_exclusions)\n  | map(attribute='entity_id')\n  | list\n}}\n"
-      - *id005
       - *id006
       - *id007
       - *id008
+      - *id009
 - alias: Update OS
   if:
   - '{{ is_there_anything_to_update }}'
@@ -1689,10 +1760,10 @@ action:
           updates_pending: "{{ states.update\n  | selectattr('state', 'eq', 'on')\n
             \ | selectattr('entity_id', 'in', os_update_entity)\n  | rejectattr('entity_id',
             'in', input_update_exclusions)\n  | map(attribute='entity_id')\n  | list\n}}\n"
-      - *id005
       - *id006
       - *id007
       - *id008
+      - *id009
 - alias: Update - Remaining
   continue_on_error: true
   if:
